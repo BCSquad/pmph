@@ -518,14 +518,14 @@ public final class SystemMessageService {
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
-	public void sendWhenManagerCertificationAudit(List<Long> orguserIds, boolean isPass)
+	public void sendWhenManagerCertificationAudit(List<Long> orguserIds, boolean isPass,String backReason)
 			throws CheckedServiceException, IOException {
 		if (null == orguserIds || orguserIds.size() == 0) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.SCHOOL_ADMIN_CHECK,
 					CheckedExceptionResult.NULL_PARAM, "认证的管理员为空");
 		}
 		// 存入消息主体
-		String msgContent = "抱歉，您提交的管理员认证资料已被退回，请您修改后重试";// 退回
+		String msgContent = "抱歉，您提交的管理员认证资料已被退回，退回原因："+backReason+"，请您修改后重试";// 退回
 		if (isPass) {// 通过
 			msgContent = "恭喜！您提交的管理员认证资料已通过审核";
 		}
@@ -1078,7 +1078,7 @@ public final class SystemMessageService {
 						}
 						sum++;
 					}
-					msgContent.replace("{sum}", String.valueOf(sum));
+					msgContent.replace("{sum}", sum+"");
 					// 存入消息主体
 					Message message = new Message(msgContent);
 					message = messageService.add(message);

@@ -163,8 +163,9 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService, A
 		if (CollectionUtil.isNotEmpty(orgUserList)) {
 			List<OrgUser> orgUsers = new ArrayList<OrgUser>(orgUserList.size());
 			for (OrgUser orgUser : orgUserList) {
-				if (Const.ORG_USER_PROGRESS_1 == orgUser.getProgress()
-						|| Const.ORG_USER_PROGRESS_2 == orgUser.getProgress()) {
+				/*Const.ORG_USER_PROGRESS_1 == orgUser.getProgress() 已经通过的可以退回。
+						||*/
+				if (Const.ORG_USER_PROGRESS_2 == orgUser.getProgress()) {
 					throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 							CheckedExceptionResult.NULL_PARAM, "已审核的用户不能再次审核");
 				}
@@ -184,7 +185,7 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService, A
 			isPass = false;
 		}
 		if (null != isPass) {// 推送机构认证审核信息
-			systemMessageService.sendWhenManagerCertificationAudit(orgUserIds, isPass);
+			systemMessageService.sendWhenManagerCertificationAudit(orgUserIds, isPass,backReason);
 		}
 		return count;
 	}
