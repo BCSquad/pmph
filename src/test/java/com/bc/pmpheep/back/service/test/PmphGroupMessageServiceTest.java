@@ -1,7 +1,5 @@
 package com.bc.pmpheep.back.service.test;
 
-import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.Random;
 
 import javax.annotation.Resource;
@@ -10,15 +8,12 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.test.annotation.Rollback;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.PmphGroupMessage;
 import com.bc.pmpheep.back.service.PmphGroupMessageService;
-import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.vo.PmphGroupMessageVO;
-import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.test.BaseTest;
 
 /**
@@ -62,7 +57,7 @@ public class PmphGroupMessageServiceTest extends BaseTest {
 		pmphGroupMessageVO.setGmtCreate(DateUtil.getCurrentTime());
 		pmphGroupMessageVO.setGroupId(pmphGroupMessage.getGroupId());
 		pageParameter.setParameter(pmphGroupMessageVO);
-		Assert.assertNotNull("获取数据失败", pmphGroupMessageService.listPmphGroupMessage(pageParameter));
+//		Assert.assertNotNull("获取数据失败", pmphGroupMessageService.listPmphGroupMessage(pageParameter, req));
 	}
 
 	@Test

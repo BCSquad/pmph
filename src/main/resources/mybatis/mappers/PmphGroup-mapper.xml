@@ -120,10 +120,8 @@
 		gmtLastMessage,
 		g.book_id,
 		t.textbook_name bookName,
-		(select CONCAT(if(pge.is_writer=1,wu.realname,pu.realname),':',pgm.msg_content)msg_content
+		(select CONCAT(pge.display_name,':',pgm.msg_content)msg_content
 		from pmph_group_message pgm LEFT JOIN  pmph_group_member  pge on pgm.member_id=pge.id
-		left join writer_user wu on  wu.id=pge.user_id
-		left  join pmph_user pu on pu.id=pge.user_id
 		where pgm.group_id=g.id and pgm.member_id >0 ORDER BY pgm.gmt_create desc LIMIT 0,1) as msg_content
 		from
 		pmph_group g
@@ -166,10 +164,8 @@
 		gmtLastMessage,
 		g.book_id,
 		t.textbook_name bookName,
-		(select CONCAT(if(pge.is_writer=1,wu.realname,pu.realname),':',pgm.msg_content) msg_content
+		(select CONCAT(pge.display_name,':',pgm.msg_content) msg_content
 		from pmph_group_message pgm LEFT JOIN  pmph_group_member  pge on pgm.member_id=pge.id
-		left join writer_user wu on  wu.id=pge.user_id
-		left  join pmph_user pu on pu.id=pge.user_id
 		where pgm.group_id=g.id and pgm.member_id >0 ORDER BY pgm.gmt_create desc LIMIT 0,1) as msg_content,
 		COUNT(f.id) files
 		FROM

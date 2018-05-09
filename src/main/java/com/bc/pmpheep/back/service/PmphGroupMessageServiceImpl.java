@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.bc.pmpheep.back.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +17,6 @@ import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphGroupMessage;
 import com.bc.pmpheep.back.po.PmphUser;
-import com.bc.pmpheep.back.util.Const;
-import com.bc.pmpheep.back.util.ObjectUtil;
-import com.bc.pmpheep.back.util.PageParameterUitl;
-import com.bc.pmpheep.back.util.RouteUtil;
-import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.vo.PmphGroupMemberVO;
 import com.bc.pmpheep.back.vo.PmphGroupMessageVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -28,6 +24,8 @@ import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.websocket.MyWebSocketHandler;
 import com.bc.pmpheep.websocket.WebScocketMessage;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * PmphGroupMessageService 接口实现
@@ -211,7 +209,7 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 	}
 
 	@Override
-	public PageResult<PmphGroupMessageVO> listPmphGroupMessage(PageParameter<PmphGroupMessageVO> pageParameter)
+	public PageResult<PmphGroupMessageVO> listPmphGroupMessage(PageParameter<PmphGroupMessageVO> pageParameter, HttpServletRequest req)
 			throws CheckedServiceException {
 		if (null == pageParameter.getParameter().getGroupId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
@@ -220,6 +218,12 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 		if (null == pageParameter.getParameter().getGmtCreate()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"进入小组时间为空");
+		}
+		String sessionId = CookiesUtil.getSessionId(req);
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (null == pmphUser || null == pmphUser.getId()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+					"用户为空");
 		}
 		PageResult<PmphGroupMessageVO> pageResult = new PageResult<>();
 		int total = pmphGroupMessageDao.getPmphGroupMessageTotal(pageParameter);
@@ -249,6 +253,13 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 				}
 			}
 			pageResult.setRows(list);
+		}
+		PmphGroupMemberVO user = pmphGroupMemberService.getPmphGroupMemberByMemberId(pageParameter.getParameter().getGroupId(),
+				pmphUser.getId(), false);
+		if (ObjectUtil.isNull(user)) {
+			pageResult.setTag("no");
+		} else {
+			pageResult.setTag("yes");
 		}
 		pageResult.setTotal(total);
 		return pageResult;

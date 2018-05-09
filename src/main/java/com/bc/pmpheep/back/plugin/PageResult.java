@@ -32,9 +32,19 @@ public class PageResult<T> {
 	private Integer start = 0;
 	// 数据集
 	private List<T> rows = new ArrayList<T>(Const.PAGE_SIZE);
+	//标记
+    private  String tag;
 
 	public PageResult() {
 		super();
+	}
+
+	public String getTag() {
+		return tag;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
 	}
 
 	public void setPageNumber(Integer pageNumber) {
