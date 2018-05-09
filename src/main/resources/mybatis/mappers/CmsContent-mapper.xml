@@ -435,6 +435,7 @@
 		cc.`is_promote`,
 		cc.`is_staging`,
 		cc.`is_material_entry`,
+		cc.author_type,
 		cc.`author_id`,
 		CASE
 		WHEN cc.author_type = 2 THEN

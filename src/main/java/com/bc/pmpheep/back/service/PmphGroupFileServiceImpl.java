@@ -102,9 +102,9 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 			pmphGroupFile.setFileId(fileId);
 			pmphGroupFileDao.updatePmphGroupFile(pmphGroupFile);
 			PmphGroupMemberVO pmphGroupMemberVO = pmphGroupMemberService
-					.getPmphGroupMemberByMemberId(pmphGroupFile.getGroupId(), userId, false);
+					.getPmphGroupMemberByMemberId(pmphGroupFile.getGroupId(), userId, false);//+ file.getOriginalFilename()
 			pmphGroupMessageService.addGroupMessage(
-					pmphGroupMemberVO.getDisplayName() + "上传了文件" + file.getOriginalFilename(),
+					"\""+pmphGroupMemberVO.getDisplayName() + "\" 上传了文件" ,
 					pmphGroupFile.getGroupId(), sessionId, Const.SENDER_TYPE_0);
 		}
 		return "success";
