@@ -6,6 +6,11 @@
     <display-name>人卫E教</display-name>
     <description>人民卫生出版社医学教育交互综合服务平台</description>
 
+    <context-param>
+        <param-name>spring.profiles.active</param-name>
+        <param-value>production</param-value>
+    </context-param>
+
     <servlet>
         <servlet-name>springMvc</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>

@@ -65,71 +65,70 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * PmphUserService 实现
- * 
+ *
  * @author 曾庆峰
- * 
  */
 @Service
 public class PmphUserServiceImpl implements PmphUserService {
 
     @Autowired
-    private TextbookService              textbookService;
+    private TextbookService textbookService;
     @Autowired
     private MaterialProjectEditorService materialProjectEditorService;
 
     @Autowired
-    PmphUserDao                          pmphUserDao;
+    PmphUserDao pmphUserDao;
     @Autowired
-    PmphRoleDao                          pmphRoleDao;
+    PmphRoleDao pmphRoleDao;
     @Autowired
-    PmphDepartmentDao                    pmphDepartmentDao;
+    PmphDepartmentDao pmphDepartmentDao;
     @Autowired
-    PmphPermissionDao                    permissionDao;
+    PmphPermissionDao permissionDao;
     @Autowired
-    PmphUserRoleDao                      pmphUserRoleDao;
+    PmphUserRoleDao pmphUserRoleDao;
     @Autowired
-    private FileService                  fileService;
+    private FileService fileService;
     @Autowired
-    MaterialService                      materialService;
+    MaterialService materialService;
     @Autowired
-    private PmphGroupService             pmphGroupService;
+    private PmphGroupService pmphGroupService;
     @Autowired
-    CmsContentService                    cmsContentService;
+    CmsContentService cmsContentService;
     @Autowired
-    BookCorrectionService                bookCorrectionService;
+    BookCorrectionService bookCorrectionService;
     @Autowired
-    BookUserCommentService               bookUserCommentService;
+    BookUserCommentService bookUserCommentService;
     @Autowired
-    WriterUserService                    writerUserService;
+    WriterUserService writerUserService;
     @Autowired
-    OrgUserService                       orgUserService;
+    OrgUserService orgUserService;
     @Autowired
-    TopicService                         topicService;
+    TopicService topicService;
     @Autowired
-    PmphRoleService                      roleService;
+    PmphRoleService roleService;
     @Autowired
-    PmphUserService                      pmphUserService;
+    PmphUserService pmphUserService;
     @Autowired
-    SysOperationService                  sysOperationService;
+    SysOperationService sysOperationService;
 
     @Override
     public boolean updatePersonalData(HttpServletRequest request, PmphUser pmphUser,
-    String newAvatar) throws IOException {
+                                      String newAvatar) throws IOException {
         Long id = pmphUser.getId();
         if (null == id) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止更新用户");
+                    CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止更新用户");
         }
         if (!StringUtil.isEmpty(pmphUser.getEmail())) {
             if (!ValidatUtil.checkEmail(pmphUser.getEmail())) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                                  CheckedExceptionResult.ILLEGAL_PARAM, "邮箱不符合规范");
+                        CheckedExceptionResult.ILLEGAL_PARAM, "邮箱不符合规范");
             }
         }
         if (!StringUtil.isEmpty(pmphUser.getHandphone())) {
             if (!ValidatUtil.checkMobileNumber(pmphUser.getHandphone())) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                                  CheckedExceptionResult.ILLEGAL_PARAM, "手机号码不符合规范");
+                        CheckedExceptionResult.ILLEGAL_PARAM, "手机号码不符合规范");
             }
         }
         // 头像文件不为空更新头像
@@ -141,8 +140,8 @@ public class PmphUserServiceImpl implements PmphUserService {
             InputStream sbs = new ByteArrayInputStream(fileByte);
             noticeId = fileService.save(sbs, fileName, ImageType.PMPH_USER_AVATAR, id);
             pmphUser.setAvatar(noticeId);
-        }else{
-        	 pmphUser.setAvatar(null);
+        } else {
+            pmphUser.setAvatar(null);
         }
         pmphUserDao.update(pmphUser);
         return true;
@@ -150,7 +149,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 
     /**
      * 返回新插入用户数据的主键
-     * 
+     *
      * @param user
      * @return
      */
@@ -158,11 +157,11 @@ public class PmphUserServiceImpl implements PmphUserService {
     public PmphUser add(PmphUser user) throws CheckedServiceException {
         if (StringUtil.isEmpty(user.getUsername())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "用户名为空时禁止新增用户");
+                    CheckedExceptionResult.NULL_PARAM, "用户名为空时禁止新增用户");
         }
         if (StringUtil.isEmpty(user.getPassword())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "密码为空时禁止新增用户");
+                    CheckedExceptionResult.NULL_PARAM, "密码为空时禁止新增用户");
         }
         if (StringUtil.isEmpty(user.getRealname())) {
             user.setRealname(user.getUsername());
@@ -178,7 +177,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 
     /**
      * 为单个用户设置多个角色
-     * 
+     *
      * @param user
      * @param rids
      */
@@ -187,7 +186,7 @@ public class PmphUserServiceImpl implements PmphUserService {
         Long userId = this.add(user).getId();
         if (ObjectUtil.isNull(userId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "用户ID为空时不能添加角色！");
+                    CheckedExceptionResult.NULL_PARAM, "用户ID为空时不能添加角色！");
         }
         pmphRoleDao.addUserRoles(userId, rids);
         return user;
@@ -195,14 +194,14 @@ public class PmphUserServiceImpl implements PmphUserService {
 
     /**
      * 根据 user_id 删除用户数据
-     * 
+     *
      * @param id
      */
     @Override
     public Integer delete(Long id) throws CheckedServiceException {
         if (ObjectUtil.isNull(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止删除用户");
+                    CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止删除用户");
         }
         return pmphUserDao.delete(id);
     }
@@ -211,7 +210,7 @@ public class PmphUserServiceImpl implements PmphUserService {
     public Integer deleteUserAndRole(List<Long> ids) throws CheckedServiceException {
         if (ids.size() < 0) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止删除用户！");
+                    CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止删除用户！");
         }
         Integer count = 0;
         // 删除用户列表
@@ -225,9 +224,8 @@ public class PmphUserServiceImpl implements PmphUserService {
     }
 
     /**
-     * 
      * 更新用户数据 1、更新用户基本信息 2、更新用户所属角色 （1）先删除所有的角色 （2）再添加绑定的角色
-     * 
+     *
      * @param user
      * @param rids
      */
@@ -236,7 +234,7 @@ public class PmphUserServiceImpl implements PmphUserService {
         Long userId = user.getId();
         if (ObjectUtil.isNull(userId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止更新用户");
+                    CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止更新用户");
         }
         pmphRoleDao.deleteUserRoles(userId);
         pmphRoleDao.addUserRoles(userId, rids);
@@ -246,7 +244,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 
     /**
      * 更新单个用户信息
-     * 
+     *
      * @param user
      * @return
      */
@@ -254,7 +252,7 @@ public class PmphUserServiceImpl implements PmphUserService {
     public PmphUser update(PmphUser user) throws CheckedServiceException {
         if (ObjectUtil.isNull(user)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "用户属性为空时禁止更新用户");
+                    CheckedExceptionResult.NULL_PARAM, "用户属性为空时禁止更新用户");
         } else {
             String password = user.getPassword();
             if (StringUtil.notEmpty(password)) {
@@ -267,7 +265,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 
     /**
      * 根据主键 id 加载用户对象
-     * 
+     *
      * @param id
      * @return
      */
@@ -275,14 +273,14 @@ public class PmphUserServiceImpl implements PmphUserService {
     public PmphUser get(Long id) throws CheckedServiceException {
         if (ObjectUtil.isNull(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
+                    CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
         }
         return pmphUserDao.get(id);
     }
 
     /**
      * 根据主键 id 加载用户对象
-     * 
+     *
      * @param id
      * @return
      */
@@ -293,12 +291,12 @@ public class PmphUserServiceImpl implements PmphUserService {
         PmphUser sessionPmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
         if (null == sessionPmphUser) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-                                              CheckedExceptionResult.NULL_PARAM, "请求用户不存在");
+                    CheckedExceptionResult.NULL_PARAM, "请求用户不存在");
         }
         Long id = sessionPmphUser.getId();
         if (ObjectUtil.isNull(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
+                    CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
         }
         PmphUser pmphUser = pmphUserDao.getInfo(id);
         if (null == pmphUser) {
@@ -316,30 +314,30 @@ public class PmphUserServiceImpl implements PmphUserService {
         PmphUser sessionPmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
         if (null == sessionPmphUser) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-                                              CheckedExceptionResult.NULL_PARAM, "请求用户不存在");
+                    CheckedExceptionResult.NULL_PARAM, "请求用户不存在");
         }
         Long id = sessionPmphUser.getId();
         if (null == id) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
+                    CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
         }
         if (StringUtil.isEmpty(oldPassword)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "原密码为空");
+                    CheckedExceptionResult.NULL_PARAM, "原密码为空");
         }
         if (StringUtil.isEmpty(newPassword)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "新密码为空");
+                    CheckedExceptionResult.NULL_PARAM, "新密码为空");
         }
         oldPassword = oldPassword.trim();
         newPassword = newPassword.trim();
         if (newPassword.length() > 50) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.ILLEGAL_PARAM, "新密码长度不能超过50");
+                    CheckedExceptionResult.ILLEGAL_PARAM, "新密码长度不能超过50");
         }
         if (oldPassword.equals(newPassword)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.ILLEGAL_PARAM, "新旧密码不能一致");
+                    CheckedExceptionResult.ILLEGAL_PARAM, "新旧密码不能一致");
         }
         // 先修改SSO
         // ---------------------------------
@@ -351,41 +349,41 @@ public class PmphUserServiceImpl implements PmphUserService {
         Integer res = pmphUserDao.updatePassword(map);
         if (null == res || res == 0) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "原密码错误");
+                    CheckedExceptionResult.NULL_PARAM, "原密码错误");
         }
         return 1;
     }
 
     /**
      * 根据用户名加载用户对象（用于登录使用）
-     * 
+     *
      * @param username
      * @return
      */
     @Override
     public PmphUser getByUsernameAndPassword(String username, String password)
-    throws CheckedServiceException {
+            throws CheckedServiceException {
         if (StringUtil.isEmpty(username) || StringUtil.isEmpty(password)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "用户名或密码为空时禁止查询");
+                    CheckedExceptionResult.NULL_PARAM, "用户名或密码为空时禁止查询");
         }
         PmphUser pmphUser = pmphUserDao.getByUsernameAndPassword(username, password);
         if (ObjectUtil.isNull(pmphUser)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.OBJECT_NOT_FOUND, "用户名或密码错误！");
+                    CheckedExceptionResult.OBJECT_NOT_FOUND, "用户名或密码错误！");
         }
         return pmphUser;
     }
 
     @Override
     public PageResult<PmphUserManagerVO> getListByUsernameAndRealname(String name, int number,
-    int size) throws CheckedServiceException {
+                                                                      int size) throws CheckedServiceException {
         if (null == name || "".equals(name)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "模糊查询条件为空");
+                    CheckedExceptionResult.NULL_PARAM, "模糊查询条件为空");
         }
         List<PmphUser> pmphUsers =
-        pmphUserDao.getListByUsernameAndRealname(name, (number - 1) * size, size);
+                pmphUserDao.getListByUsernameAndRealname(name, (number - 1) * size, size);
         PageResult<PmphUserManagerVO> page = new PageResult<>();
         page.setFirst(true);
         page.setLast(true);
@@ -396,7 +394,7 @@ public class PmphUserServiceImpl implements PmphUserService {
             for (PmphUser user : pmphUsers) {
                 PmphUserManagerVO userVO = new PmphUserManagerVO();
                 PmphDepartment department =
-                pmphDepartmentDao.getPmphDepartmentById(user.getDepartmentId());
+                        pmphDepartmentDao.getPmphDepartmentById(user.getDepartmentId());
                 if (null != department) {
                     userVO.setDepartmentName(department.getDpName());
                 }
@@ -404,8 +402,8 @@ public class PmphUserServiceImpl implements PmphUserService {
                     BeanUtils.copyProperties(userVO, user);
                 } catch (BeansException ex) {
                     throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                                      CheckedExceptionResult.VO_CONVERSION_FAILED,
-                                                      ex.getMessage());
+                            CheckedExceptionResult.VO_CONVERSION_FAILED,
+                            ex.getMessage());
                 }
                 list.add(userVO);
             }
@@ -416,11 +414,11 @@ public class PmphUserServiceImpl implements PmphUserService {
 
     /**
      * 登录逻辑
-     * 
+     * <p>
      * 1、先根据用户名查询用户对象
-     * 
+     * <p>
      * 2、如果有用户对象，则继续匹配密码 如果没有用户对象，则抛出异常
-     * 
+     *
      * @param username
      * @param password
      * @return
@@ -432,20 +430,43 @@ public class PmphUserServiceImpl implements PmphUserService {
         if (ObjectUtil.isNull(user)) {
             // 因为缓存切面的原因,在这里就抛出用户名不存在的异常
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "用户名或密码不正确！");
+                    CheckedExceptionResult.NULL_PARAM, "用户名或密码不正确！");
         } else {
             if (user.getIsDisabled()) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                                  CheckedExceptionResult.ILLEGAL_PARAM,
-                                                  "用户已经被禁用，请联系管理员启用该账号");
+                        CheckedExceptionResult.ILLEGAL_PARAM,
+                        "用户已经被禁用，请联系管理员启用该账号");
             }
         }
         return user;
     }
 
+    @Override
+    public PmphUser login(String openid) throws CheckedServiceException {
+        PmphUser user = pmphUserDao.getByOpenid(openid);
+        // 密码匹配的工作交给 Shiro 去完成
+        if (ObjectUtil.isNull(user)) {
+            // 因为缓存切面的原因,在这里就抛出用户名不存在的异常
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                    CheckedExceptionResult.NULL_PARAM, "未找到绑定的微信信息！");
+        } else {
+            if (user.getIsDisabled()) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                        CheckedExceptionResult.ILLEGAL_PARAM,
+                        "用户已经被禁用，请联系管理员启用该账号");
+            }
+        }
+        return user;
+    }
+
+    @Override
+    public int updateUserOpenid(String openid, String username) {
+        return pmphUserDao.updateUserOpenid(openid, username);
+    }
+
     /**
      * 查询所有的用户对象列表
-     * 
+     *
      * @return
      */
     @Override
@@ -455,7 +476,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 
     /**
      * 根据角色 id 查询是这个角色的所有用户
-     * 
+     *
      * @param id
      * @return
      */
@@ -463,14 +484,14 @@ public class PmphUserServiceImpl implements PmphUserService {
     public List<PmphUser> getListByRole(Long id) throws CheckedServiceException {
         if (ObjectUtil.isNull(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "用户名为空时禁止查询");
+                    CheckedExceptionResult.NULL_PARAM, "用户名为空时禁止查询");
         }
         return pmphUserDao.getListByRole(id);
     }
 
     /**
      * 查询指定用户 id 所拥有的权限
-     * 
+     *
      * @param uid
      * @return
      */
@@ -478,7 +499,7 @@ public class PmphUserServiceImpl implements PmphUserService {
     public List<PmphPermission> getListAllResource(Long uid) throws CheckedServiceException {
         if (ObjectUtil.isNull(uid)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
+                    CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
         }
         List<PmphPermission> permissions = pmphUserDao.getListAllResources(uid);
         // List<PmphPermission> perList = permissions;
@@ -495,7 +516,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 
     /**
      * 查询指定用户所指定的角色字符串列表
-     * 
+     *
      * @param uid
      * @return
      */
@@ -503,14 +524,14 @@ public class PmphUserServiceImpl implements PmphUserService {
     public List<String> getListRoleSnByUser(Long uid) throws CheckedServiceException {
         if (ObjectUtil.isNull(uid)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
+                    CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
         }
         return pmphUserDao.getListRoleSnByUser(uid);
     }
 
     /**
      * 查询指定用户所绑定的角色列表
-     * 
+     *
      * @param uid
      * @return
      */
@@ -518,14 +539,14 @@ public class PmphUserServiceImpl implements PmphUserService {
     public List<PmphRole> getListUserRole(Long uid) throws CheckedServiceException {
         if (ObjectUtil.isNull(uid)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
+                    CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
         }
         return pmphUserDao.getListUserRole(uid);
     }
 
     @Override
     public PageResult<PmphUserManagerVO> getListPmphUser(
-    PageParameter<PmphUserManagerVO> pageParameter, Long groupId) throws CheckedServiceException {
+            PageParameter<PmphUserManagerVO> pageParameter, Long groupId) throws CheckedServiceException {
         String name = pageParameter.getParameter().getName();
         if (StringUtil.notEmpty(name)) {
             pageParameter.getParameter().setName(name);
@@ -534,7 +555,7 @@ public class PmphUserServiceImpl implements PmphUserService {
         Long departmentId = pageParameter.getParameter().getDepartmentId();
         if (StringUtil.notEmpty(path) && ObjectUtil.notNull(departmentId)) {
             pageParameter.getParameter().setPath(path + "-"
-                                                 + java.lang.String.valueOf(departmentId) + '-');
+                    + java.lang.String.valueOf(departmentId) + '-');
         }
         PageResult<PmphUserManagerVO> pageResult = new PageResult<>();
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
@@ -543,7 +564,7 @@ public class PmphUserServiceImpl implements PmphUserService {
             List<PmphUserManagerVO> list = pmphUserDao.getListPmphUser(pageParameter);
             for (PmphUserManagerVO pmphUserManagerVO : list) {
                 List<PmphRoleVO> pmphRoles =
-                pmphRoleDao.listPmphUserRoleByUserId(pmphUserManagerVO.getId());
+                        pmphRoleDao.listPmphUserRoleByUserId(pmphUserManagerVO.getId());
                 pmphUserManagerVO.setPmphRoles(pmphRoles);
             }
             pageResult.setRows(list);
@@ -562,7 +583,7 @@ public class PmphUserServiceImpl implements PmphUserService {
                 Textbook textbook = textbookService.getTextbookById(bookId);
                 Material material = materialService.getMaterialById(textbook.getMaterialId());
                 List<MaterialProjectEditorVO> projects =
-                materialProjectEditorService.listMaterialProjectEditors(textbook.getMaterialId());
+                        materialProjectEditorService.listMaterialProjectEditors(textbook.getMaterialId());
                 for (PmphUserManagerVO pmphUserManagerVO : pageResult.getRows()) {
                     Long pmphUserId = pmphUserManagerVO.getId();
                     String posotion = null;
@@ -590,43 +611,43 @@ public class PmphUserServiceImpl implements PmphUserService {
 
     @Override
     public String updatePmphUserOfBack(PmphUserManagerVO pmphUserManagerVO)
-    throws CheckedServiceException {
+            throws CheckedServiceException {
         PmphUser username = pmphUserDao.get(pmphUserManagerVO.getId());
         if (!username.getUsername().equals(pmphUserManagerVO.getUsername())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.ILLEGAL_PARAM, "用户账号不相同");
+                    CheckedExceptionResult.ILLEGAL_PARAM, "用户账号不相同");
         }
         if (ObjectUtil.isNull(pmphUserManagerVO.getId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止更新用户");
+                    CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止更新用户");
         }
         if (StringUtil.strLength(pmphUserManagerVO.getUsername()) > 20) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.ILLEGAL_PARAM, "用户名需要小于20字符");
+                    CheckedExceptionResult.ILLEGAL_PARAM, "用户名需要小于20字符");
         }
         if (StringUtil.strLength(pmphUserManagerVO.getRealname()) > 20) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.ILLEGAL_PARAM, "姓名需要小于20字符");
+                    CheckedExceptionResult.ILLEGAL_PARAM, "姓名需要小于20字符");
         }
         if (!StringUtil.isEmpty(pmphUserManagerVO.getHandphone())) {
             if (!ValidatUtil.checkMobileNumber(pmphUserManagerVO.getHandphone())) {
-            	if ("-".equals(pmphUserManagerVO.getHandphone())) {
-                	pmphUserManagerVO.setHandphone("-");
+                if ("-".equals(pmphUserManagerVO.getHandphone())) {
+                    pmphUserManagerVO.setHandphone("-");
                 } else {
-                	throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                    throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                             CheckedExceptionResult.ILLEGAL_PARAM, "电话格式不正确");
                 }
             }
         }
         if (!StringUtil.isEmpty(pmphUserManagerVO.getEmail())) {
             if (!ValidatUtil.checkEmail(pmphUserManagerVO.getEmail())) {
-            	if ("-".equals(pmphUserManagerVO.getEmail())) {
-                	pmphUserManagerVO.setEmail("-");
+                if ("-".equals(pmphUserManagerVO.getEmail())) {
+                    pmphUserManagerVO.setEmail("-");
                 } else {
-                	throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                            CheckedExceptionResult.ILLEGAL_PARAM, "邮箱格式不正确");	
-				}
-            } 
+                    throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                            CheckedExceptionResult.ILLEGAL_PARAM, "邮箱格式不正确");
+                }
+            }
         }
         if (StringUtil.isEmpty(pmphUserManagerVO.getRealname())) {
             pmphUserManagerVO.setRealname(pmphUserManagerVO.getUsername());
@@ -640,7 +661,7 @@ public class PmphUserServiceImpl implements PmphUserService {
                 String[] roleIds = pmphRoles.split(",");
                 for (String roleId : roleIds) {
                     PmphUserRole pmphUserRole =
-                    new PmphUserRole(pmphUserManagerVO.getId(), Long.valueOf(roleId));
+                            new PmphUserRole(pmphUserManagerVO.getId(), Long.valueOf(roleId));
                     pmphUserRoleDao.addPmphUserRole(pmphUserRole);
                 }
             }
@@ -655,7 +676,7 @@ public class PmphUserServiceImpl implements PmphUserService {
     public List<Long> getPmphUserPermissionByUserId(Long userId) {
         if (ObjectUtil.isNull(userId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
+                    CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
         }
         List<Long> list = pmphUserDao.getPmphUserPermissionByUserId(userId);
         if (CollectionUtil.isEmpty(list)) {
@@ -668,7 +689,7 @@ public class PmphUserServiceImpl implements PmphUserService {
     public String getMaterialPermissionByUserId(Long userId) {
         if (ObjectUtil.isNull(userId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
+                    CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
         }
         String materialPermission = null;
         List<Integer> integers = pmphUserDao.getMaterialPermissionByUserId(userId);
@@ -694,18 +715,18 @@ public class PmphUserServiceImpl implements PmphUserService {
 
     @Override
     public Map<String, Object> getPersonalCenter(HttpServletRequest request, String state,
-    String materialName, String groupName, String title, String bookname, String name,
-    String authProgress, String topicBookname) {
+                                                 String materialName, String groupName, String title, String bookname, String name,
+                                                 String authProgress, String topicBookname) {
         String sessionId = CookiesUtil.getSessionId(request);
         PmphUser sessionPmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
         if (null == sessionPmphUser) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-                                              CheckedExceptionResult.NULL_PARAM, "请求用户不存在");
+                    CheckedExceptionResult.NULL_PARAM, "请求用户不存在");
         }
         // 获取用户角色
         List<PmphRole> rolelist = roleService.getPmphRoleByUserId(sessionPmphUser.getId());
         //获取当前用户的首页的 权限
-        List<Map<String,Object>> userPermissionList = roleService.userPermission(sessionPmphUser.getId());
+        List<Map<String, Object>> userPermissionList = roleService.userPermission(sessionPmphUser.getId());
         // 用于装所有的数据map
         Map<String, Object> map = new HashMap<>();
         // 教师认证总数量
@@ -718,7 +739,7 @@ public class PmphUserServiceImpl implements PmphUserService {
         pageParameterPmphGroup.setParameter(pmphGroup);
         // 小组结果
         PageResult<PmphGroupListVO> pageResultPmphGroup =
-        pmphGroupService.getlistPmphGroup(pageParameterPmphGroup, sessionId);
+                pmphGroupService.getlistPmphGroup(pageParameterPmphGroup, sessionId);
         // 教材申报
         PageParameter<MaterialListVO> pageParameter2 = new PageParameter<>();
         MaterialListVO materialListVO = new MaterialListVO();
@@ -727,7 +748,7 @@ public class PmphUserServiceImpl implements PmphUserService {
         pageParameter2.setParameter(materialListVO);
         // 教材申报的结果
         PageResult<MaterialListVO> pageResultMaterialListVO =
-        materialService.listMaterials(pageParameter2, sessionId);
+                materialService.listMaterials(pageParameter2, sessionId);
         // 文章审核
         PageParameter<CmsContentVO> pageParameter1 = new PageParameter<>();
         CmsContentVO cmsContentVO = new CmsContentVO();
@@ -736,16 +757,16 @@ public class PmphUserServiceImpl implements PmphUserService {
         pageParameter1.setParameter(cmsContentVO);
         // 文章审核的结果
         PageResult<CmsContentVO> pageResultCmsContentVO =
-        cmsContentService.listCmsContent(pageParameter1, sessionId);
+                cmsContentService.listCmsContent(pageParameter1, sessionId);
         map.put("cmsContent", pageResultCmsContentVO);
         // 图书纠错审核
         PageResult<BookCorrectionAuditVO> pageResultBookCorrectionAuditVO =
-        bookCorrectionService.listBookCorrectionAudit(request,
-                                                      Const.PAGE_NUMBER,
-                                                      Const.PAGE_SIZE,
-                                                      bookname,
-                                                      null,
-                                                      null);
+                bookCorrectionService.listBookCorrectionAudit(request,
+                        Const.PAGE_NUMBER,
+                        Const.PAGE_SIZE,
+                        bookname,
+                        null,
+                        null);
         map.put("bookCorrectionAudit", pageResultBookCorrectionAuditVO);
         // 图书评论审核
         PageParameter<BookUserCommentVO> pageParameter = new PageParameter<>();
@@ -753,7 +774,7 @@ public class PmphUserServiceImpl implements PmphUserService {
         bookUserCommentVO.setName(name.replaceAll(" ", ""));// 去除空格
         pageParameter.setParameter(bookUserCommentVO);
         PageResult<BookUserCommentVO> pageResultBookUserCommentVO =
-        bookUserCommentService.listBookUserCommentAdmin(pageParameter);
+                bookUserCommentService.listBookUserCommentAdmin(pageParameter);
         map.put("bookUserComment", pageResultBookUserCommentVO);
         // 选题申报
         PageParameter<TopicDeclarationVO> pageParameter3 = new PageParameter<>();
@@ -769,7 +790,7 @@ public class PmphUserServiceImpl implements PmphUserService {
         pageParameter3.setParameter(topicDeclarationVO);
         // 由主任受理
         if (pmphIdentity.getIsDirector()) {
-            PageParameter<TopicDirectorVO> pageParameterTopicDirectorVO = new PageParameter<>(1,100);
+            PageParameter<TopicDirectorVO> pageParameterTopicDirectorVO = new PageParameter<>(1, 100);
             PageResult<TopicDirectorVO> PageResultTopicDirectorVO =
                     topicService.listIsDirectorTopic(sessionPmphUser.getId(), pageParameterTopicDirectorVO);
             map.put("topicList", PageResultTopicDirectorVO);
@@ -777,24 +798,24 @@ public class PmphUserServiceImpl implements PmphUserService {
         // 由运维人员受理
         if (pmphIdentity.getIsOpts()) {
             PageParameter<TopicOPtsManagerVO> pageParameterTopicOPtsManagerVO =
-            new PageParameter<>(1,100);
+                    new PageParameter<>(1, 100);
             PageResult<TopicOPtsManagerVO> PageResultTopicOPtsManagerVO =
-            topicService.listIsOptsTopic(sessionPmphUser.getId(), pageParameterTopicOPtsManagerVO);
+                    topicService.listIsOptsTopic(sessionPmphUser.getId(), pageParameterTopicOPtsManagerVO);
             map.put("topicList", PageResultTopicOPtsManagerVO);
 
         }
         // 由编辑受理
         if (pmphIdentity.getIsEditor()) {
-            PageParameter<TopicEditorVO> pageParameterTopicEditorVO = new PageParameter<>(1,100);
+            PageParameter<TopicEditorVO> pageParameterTopicEditorVO = new PageParameter<>(1, 100);
             PageResult<TopicEditorVO> PageResultTopicEditorVO =
-            topicService.listIsEditor(sessionPmphUser.getId(), pageParameterTopicEditorVO);
+                    topicService.listIsEditor(sessionPmphUser.getId(), pageParameterTopicEditorVO);
             map.put("topicList", PageResultTopicEditorVO);
         }
         // 是否是系统管理员
         if (pmphIdentity.getIsAdmin()) {
             pageParameter3.setPageSize(100);
             PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO =
-            topicService.listMyTopic(progress, pageParameter3, null);
+                    topicService.listMyTopic(progress, pageParameter3, null);
             map.put("topicList", pageResultTopicDeclarationVO);
         }
 
@@ -812,7 +833,7 @@ public class PmphUserServiceImpl implements PmphUserService {
         }
         // 获取用户上次登录时间
         List<SysOperation> listSysOperation =
-        sysOperationService.getSysOperation(sessionPmphUser.getId());
+                sysOperationService.getSysOperation(sessionPmphUser.getId());
         Timestamp loginTime = DateUtil.getCurrentTime();
         if (!listSysOperation.isEmpty()) {
             loginTime = listSysOperation.get(0).getOperateDate();
@@ -826,7 +847,7 @@ public class PmphUserServiceImpl implements PmphUserService {
         map.put("pmphUser", sessionPmphUser);
         // 把用户角色存入map
         map.put("pmphRole", rolelist);
-        map.put("userPermission",userPermissionList);
+        map.put("userPermission", userPermissionList);
         // 把选题申报的当前身份存入map
         map.put("pmphIdentity", pmphIdentity);
         // 存入用户上次操作时间
@@ -836,10 +857,10 @@ public class PmphUserServiceImpl implements PmphUserService {
 
     @Override
     public PageResult<PmphEditorVO> listEditors(PageParameter<PmphEditorVO> pageParameter)
-    throws CheckedServiceException {
+            throws CheckedServiceException {
         if (ObjectUtil.isNull(pageParameter.getParameter().getDepartmentId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC,
-                                              CheckedExceptionResult.NULL_PARAM, "部门id为空");
+                    CheckedExceptionResult.NULL_PARAM, "部门id为空");
         }
         PageResult<PmphEditorVO> pageResult = new PageResult<>();
         Long departmentId = pageParameter.getParameter().getDepartmentId();
@@ -847,14 +868,14 @@ public class PmphUserServiceImpl implements PmphUserService {
         path = path + "-" + departmentId + "-";
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
         Integer total =
-        pmphUserDao.totalEditors(path, departmentId, pageParameter.getParameter().getRealName());
+                pmphUserDao.totalEditors(path, departmentId, pageParameter.getParameter().getRealName());
         if (total > 0) {
             List<PmphEditorVO> list =
-            pmphUserDao.listEditors(path,
-                                    departmentId,
-                                    pageParameter.getParameter().getRealName(),
-                                    pageParameter.getPageSize(),
-                                    pageParameter.getStart());
+                    pmphUserDao.listEditors(path,
+                            departmentId,
+                            pageParameter.getParameter().getRealName(),
+                            pageParameter.getPageSize(),
+                            pageParameter.getStart());
             pageResult.setRows(list);
         }
         pageResult.setTotal(total);
@@ -865,7 +886,7 @@ public class PmphUserServiceImpl implements PmphUserService {
     public PmphUser getPmphUser(String username) {
         if (StringUtil.isEmpty(username)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "用户名为空");
+                    CheckedExceptionResult.NULL_PARAM, "用户名为空");
         }
         PmphUser pmphUser = pmphUserDao.getPmphUser(username);
         return pmphUser;
@@ -873,10 +894,10 @@ public class PmphUserServiceImpl implements PmphUserService {
 
     @Override
     public List<PmphUser> listPmphUserByDepartmentId(Long departmentId)
-    throws CheckedServiceException {
+            throws CheckedServiceException {
         if (ObjectUtil.isNull(departmentId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC,
-                                              CheckedExceptionResult.NULL_PARAM, "部门id为空");
+                    CheckedExceptionResult.NULL_PARAM, "部门id为空");
         }
         return pmphUserDao.listPmphUserByDepartmentId(departmentId);
     }
@@ -886,11 +907,11 @@ public class PmphUserServiceImpl implements PmphUserService {
         PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
         if (ObjectUtil.isNull(pmphUser)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC,
-                                              CheckedExceptionResult.NULL_PARAM, "用户为空！");
+                    CheckedExceptionResult.NULL_PARAM, "用户为空！");
         }
         Long id = pmphUser.getId();
         PmphIdentity identity =
-        new PmphIdentity(pmphUser.getId(), pmphUser.getUsername(), pmphUser.getRealname());
+                new PmphIdentity(pmphUser.getId(), pmphUser.getUsername(), pmphUser.getRealname());
         identity.setIsAdmin(pmphUser.getIsAdmin());
         identity.setIsDirector(pmphUser.getIsDirector());
         List<PmphUser> list = new ArrayList<>();
@@ -909,7 +930,7 @@ public class PmphUserServiceImpl implements PmphUserService {
     public PmphUser getPmphUserByUsername(String username) throws CheckedServiceException {
         if (StringUtil.isEmpty(username)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "用户名为空！");
+                    CheckedExceptionResult.NULL_PARAM, "用户名为空！");
         }
         return pmphUserDao.getPmphUserByUsername(username);
     }
@@ -918,7 +939,7 @@ public class PmphUserServiceImpl implements PmphUserService {
     public PmphUser updateUser(PmphUser pmphUser) {
         if (ObjectUtil.isNull(pmphUser)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "用户属性为空时禁止更新用户");
+                    CheckedExceptionResult.NULL_PARAM, "用户属性为空时禁止更新用户");
         }
         pmphUserDao.update(pmphUser);
         return pmphUser;
