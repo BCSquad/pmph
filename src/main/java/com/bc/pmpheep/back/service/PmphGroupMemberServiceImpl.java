@@ -577,13 +577,15 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 		    pmphGroupMemberDao.listPmphGroupMembers(pmphGroup.getId());
 		    List<Long> groupUserIdList = new ArrayList<Long>(pmphGroupMembers.size());
 		    for (PmphGroupMember pmphGroupMember : pmphGroupMembers) {
-		        groupUserIdList.add(pmphGroupMember.getUserId());
+		    	if(pmphGroupMember.getIsWriter()){
+					groupUserIdList.add(pmphGroupMember.getUserId());
+				}
 		    }
 		    // 通过遍历把不存在的成员添加到list中
 		    for (TextbookDecVO textbookDecVO : textbookDecVOs) {
 		        Long userId = textbookDecVO.getUserId();
 		        if (!groupUserIdList.contains(userId)) {
-		            list.add(new PmphGroupMember(userId, Const.TRUE,textbook.getMaterialId(),textbookId));
+		            list.add(new PmphGroupMember(userId, Const.TRUE,textbook.getMaterialId(),textbookId,textbookDecVO.getRealname()));
 		        }
 		    }
 		    if (CollectionUtil.isEmpty(list)) {
