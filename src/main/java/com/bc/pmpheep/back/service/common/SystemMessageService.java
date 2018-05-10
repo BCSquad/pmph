@@ -1017,7 +1017,7 @@ public final class SystemMessageService {
 		// 给学校管理员发送消息
 		if (material.getIsAllTextbookPublished()) {// 所有都发布了
 			String orgMsg = "《<font color='red'>" + material.getMaterialName()
-					+ "</font>》的编写团队遴选已结束，贵校共[{sum}]位老师当选，名单如下：";
+					+ "</font>》的编写团队遴选已结束，贵校共【sum】位老师当选，名单如下：";
 			// 根据教材Id查询对应的书籍集合
 			List<Textbook> textbooks = textbookService.getTextbookByMaterialId(material.getId());
 			List<Long> bookIds = new ArrayList<Long>();
@@ -1078,7 +1078,7 @@ public final class SystemMessageService {
 						}
 						sum++;
 					}
-					msgContent.replace("{sum}", sum+"");
+					msgContent.replace("sum", sum+"");
 					// 存入消息主体
 					Message message = new Message(msgContent);
 					message = messageService.add(message);
