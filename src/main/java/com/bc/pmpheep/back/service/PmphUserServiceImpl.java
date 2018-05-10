@@ -598,7 +598,9 @@ public class PmphUserServiceImpl implements PmphUserService {
                             }
                         }
                     }
-                    if (textbook.getPlanningEditor().intValue() == pmphUserId.intValue()) {
+                    if(textbook.getPlanningEditor() == null){
+                        posotion = null;
+                    }else if (  textbook.getPlanningEditor().intValue()== pmphUserId.intValue()) {
                         posotion += (posotion == null) ? "策划编辑" : ",策划编辑";
                     }
                     pmphUserManagerVO.setPosition(posotion == null ? "无" : posotion);

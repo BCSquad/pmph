@@ -35,7 +35,7 @@ public class WriterUserCertificationServiceTest extends BaseTest {
         Long[] idsLongs = { 1L, 2L };
         Assert.assertTrue("修改失败",
                           writerUserCertificationService.updateWriterUserCertificationProgressByUserId(progress,
-                                                                                                       idsLongs, null) >= 0);
+                                                                                                       idsLongs, "",null) >= 0);
     }
 
     @Test

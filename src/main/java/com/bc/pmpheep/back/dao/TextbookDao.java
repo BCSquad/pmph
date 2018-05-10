@@ -201,4 +201,7 @@ public interface TextbookDao {
     Integer updatRevisionTimesByTextBookId(@Param("number") Integer number,
     @Param("textBookId") Long textBookId);
 
+    Integer listBookPositionTotal_up1(PageParameter<Map<String, Object>> pageParameter);
+
+    List<BookPositionVO> listBookPosition_up1(PageParameter<Map<String, Object>> pageParameter);
 }
