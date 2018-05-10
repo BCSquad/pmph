@@ -380,6 +380,30 @@
 		</foreach>
 	</select>
 
+	<!-- 根据书籍获取当选了该书籍的人员所属机构 修改-->
+	<select id="listBeElectedOrgByBookIds_up1" parameterType="list"
+			resultType="Org">
+		SELECT
+		a.*
+		FROM
+		org a
+		left join writer_user  wu on wu.org_id = a.id
+		LEFT JOIN declaration b ON b.user_id = wu.id
+		LEFT JOIN dec_position c ON c.declaration_id = b.id
+		LEFT JOIN textbook d ON d.id = c.textbook_id
+		where
+		b.is_staging =false and
+		b.online_progress != 2
+		and c.chosen_position in (1, 2,4,8,9,10,12)
+		and b.id is not null and c.id is not null and
+		d.id is not null
+		and d.id in
+		<foreach item="bookId" collection="list" open="(" separator=","
+				 close=")">
+			#{bookId}
+		</foreach>
+	</select>
+
 	<!-- 所有学校导出 -->
 	<select id="listAllOrgToExcel" resultType="OrgExclVO">
 		SELECT
