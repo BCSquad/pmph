@@ -651,7 +651,7 @@
 		LEFT JOIN
 		textbook e
 		ON e.material_id = m.id
-		LEFT JOIN pmph_user u ON m.director
+		LEFT JOIN pmph_user u ON m.founder_id
 		= u.id
 		left join pmph_department pdu on pdu.id = u.department_id
 		left join (select t1.* from (select t1.gmt_create,t1.material_id from cms_content t1
@@ -715,7 +715,7 @@
 		LEFT JOIN
 		textbook e ON e.material_id = m.id
 		LEFT
-		JOIN pmph_user u ON m.director =
+		JOIN pmph_user u ON m.founder_id =
 		u.id
 		left join pmph_department pdu on pdu.id = u.department_id
 		left join (select t1.* from (select t1.gmt_create,t1.material_id from cms_content t1
@@ -781,7 +781,7 @@
 		LEFT JOIN
 		textbook e
 		ON e.material_id = m.id
-		LEFT JOIN pmph_user u ON m.director
+		LEFT JOIN pmph_user u ON m.founder_id
 		= u.id
 		left join pmph_department pdu on pdu.id = u.department_id
 		left join (select t1.* from (select t1.gmt_create,t1.material_id from cms_content t1
@@ -844,7 +844,7 @@
 		LEFT JOIN
 		textbook e ON e.material_id = m.id
 		LEFT
-		JOIN pmph_user u ON m.director =
+		JOIN pmph_user u ON m.founder_id =
 		u.id
 		left join pmph_department pdu on pdu.id = u.department_id
 		left join (select t1.* from (select t1.gmt_create,t1.material_id from cms_content t1
@@ -922,7 +922,7 @@
 		LEFT JOIN
 		textbook e
 		ON e.material_id = m.id
-		LEFT JOIN pmph_user u ON m.director
+		LEFT JOIN pmph_user u ON m.founder_id
 		= u.id
 		left join pmph_department pdu on pdu.id = u.department_id
 		left join (select t1.* from (select t1.gmt_create,t1.material_id from cms_content t1
@@ -981,7 +981,7 @@
 		LEFT JOIN
 		textbook e
 		ON e.material_id = m.id
-		LEFT JOIN pmph_user u ON m.director
+		LEFT JOIN pmph_user u ON m.founder_id
 		= u.id
 		left join pmph_department pdu on pdu.id = u.department_id
 		left join (select t1.* from (select t1.gmt_create,t1.material_id from cms_content t1
