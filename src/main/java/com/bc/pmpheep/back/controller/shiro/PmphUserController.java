@@ -111,13 +111,21 @@ public class PmphUserController {
 			HttpServletRequest request, 
 			PmphUser pmphUser,
 			@RequestParam(value="file", required = false) String newAvatar) {
+		ResponseBean rb = new ResponseBean();
 		try {
-			return new ResponseBean(userService.updatePersonalData(request,pmphUser, newAvatar));
+			pmphUser.setId(Long.parseLong(request.getParameter("id")));
+			pmphUser.setRealname(request.getParameter("realname"));
+			pmphUser.setHandphone(request.getParameter("handphone"));
+			pmphUser.setEmail(request.getParameter("email"));
+			rb.setData(userService.updatePersonalData(request,pmphUser, newAvatar));
 		} catch (IOException e) {
-			return new ResponseBean("文件上传失败");
+			rb.setData("文件上传失败");
+			rb.setCode(0);
 		} catch (Exception e) {
-			return new ResponseBean(e.getMessage());
+			rb.setData(e.getMessage());
+			rb.setCode(0);
 		}
+		return rb;
 	}
 
 	@ResponseBody
