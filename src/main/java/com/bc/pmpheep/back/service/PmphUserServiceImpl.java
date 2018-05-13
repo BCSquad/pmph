@@ -144,7 +144,7 @@ public class PmphUserServiceImpl implements PmphUserService {
         }else{
         	 pmphUser.setAvatar(null);
         }
-        pmphUserDao.update(pmphUser);
+        Integer update = pmphUserDao.update(pmphUser);
         return true;
     }
 
