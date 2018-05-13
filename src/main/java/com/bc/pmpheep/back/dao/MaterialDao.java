@@ -115,6 +115,7 @@ public interface MaterialDao {
      * 
      */
     List<MaterialListVO> listMaterialEnd(PageParameter<MaterialListVO> pageParameter);
+    List<MaterialListVO> listMaterialOrEndSignUpEnd(PageParameter<MaterialListVO> pageParameter);
 
     /**
      * 
@@ -126,6 +127,8 @@ public interface MaterialDao {
      * 
      */
     Integer listMaterialEndTotal(PageParameter<MaterialListVO> pageParameter);
+    Integer listMaterialOrEndSignUpEndTotal(PageParameter<MaterialListVO> pageParameter);
+
 
     /**
      * 获取用户在该教材是几本书的策划编辑

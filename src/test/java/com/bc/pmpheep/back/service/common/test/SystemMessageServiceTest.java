@@ -2,7 +2,11 @@ package com.bc.pmpheep.back.service.common.test;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.annotation.Resource;
+
+import jdk.nashorn.internal.runtime.regexp.RegExp;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +21,7 @@ import com.bc.pmpheep.test.BaseTest;
  * @CreateDate 2017年11月20日 上午11:28:44
  *
  **/
-public class SystemMessageServiceTest extends BaseTest {
+public class SystemMessageServiceTest  {
 	Logger logger = LoggerFactory.getLogger(SystemMessageServiceTest.class);
 
 	@Resource
@@ -102,6 +106,18 @@ public class SystemMessageServiceTest extends BaseTest {
 	public void testSendWhenInformalEssayAudit() throws CheckedServiceException, IOException {
 		systemMessageService.sendWhenInformalEssayAudit(5L, true);
 
+	}
+
+	@Test
+	public void TestReplace(){
+		String str = "《<font color='red'>1212</font>》的编写团队遴选已结束，贵校共sum位老师当选，名单如下：</br>[<font color='red'>王欣然</font>] - 1 - 编委、数字编委</br>[<font color='red'>张臻</font>] - 2 - 编委</br>[<font color='red'>钟丹丹1方法</font>] - 1 - 编委、数字编委</br>[<font color='red'>张成明</font>] - 2 - 主编</br>[<font color='red'>张成明</font>] - 3 - 编委、数字编委</br>[<font color='red'>钱聪</font>] - 3 - 第一主编、" +
+				"数字编委</br>[<font color='red'>冯浩</font>] - 1 - 第一主编</br>[<font color='red'>冯浩</font>] - " +
+				"2 - 第一主编</br>[<font color='red'>冯浩</font>] - 3 - 编委、数字编委";
+		Pattern r = Pattern.compile("sum");
+		Matcher m = r.matcher(str);
+		str = m.replaceAll("1111");
+
+		System.out.println(str);
 	}
 	//
 	// @Test
