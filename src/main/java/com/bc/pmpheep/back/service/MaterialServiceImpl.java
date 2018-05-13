@@ -781,6 +781,11 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			if (total > 0) {
 				list = materialDao.listMaterialSignUpEnd(pageParameter);
 			}
+		}else if ("已结束".equals(state)) {
+			total = materialDao.listMaterialOrEndSignUpEndTotal(pageParameter);
+			if (total > 0) {
+				list = materialDao.listMaterialOrEndSignUpEnd(pageParameter);
+			}
 		}else {
 			if (!StringUtil.isEmpty(state)) {
 				switch (state) {
@@ -796,11 +801,6 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 					break;
 				case "未结束":
 					pageParameter.getParameter().setIsAllTextbookPublished(false);//是否所有书籍已公布
-					pageParameter.getParameter().setIsForceEnd(false);//是否被强制结束
-					pageParameter.getParameter().setIsPublished(null);//是否已发布到前台
-					break;
-				case "已结束":
-					pageParameter.getParameter().setIsAllTextbookPublished(true);//是否所有书籍已公布
 					pageParameter.getParameter().setIsForceEnd(false);//是否被强制结束
 					pageParameter.getParameter().setIsPublished(null);//是否已发布到前台
 					break;

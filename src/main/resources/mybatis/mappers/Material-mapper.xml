@@ -1060,4 +1060,120 @@
 		AND
 		m.`is_force_end` = FALSE
 	</select>
+		<!--已结束-->
+	<select id="listMaterialOrEndSignUpEnd" parameterType="PageParameter"
+			resultType="MaterialListVO">
+		SELECT DISTINCT m.id,
+		m.material_name,
+		m.deadline,
+		m.actual_deadline,
+		m.director,
+		m.is_force_end,
+		m.is_all_textbook_published,
+		m.is_deleted,
+		m.is_published,
+		m.founder_id,
+		m.project_permission,
+		m.plan_permission,
+		t1.gmt_create,
+		pdu.dp_name
+		FROM
+		material m
+		LEFT JOIN
+		material_contact c ON m.id = c.material_id
+		LEFT JOIN
+		material_project_editor p ON p.material_id = m.id
+		LEFT JOIN
+		textbook e
+		ON e.material_id = m.id
+		LEFT JOIN pmph_user u ON m.director
+		= u.id
+		left join pmph_department pdu on pdu.id = u.department_id
+		left join (select t1.* from (select t1.gmt_create,t1.material_id from cms_content t1
+		where t1.category_id = 3
+		group by t1.material_id) t1 GROUP BY t1.material_id) t1 on t1.material_id = m.id
+		WHERE
+		m.is_deleted = FALSE
+		<if test="parameter.isMy != null">
+			AND (m.director = #{parameter.userId} OR p.editor_id =
+			#{parameter.userId}
+			OR e.planning_editor = #{parameter.userId} OR
+			m.founder_id = #{parameter.userId})
+		</if>
+		<if test="parameter.materialName != null and parameter.materialName != ''">
+			AND m.material_name LIKE
+			concat('%',#{parameter.materialName},'%')
+		</if>
+		<if
+				test="parameter.contactUserName != null and parameter.contactUserName !=''">
+			AND c.contact_user_name LIKE
+			concat('%',#{parameter.contactUserName},'%')
+		</if>
+		<if test="parameter.state != null and parameter.state = '已结束'">
+			AND ( (m.is_all_textbook_published = 1 and m.is_force_end = 1 And m.actual_deadline &lt; curdate()) OR
+			(m.is_all_textbook_published =1 OR m.is_force_end = 1 AND m.is_published = 1))
+		</if>
+		ORDER BY
+		t1.gmt_create DESC,
+		m.gmt_create DESC
+		<if test="pageSize != null">
+			LIMIT #{start} , #{pageSize}
+		</if>
+	</select>
+
+	<select id="listMaterialOrEndSignUpEndTotal" parameterType="PageParameter"
+			resultType="java.lang.Integer">
+		select COUNT(*) from (
+		SELECT DISTINCT m.id,
+		m.material_name,
+		m.deadline,
+		m.actual_deadline,
+		m.director,
+		m.is_force_end,
+		m.is_all_textbook_published,
+		m.is_deleted,
+		m.is_published,
+		m.founder_id,
+		m.project_permission,
+		m.plan_permission,
+		t1.gmt_create,
+		pdu.dp_name
+		FROM
+		material m
+		LEFT JOIN
+		material_contact c ON m.id = c.material_id
+		LEFT JOIN
+		material_project_editor p ON p.material_id = m.id
+		LEFT JOIN
+		textbook e
+		ON e.material_id = m.id
+		LEFT JOIN pmph_user u ON m.director
+		= u.id
+		left join pmph_department pdu on pdu.id = u.department_id
+		left join (select t1.* from (select t1.gmt_create,t1.material_id from cms_content t1
+		where t1.category_id = 3
+		group by t1.material_id) t1 GROUP BY t1.material_id) t1 on t1.material_id = m.id
+		WHERE
+		m.is_deleted = FALSE
+		<if test="parameter.isMy != null">
+			AND (m.director = #{parameter.userId} OR p.editor_id =
+			#{parameter.userId}
+			OR e.planning_editor = #{parameter.userId} OR
+			m.founder_id = #{parameter.userId})
+		</if>
+		<if test="parameter.materialName != null and parameter.materialName != ''">
+			AND m.material_name LIKE
+			concat('%',#{parameter.materialName},'%')
+		</if>
+		<if
+				test="parameter.contactUserName != null and parameter.contactUserName !=''">
+			AND c.contact_user_name LIKE
+			concat('%',#{parameter.contactUserName},'%')
+		</if>
+		<if test="parameter.state != null and parameter.state = '已结束'">
+			AND ( (m.is_all_textbook_published = 1 and m.is_force_end = 1 And m.actual_deadline &lt; curdate()) OR
+			(m.is_all_textbook_published =1 OR m.is_force_end = 1 AND m.is_published = 1))
+		</if>
+		) tt
+	</select>
 </mapper>
