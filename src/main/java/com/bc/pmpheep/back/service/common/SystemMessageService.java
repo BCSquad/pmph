@@ -3,6 +3,8 @@ package com.bc.pmpheep.back.service.common;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -518,14 +520,14 @@ public final class SystemMessageService {
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
-	public void sendWhenManagerCertificationAudit(List<Long> orguserIds, boolean isPass)
+	public void sendWhenManagerCertificationAudit(List<Long> orguserIds, boolean isPass,String backReason)
 			throws CheckedServiceException, IOException {
 		if (null == orguserIds || orguserIds.size() == 0) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.SCHOOL_ADMIN_CHECK,
 					CheckedExceptionResult.NULL_PARAM, "认证的管理员为空");
 		}
 		// 存入消息主体
-		String msgContent = "抱歉，您提交的管理员认证资料已被退回，请您修改后重试";// 退回
+		String msgContent = "抱歉，您提交的管理员认证资料已被退回，退回原因："+backReason+"，请您修改后重试";// 退回
 		if (isPass) {// 通过
 			msgContent = "恭喜！您提交的管理员认证资料已通过审核";
 		}
@@ -839,12 +841,12 @@ public final class SystemMessageService {
 				+ "</font>》提交的申报纸质表被退回，请您核对后重试";
 		if (isPass) {// 收到
 			orgMsgContent = "您好，人民卫生出版社已收到贵校老师[<font color='red'>" + declaration.getRealname()
-					+ "</font>]在《<font color='red'>" + material.getMaterialName() + "</font>》提交的申报纸质表";
-			writerMsgContent = "您好，人民卫生出版社已收到您在《<font color='red'>" + material.getMaterialName()
-					+ "</font>》提交的申报纸质表，感谢您的参与，请耐心等待遴选结果";
+					+ "</font>]提交的《<font color='red'>" + material.getMaterialName() + "</font>》申报纸质表";
+			writerMsgContent = "您好，人民卫生出版社已收到您提交的《<font color='red'>" + material.getMaterialName()
+					+ "</font>》申报纸质表，感谢您的参与，请耐心等待遴选结果";
 		}else{//取消收到
-			orgMsgContent = "抱歉，贵校老师[<font color='red'>" + declaration.getRealname() + "</font>]在《<font color='red'>"
-					+ material.getMaterialName() + "</font>》提交的申报纸质表被退回";
+			orgMsgContent = "抱歉，贵校老师提交的[<font color='red'>" + declaration.getRealname() + "</font>]在《<font color='red'>"
+					+ material.getMaterialName() + "</font>》申报纸质表被退回";
 			writerMsgContent ="抱歉，您在《<font color='red'>" + material.getMaterialName()
 			+ "</font>》提交的申报纸质表被退回，请您核对后重试";
 		}
@@ -1017,7 +1019,7 @@ public final class SystemMessageService {
 		// 给学校管理员发送消息
 		if (material.getIsAllTextbookPublished()) {// 所有都发布了
 			String orgMsg = "《<font color='red'>" + material.getMaterialName()
-					+ "</font>》的编写团队遴选已结束，贵校共[{sum}]位老师当选，名单如下：";
+					+ "</font>》的编写团队遴选已结束，贵校共sum位老师当选，名单如下：";
 			// 根据教材Id查询对应的书籍集合
 			List<Textbook> textbooks = textbookService.getTextbookByMaterialId(material.getId());
 			List<Long> bookIds = new ArrayList<Long>();
@@ -1078,7 +1080,9 @@ public final class SystemMessageService {
 						}
 						sum++;
 					}
-					msgContent.replace("{sum}", String.valueOf(sum));
+					Pattern r = Pattern.compile("sum");
+					Matcher m = r.matcher(msgContent);
+					msgContent = m.replaceAll(sum+"");
 					// 存入消息主体
 					Message message = new Message(msgContent);
 					message = messageService.add(message);

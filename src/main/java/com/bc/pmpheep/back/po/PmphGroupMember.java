@@ -193,5 +193,12 @@ public class PmphGroupMember implements Serializable {
 		this.materialId=materialId;
 		this.textbookId=textbookId;
 	}
-
+	public PmphGroupMember(Long userId, Boolean isWriter,Long materialId,Long textbookId,String displayName) {
+		super();
+		this.userId = userId;
+		this.isWriter = isWriter;
+		this.materialId=materialId;
+		this.textbookId=textbookId;
+		this.displayName=displayName;
+	}
 }
