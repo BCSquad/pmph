@@ -367,14 +367,16 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             List<UserMessage> sendedList = userMessageDao.getMessageByMsgId(message.getId());
             // 已发送消息是否撤回
             Boolean isWithdraw = false;
+            //消息是否已撤回
+
             for (UserMessage userMessage : userMessageList) {
                 boolean flag = false;// 没有发送
                 for (UserMessage uMessage : sendedList) {
-                    if (!isWithdraw) {
-                        if (uMessage.getIsWithdraw()) {// 判断消息是否撤回
-                            isWithdraw = true;
-                        }
-                    }
+//                    if (!isWithdraw) {
+//                        if (uMessage.getIsWithdraw()) {// 判断消息是否撤回
+//                            isWithdraw = true;
+//                        }
+//                    }
                     if (userMessage.getReceiverId().longValue() == uMessage.getReceiverId()
                                                                            .longValue()
                         && userMessage.getReceiverType().shortValue() == uMessage.getReceiverType()
@@ -389,7 +391,8 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             }
             userMessageList = temp;
             // 补发，取消撤回当前已发送的消息
-            if (isWithdraw) {
+            //消息是否已撤回
+            if (userMessageDao.getMessageIsWithDraw(message.getId())>0) {
                 this.updateCancelToWithdraw(message.getId());
             }
         }
