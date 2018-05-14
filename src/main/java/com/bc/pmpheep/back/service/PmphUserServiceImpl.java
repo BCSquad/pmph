@@ -157,15 +157,15 @@ public class PmphUserServiceImpl implements PmphUserService {
      * </pre>
      */
     private String saveFileToMongoDB(String file, HttpServletRequest request) throws IOException {
-        String groupImage = RouteUtil.DEFAULT_GROUP_IMAGE;
+        String userAvatar = RouteUtil.DEFAULT_USER_AVATAR;
         // 添加附件到MongoDB表中
         if (!StringUtil.isEmpty(file)) {
             File f = FileUpload.getFileByFilePath(request.getSession().getServletContext().getRealPath("/") + file);
             if (f.isFile()) {
                 // 循环获取file数组中得文件
                 if (StringUtil.notEmpty(f.getName())) {
-                    groupImage = fileService.saveLocalFile(f, FileType.GROUP_FILE, 0);// 上传文件到MongoDB
-                    if (StringUtil.isEmpty(groupImage)) {
+                    userAvatar = fileService.saveLocalFile(f, FileType.GROUP_FILE, 0);// 上传文件到MongoDB
+                    if (StringUtil.isEmpty(userAvatar)) {
                         throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                 CheckedExceptionResult.FILE_UPLOAD_FAILED, "文件上传失败!");
                     }
@@ -174,7 +174,7 @@ public class PmphUserServiceImpl implements PmphUserService {
                 FileUtil.delFile(file);// 删除本地临时文件
             }
         }
-        return groupImage;
+        return userAvatar;
     }
 
     /**
