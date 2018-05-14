@@ -152,8 +152,9 @@ WriterUserCertificationService {
                 throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                                   CheckedExceptionResult.NULL_PARAM, "用户信息未提交，不能审核");
             }
+           // || Const.WRITER_PROGRESS_3 == writerUserCertification.getProgress()
             if (Const.WRITER_PROGRESS_2 == writerUserCertification.getProgress()
-                || Const.WRITER_PROGRESS_3 == writerUserCertification.getProgress()) {
+                ) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                                   CheckedExceptionResult.NULL_PARAM, "已审核的用户不能再次审核");
             }
