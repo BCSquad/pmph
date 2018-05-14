@@ -183,7 +183,7 @@ public class GroupController {
 		}.getType();
 		List<PmphGroupMember> list = gson.fromJson(pmphGroupMembers, type);
 		String sessionId = CookiesUtil.getSessionId(request);
-		return new ResponseBean(pmphGroupMemberService.addPmphGroupMembers(groupId,list));
+		return new ResponseBean(pmphGroupMemberService.addPmphGroupMembers(groupId, list, sessionId));
 
 	}
 
