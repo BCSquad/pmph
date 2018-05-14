@@ -218,6 +218,18 @@
 		select * from `user_message` t where t.`msg_id` = #{msgId} AND t.`is_read`=1;
 	</select>
 
+	<!-- 根据消息id 判断是否已撤回 -->
+	<select id="getMessageIsWithDraw" parameterType="java.lang.String"
+			resultType="int">
+		SELECT
+	count(id)
+FROM
+	`user_message` t
+WHERE
+	t.`msg_id` = #{msgId}
+AND t.is_withdraw = 1;
+	</select>
+
 	<!-- 批量插入 UserMessage -->
 	<insert id="addUserMessageBatch" parameterType="java.util.List">
 		<selectKey resultType="java.lang.Long" order="AFTER"

@@ -113,10 +113,6 @@ public class PmphUserController {
 			@RequestParam(value="file", required = false) String newAvatar) {
 		ResponseBean rb = new ResponseBean();
 		try {
-			pmphUser.setId(Long.parseLong(request.getParameter("id")));
-			pmphUser.setRealname(request.getParameter("realname"));
-			pmphUser.setHandphone(request.getParameter("handphone"));
-			pmphUser.setEmail(request.getParameter("email"));
 			rb.setData(userService.updatePersonalData(request,pmphUser, newAvatar));
 		} catch (IOException e) {
 			rb.setData("文件上传失败");

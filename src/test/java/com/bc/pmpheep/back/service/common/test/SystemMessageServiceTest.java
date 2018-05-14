@@ -1,27 +1,26 @@
 package com.bc.pmpheep.back.service.common.test;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.annotation.Resource;
-
-import jdk.nashorn.internal.runtime.regexp.RegExp;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.test.annotation.Rollback;
 import com.bc.pmpheep.back.service.common.SystemMessageService;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.test.BaseTest;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.test.annotation.Rollback;
+
+import javax.annotation.Resource;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author MrYang
  * @CreateDate 2017年11月20日 上午11:28:44
  *
  **/
-public class SystemMessageServiceTest  {
+public class SystemMessageServiceTest extends BaseTest  {
 	Logger logger = LoggerFactory.getLogger(SystemMessageServiceTest.class);
 
 	@Resource
