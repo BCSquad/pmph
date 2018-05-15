@@ -30,6 +30,8 @@ public interface OrgService {
      */
     List<Org> listBeElectedOrgByBookIds(List<Long> bookIds) throws CheckedServiceException;
 
+    List<Org> listBeElectedOrgByBookIds_up1(List<Long> bookIds)throws CheckedServiceException;
+
     /**
      * 
      * @param org 实体对象
@@ -131,4 +133,6 @@ public interface OrgService {
      * </pre>
      */
     List<OrgExclVO> listAllOrgToExcel(String chooseOrg) throws CheckedServiceException;
+
+
 }

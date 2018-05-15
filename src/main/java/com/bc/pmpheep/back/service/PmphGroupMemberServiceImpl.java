@@ -577,13 +577,15 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 		    pmphGroupMemberDao.listPmphGroupMembers(pmphGroup.getId());
 		    List<Long> groupUserIdList = new ArrayList<Long>(pmphGroupMembers.size());
 		    for (PmphGroupMember pmphGroupMember : pmphGroupMembers) {
-		        groupUserIdList.add(pmphGroupMember.getUserId());
+		    	if(pmphGroupMember.getIsWriter()){
+					groupUserIdList.add(pmphGroupMember.getUserId());
+				}
 		    }
 		    // 通过遍历把不存在的成员添加到list中
 		    for (TextbookDecVO textbookDecVO : textbookDecVOs) {
 		        Long userId = textbookDecVO.getUserId();
 		        if (!groupUserIdList.contains(userId)) {
-		            list.add(new PmphGroupMember(userId, Const.TRUE,textbook.getMaterialId(),textbookId));
+		            list.add(new PmphGroupMember(userId, Const.TRUE,textbook.getMaterialId(),textbookId,textbookDecVO.getRealname()));
 		        }
 		    }
 		    if (CollectionUtil.isEmpty(list)) {
@@ -600,32 +602,47 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
     }
 
 	@Override
-	public Integer addPmphGroupMembers(Long groupId,List<PmphGroupMember> pmphGroupMembers) throws CheckedServiceException {
+	public Integer addPmphGroupMembers(Long groupId, List<PmphGroupMember> pmphGroupMembers, String sessionId) throws CheckedServiceException {
 		if(null == pmphGroupMembers || pmphGroupMembers.size() == 0 ) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-    				CheckedExceptionResult.ILLEGAL_PARAM, "参数为空");
+    				CheckedExceptionResult.ILLEGAL_PARAM, "请选择用户");
 		}
-		for(PmphGroupMember pmphGroupMember: pmphGroupMembers) {
-			Boolean isWriter = pmphGroupMember.getIsWriter();
-			isWriter = (isWriter == null || !isWriter) ? false:true;
-			PmphGroupMemberVO member = getPmphGroupMemberByMemberId(groupId,pmphGroupMember.getUserId(),isWriter);
-			if(null== member || member.getId() == null ) {
-				if(StringUtil.isEmpty(pmphGroupMember.getDisplayName())) {
-					if(isWriter) {
-						pmphGroupMember.setDisplayName(writerUserService.get(pmphGroupMember.getUserId()).getRealname());
-					}else {
-						pmphGroupMember.setDisplayName(pmphUserService.get(pmphGroupMember.getUserId()).getRealname());
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		PmphGroupMemberVO currentUser = new PmphGroupMemberVO();
+
+		if (!pmphUser.getIsAdmin()) {
+			Long userId = pmphUser.getId();
+			currentUser = pmphGroupMemberService.getPmphGroupMemberByMemberId(groupId, userId, false);
+		}
+
+		if (pmphUser.getIsAdmin() || currentUser.getIsFounder()
+				|| currentUser.getIsAdmin()) {// 超级管理员、小组创建者、小组管理者才可以邀请新成员
+			for(PmphGroupMember pmphGroupMember: pmphGroupMembers) {
+				Boolean isWriter = pmphGroupMember.getIsWriter();
+				isWriter = (isWriter == null || !isWriter) ? false:true;
+				PmphGroupMemberVO member = getPmphGroupMemberByMemberId(groupId,pmphGroupMember.getUserId(),isWriter);
+				if(null== member || member.getId() == null ) {
+					if(StringUtil.isEmpty(pmphGroupMember.getDisplayName())) {
+						if(isWriter) {
+							pmphGroupMember.setDisplayName(writerUserService.get(pmphGroupMember.getUserId()).getRealname());
+						}else {
+							pmphGroupMember.setDisplayName(pmphUserService.get(pmphGroupMember.getUserId()).getRealname());
+						}
 					}
+					pmphGroupMember.setGroupId(groupId);
+					this.addPmphGroupMember(pmphGroupMember);
+				}else{
+					PmphGroupMember reUseMember = new PmphGroupMember ();
+					reUseMember.setId(member.getId());
+					reUseMember.setIsDeleted(false);
+					pmphGroupMemberDao.updatePmphGroupMember(reUseMember);
 				}
-				pmphGroupMember.setGroupId(groupId);
-				this.addPmphGroupMember(pmphGroupMember);
-			}else{
-				PmphGroupMember reUseMember = new PmphGroupMember ();
-				reUseMember.setId(member.getId());
-				reUseMember.setIsDeleted(false);
-				pmphGroupMemberDao.updatePmphGroupMember(reUseMember);
 			}
+		} else {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+					CheckedExceptionResult.ILLEGAL_PARAM, "该用户没有此操作权限");
 		}
+
 		return pmphGroupMembers.size();
 	}
 

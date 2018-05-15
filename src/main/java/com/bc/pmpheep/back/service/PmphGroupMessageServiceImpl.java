@@ -259,7 +259,7 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 		if (ObjectUtil.isNull(user)) {
 			pageResult.setTag("no");
 		} else {
-			pageResult.setTag("yes");
+			pageResult.setTag(user.getDisplayName());
 		}
 		pageResult.setTotal(total);
 		return pageResult;

@@ -183,7 +183,7 @@ public class GroupController {
 		}.getType();
 		List<PmphGroupMember> list = gson.fromJson(pmphGroupMembers, type);
 		String sessionId = CookiesUtil.getSessionId(request);
-		return new ResponseBean(pmphGroupMemberService.addPmphGroupMembers(groupId,list));
+		return new ResponseBean(pmphGroupMemberService.addPmphGroupMembers(groupId, list, sessionId));
 
 	}
 
@@ -205,8 +205,6 @@ public class GroupController {
 	@RequestMapping(value = "/update/pmphGroupDetail", method = RequestMethod.PUT)
 	public ResponseBean pmphGroupDetail(String file, PmphGroup pmphGroup, HttpServletRequest request) {
 		try {
-			pmphGroup.setId(Long.parseLong(request.getParameter("groupId")));
-			pmphGroup.setGroupName(request.getParameter("groupName"));
 			return new ResponseBean(pmphGroupService.updatePmphGroupOnGroup(file, pmphGroup, request));
 		} catch (IOException e) {
 			return new ResponseBean(e.getMessage());
@@ -461,6 +459,7 @@ public class GroupController {
 			List<PmphGroupMember> list = gson.fromJson(pmphGroupMembers, type);
 			return new ResponseBean(pmphGroupService.addEditorSelcetionGroup(sessionId, list, textbookId));
 		} catch (Exception e) {
+		    e.printStackTrace();
 			return new ResponseBean(e);
 		}
 	}

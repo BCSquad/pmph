@@ -323,12 +323,10 @@
 			<if test="authUserId != null">
 				auth_user_id=#{authUserId},
 			</if>
-			<if test="authDate == null ">
-				auth_date=#{authDate},
-			</if>
 			<if test="authDate != null ">
-				auth_date=#{authDate},
+				auth_date=str_to_date(#{authDate}, '%Y-%m-%d %H:%i:%s'),
 			</if>
+
 			<if test="isDeleted != null">
 				is_deleted=#{isDeleted},
 			</if>
@@ -435,6 +433,7 @@
 		cc.`is_promote`,
 		cc.`is_staging`,
 		cc.`is_material_entry`,
+		cc.author_type,
 		cc.`author_id`,
 		CASE
 		WHEN cc.author_type = 2 THEN
