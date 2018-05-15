@@ -187,7 +187,7 @@ public class PmphUserServiceImpl implements PmphUserService {
     public PmphUser add(PmphUser user) throws CheckedServiceException {
         if (StringUtil.isEmpty(user.getUsername())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "用户名为空时禁止新增用户");
+                    CheckedExceptionResult.NULL_PARAM, "用户名为空时禁止新增用户");
         }
         if (StringUtil.isEmpty(user.getPassword())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
@@ -470,6 +470,29 @@ public class PmphUserServiceImpl implements PmphUserService {
             }
         }
         return user;
+    }
+
+    @Override
+    public PmphUser login(String openid) throws CheckedServiceException {
+        PmphUser user = pmphUserDao.getByOpenid(openid);
+        // 密码匹配的工作交给 Shiro 去完成
+        if (ObjectUtil.isNull(user)) {
+            // 因为缓存切面的原因,在这里就抛出用户名不存在的异常
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                    CheckedExceptionResult.NULL_PARAM, "未找到绑定的微信信息！");
+        } else {
+            if (user.getIsDisabled()) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                        CheckedExceptionResult.ILLEGAL_PARAM,
+                        "用户已经被禁用，请联系管理员启用该账号");
+            }
+        }
+        return user;
+    }
+
+    @Override
+    public int updateUserOpenid(String openid, String username) {
+        return pmphUserDao.updateUserOpenid(openid, username);
     }
 
     /**
