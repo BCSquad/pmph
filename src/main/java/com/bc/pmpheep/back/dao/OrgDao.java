@@ -27,6 +27,8 @@ public interface OrgDao {
      */
     List<Org> listBeElectedOrgByBookIds(List<Long> bookIds);
 
+    List<Org> listBeElectedOrgByBookIds_up1(List<Long> bookIds);
+
     /**
      * 
      * @param org 实体对象
@@ -164,5 +166,6 @@ public interface OrgDao {
      * </pre>
      */
     List<OrgExclVO> listAllOrgToExcel(@Param("chooseOrg") String[] chooseOrg);
+
 
 }

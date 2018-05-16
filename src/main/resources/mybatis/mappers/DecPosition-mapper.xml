@@ -1235,7 +1235,7 @@
 	<select id="getIsZhuBian" resultType="map">
 		 SELECT
 			realname,
-			(dp.chosen_position &amp; 4)>0 iszhubian,tb.textbook_name as textbookName
+			(dp.chosen_position &amp; 4)>0 iszhubian,tb.textbook_name as textbookName,tb.id as textbookId,(dp.chosen_position &amp; 2)>0 isfubian
 		FROM
 			declaration d
 		LEFT JOIN dec_position dp ON d.id = dp.declaration_id

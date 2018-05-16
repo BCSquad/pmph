@@ -574,9 +574,10 @@ public class TextbookServiceImpl implements TextbookService {
 				map);
 		PageResult<BookPositionVO> pageResult = new PageResult<>();
 		// 获取总数
+
 		Integer total = textbookDao.listBookPositionTotal(pageParameter);
 		if (null != total && total > 0) {
-			List<BookPositionVO> rows = textbookDao.listBookPosition(pageParameter);
+			List<BookPositionVO> rows = textbookDao.listBookPosition_up1(pageParameter);
 			// 下面进行授权
 			for (BookPositionVO row : rows) {
 				String rowpower = "000000";

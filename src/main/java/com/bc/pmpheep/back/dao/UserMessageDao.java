@@ -210,4 +210,7 @@ public interface UserMessageDao {
      * @return
      */
     Long getSenderDepartmentId(Long senderId);
+
+
+    Integer getMessageIsWithDraw(String id);
 }
