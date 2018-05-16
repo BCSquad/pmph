@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.bc.pmpheep.back.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.common.service.BaseService;
@@ -503,6 +504,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		String title = material.getMaterialName();
 		if (null != cmsContent && null != cmsContent.getTitle() && !title.equals(cmsContent.getTitle())) {
 			cmsContent.setTitle(title);
+			cmsContent.setAuthDate(DateUtil.date2Str(DateUtil.str4Date(cmsContent.getAuthDate()),"yyyy-MM-dd HH:mm:ss"));
 			cmsContentService.updateCmsContent(cmsContent);
 		}
 

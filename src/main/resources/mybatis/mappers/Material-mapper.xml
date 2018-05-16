@@ -898,8 +898,7 @@
 	<select id="listMaterialSignUpEndTotal" parameterType="PageParameter"
 			resultType="java.lang.Integer">
 		SELECT count(*) FROM
-		(SELECT DISTINCT
-		m.id,
+		(SELECT DISTINCT m.id,
 		m.material_name,
 		m.deadline,
 		m.actual_deadline,
@@ -911,7 +910,7 @@
 		m.founder_id,
 		m.project_permission,
 		m.plan_permission,
-		m.gmt_create,
+		t1.gmt_create,
 		pdu.dp_name
 		FROM
 		material m
@@ -951,9 +950,10 @@
 			and m.is_force_end =
 			#{parameter.isForceEnd})
 			And m.actual_deadline &lt; curdate()
+
 		</if>
 		ORDER BY
-		m.actual_deadline DESC,
+		t1.gmt_create DESC,
 		m.gmt_create DESC) t
 	</select>
 	<select id="listMaterialSignUpEnd" parameterType="PageParameter"
@@ -1015,6 +1015,9 @@
 		ORDER BY
 		t1.gmt_create DESC,
 		m.gmt_create DESC
+		<if test="pageSize != null">
+			LIMIT #{start} , #{pageSize}
+		</if>
 	</select>
 	<!-- 通过书籍id获取教材信息 -->
 	<select id="getMaterialByName" resultType="Material">
