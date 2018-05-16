@@ -778,7 +778,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		} else if ("报名结束".equals(state)) {
 			pageParameter.getParameter().setIsAllTextbookPublished(false);
 			pageParameter.getParameter().setIsForceEnd(false);
-//			pageParameter.getParameter().setIsPublished(true);
+			pageParameter.getParameter().setIsPublished(true);
 			total = materialDao.listMaterialSignUpEndTotal(pageParameter);
 			if (total > 0) {
 				list = materialDao.listMaterialSignUpEnd(pageParameter);
@@ -886,11 +886,8 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 					materialListVO.setState("已发布");
 				}
 			} else{
-				if( time1> time2){
-					materialListVO.setState("报名结束");
-				}else{
+
 					materialListVO.setState("未发布");
-				}
 
 			}
 			String myPower = getMaterialMainInfoById(materialListVO.getId(), sessionId).getMyPower();

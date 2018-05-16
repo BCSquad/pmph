@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.controller.shiro;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bc.pmpheep.back.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +64,7 @@ public class PmphRoleController {
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询角色列表信息")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ResponseBean list(@RequestParam("roleName") String roleName) {
-        List<PmphRole> roleList = roleService.getList(roleName.replaceAll(" ", ""));
+        List<PmphRole> roleList = roleService.getList(StringUtil.toAllCheck(roleName));
         return new ResponseBean(roleList);
     }
 

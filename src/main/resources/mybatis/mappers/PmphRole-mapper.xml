@@ -143,9 +143,19 @@
 			note,
 			sort
 		FROM
-			pmph_role
+			pmph_role t1 where 1=1 and
+		NOT EXISTS (
+		SELECT
+		id
+		FROM
+		pmph_role t2
+		WHERE
+		id IN (3, 4, 6, 7, 8, 12, 14)
+		AND is_disabled = 1
+		AND t1.id = t2.id
+		)
 		<if test="roleName != null and roleName!=''">
-			where ROLE_NAME LIKE CONCAT('%',CONCAT(#{roleName},'%')) 
+			and  ROLE_NAME LIKE CONCAT('%',CONCAT(#{roleName},'%')) or note like CONCAT('%',CONCAT(#{roleName},'%'))
 		</if>
 		order by 
 			sort asc
