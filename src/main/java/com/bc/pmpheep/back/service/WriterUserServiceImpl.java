@@ -339,6 +339,9 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 		if (StringUtil.notEmpty(orgName)) {
 			pageParameter.getParameter().setOrgName(orgName);
 		}
+		if (!ObjectUtil.isNull(groupId)) {
+			pageParameter.getParameter().setGroupId(groupId);
+		}
 		PageResult<WriterUserManagerVO> pageResult = new PageResult<>();
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 		// 当rank为1的时候 查询教师用户
