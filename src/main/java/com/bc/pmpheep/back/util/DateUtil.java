@@ -38,6 +38,25 @@ public final class DateUtil {
     }
 
     /**
+     * 按照yyyy-MM-dd HH:mm:ss的格式，字符串转日期
+     *
+     * @param date
+     * @return
+     */
+    public static Date str4Date(String date) {
+        if (StringUtil.notEmpty(date)) {
+            try {
+                return sdfTime.parse(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            return new Date();
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * 获取YYYY格式
      * 
      * @return
