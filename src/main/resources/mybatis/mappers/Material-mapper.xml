@@ -1115,7 +1115,7 @@
 			concat('%',#{parameter.contactUserName},'%')
 		</if>
 		<if test="parameter.state != null and parameter.state = '已结束'">
-			AND ( (m.is_all_textbook_published = 0 and m.is_force_end = 0 And m.actual_deadline &lt; curdate()) OR
+			AND ( (m.is_all_textbook_published = 0 and m.is_force_end = 0 AND m.is_published = 1 And m.actual_deadline &lt; curdate()) OR
 			(m.is_all_textbook_published =1 OR m.is_force_end = 1 AND m.is_published = 1))
 		</if>
 		ORDER BY
@@ -1176,7 +1176,7 @@
 			concat('%',#{parameter.contactUserName},'%')
 		</if>
 		<if test="parameter.state != null and parameter.state = '已结束'">
-			AND ( (m.is_all_textbook_published = 0 and m.is_force_end =0 And m.actual_deadline &lt; curdate()) OR
+			AND ( (m.is_all_textbook_published = 0 and m.is_force_end =0 AND m.is_published = 1 And m.actual_deadline &lt; curdate()) OR
 			(m.is_all_textbook_published =1 OR m.is_force_end = 1 AND m.is_published = 1))
 		</if>
 		) tt
