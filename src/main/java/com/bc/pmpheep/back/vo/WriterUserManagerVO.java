@@ -88,6 +88,10 @@ public class WriterUserManagerVO implements Serializable {
      */
     private Integer sort;
     /**
+     * 小组id
+     */
+    private Long groupId;
+    /**
      * 备注
      */
     private String  note;
@@ -335,5 +339,13 @@ public class WriterUserManagerVO implements Serializable {
 
     public void setIsTop(Boolean isTop) {
         this.isTop = isTop;
+    }
+
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
     }
 }

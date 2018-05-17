@@ -634,13 +634,19 @@
 		<if test="parameter.rank !=null">
 			and w.rank = #{parameter.rank}
 		</if>
-		<if test="groupId !=null">
+		<if test="parameter.groupId !=null">
 			and not EXISTS (
-			select count(id) from pmph_group_member t1 where t1.user_id = w.id and t1.group_id = #{groupId}
+            SELECT
+            id
+            FROM
+            pmph_group_member t1
+            WHERE
+            t1.user_id = w.id
+            and t1.is_writer = true and t1.group_id = #{parameter.groupId}
 			)
 		</if>
 	</select>
-	<select id="getListWriterUser" parameterType="map"
+	<select id="getListWriterUser" parameterType="PageParameter"
 		resultType="WriterUserManagerVO">
 		select
 		*
@@ -659,9 +665,15 @@
 		<if test="parameter.rank !=null">
 			and w.rank = #{parameter.rank}
 		</if>
-		<if test="groupId !=null">
+		<if test="parameter.groupId !=null">
 			and not EXISTS (
-			select count(id) from pmph_group_member t1 where t1.user_id = w.id and t1.group_id = #{groupId}
+            SELECT
+            id
+            FROM
+            pmph_group_member t1
+            WHERE
+            t1.user_id = w.id
+            and t1.is_writer = true and t1.group_id = #{parameter.groupId}
 			)
 		</if>
 		<if test="start !=null and pageNumber != null">

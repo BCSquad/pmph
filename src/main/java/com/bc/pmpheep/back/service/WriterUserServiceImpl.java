@@ -339,15 +339,18 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 		if (StringUtil.notEmpty(orgName)) {
 			pageParameter.getParameter().setOrgName(orgName);
 		}
+		if (!ObjectUtil.isNull(groupId)) {
+			pageParameter.getParameter().setGroupId(groupId);
+		}
 		PageResult<WriterUserManagerVO> pageResult = new PageResult<>();
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 		// 当rank为1的时候 查询教师用户
 		int total = 0;
 		if (pageParameter.getParameter().getRank() == null || pageParameter.getParameter().getRank() != 1) {
 			// 当rank不为1的时候
-			total = writerUserDao.getListWriterUserTotal(pageParameter,groupId);
+			total = writerUserDao.getListWriterUserTotal(pageParameter);
 			if (total > 0) {
-				List<WriterUserManagerVO> list = writerUserDao.getListWriterUser(pageParameter,groupId);
+				List<WriterUserManagerVO> list = writerUserDao.getListWriterUser(pageParameter);
 				for (WriterUserManagerVO vo : list) {
 					switch (vo.getRank()) {
 					case 0:
