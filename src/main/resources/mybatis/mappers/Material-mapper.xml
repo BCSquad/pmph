@@ -898,8 +898,7 @@
 	<select id="listMaterialSignUpEndTotal" parameterType="PageParameter"
 			resultType="java.lang.Integer">
 		SELECT count(*) FROM
-		(SELECT DISTINCT
-		m.id,
+		(SELECT DISTINCT m.id,
 		m.material_name,
 		m.deadline,
 		m.actual_deadline,
@@ -911,7 +910,7 @@
 		m.founder_id,
 		m.project_permission,
 		m.plan_permission,
-		m.gmt_create,
+		t1.gmt_create,
 		pdu.dp_name
 		FROM
 		material m
@@ -946,14 +945,16 @@
 			concat('%',#{parameter.contactUserName},'%')
 		</if>
 		<if test="parameter.state != null and parameter.state != ''">
-			AND (m.is_all_textbook_published =
+			AND m.is_published = #{parameter.isPublished}
+			AND ((m.is_all_textbook_published =
 			#{parameter.isAllTextbookPublished}
 			and m.is_force_end =
-			#{parameter.isForceEnd})
+			#{parameter.isForceEnd}))
 			And m.actual_deadline &lt; curdate()
+
 		</if>
 		ORDER BY
-		m.actual_deadline DESC,
+		t1.gmt_create DESC,
 		m.gmt_create DESC) t
 	</select>
 	<select id="listMaterialSignUpEnd" parameterType="PageParameter"
@@ -1005,16 +1006,20 @@
 			concat('%',#{parameter.contactUserName},'%')
 		</if>
 		<if test="parameter.state != null and parameter.state != ''">
-			AND (m.is_all_textbook_published =
+			AND m.is_published = #{parameter.isPublished}
+			AND ((m.is_all_textbook_published =
 			#{parameter.isAllTextbookPublished}
 			and m.is_force_end =
-			#{parameter.isForceEnd})
+			#{parameter.isForceEnd}))
 			And m.actual_deadline &lt; curdate()
 
 		</if>
 		ORDER BY
 		t1.gmt_create DESC,
 		m.gmt_create DESC
+		<if test="pageSize != null">
+			LIMIT #{start} , #{pageSize}
+		</if>
 	</select>
 	<!-- 通过书籍id获取教材信息 -->
 	<select id="getMaterialByName" resultType="Material">
@@ -1110,8 +1115,11 @@
 			concat('%',#{parameter.contactUserName},'%')
 		</if>
 		<if test="parameter.state != null and parameter.state = '已结束'">
-			AND ( (m.is_all_textbook_published = 1 and m.is_force_end = 1 And m.actual_deadline &lt; curdate()) OR
-			(m.is_all_textbook_published =1 OR m.is_force_end = 1 AND m.is_published = 1))
+			AND (
+			((m.is_all_textbook_published = 0 and m.is_force_end =0) AND m.is_published = 1 And m.actual_deadline &lt; curdate())
+			OR
+			((m.is_all_textbook_published =1 OR m.is_force_end = 1) AND m.is_published = 1)
+			)
 		</if>
 		ORDER BY
 		t1.gmt_create DESC,
@@ -1171,8 +1179,11 @@
 			concat('%',#{parameter.contactUserName},'%')
 		</if>
 		<if test="parameter.state != null and parameter.state = '已结束'">
-			AND ( (m.is_all_textbook_published = 1 and m.is_force_end = 1 And m.actual_deadline &lt; curdate()) OR
-			(m.is_all_textbook_published =1 OR m.is_force_end = 1 AND m.is_published = 1))
+			AND (
+					((m.is_all_textbook_published = 0 and m.is_force_end =0) AND m.is_published = 1 And m.actual_deadline &lt; curdate())
+						OR
+					((m.is_all_textbook_published =1 OR m.is_force_end = 1) AND m.is_published = 1)
+				)
 		</if>
 		) tt
 	</select>

@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.service;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
@@ -11,6 +12,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.bc.pmpheep.back.util.*;
+import com.bc.pmpheep.general.bean.FileType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,17 +35,6 @@ import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.PmphUserRole;
 import com.bc.pmpheep.back.po.SysOperation;
 import com.bc.pmpheep.back.po.Textbook;
-import com.bc.pmpheep.back.util.CollectionUtil;
-import com.bc.pmpheep.back.util.Const;
-import com.bc.pmpheep.back.util.CookiesUtil;
-import com.bc.pmpheep.back.util.DateUtil;
-import com.bc.pmpheep.back.util.DesRun;
-import com.bc.pmpheep.back.util.ObjectUtil;
-import com.bc.pmpheep.back.util.PageParameterUitl;
-import com.bc.pmpheep.back.util.RouteUtil;
-import com.bc.pmpheep.back.util.SessionUtil;
-import com.bc.pmpheep.back.util.StringUtil;
-import com.bc.pmpheep.back.util.ValidatUtil;
 import com.bc.pmpheep.back.vo.BookCorrectionAuditVO;
 import com.bc.pmpheep.back.vo.BookUserCommentVO;
 import com.bc.pmpheep.back.vo.CmsContentVO;
@@ -138,18 +130,51 @@ public class PmphUserServiceImpl implements PmphUserService {
         }
         // 头像文件不为空更新头像
         if (StringUtil.notEmpty(newAvatar)) {
-            byte[] fileByte = (byte[]) request.getSession(false).getAttribute(newAvatar);
-            String fileName = (String) request.getSession(false).getAttribute("fileName_" + newAvatar);
-            String noticeId;
-            // 保存通知文件
-            InputStream sbs = new ByteArrayInputStream(fileByte);
-            noticeId = fileService.save(sbs, fileName, ImageType.PMPH_USER_AVATAR, id);
-            pmphUser.setAvatar(noticeId);
+            PmphUser pmphUserOld = get(id);
+            if (null != pmphUserOld && null != pmphUserOld.getAvatar()
+                    && !"".equals(pmphUserOld.getAvatar())
+                    && !RouteUtil.DEFAULT_USER_AVATAR.equals(pmphUserOld.getAvatar())) {
+                fileService.remove(pmphUserOld.getAvatar());
+            }
+            String newGroupImage = saveFileToMongoDB(newAvatar, request);
+            pmphUser.setAvatar(newGroupImage);
         }else{
         	 pmphUser.setAvatar(null);
         }
         Integer update = pmphUserDao.update(pmphUser);
         return true;
+    }
+
+    /**
+     *
+     * <pre>
+     * 功能描述：保存文件到MongoDB
+     * 使用示范：
+     *
+     * &#64;param files 临时文件路径
+     * &#64;param msgId messageId
+     * &#64;throws CheckedServiceException
+     * </pre>
+     */
+    private String saveFileToMongoDB(String file, HttpServletRequest request) throws IOException {
+        String userAvatar = RouteUtil.DEFAULT_USER_AVATAR;
+        // 添加附件到MongoDB表中
+        if (!StringUtil.isEmpty(file)) {
+            File f = FileUpload.getFileByFilePath(request.getSession().getServletContext().getRealPath("/") + file);
+            if (f.isFile()) {
+                // 循环获取file数组中得文件
+                if (StringUtil.notEmpty(f.getName())) {
+                    userAvatar = fileService.saveLocalFile(f, FileType.GROUP_FILE, 0);// 上传文件到MongoDB
+                    if (StringUtil.isEmpty(userAvatar)) {
+                        throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                CheckedExceptionResult.FILE_UPLOAD_FAILED, "文件上传失败!");
+                    }
+
+                }
+                FileUtil.delFile(file);// 删除本地临时文件
+            }
+        }
+        return userAvatar;
     }
 
     /**
@@ -539,6 +564,9 @@ public class PmphUserServiceImpl implements PmphUserService {
         if (StringUtil.notEmpty(path) && ObjectUtil.notNull(departmentId)) {
             pageParameter.getParameter().setPath(path + "-"
                                                  + java.lang.String.valueOf(departmentId) + '-');
+        }
+        if(!ObjectUtil.isNull(groupId)){
+            pageParameter.getParameter().setGroupId(groupId);
         }
         PageResult<PmphUserManagerVO> pageResult = new PageResult<>();
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);

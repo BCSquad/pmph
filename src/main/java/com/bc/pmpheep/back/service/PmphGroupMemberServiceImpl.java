@@ -576,9 +576,12 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 		    List<PmphGroupMember> pmphGroupMembers =
 		    pmphGroupMemberDao.listPmphGroupMembers(pmphGroup.getId());
 		    List<Long> groupUserIdList = new ArrayList<Long>(pmphGroupMembers.size());
+			List<Long> groupUserIdNotWriterList = new ArrayList<Long>(pmphGroupMembers.size());
 		    for (PmphGroupMember pmphGroupMember : pmphGroupMembers) {
 		    	if(pmphGroupMember.getIsWriter()){
 					groupUserIdList.add(pmphGroupMember.getUserId());
+				}else{
+					groupUserIdNotWriterList.add(pmphGroupMember.getUserId());
 				}
 		    }
 		    // 通过遍历把不存在的成员添加到list中
@@ -588,6 +591,9 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 		            list.add(new PmphGroupMember(userId, Const.TRUE,textbook.getMaterialId(),textbookId,textbookDecVO.getRealname()));
 		        }
 		    }
+		    if(!ObjectUtil.isNull(textbook.getPlanningEditor())&&!groupUserIdNotWriterList.contains(textbook.getPlanningEditor())){
+				list.add(new PmphGroupMember(textbook.getPlanningEditor(), Const.FALSE,textbook.getMaterialId(),textbookId,textbook.getRealname()));
+			}
 		    if (CollectionUtil.isEmpty(list)) {
 		        throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
 		                                          CheckedExceptionResult.SUCCESS, "小组成员已是最新");

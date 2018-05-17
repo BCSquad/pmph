@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.bc.pmpheep.back.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.common.service.BaseService;
@@ -503,6 +504,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		String title = material.getMaterialName();
 		if (null != cmsContent && null != cmsContent.getTitle() && !title.equals(cmsContent.getTitle())) {
 			cmsContent.setTitle(title);
+			cmsContent.setAuthDate(DateUtil.date2Str(DateUtil.str4Date(cmsContent.getAuthDate()),"yyyy-MM-dd HH:mm:ss"));
 			cmsContentService.updateCmsContent(cmsContent);
 		}
 
@@ -776,7 +778,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		} else if ("报名结束".equals(state)) {
 			pageParameter.getParameter().setIsAllTextbookPublished(false);
 			pageParameter.getParameter().setIsForceEnd(false);
-//			pageParameter.getParameter().setIsPublished(true);
+			pageParameter.getParameter().setIsPublished(true);
 			total = materialDao.listMaterialSignUpEndTotal(pageParameter);
 			if (total > 0) {
 				list = materialDao.listMaterialSignUpEnd(pageParameter);
@@ -884,11 +886,8 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 					materialListVO.setState("已发布");
 				}
 			} else{
-				if( time1> time2){
-					materialListVO.setState("报名结束");
-				}else{
+
 					materialListVO.setState("未发布");
-				}
 
 			}
 			String myPower = getMaterialMainInfoById(materialListVO.getId(), sessionId).getMyPower();
