@@ -345,9 +345,9 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 		int total = 0;
 		if (pageParameter.getParameter().getRank() == null || pageParameter.getParameter().getRank() != 1) {
 			// 当rank不为1的时候
-			total = writerUserDao.getListWriterUserTotal(pageParameter);
+			total = writerUserDao.getListWriterUserTotal(pageParameter,groupId);
 			if (total > 0) {
-				List<WriterUserManagerVO> list = writerUserDao.getListWriterUser(pageParameter);
+				List<WriterUserManagerVO> list = writerUserDao.getListWriterUser(pageParameter,groupId);
 				for (WriterUserManagerVO vo : list) {
 					switch (vo.getRank()) {
 					case 0:

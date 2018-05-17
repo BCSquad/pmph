@@ -79,7 +79,7 @@ public interface WriterUserDao {
      * @param page 传入的查询条件
      * @return 需要的作家用户集合
      */
-    List<WriterUserManagerVO> getListWriterUser(PageParameter<WriterUserManagerVO> page);
+    List<WriterUserManagerVO> getListWriterUser(@Param("PageParameter") PageParameter<WriterUserManagerVO> page,@Param("groupId") Long groupId);
 
     /**
      * 
@@ -100,7 +100,7 @@ public interface WriterUserDao {
      * @param page 传入查询条件
      * @return 查询到的条数
      */
-    Integer getListWriterUserTotal(PageParameter<WriterUserManagerVO> page);
+    Integer getListWriterUserTotal(@Param("PageParameter") PageParameter<WriterUserManagerVO> page,@Param("groupId") Long groupId);
 
     /**
      * 
