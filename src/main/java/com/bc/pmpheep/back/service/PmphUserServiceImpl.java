@@ -565,6 +565,9 @@ public class PmphUserServiceImpl implements PmphUserService {
             pageParameter.getParameter().setPath(path + "-"
                                                  + java.lang.String.valueOf(departmentId) + '-');
         }
+        if(!ObjectUtil.isNull(groupId)){
+            pageParameter.getParameter().setGroupId(groupId);
+        }
         PageResult<PmphUserManagerVO> pageResult = new PageResult<>();
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
         int total = pmphUserDao.getListPmphUserTotal(pageParameter);
