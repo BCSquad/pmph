@@ -678,7 +678,7 @@ public final class SystemMessageService {
 		if (declaration.getOrgId() == 0) {// 提交的人卫社
 			msgContent = "抱歉，您提交的《<font color='red'>" + material.getMaterialName()
 					+ "</font>》申报表被[<font color='red'>出版社</font>]退回，退回原因：" + returnCause 
-					+ "，请您核对后重试";
+					+ "，请您核对后重新提交";
 			if (isPass) {// 通过
 				msgContent = "恭喜！您提交的《<font color='red'>" + material.getMaterialName()
 						+ "</font>》申报表已通过[<font color='red'>出版社</font>]审核";
@@ -686,7 +686,7 @@ public final class SystemMessageService {
 		} else {// 提交的机构
 			msgContent = "抱歉，您提交的《<font color='red'>" + material.getMaterialName()
 					+ "</font>》申报表被[<font color='red'>学校管理员</font>]退回，退回原因：" + returnCause 
-					+ "，请您核对后重试";
+					+ "，请您核对后重新提交";
 			if (isPass) {// 通过
 				msgContent = "恭喜！您提交的《<font color='red'>" + material.getMaterialName()
 						+ "</font>》申报表已通过[<font color='red'>学校管理员</font>]审核";
@@ -748,7 +748,7 @@ public final class SystemMessageService {
 			} else if (5 == onlineProgress.intValue()) { // 出版社退回给个人==5
 				msgContent = "抱歉！您提交的《<font color='red'>" + material.getMaterialName()
 						+ "</font>》申报表被[<font color='red'>出版社</font>]退回，退回原因：" + returnCause 
-						+ "，请您核对后重试";
+						+ "，请您核对后重新提交";
 			}
 		}
 		WebScocketMessage webScocketMessage = null;
@@ -838,7 +838,7 @@ public final class SystemMessageService {
 		String orgMsgContent = "抱歉，贵校老师[<font color='red'>" + declaration.getRealname() + "</font>]在《<font color='red'>"
 				+ material.getMaterialName() + "</font>》提交的申报纸质表被退回";
 		String writerMsgContent = "抱歉，您在《<font color='red'>" + material.getMaterialName()
-				+ "</font>》提交的申报纸质表被退回，请您核对后重试";
+				+ "</font>》提交的申报纸质表被退回，请您核对后重新提交";
 		if (isPass) {// 收到
 			orgMsgContent = "您好，人民卫生出版社已收到贵校老师[<font color='red'>" + declaration.getRealname()
 					+ "</font>]提交的《<font color='red'>" + material.getMaterialName() + "</font>》申报纸质表";
@@ -848,7 +848,7 @@ public final class SystemMessageService {
 			orgMsgContent = "抱歉，贵校老师提交的[<font color='red'>" + declaration.getRealname() + "</font>]在《<font color='red'>"
 					+ material.getMaterialName() + "</font>》申报纸质表被退回";
 			writerMsgContent ="抱歉，您在《<font color='red'>" + material.getMaterialName()
-			+ "</font>》提交的申报纸质表被退回，请您核对后重试";
+			+ "</font>》提交的申报纸质表被退回，请您核对后重新提交";
 		}
 		// 存入消息主体
 		Message orgUserMessage = new Message(orgMsgContent);

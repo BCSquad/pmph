@@ -323,7 +323,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("title", CheckedExceptionBusiness.MATERIAL);
 		if (0 == offlineProgress) {
-			map.put("content", "抱歉，您在《" + material.getMaterialName() + "》提交的申报纸质表被退回，请您核对后重试。");
+			map.put("content", "抱歉，您在《" + material.getMaterialName() + "》提交的申报纸质表被退回，请您核对后重新提交。");
 		} else {
 			map.put("content", "您好，人民卫生出版社已收到您提交《" + material.getMaterialName() + "》的纸质申报表，感谢您的参与，请耐心等待遴选结果。");
 		}
@@ -445,7 +445,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("title", CheckedExceptionBusiness.MATERIAL);
 			map.put("content", "抱歉，您提交的《" + material.getMaterialName() + "》申报表被出版社退回，"
-					+ "退回原因：" + returnCause + "，请您核对后重试。");
+					+ "退回原因：" + returnCause + "，请您核对后重新提交。");
 			map.put("img", 2);
 			detail = new Gson().toJson(map);
 			writerUserTrendst.setDetail(detail);
@@ -482,7 +482,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("title", CheckedExceptionBusiness.MATERIAL);
 			map.put("content", "抱歉，您提交的《" + material.getMaterialName() + "》申报表被出版社退回，"
-					+ "退回原因：" + returnCause + "，请您核对后重试。");
+					+ "退回原因：" + returnCause + "，请您核对后重新提交。");
 			map.put("img", 2);
 			detail = new Gson().toJson(map);
 			writerUserTrendst.setDetail(detail);
