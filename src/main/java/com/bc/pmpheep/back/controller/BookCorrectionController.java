@@ -132,9 +132,10 @@ public class BookCorrectionController {
 	@RequestMapping(value = "/replyWriter", method = RequestMethod.PUT)
 	public ResponseBean replyWriter(HttpServletRequest request,
 			@RequestParam(value = "id", 		         required = true)  Long id ,
-			@RequestParam(value = "result", 		     required = true)  Boolean result , 
+			@RequestParam(value = "result", 		     required = true)  Boolean result ,
+			@RequestParam(value = "authorReply", 		 required = false)  String authorReply,
 			@RequestParam(value = "editorReply", 		 required = true)  String editorReply) {
-		return new ResponseBean(bookCorrectionService.replyWriter(id , result , editorReply));
+		return new ResponseBean(bookCorrectionService.replyWriter(id , result , editorReply,authorReply));
 	}
 
 	@ResponseBody

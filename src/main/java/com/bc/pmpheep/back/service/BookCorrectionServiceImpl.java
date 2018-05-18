@@ -72,7 +72,7 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 	private WriterUserTrendstService writerUserTrendstService;
 
 	@Override
-	public Integer replyWriter(Long id, Boolean result, String editorReply) throws CheckedServiceException {
+	public Integer replyWriter(Long id, Boolean result, String editorReply,String authorReply) throws CheckedServiceException {
 		if (null == id) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION,
 					CheckedExceptionResult.NULL_PARAM, "主键为空");
@@ -81,6 +81,11 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION,
 					CheckedExceptionResult.NULL_PARAM, "检查结果为空");
 		}
+//		if (StringUtil.isEmpty(authorReply)) {
+//			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION,
+//					CheckedExceptionResult.NULL_PARAM, "回复内容为空");
+//		}
+
 		if (StringUtil.isEmpty(editorReply)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION,
 					CheckedExceptionResult.NULL_PARAM, "回复内容为空");
@@ -110,6 +115,15 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 		bookCorrection.setIsEditorReplied(true);
 		bookCorrection.setEditorReply(editorReply);
 		bookCorrection.setIsEditorHandling(true);
+		if (!StringUtil.isEmpty(authorReply)) {
+			if (authorReply.length() > 500) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION,
+						CheckedExceptionResult.NULL_PARAM, "回复内容超过最长限制500");
+			}
+			bookCorrection.setIsAuthorReplied(true);
+			bookCorrection.setEditorReply(authorReply);
+		}
+
 
 		WriterUserTrendst writerUserTrendst = new WriterUserTrendst();
 		writerUserTrendst.setUserId(submitUserId);

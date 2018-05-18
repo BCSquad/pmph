@@ -40,7 +40,7 @@ public class DataTransfer {
 
     private final Logger          logger   = LoggerFactory.getLogger(DataTransfer.class);
     private String                url      =
-                                           "jdbc:mysql://localhost:3306/pmph_imesp_9.18?useSSL=true";
+                                           "jdbc:mysql://localhost:3306/pmph_imesp_9.18?useSSL=false";
     private String                username = "root";
     private String                password = "cc148604";
 
