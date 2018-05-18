@@ -441,7 +441,7 @@
 		a.textbook_name,
 		a.textbook_round textbookRound,
 		a.is_chief_published,
-		sum(IF(g.id is not null ,1,0))
+		sum(IF(b.id is not null ,1,0))
 		applyNum,
 		a.planning_editor planningEditor,
 		planningEditor.realname

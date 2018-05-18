@@ -74,10 +74,11 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	 */
 	@Override
 	public PmphGroupMember addPmphGroupMember(PmphGroupMember pmphGroupMember) throws CheckedServiceException {
-//		if (null == pmphGroupMember.getDisplayName()) {
+		if (null == pmphGroupMember.getDisplayName()) {
 //			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 //					"小组内显示名称为空");
-//		}
+			pmphGroupMember.setDisplayName("");
+		}
 		pmphGroupMemberDao.addPmphGroupMember(pmphGroupMember);
 		return pmphGroupMember;
 	}
