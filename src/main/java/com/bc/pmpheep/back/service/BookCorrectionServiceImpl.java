@@ -120,7 +120,7 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 		if (result) {// 有问题
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("title", CheckedExceptionBusiness.BOOKCORRECTION);
-			map.put("content", "您的图书纠错已核实。");
+			map.put("content", "您提交的纠错信息已回复。");
 			map.put("img", 1);
 			detail = new Gson().toJson(map);
 			// 更新评论数
@@ -129,7 +129,7 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 		} else {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("title", CheckedExceptionBusiness.BOOKCORRECTION);
-			map.put("content", "您的图书纠错未核实到该问题。");
+			map.put("content", "您提交的纠错信息已回复。");
 			map.put("img", 2);
 			detail = new Gson().toJson(map);
 		}
