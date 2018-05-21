@@ -44,6 +44,10 @@ public class WxController {
         return new ResponseBean<Map>(result);
     }
 
+    @GetMapping("findUserByUserId")
+    public ResponseBean<Map> findUserByUserId (@RequestParam(value = "userId",required = true) String userId,HttpServletRequest request ){
+        return new ResponseBean<Map>(service.findUser(userId));
+    }
 
     @GetMapping("userid")
     public ResponseBean<Map> getUserIdFromCode(@RequestParam("code") String code, HttpServletRequest request) {

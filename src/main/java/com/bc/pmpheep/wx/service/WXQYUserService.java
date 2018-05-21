@@ -2,6 +2,9 @@ package com.bc.pmpheep.wx.service;
 
 
 import com.alibaba.fastjson.JSON;
+import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.service.exception.CheckedExceptionResult;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
@@ -20,15 +23,20 @@ public class WXQYUserService extends WXBaseService {
     static final String URL_USERINFO_GET = "https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo?access_token=%s&code=%s&agentid=%s";
 
 
-    public Map findUser(String userid) {
+    public Map findUser(String userid) throws  CheckedServiceException{
         String url = String.format(URL_USER_GET, this.getAccessToken(false), userid);
+        if(StringUtil.isEmpty(userid)){
+            throw new CheckedServiceException("微信请求", CheckedExceptionResult.NULL_PARAM,"userid为空");
+        }
         try {
+
             HttpGet get = new HttpGet(url);
             HttpResponse res = client.execute(get);
             HttpEntity entity = res.getEntity();
             String responseContent = EntityUtils.toString(entity, "UTF-8");
             if (res.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 Map user = JSON.parseObject(responseContent, Map.class);
+                return  user;
             }
         } catch (Exception ex) {
 
