@@ -503,4 +503,12 @@ public class GroupController {
 		String sessionId = CookiesUtil.getSessionId(request);
 		return new ResponseBean(pmphGroupMemberService.updatePmphGroupMemberDisplayName(groupId,userId, id, displayName, sessionId));
 	}
+
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取本套教材成员")
+	@RequestMapping(value = "/member/getMaterialMember", method = RequestMethod.GET)
+	public ResponseBean getMaterialMember( @RequestParam(name = "bookId") Long bookId,HttpServletRequest request){
+		String sessionId = CookiesUtil.getSessionId(request);
+		return new ResponseBean(pmphGroupMemberService.queryMaterialMembers(bookId));
+	}
 }

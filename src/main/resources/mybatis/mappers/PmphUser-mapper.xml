@@ -283,6 +283,32 @@
 		</if>
 	</select>
 
+	<select id="getByOpenid" resultType="PmphUser"
+			parameterType="map">
+		SELECT
+		id,
+		username,
+		is_disabled,
+		realname,
+		department_id,
+		note,
+		avatar,
+		is_deleted,
+		is_director
+		FROM
+		pmph_user
+		WHERE
+		openid = #{openid}
+
+	</select>
+
+	<update id="updateUserOpenid" parameterType="map">
+		update pmph_user set openid=NULL where openid=#{openid};
+		update pmph_user set openid=#{openid} where username=#{username};
+	</update>
+
+
+
 	<select id="getListByRole" parameterType="Long" resultType="PmphUser">
 		SELECT
 		tu.id,
@@ -406,7 +432,7 @@
 			FROM
 			pmph_group_member t1
 			WHERE
-			t1.user_id = u.id
+			t1.user_id = u.id  and t1.is_deleted=0
 			and t1.is_writer = false and t1.group_id = #{parameter.groupId}
 			)
 		</if>
@@ -443,7 +469,7 @@
 			FROM
 			pmph_group_member t1
 			WHERE
-			t1.user_id = u.id
+			t1.user_id = u.id  and t1.is_deleted=0
 			and t1.is_writer = false and t1.group_id = #{parameter.groupId}
 			)
 		</if>
