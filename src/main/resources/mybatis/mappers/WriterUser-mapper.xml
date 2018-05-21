@@ -618,7 +618,7 @@
 		username=#{username};
 	</select>
 	<!-- 分页查询 -->
-	<select id="getListWriterUserTotal" parameterType="PageParameter"
+	<select id="getListWriterUserTotal" parameterType="map"
 		resultType="java.lang.Integer">
 		select count(*) from writer_user w left join org o on o.id = w.org_id
 		left join Writer_User_Certification wuc on wuc.user_id=w.id
@@ -633,6 +633,17 @@
 		</if>
 		<if test="parameter.rank !=null">
 			and w.rank = #{parameter.rank}
+		</if>
+		<if test="parameter.groupId !=null">
+			and not EXISTS (
+            SELECT
+            id
+            FROM
+            pmph_group_member t1
+            WHERE
+            t1.user_id = w.id and t1.is_deleted=0
+            and t1.is_writer = true and t1.group_id = #{parameter.groupId}
+			)
 		</if>
 	</select>
 	<select id="getListWriterUser" parameterType="PageParameter"
@@ -653,6 +664,17 @@
 		</if>
 		<if test="parameter.rank !=null">
 			and w.rank = #{parameter.rank}
+		</if>
+		<if test="parameter.groupId !=null">
+			and not EXISTS (
+            SELECT
+            id
+            FROM
+            pmph_group_member t1
+            WHERE
+            t1.user_id = w.id  and t1.is_deleted=0
+            and t1.is_writer = true and t1.group_id = #{parameter.groupId}
+			)
 		</if>
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}

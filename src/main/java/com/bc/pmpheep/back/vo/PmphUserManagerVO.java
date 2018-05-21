@@ -87,6 +87,11 @@ public class PmphUserManagerVO implements java.io.Serializable {
 	private String position;
 
 	/**
+	 * 小组id
+	 */
+	private Long groupId;
+
+	/**
 	 * @return the id
 	 */
 	public Long getId() {
@@ -285,5 +290,13 @@ public class PmphUserManagerVO implements java.io.Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public Long getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(Long groupId) {
+		this.groupId = groupId;
 	}
 }
