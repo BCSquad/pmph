@@ -668,7 +668,7 @@ public class PmphUserServiceImpl implements PmphUserService {
         if (!StringUtil.isEmpty(pmphUserManagerVO.getHandphone())) {
             if (!ValidatUtil.checkMobileNumber(pmphUserManagerVO.getHandphone())) {
             	if ("-".equals(pmphUserManagerVO.getHandphone())) {
-                	pmphUserManagerVO.setHandphone("-");
+                	pmphUserManagerVO.setHandphone("");
                 } else {
                 	throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                             CheckedExceptionResult.ILLEGAL_PARAM, "电话格式不正确");
@@ -678,7 +678,7 @@ public class PmphUserServiceImpl implements PmphUserService {
         if (!StringUtil.isEmpty(pmphUserManagerVO.getEmail())) {
             if (!ValidatUtil.checkEmail(pmphUserManagerVO.getEmail())) {
             	if ("-".equals(pmphUserManagerVO.getEmail())) {
-                	pmphUserManagerVO.setEmail("-");
+                	pmphUserManagerVO.setEmail("");
                 } else {
                 	throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                             CheckedExceptionResult.ILLEGAL_PARAM, "邮箱格式不正确");	
