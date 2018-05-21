@@ -441,8 +441,8 @@
 		a.textbook_name,
 		a.textbook_round textbookRound,
 		a.is_chief_published,
-		sum(IF(b.id is not null ,1,0))
-		applyNum,
+		/*sum(IF(b.id is not null ,1,0))*/
+		app.applyNum,
 		a.planning_editor planningEditor,
 		planningEditor.realname
 		planningEditorName ,
@@ -515,6 +515,14 @@
 		declaration where is_deleted = 0 and is_staging =
 		0 and online_progress
 		!=0) c on c.id = b1.declaration_id) b on b.textbook_id = a.id and (a.is_published=false and a.is_chief_published=false)
+
+		left join
+		(select dp.textbook_id ,count(dp.id) applyNum
+		from dec_position dp left join declaration d on dp.declaration_id = d.id
+		where d.online_progress !=0
+		group by dp.textbook_id)app
+		on app.textbook_id = a.id
+
 		where d.is_deleted =0 and d.is_published =1
 		and d.id =
 		#{parameter.materialId}
