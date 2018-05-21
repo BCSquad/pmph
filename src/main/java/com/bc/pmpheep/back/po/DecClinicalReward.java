@@ -27,7 +27,9 @@ public class DecClinicalReward implements Serializable {
     private String note;
     // 显示顺序
     private Integer sort;
-    
+	//个人资料id
+	private String perId;
+
     public DecClinicalReward() {
     	
     }
@@ -92,5 +94,12 @@ public class DecClinicalReward implements Serializable {
 				+ awardUnit + ", rewardDate=" + rewardDate + ", note=" + note
 				+ ", sort=" + sort + "]";
 	}
-    
+
+	public String getPerId() {
+		return perId;
+	}
+
+	public void setPerId(String perId) {
+		this.perId = perId;
+	}
 }

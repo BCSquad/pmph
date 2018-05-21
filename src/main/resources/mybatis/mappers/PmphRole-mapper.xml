@@ -143,9 +143,19 @@
 			note,
 			sort
 		FROM
-			pmph_role
+			pmph_role t1 where 1=1 and
+		NOT EXISTS (
+		SELECT
+		id
+		FROM
+		pmph_role t2
+		WHERE
+		id IN (3, 4, 6, 7, 8, 12, 14)
+		AND is_disabled = 1
+		AND t1.id = t2.id
+		)
 		<if test="roleName != null and roleName!=''">
-			where ROLE_NAME LIKE CONCAT('%',CONCAT(#{roleName},'%')) 
+			and  ROLE_NAME LIKE CONCAT('%',CONCAT(#{roleName},'%')) or note like CONCAT('%',CONCAT(#{roleName},'%'))
 		</if>
 		order by 
 			sort asc
@@ -339,5 +349,30 @@
 		pmph_user_role
 		WHERE
 		user_id = #{userId} AND role_id = #{roleId}
+	</select>
+
+	<select id="userPermission" resultType="map">
+		SELECT
+	sum(t.materialAuthor) materialAuthor,t.permission_id
+FROM
+	(
+		SELECT
+			count(*) AS materialAuthor,prp.permission_id
+		FROM
+			pmph_user_role p
+		LEFT JOIN pmph_role r ON p.role_id = r.id
+		LEFT JOIN pmph_role_permission prp ON prp.role_id = p.role_id
+		WHERE
+
+			p.user_id = #{id}
+		AND r.is_disabled IS FALSE
+		AND prp.permission_id in(2,3,7,15,20,23)
+		GROUP BY
+			r.role_name,
+			prp.permission_id
+		ORDER BY
+			role_name,
+			permission_id
+	) t group by t.permission_id
 	</select>
 </mapper>

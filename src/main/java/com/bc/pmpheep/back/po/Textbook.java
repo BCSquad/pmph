@@ -52,6 +52,8 @@ public class Textbook implements java.io.Serializable {
     private String    topicNumber;
     // 创建人id
     private Long      founderId;
+    //策划编辑真实姓名
+    private String realname;
     // 创建时间
     private Timestamp gmtCreate;
     // 修改时间
@@ -315,4 +317,11 @@ public class Textbook implements java.io.Serializable {
                + ", gmtUpdate:" + gmtUpdate + "}";
     }
 
+    public String getRealname() {
+        return realname;
+    }
+
+    public void setRealname(String realname) {
+        this.realname = realname;
+    }
 }

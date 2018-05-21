@@ -159,6 +159,7 @@ public class FileDownLoadController {
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		GridFSDBFile file = fileService.get(id);
+
 		if (null == file) {
 			logger.warn("未找到id为'{}'的文件", id);
 			return;
@@ -246,7 +247,8 @@ public class FileDownLoadController {
 			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
 					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "未找到对应文件");
 		}
-		String fileName = returnFileName(request, file.getFilename());
+		String fileName = groupFileService.getFileName(id);
+				fileName =	returnFileName(request, fileName);
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
 		try (OutputStream out = response.getOutputStream()) {
 			file.writeTo(out);
@@ -634,6 +636,7 @@ public class FileDownLoadController {
 			workbook = excelHelper.fromBusinessObjectList(list, "遴选名单");
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");
+			e.printStackTrace();
 		}
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
@@ -1047,15 +1050,18 @@ public class FileDownLoadController {
 	public void allOrg(HttpServletRequest request, HttpServletResponse response) {
 		Workbook workbook = null;
 		List<OrgExclVO> orgList = null;
+		String chooseOrg = request.getParameter("chooseOrg");
 		try {
-			orgList = orgService.listAllOrgToExcel();
+
+
+			orgList = orgService.listAllOrgToExcel(StringUtil.isEmpty(chooseOrg)?"":chooseOrg);
 			workbook = excelHelper.fromBusinessObjectList(orgList, "所有学校信息");
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");
 		}
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
-		String fileName = returnFileName(request, "所有学校" + ".xls");
+		String fileName = returnFileName(request, StringUtil.isEmpty(chooseOrg)?"所有学校"+ ".xls":"学校名单" + ".xls");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
 		try (OutputStream out = response.getOutputStream()) {
 			workbook.write(out);

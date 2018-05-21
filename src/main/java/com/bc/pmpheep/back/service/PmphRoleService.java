@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.back.po.PmphRole;
@@ -211,4 +212,11 @@ public interface PmphRoleService {
      * @return
      */
     List<PmphUserRole> getUserRoleList(Long userId, Long roleId) throws CheckedServiceException;
+
+    /**
+     * 首页权限问题处理
+     * @param id
+     * @return
+     */
+    List<Map<String,Object>> userPermission(Long id);
 }

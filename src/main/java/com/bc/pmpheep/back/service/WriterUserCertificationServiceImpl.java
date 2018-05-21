@@ -133,7 +133,7 @@ WriterUserCertificationService {
     }
 
     @Override
-    public Integer updateWriterUserCertificationProgressByUserId(Short progress, Long[] userIds,HttpServletRequest request)
+    public Integer updateWriterUserCertificationProgressByUserId(Short progress, Long[] userIds,String backReason,HttpServletRequest request)
     throws CheckedServiceException, Exception {
     	String sessionId = CookiesUtil.getSessionId(request);
     	PmphUser pmphuser = SessionUtil.getPmphUserBySessionId(sessionId);
@@ -152,14 +152,15 @@ WriterUserCertificationService {
                 throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                                   CheckedExceptionResult.NULL_PARAM, "用户信息未提交，不能审核");
             }
+           // || Const.WRITER_PROGRESS_3 == writerUserCertification.getProgress()
             if (Const.WRITER_PROGRESS_2 == writerUserCertification.getProgress()
-                || Const.WRITER_PROGRESS_3 == writerUserCertification.getProgress()) {
+                ) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                                   CheckedExceptionResult.NULL_PARAM, "已审核的用户不能再次审核");
             }
             wUserCertifications.add(new WriterUserCertification(
                                                                 writerUserCertification.getUserId(),
-                                                                progress));
+                                                                progress,backReason));
             writerUsers.add(new WriterUser(writerUserCertification.getUserId()));
         }
         if (CollectionUtil.isNotEmpty(wUserCertifications)) {//教师审核通过的同时修改普通用户级别为教师

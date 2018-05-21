@@ -79,7 +79,7 @@ public class GroupController {
 		 * 因此返回时<务必>要使用ResponseBean的构造函数即 new ResponseBean(anything)
 		 */
 		PmphGroup pmphGroup = new PmphGroup();
-		if (StringUtil.isEmpty(groupName)) {
+		if (!StringUtil.isEmpty(groupName)) {
 			pmphGroup.setGroupName(groupName.trim());
 		}
 		String sessionId = CookiesUtil.getSessionId(request);
@@ -183,7 +183,7 @@ public class GroupController {
 		}.getType();
 		List<PmphGroupMember> list = gson.fromJson(pmphGroupMembers, type);
 		String sessionId = CookiesUtil.getSessionId(request);
-		return new ResponseBean(pmphGroupMemberService.addPmphGroupMembers(groupId,list));
+		return new ResponseBean(pmphGroupMemberService.addPmphGroupMembers(groupId, list, sessionId));
 
 	}
 
@@ -357,6 +357,9 @@ public class GroupController {
 		return new ResponseBean(pmphGroupMemberService.listGroupMemberManagerVOs(pageParameter));
 	}
 
+
+
+
 	/**
 	 * 
 	 * 
@@ -427,13 +430,13 @@ public class GroupController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取历史消息")
 	@RequestMapping(value = "/list/message", method = RequestMethod.GET)
-	public ResponseBean message(Integer pageSize, Integer pageNumber, Long groupId, Long baseTime) {
+	public ResponseBean message(Integer pageSize, Integer pageNumber, Long groupId, Long baseTime,HttpServletRequest req) {
 		PageParameter<PmphGroupMessageVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		PmphGroupMessageVO pmphGroupMessageVO = new PmphGroupMessageVO();
 		pmphGroupMessageVO.setGmtCreate(new Timestamp(baseTime));
 		pmphGroupMessageVO.setGroupId(groupId);
 		pageParameter.setParameter(pmphGroupMessageVO);
-		return new ResponseBean(pmphGroupMessageService.listPmphGroupMessage(pageParameter));
+		return new ResponseBean(pmphGroupMessageService.listPmphGroupMessage(pageParameter,req));
 	}
 
 	/**
@@ -456,9 +459,12 @@ public class GroupController {
 			List<PmphGroupMember> list = gson.fromJson(pmphGroupMembers, type);
 			return new ResponseBean(pmphGroupService.addEditorSelcetionGroup(sessionId, list, textbookId));
 		} catch (Exception e) {
+		    e.printStackTrace();
 			return new ResponseBean(e);
 		}
 	}
+
+
 
 	/**
 	 * 职位遴选页面更新小组成员
@@ -493,8 +499,8 @@ public class GroupController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "后台小组成员管理修改小组成员昵称")
 	@RequestMapping(value = "/update/displayName", method = RequestMethod.POST)
-	public ResponseBean displayName(Long groupId, Long id, String displayName,HttpServletRequest request){
+	public ResponseBean displayName(Long groupId,Long userId, Long id, String displayName,HttpServletRequest request){
 		String sessionId = CookiesUtil.getSessionId(request);
-		return new ResponseBean(pmphGroupMemberService.updatePmphGroupMemberDisplayName(groupId, id, displayName, sessionId));
+		return new ResponseBean(pmphGroupMemberService.updatePmphGroupMemberDisplayName(groupId,userId, id, displayName, sessionId));
 	}
 }

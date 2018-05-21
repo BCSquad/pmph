@@ -119,4 +119,11 @@ public interface PmphGroupFileDao {
 	 *
 	 */
 	Integer updatePmphGroupFileOfDownload(@Param("groupId") Long groupId, @Param("fileId") String fileId);
+
+	/**
+	 *文件名获取
+	 * @param id
+	 * @return
+	 */
+    String getFileName(@Param("id") String id);
 }

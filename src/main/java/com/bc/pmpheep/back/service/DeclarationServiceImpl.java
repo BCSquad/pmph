@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.bc.pmpheep.back.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -65,14 +66,6 @@ import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.po.WriterUserTrendst;
 import com.bc.pmpheep.back.service.common.SystemMessageService;
-import com.bc.pmpheep.back.util.CollectionUtil;
-import com.bc.pmpheep.back.util.Const;
-import com.bc.pmpheep.back.util.DateUtil;
-import com.bc.pmpheep.back.util.ObjectUtil;
-import com.bc.pmpheep.back.util.PageParameterUitl;
-import com.bc.pmpheep.back.util.RouteUtil;
-import com.bc.pmpheep.back.util.SessionUtil;
-import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.ApplicationVO;
 import com.bc.pmpheep.back.vo.DecExtensionVO;
 import com.bc.pmpheep.back.vo.DecPositionDisplayVO;
@@ -84,6 +77,8 @@ import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * <p>
@@ -207,10 +202,24 @@ public class DeclarationServiceImpl implements DeclarationService {
 
 	@Override
 	public PageResult<DeclarationListVO> pageDeclaration(Integer pageNumber, Integer pageSize, Long materialId,
-			String textBookids, String realname, String position, String title, String orgName, Long orgId,
-			String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress, Boolean haveFile)
+														 String textBookids, String realname, String position, String title, String orgName, Long orgId,
+														 String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress, Boolean haveFile, String tag,
+														 HttpServletRequest request)
 			throws CheckedServiceException {
-		if (null == materialId) {
+		if (null == request.getSession(false)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"会话过期");
+		}
+		// 获取当前用户
+		String sessionId = CookiesUtil.getSessionId(request);
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (null == pmphUser) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"请求用户不存在");
+		}
+
+
+		if (null == materialId && tag==null) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
 					"教材为空");
 		}
@@ -219,7 +228,13 @@ public class DeclarationServiceImpl implements DeclarationService {
 		}.getType());
 		// 拼装复合参数
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("materialId", materialId);
+		if(tag!=null&& tag.equals("WX")){
+			map.put("userId",pmphUser.getId());
+			Map<String,Object> ma=declarationDao.getMaterialForResolve(map);
+			map.put("materialId", ma.get("mymaterials"));
+		}else{
+			map.put("materialId", "("+materialId+")");
+		}
 		if (null != bookIds && bookIds.size() > 0) {
 			map.put("bookIds", bookIds); // 书籍ids
 		}
@@ -308,9 +323,9 @@ public class DeclarationServiceImpl implements DeclarationService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("title", CheckedExceptionBusiness.MATERIAL);
 		if (0 == offlineProgress) {
-			map.put("content", "抱歉，您在《" + material.getMaterialName() + "》提交的申报纸质表被退回，请您核对后重试。");
+			map.put("content", "抱歉，您在《" + material.getMaterialName() + "》提交的申报纸质表被退回，请您核对后重新提交。");
 		} else {
-			map.put("content", "您好，人民卫生出版社已收到您在《" + material.getMaterialName() + "》提交的申报纸质表，感谢您的参与，请耐心等待遴选结果。");
+			map.put("content", "您好，人民卫生出版社已收到您提交《" + material.getMaterialName() + "》的纸质申报表，感谢您的参与，请耐心等待遴选结果。");
 		}
 		map.put("img", 1);
 		detail = new Gson().toJson(map);
@@ -366,18 +381,17 @@ public class DeclarationServiceImpl implements DeclarationService {
 			writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
 			// 发送系统消息
 			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), true, returnCause); 
-			// 获取审核进度是4并且已经通过审核单位并且不是提交到出版社0则被退回给申报单位
-			// 提交审核单位，审核单位已经通过，出版社退回给申报单位操作
-		} else if (4 == onlineProgress.intValue() && 3 == declarationCon.getOnlineProgress()
-				&& 0 != declarationCon.getOrgId()) {
-			List<DecPosition> decPosition = decPositionDao.listDecPositions(id);
+			// 获取审核进度是4并且通过或者不通过审核单位并且不是提交到出版社0则被退回给申报单位
+			// 提交审核单位，审核单位通过或者不通过，出版社都退回给申报单位操作
+		} else if (4 == onlineProgress.intValue() && 0 != declarationCon.getOrgId()) {
+			/*List<DecPosition> decPosition = decPositionDao.listDecPositions(id);
 			for (DecPosition decPositions : decPosition) {
 				Integer chosenPosition = decPositions.getChosenPosition();
 				if (null != chosenPosition && chosenPosition.intValue() > 0) {
 					throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 							CheckedExceptionResult.NULL_PARAM, "已遴选职务，不可退回给申报单位!");
 				}
-			}
+			}*/
 			declarationCon.setOnlineProgress(onlineProgress);
 			if (StringUtil.strLength(returnCause) > 100) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
@@ -407,14 +421,14 @@ public class DeclarationServiceImpl implements DeclarationService {
 			// 获取审核进度是5并且通过或者不通过审核单位并且不是提交到出版社0则被退回给个人
 			// 提交审核单位，审核单位通过或者不通过，出版社都可以退回给个人操作
 		} else if (5 == onlineProgress.intValue() && 0 != declarationCon.getOrgId()) {
-			List<DecPosition> decPosition = decPositionDao.listDecPositions(id);
+			/*List<DecPosition> decPosition = decPositionDao.listDecPositions(id);
 			for (DecPosition decPositions : decPosition) {
 				Integer chosenPosition = decPositions.getChosenPosition();
 				if (null != chosenPosition && chosenPosition.intValue() > 0) {
 					throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 							CheckedExceptionResult.NULL_PARAM, "已遴选职务，不可退回给个人!");
 				}
-			}
+			}*/
 			declarationCon.setOnlineProgress(onlineProgress);
 			if (StringUtil.strLength(returnCause) > 100) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
@@ -431,7 +445,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("title", CheckedExceptionBusiness.MATERIAL);
 			map.put("content", "抱歉，您提交的《" + material.getMaterialName() + "》申报表被出版社退回，"
-					+ "退回原因：" + returnCause + "，请您核对后重试。");
+					+ "退回原因：" + returnCause + "，请您核对后重新提交。");
 			map.put("img", 2);
 			detail = new Gson().toJson(map);
 			writerUserTrendst.setDetail(detail);
@@ -444,14 +458,14 @@ public class DeclarationServiceImpl implements DeclarationService {
 			// 获取审核进度是5并且机构id为出版社0则被退回给个人
 			// 提交到出版社，出版社退回给个人操作
 		} else if (5 == onlineProgress.intValue() && 0 == declarationCon.getOrgId()) {
-			List<DecPosition> decPosition = decPositionDao.listDecPositions(id);
+			/*List<DecPosition> decPosition = decPositionDao.listDecPositions(id);
 			for (DecPosition decPositions : decPosition) {
 				Integer chosenPosition = decPositions.getChosenPosition();
 				if (null != chosenPosition && chosenPosition.intValue() > 0) {
 					throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 							CheckedExceptionResult.NULL_PARAM, "已遴选职务，不可退回给个人!");
 				}
-			}
+			}*/
 			declarationCon.setOnlineProgress(onlineProgress);
 			if (StringUtil.strLength(returnCause) > 100) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
@@ -468,7 +482,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("title", CheckedExceptionBusiness.MATERIAL);
 			map.put("content", "抱歉，您提交的《" + material.getMaterialName() + "》申报表被出版社退回，"
-					+ "退回原因：" + returnCause + "，请您核对后重试。");
+					+ "退回原因：" + returnCause + "，请您核对后重新提交。");
 			map.put("img", 2);
 			detail = new Gson().toJson(map);
 			writerUserTrendst.setDetail(detail);
@@ -813,7 +827,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 			throws CheckedServiceException, IllegalArgumentException, IllegalAccessException {
 		List<DeclarationEtcBO> declarationEtcBOs = new ArrayList<>();
 		Gson gson = new Gson();
-		List<Long> bookIds = gson.fromJson(textBookids, new TypeToken<ArrayList<Long>>() {
+
+ 		List<Long> bookIds = gson.fromJson("["+textBookids+"]", new TypeToken<ArrayList<Long>>() {
 		}.getType());
 		List<DeclarationOrDisplayVO> declarationOrDisplayVOs = declarationDao.getDeclarationOrDisplayVOByMaterialId(
 				materialId, bookIds, realname, position, title, orgName, unitName, positionType, onlineProgress,

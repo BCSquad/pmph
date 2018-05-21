@@ -18,6 +18,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -381,13 +382,17 @@ public class DecPositionServiceImpl implements DecPositionService {
         }
         Collections.sort(editorList, new Comparator<DecPositionEditorSelectionVO>() {
             public int compare(DecPositionEditorSelectionVO arg0, DecPositionEditorSelectionVO arg1) {
-                return arg0.getRank().compareTo(arg1.getRank());
+                Integer com1 = arg0.getRank()==null?0:arg0.getRank();
+                Integer com2 = arg1.getRank()==null?0:arg1.getRank();
+                return com1.compareTo(com2);
             }
         });
 
         Collections.sort(subeditorList, new Comparator<DecPositionEditorSelectionVO>() {
             public int compare(DecPositionEditorSelectionVO arg0, DecPositionEditorSelectionVO arg1) {
-                return arg0.getRank().compareTo(arg1.getRank());
+                Integer com1 = arg0.getRank()==null?0:arg0.getRank();
+                Integer com2 = arg1.getRank()==null?0:arg1.getRank();
+                return com1.compareTo(com2);
             }
         });
         Collections.sort(unselectedDecPositionEditorSelectionVOs,
@@ -408,6 +413,8 @@ public class DecPositionServiceImpl implements DecPositionService {
         resultMap.put("DecPositionEditorSelectionVO", newDecPositionEditorSelectionVOs);
         Material material = materialService.getMaterialById(materialId);
         resultMap.put("IsDigitalEditorOptional", material.getIsDigitalEditorOptional());
+        List<Map<String,Object>> isZhuBian = decPositionDao.getIsZhuBian( materialId);
+        resultMap.put("isZhuBian",isZhuBian);
         return resultMap;
     }
 
@@ -432,6 +439,10 @@ public class DecPositionServiceImpl implements DecPositionService {
         Integer count = 0;
         List<DecPosition> decPositions =
         new JsonUtil().getArrayListObjectFromStr(DecPosition.class, jsonDecPosition);// json字符串转List对象集合
+       /* if (org.springframework.util.StringUtils.isEmpty(decPositions.get(0).getRank())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                    CheckedExceptionResult.NULL_PARAM, "排序不能为空");
+        }*/
         // 编委遴选界面 (0:未选中)
         Integer unselectedHold_0 = 0;
         if (CollectionUtil.isEmpty(decPositions) && unselectedHold_0 == unselectedHold
@@ -498,6 +509,7 @@ public class DecPositionServiceImpl implements DecPositionService {
                 Long updaterId = pmphUser.getId(); // 获取修改者id
                 // 添加新的遴选记录
                 textbookLogService.addTextbookLog(oldlist, textbookId, updaterId, userType);
+
             }
             // 2：发布
             if (selectionType_2.intValue() == selectionType.intValue()) {

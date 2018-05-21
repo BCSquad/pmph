@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.vo;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import org.apache.ibatis.type.Alias;
 
@@ -87,6 +88,10 @@ public class WriterUserManagerVO implements Serializable {
      */
     private Integer sort;
     /**
+     * 小组id
+     */
+    private Long groupId;
+    /**
      * 备注
      */
     private String  note;
@@ -94,7 +99,11 @@ public class WriterUserManagerVO implements Serializable {
     private Integer count;
     // 是否教师
     private Boolean isTeacher;
-    
+
+    private Boolean isTop;
+
+    private Date topSort;
+
     public Boolean getIsTeacher() {
 		return isTeacher;
 	}
@@ -312,7 +321,31 @@ public class WriterUserManagerVO implements Serializable {
 				+ ", isTeacher=" + isTeacher + "]";
 	}
 
-   
-  
 
+
+
+    public Date getTopSort() {
+        return topSort;
+    }
+
+    public void setTopSort(Date topSort) {
+        this.topSort = topSort;
+    }
+
+
+    public Boolean getIsTop() {
+        return isTop;
+    }
+
+    public void setIsTop(Boolean isTop) {
+        this.isTop = isTop;
+    }
+
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
+    }
 }

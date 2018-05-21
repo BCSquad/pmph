@@ -175,5 +175,5 @@ public class BookVO implements Serializable {
 	public void setSortKey(Integer sortKey) {
 		this.sortKey = sortKey;
 	}
-	
+
 }

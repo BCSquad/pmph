@@ -52,6 +52,7 @@ import org.springframework.context.ApplicationContextAware;
  */
 @Service
 public class OrgUserServiceImpl extends BaseService implements OrgUserService, ApplicationContextAware {
+
 	@Autowired
 	private OrgUserDao orgUserDao;
 	@Autowired
@@ -151,7 +152,7 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService, A
 	}
 
 	@Override
-	public Integer updateOrgUserProgressById(Integer progress, List<Long> orgUserIds)
+	public Integer updateOrgUserProgressById(Integer progress, List<Long> orgUserIds,String backReason)
 			throws CheckedServiceException, IOException {
 		if (CollectionUtil.isEmpty(orgUserIds) || ObjectUtil.isNull(progress)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.SCHOOL_ADMIN_CHECK,
@@ -162,12 +163,15 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService, A
 		if (CollectionUtil.isNotEmpty(orgUserList)) {
 			List<OrgUser> orgUsers = new ArrayList<OrgUser>(orgUserList.size());
 			for (OrgUser orgUser : orgUserList) {
-				if (Const.ORG_USER_PROGRESS_1 == orgUser.getProgress()
-						|| Const.ORG_USER_PROGRESS_2 == orgUser.getProgress()) {
+				/*Const.ORG_USER_PROGRESS_1 == orgUser.getProgress() 已经通过的可以退回。
+						||*/
+				if (Const.ORG_USER_PROGRESS_2 == orgUser.getProgress()) {
 					throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 							CheckedExceptionResult.NULL_PARAM, "已审核的用户不能再次审核");
 				}
-				orgUsers.add(new OrgUser(orgUser.getId(), progress));
+				OrgUser ou = new OrgUser(orgUser.getId(), progress);
+				ou.setBackReason(backReason);
+				orgUsers.add(ou);
 			}
 			if (CollectionUtil.isNotEmpty(orgUsers)) {
 				count = orgUserDao.updateOrgUserProgressById(orgUsers);
@@ -181,7 +185,7 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService, A
 			isPass = false;
 		}
 		if (null != isPass) {// 推送机构认证审核信息
-			systemMessageService.sendWhenManagerCertificationAudit(orgUserIds, isPass);
+			systemMessageService.sendWhenManagerCertificationAudit(orgUserIds, isPass,backReason);
 		}
 		return count;
 	}
@@ -488,6 +492,11 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService, A
 		}
 		String password = "123456";
 		OrgUser orgUser = orgUserDao.getOrgUserById(id);
+                SsoHelper ssoHelper = context.getBean(SsoHelper.class);
+                if(!ssoHelper.resetPassword(orgUser.getUsername(), password)){
+                    throw new CheckedServiceException(CheckedExceptionBusiness.ORG, 
+                            CheckedExceptionResult.FAILURE_SSO_CALLBACK, "访问单点登录系统失败");
+                }
 		DesRun desRun = new DesRun(orgUser.getUsername(), password);
 		orgUser.setPassword(desRun.enpsw);
 		orgUserDao.updateOrgUser(orgUser);

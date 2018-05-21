@@ -52,6 +52,21 @@ public class OrgServiceImpl extends BaseService implements OrgService {
         return orgDao.listBeElectedOrgByBookIds(bookIds);
     }
 
+    @Override
+    public List<Org> listBeElectedOrgByBookIds_up1(List<Long> bookIds) throws CheckedServiceException {
+        if (null == bookIds || bookIds.size() == 0) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+                    CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        for (Long bookId : bookIds) {
+            if (null == bookId) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+                        CheckedExceptionResult.NULL_PARAM, "书籍参数为空");
+            }
+        }
+        return orgDao.listBeElectedOrgByBookIds_up1(bookIds);
+    }
+
     /**
      * 
      * @param org 实体对象
@@ -262,8 +277,8 @@ public class OrgServiceImpl extends BaseService implements OrgService {
     }
 
     @Override
-    public List<OrgExclVO> listAllOrgToExcel() throws CheckedServiceException {
-        return orgDao.listAllOrgToExcel();
+    public List<OrgExclVO> listAllOrgToExcel(String listAllOrgToExcel) throws CheckedServiceException {
+        return orgDao.listAllOrgToExcel(listAllOrgToExcel.split(","));
     }
 
 }

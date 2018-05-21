@@ -1232,4 +1232,16 @@
 		dp.`textbook_id`= #{textbookId}
 	</select>
 
+	<select id="getIsZhuBian" resultType="map">
+		 SELECT
+			realname,
+			(dp.chosen_position &amp; 4)>0 iszhubian,tb.textbook_name as textbookName,tb.id as textbookId,(dp.chosen_position &amp; 2)>0 isfubian
+		FROM
+			declaration d
+		LEFT JOIN dec_position dp ON d.id = dp.declaration_id
+		LEFT JOIN textbook tb ON tb.id = dp.textbook_id
+		WHERE
+			d.material_id = #{materialId}
+	</select>
+
 </mapper>

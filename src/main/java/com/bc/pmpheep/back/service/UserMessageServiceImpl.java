@@ -11,6 +11,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -202,8 +203,15 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             pageParameter.getParameter().setName(orgNameOrReceiver.replaceAll(" ", ""));
         }
         if (Const.FALSE.booleanValue() == pmphUser.getIsAdmin().booleanValue()) {
-            pageParameter.getParameter().setSenderId(pmphUser.getId());
+            //这里是为了过滤权限 自己可以看到自己发送的，主任可以看到下属发送的。
+            if(pmphUser.getDepartmentId()==userMessageDao.getSenderDepartmentId(pageParameter.getParameter().getSenderId())&&pmphUser.getIsDirector()){
+
+            }else{
+                pageParameter.getParameter().setSenderId(pmphUser.getId());
+            }
+
         }
+
         PageResult<MessageStateVO> pageResult = new PageResult<MessageStateVO>();
         // 将页面大小和页面页码拷贝
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
@@ -359,14 +367,16 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             List<UserMessage> sendedList = userMessageDao.getMessageByMsgId(message.getId());
             // 已发送消息是否撤回
             Boolean isWithdraw = false;
+            //消息是否已撤回
+
             for (UserMessage userMessage : userMessageList) {
                 boolean flag = false;// 没有发送
                 for (UserMessage uMessage : sendedList) {
-                    if (!isWithdraw) {
-                        if (uMessage.getIsWithdraw()) {// 判断消息是否撤回
-                            isWithdraw = true;
-                        }
-                    }
+//                    if (!isWithdraw) {
+//                        if (uMessage.getIsWithdraw()) {// 判断消息是否撤回
+//                            isWithdraw = true;
+//                        }
+//                    }
                     if (userMessage.getReceiverId().longValue() == uMessage.getReceiverId()
                                                                            .longValue()
                         && userMessage.getReceiverType().shortValue() == uMessage.getReceiverType()
@@ -381,7 +391,8 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             }
             userMessageList = temp;
             // 补发，取消撤回当前已发送的消息
-            if (isWithdraw) {
+            //消息是否已撤回
+            if (userMessageDao.getMessageIsWithDraw(message.getId())>0) {
                 this.updateCancelToWithdraw(message.getId());
             }
         }

@@ -46,6 +46,24 @@ public class BookCorrectionController {
 			@RequestParam(value = "result",     required = false)	Boolean result) {
 		return new ResponseBean(bookCorrectionService.listBookCorrectionAudit(request,pageNumber,pageSize,bookname ,isOver,result));
 	}
+
+	/**
+	 * 读书反馈
+	 * @param request
+	 * @param pageNumber
+	 * @param pageSize
+	 * @param result
+	 * @return
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取读书反馈页面的分页数据")
+	@RequestMapping(value = "/bookList", method = RequestMethod.GET)
+	public ResponseBean bookList(HttpServletRequest request,
+							 @RequestParam(value = "pageNumber", required = false)    Integer pageNumber,
+							 @RequestParam(value = "pageSize",   required = false)	Integer pageSize,
+							 @RequestParam(value = "result",     required = false)	Boolean result) {
+		return new ResponseBean(bookCorrectionService.bookFeedBaskList(request,pageNumber,pageSize,result));
+	}
 	
 	/**
 	 * 根据id获取审核详情
@@ -60,6 +78,18 @@ public class BookCorrectionController {
 	@RequestMapping(value = "/detail", method = RequestMethod.GET)
 	public ResponseBean detail( @RequestParam(value = "id",  required = true)	Long id) {
 		return new ResponseBean(bookCorrectionService.getBookCorrectionAuditDetailById(id));
+	}
+
+	/**
+	 * 读书反馈
+	 * @param id
+	 * @return
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取审核读书反馈详情")
+	@RequestMapping(value = "/bookFeekBackDetail", method = RequestMethod.GET)
+	public ResponseBean bookFeekBackDetail( @RequestParam(value = "id",  required = true)	Long id) {
+		return new ResponseBean(bookCorrectionService.getBookFeedBackDetailById(id));
 	}
 	
 	/**
@@ -105,6 +135,15 @@ public class BookCorrectionController {
 			@RequestParam(value = "result", 		     required = true)  Boolean result , 
 			@RequestParam(value = "editorReply", 		 required = true)  String editorReply) {
 		return new ResponseBean(bookCorrectionService.replyWriter(id , result , editorReply));
+	}
+
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "读者反馈")
+	@RequestMapping(value = "/replyBookFeedBackWriter", method = RequestMethod.PUT)
+	public ResponseBean replyBookFeedBackWriter(HttpServletRequest request,
+									@RequestParam(value = "id", 		         required = true)  Long id ,
+									@RequestParam(value = "authorReply", 		 required = true)  String authorReply) {
+		return new ResponseBean(bookCorrectionService.replyBookFeedBackWriter(id, authorReply,request));
 	}
 	
 	/**

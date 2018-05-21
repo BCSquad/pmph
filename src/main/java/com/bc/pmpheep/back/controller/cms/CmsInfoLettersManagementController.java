@@ -147,9 +147,9 @@ public class CmsInfoLettersManagementController {
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "信息快报内容修改")
     @RequestMapping(value = "/letters/update", method = RequestMethod.PUT)
-    public ResponseBean update(CmsContent cmsContent, @RequestParam("file") String[] files,
-    @RequestParam("content") String content, @RequestParam("attachment") String[] attachment,
-    @RequestParam("scheduledTime") String scheduledTime, HttpServletRequest request) {
+    public ResponseBean update(CmsContent cmsContent, @RequestParam(value="file",required = false) String[] files,
+    @RequestParam(value="content",required = false) String content, @RequestParam(value = "attachment",required = false) String[] attachment,
+    @RequestParam(value="scheduledTime",required = false) String scheduledTime, HttpServletRequest request) {
         try {
             String sessionId = CookiesUtil.getSessionId(request);
             return new ResponseBean(cmsContentService.updateCmsContent(cmsContent,

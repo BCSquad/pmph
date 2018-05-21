@@ -107,6 +107,9 @@
 			<if test="cover != null and cover != ''">
 				cover,
 			</if>
+			<if test="authorname != null and authorname != ''">
+				author_name,
+			</if>
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
@@ -215,6 +218,10 @@
 			<if test="cover != null and cover != ''">
 				#{cover},
 			</if>
+			<if test="authorname != null and authorname != ''">
+				#{authorname},
+			</if>
+
 		</trim>
 	</sql>
 	<!-- 新增CmsContent -->
@@ -316,12 +323,10 @@
 			<if test="authUserId != null">
 				auth_user_id=#{authUserId},
 			</if>
-			<if test="authDate == null ">
-				auth_date=#{authDate},
-			</if>
 			<if test="authDate != null ">
-				auth_date=#{authDate},
+				auth_date=str_to_date(#{authDate}, '%Y-%m-%d %H:%i:%s'),
 			</if>
+
 			<if test="isDeleted != null">
 				is_deleted=#{isDeleted},
 			</if>
@@ -336,6 +341,9 @@
 			</if>
 			<if test="cover != null and cover != ''">
 				cover=#{cover},
+			</if>
+			<if test="authorname != null and authorname != ''">
+				author_name=#{authorname},
 			</if>
 		</set>
 		where
@@ -398,20 +406,42 @@
 
 	<!--CmsContentVO模糊查询获取列表 -->
 	<select id="listCmsContent" parameterType="PageParameter" resultType="CmsContentVO">
-		SELECT * FROM (
-			(SELECT  cc.`id`, cc.`title`, pu.`username` username,
-			
-  				<!-- (
-    				CASE
-				      WHEN cc.`author_type` = 0 
-				      THEN pu.username 
-				      WHEN cc.`author_type` = 1 || cc.`author_type` = 2 
-				      THEN wu.`username` 
-   					END
-  				) username, -->
-  				cc.`auth_status`,cc.`auth_date`,cc.`gmt_create`,cc.`clicks`,cc.`comments`,cc.`likes`,
-  				cc.`bookmarks`,cc.category_id,ccg.`category_name`,cc.`is_published`,cc.`is_stick`,cc.`is_hot`,
-  				cc.`is_promote`,cc.`is_staging`,cc.`is_material_entry`,cc.`author_id`,pu.`realname`,cc.`material_id` 
+		SELECT * FROM
+			(
+		SELECT
+		cc.`id`,
+		cc.`title`,
+		cc.author_name authorname,
+		CASE
+		WHEN cc.author_type = 2 THEN
+		wu.username
+		ELSE
+		pu.`username`
+		END username,
+		cc.`auth_status`,
+		cc.`auth_date`,
+		cc.`gmt_create`,
+		cc.`clicks`,
+		cc.`comments`,
+		cc.`likes`,
+		cc.`bookmarks`,
+		cc.category_id,
+		ccg.`category_name`,
+		cc.`is_published`,
+		cc.`is_stick`,
+		cc.`is_hot`,
+		cc.`is_promote`,
+		cc.`is_staging`,
+		cc.`is_material_entry`,
+		cc.author_type,
+		cc.`author_id`,
+		CASE
+		WHEN cc.author_type = 2 THEN
+		wu.realname
+		ELSE
+		pu.`realname`
+		END realname,
+		cc.`material_id`
 			FROM
 			  `cms_content` cc 
 			  LEFT JOIN `pmph_user` pu 
@@ -420,105 +450,17 @@
 			    ON cc.author_id = wu.id 
 			  LEFT JOIN `cms_category` ccg 
 			    ON cc.`category_id` = ccg.`id` 
-			WHERE cc.`is_deleted` = 0 
-			  AND cc.`author_type` IN (0,1) 
+			WHERE cc.`is_deleted` = 0
+		AND (
+		cc.`author_type` IN (0, 1)
+		OR (
+		cc.`author_type` = 2
+		AND cc.`is_staging` = FALSE
+		)
+		)
 			ORDER BY cc.`gmt_create` DESC) 
-		UNION
-			(SELECT  cc.`id`, cc.`title`,wu.`username` username,
-			 <!--  (
-			    CASE
-			      WHEN cc.`author_type` = 0 
-			      THEN pu.username 
-			      WHEN cc.`author_type` = 1 || cc.`author_type` = 2 
-			      THEN wu.`username` 
-			    END
-			  ) username, -->
-			    cc.`auth_status`,cc.`auth_date`,cc.`gmt_create`,cc.`clicks`,cc.`comments`,
-			    cc.`likes`,cc.`bookmarks`,cc.category_id,ccg.`category_name`,cc.`is_published`,cc.`is_stick`,
-			    cc.`is_hot`,cc.`is_promote`,cc.`is_staging`,cc.`is_material_entry`,cc.`author_id`,pu.`realname`,cc.`material_id` 
-			FROM
-			  `cms_content` cc 
-			  LEFT JOIN `pmph_user` pu 
-			    ON cc.author_id = pu.id 
-			  LEFT JOIN `writer_user` wu 
-			    ON cc.author_id = wu.id 
-			  LEFT JOIN `cms_category` ccg 
-			    ON cc.`category_id` = ccg.`id` 
-			WHERE cc.`is_deleted` = 0 
-			  AND cc.`author_type`=2
-			  AND cc.`is_staging` = FALSE
-			  ORDER BY cc.`gmt_create` DESC ))a,
-			  (SELECT SUM(`count`) `count` FROM
-			  	(SELECT  COUNT(*) `count`
-			     FROM
-			     	`cms_content` cc 
-			  	LEFT JOIN 
-			  		`pmph_user` pu 
-			    ON 
-			    	cc.author_id = pu.id 
-			  	LEFT JOIN 
-			  		`writer_user` wu 
-			    ON 
-			    	cc.author_id = wu.id 
-			  	LEFT JOIN 
-			  		`cms_category` ccg 
-			    ON 
-			    	cc.`category_id` = ccg.`id` 
-				WHERE 
-					cc.`is_deleted` = 0 
-				AND 
-					cc.`author_type` =2 
-				AND 
-				cc.`is_staging` = FALSE
-				 <if test="parameter !=null ">
-				 			<!-- 栏目类型 -->
-							<if test="parameter.categoryId != null">
-								AND cc.`category_id` = #{parameter.categoryId}
-							</if>
-							<!-- 作者 -->
-							<if test="parameter.isAdmin == false ">
-								AND cc.`author_id`=#{parameter.authorId}
-							</if>
-							<!-- 文章标题 -->
-							<if test="parameter.title != null and parameter.title != ''">
-								AND cc.`title` like concat('%',#{parameter.title},'%')
-							</if>
-							<!-- 状态（已发布，未发布，已退回） -->
-							<if test="parameter.authStatus !=null ">
-								AND cc.`auth_status` = #{parameter.authStatus}
-							</if>
-							<if test="parameter.isPublished !=null ">
-								AND cc.`is_published` = #{parameter.isPublished}
-							</if>
-							<!-- 作者 -->
-							<if test="parameter.username !=null and  parameter.username!='' ">
-								AND (
-								pu.`username` like
-								concat('%',#{parameter.username},'%')
-								OR
-								pu.`realname`like
-								concat('%',#{parameter.username},'%') )
-							</if>
-							<!-- 所属教材 -->
-							<if test="parameter.materialId !=null ">
-								AND cc.`material_id` = #{parameter.materialId}
-							</if>
-							<!-- 创建时间 -->
-							<if test="parameter.startCreateDate !=null and parameter.startCreateDate !=''">
-								AND cc.`gmt_create` &gt;= str_to_date(#{parameter.startCreateDate},'%Y-%m-%d %H:%i:%s')
-							</if>
-							<if test="parameter.endCreateDate !=null and parameter.endCreateDate !='' ">
-								AND cc.`gmt_create`  &lt;=  str_to_date(#{parameter.endCreateDate},'%Y-%m-%d %H:%i:%s')
-							</if>
-							<!-- 发布时间 -->
-							<if test="parameter.startAuDate !=null and parameter.startAuDate !='' ">
-								AND cc.`auth_date` &gt;= str_to_date(#{parameter.startAuDate},'%Y-%m-%d %H:%i:%s')
-							</if>
-							<if test="parameter.endAuDate !=null and parameter.endAuDate !='' ">
-								AND cc.`auth_date`  &lt;= str_to_date(#{parameter.endAuDate},'%Y-%m-%d %H:%i:%s')
-							</if>
-				</if>
-  				UNION
+	a,
+			  (
 				SELECT 
 					COUNT(*) `COUNT`
 				FROM
@@ -536,9 +478,14 @@
 				ON 
 					cc.`category_id` = ccg.`id` 
 				WHERE 
-					cc.`is_deleted` = 0 
-				AND 
-					cc.`author_type` IN(0,1)
+					cc.`is_deleted` = 0
+		AND (
+		cc.`author_type` IN (0, 1)
+		OR (
+		cc.`author_type` = 2
+		AND cc.`is_staging` = FALSE
+		)
+		)
 				<if test="parameter !=null ">
 							<if test="parameter.categoryId != null">
 								AND cc.`category_id` = #{parameter.categoryId}
@@ -582,7 +529,7 @@
 								AND cc.`auth_date`  &lt;= str_to_date(#{parameter.endAuDate},'%Y-%m-%d %H:%i:%s')
 							</if>
 				</if>
-				 )t
+
 			)b
 		<where>
 		<if test="parameter !=null ">

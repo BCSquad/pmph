@@ -19,6 +19,8 @@ public class MaterialListVO implements Serializable {
 	private Date deadline;
 	// 实际报名截止日期
 	private Date actualDeadline;
+	//发布日期
+	private Date gmtCreate;
 	// 联系人
 	private List<MaterialContact> contacts;
 	// 联系人名称（用于查询）
@@ -57,6 +59,8 @@ public class MaterialListVO implements Serializable {
 	private Integer projectPermission;
 	// 策划编辑权限
 	private Integer planPermission;
+	//部门名称
+	private String dpName;
 
 	public Long getId() {
 		return id;
@@ -242,4 +246,20 @@ public class MaterialListVO implements Serializable {
 		this.planPermission = planPermission;
 	}
 
+
+	public Date getGmtCreate() {
+		return gmtCreate;
+	}
+
+	public void setGmtCreate(Date gmtCreate) {
+		this.gmtCreate = gmtCreate;
+	}
+
+	public String getDpName() {
+		return dpName;
+	}
+
+	public void setDpName(String dpName) {
+		this.dpName = dpName;
+	}
 }

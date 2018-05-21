@@ -115,6 +115,7 @@ public interface MaterialDao {
      * 
      */
     List<MaterialListVO> listMaterialEnd(PageParameter<MaterialListVO> pageParameter);
+    List<MaterialListVO> listMaterialOrEndSignUpEnd(PageParameter<MaterialListVO> pageParameter);
 
     /**
      * 
@@ -126,6 +127,8 @@ public interface MaterialDao {
      * 
      */
     Integer listMaterialEndTotal(PageParameter<MaterialListVO> pageParameter);
+    Integer listMaterialOrEndSignUpEndTotal(PageParameter<MaterialListVO> pageParameter);
+
 
     /**
      * 获取用户在该教材是几本书的策划编辑
@@ -184,4 +187,18 @@ public interface MaterialDao {
      * </pre>
      */
     List<Material> listPublishedMaterial();
+
+    /**
+     * 报名已结束 实际报名截止时间 且遴选为结束
+     * @param pageParameter
+     * @return
+     */
+    Integer listMaterialSignUpEndTotal(PageParameter<MaterialListVO> pageParameter);
+
+    /**
+     * 报名已结束 实际报名截止时间 且遴选为结束
+     * @param pageParameter
+     * @return
+     */
+    List<MaterialListVO> listMaterialSignUpEnd(PageParameter<MaterialListVO> pageParameter);
 }

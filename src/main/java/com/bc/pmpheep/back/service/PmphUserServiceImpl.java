@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.service;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
@@ -11,6 +12,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.bc.pmpheep.back.util.*;
+import com.bc.pmpheep.general.bean.FileType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,17 +35,6 @@ import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.PmphUserRole;
 import com.bc.pmpheep.back.po.SysOperation;
 import com.bc.pmpheep.back.po.Textbook;
-import com.bc.pmpheep.back.util.CollectionUtil;
-import com.bc.pmpheep.back.util.Const;
-import com.bc.pmpheep.back.util.CookiesUtil;
-import com.bc.pmpheep.back.util.DateUtil;
-import com.bc.pmpheep.back.util.DesRun;
-import com.bc.pmpheep.back.util.ObjectUtil;
-import com.bc.pmpheep.back.util.PageParameterUitl;
-import com.bc.pmpheep.back.util.RouteUtil;
-import com.bc.pmpheep.back.util.SessionUtil;
-import com.bc.pmpheep.back.util.StringUtil;
-import com.bc.pmpheep.back.util.ValidatUtil;
 import com.bc.pmpheep.back.vo.BookCorrectionAuditVO;
 import com.bc.pmpheep.back.vo.BookUserCommentVO;
 import com.bc.pmpheep.back.vo.CmsContentVO;
@@ -120,32 +112,69 @@ public class PmphUserServiceImpl implements PmphUserService {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止更新用户");
         }
+        if (StringUtil.isEmpty(pmphUser.getRealname())) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                        CheckedExceptionResult.ILLEGAL_PARAM, "姓名不能为空");
+        }
+        if (!StringUtil.isEmpty(pmphUser.getHandphone())) {
+            if (!ValidatUtil.checkMobileNumber(pmphUser.getHandphone())) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                        CheckedExceptionResult.ILLEGAL_PARAM, "手机号码不符合规范");
+            }
+        }
         if (!StringUtil.isEmpty(pmphUser.getEmail())) {
             if (!ValidatUtil.checkEmail(pmphUser.getEmail())) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                                   CheckedExceptionResult.ILLEGAL_PARAM, "邮箱不符合规范");
             }
         }
-        if (!StringUtil.isEmpty(pmphUser.getHandphone())) {
-            if (!ValidatUtil.checkMobileNumber(pmphUser.getHandphone())) {
-                throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                                  CheckedExceptionResult.ILLEGAL_PARAM, "手机号码不符合规范");
-            }
-        }
         // 头像文件不为空更新头像
         if (StringUtil.notEmpty(newAvatar)) {
-            byte[] fileByte = (byte[]) request.getSession(false).getAttribute(newAvatar);
-            String fileName = (String) request.getSession(false).getAttribute("fileName_" + newAvatar);
-            String noticeId;
-            // 保存通知文件
-            InputStream sbs = new ByteArrayInputStream(fileByte);
-            noticeId = fileService.save(sbs, fileName, ImageType.PMPH_USER_AVATAR, id);
-            pmphUser.setAvatar(noticeId);
+            PmphUser pmphUserOld = get(id);
+            if (null != pmphUserOld && null != pmphUserOld.getAvatar()
+                    && !"".equals(pmphUserOld.getAvatar())
+                    && !RouteUtil.DEFAULT_USER_AVATAR.equals(pmphUserOld.getAvatar())) {
+                fileService.remove(pmphUserOld.getAvatar());
+            }
+            String newGroupImage = saveFileToMongoDB(newAvatar, request);
+            pmphUser.setAvatar(newGroupImage);
         }else{
         	 pmphUser.setAvatar(null);
         }
-        pmphUserDao.update(pmphUser);
+        Integer update = pmphUserDao.update(pmphUser);
         return true;
+    }
+
+    /**
+     *
+     * <pre>
+     * 功能描述：保存文件到MongoDB
+     * 使用示范：
+     *
+     * &#64;param files 临时文件路径
+     * &#64;param msgId messageId
+     * &#64;throws CheckedServiceException
+     * </pre>
+     */
+    private String saveFileToMongoDB(String file, HttpServletRequest request) throws IOException {
+        String userAvatar = RouteUtil.DEFAULT_USER_AVATAR;
+        // 添加附件到MongoDB表中
+        if (!StringUtil.isEmpty(file)) {
+            File f = FileUpload.getFileByFilePath(request.getSession().getServletContext().getRealPath("/") + file);
+            if (f.isFile()) {
+                // 循环获取file数组中得文件
+                if (StringUtil.notEmpty(f.getName())) {
+                    userAvatar = fileService.saveLocalFile(f, FileType.GROUP_FILE, 0);// 上传文件到MongoDB
+                    if (StringUtil.isEmpty(userAvatar)) {
+                        throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                CheckedExceptionResult.FILE_UPLOAD_FAILED, "文件上传失败!");
+                    }
+
+                }
+                FileUtil.delFile(file);// 删除本地临时文件
+            }
+        }
+        return userAvatar;
     }
 
     /**
@@ -158,7 +187,7 @@ public class PmphUserServiceImpl implements PmphUserService {
     public PmphUser add(PmphUser user) throws CheckedServiceException {
         if (StringUtil.isEmpty(user.getUsername())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "用户名为空时禁止新增用户");
+                    CheckedExceptionResult.NULL_PARAM, "用户名为空时禁止新增用户");
         }
         if (StringUtil.isEmpty(user.getPassword())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
@@ -443,6 +472,29 @@ public class PmphUserServiceImpl implements PmphUserService {
         return user;
     }
 
+    @Override
+    public PmphUser login(String openid) throws CheckedServiceException {
+        PmphUser user = pmphUserDao.getByOpenid(openid);
+        // 密码匹配的工作交给 Shiro 去完成
+        if (ObjectUtil.isNull(user)) {
+            // 因为缓存切面的原因,在这里就抛出用户名不存在的异常
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                    CheckedExceptionResult.NULL_PARAM, "未找到绑定的微信信息！");
+        } else {
+            if (user.getIsDisabled()) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                        CheckedExceptionResult.ILLEGAL_PARAM,
+                        "用户已经被禁用，请联系管理员启用该账号");
+            }
+        }
+        return user;
+    }
+
+    @Override
+    public int updateUserOpenid(String openid, String username) {
+        return pmphUserDao.updateUserOpenid(openid, username);
+    }
+
     /**
      * 查询所有的用户对象列表
      * 
@@ -536,6 +588,9 @@ public class PmphUserServiceImpl implements PmphUserService {
             pageParameter.getParameter().setPath(path + "-"
                                                  + java.lang.String.valueOf(departmentId) + '-');
         }
+        if(!ObjectUtil.isNull(groupId)){
+            pageParameter.getParameter().setGroupId(groupId);
+        }
         PageResult<PmphUserManagerVO> pageResult = new PageResult<>();
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
         int total = pmphUserDao.getListPmphUserTotal(pageParameter);
@@ -577,7 +632,9 @@ public class PmphUserServiceImpl implements PmphUserService {
                             }
                         }
                     }
-                    if (textbook.getPlanningEditor().intValue() == pmphUserId.intValue()) {
+                    if(textbook.getPlanningEditor() == null){
+                        posotion = null;
+                    }else if (  textbook.getPlanningEditor().intValue()== pmphUserId.intValue()) {
                         posotion += (posotion == null) ? "策划编辑" : ",策划编辑";
                     }
                     pmphUserManagerVO.setPosition(posotion == null ? "无" : posotion);
@@ -610,15 +667,23 @@ public class PmphUserServiceImpl implements PmphUserService {
         }
         if (!StringUtil.isEmpty(pmphUserManagerVO.getHandphone())) {
             if (!ValidatUtil.checkMobileNumber(pmphUserManagerVO.getHandphone())) {
-                throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                                  CheckedExceptionResult.ILLEGAL_PARAM, "电话格式不正确");
+            	if ("-".equals(pmphUserManagerVO.getHandphone())) {
+                	pmphUserManagerVO.setHandphone("-");
+                } else {
+                	throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                            CheckedExceptionResult.ILLEGAL_PARAM, "电话格式不正确");
+                }
             }
         }
         if (!StringUtil.isEmpty(pmphUserManagerVO.getEmail())) {
             if (!ValidatUtil.checkEmail(pmphUserManagerVO.getEmail())) {
-                throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                                  CheckedExceptionResult.ILLEGAL_PARAM, "邮箱格式不正确");
-            }
+            	if ("-".equals(pmphUserManagerVO.getEmail())) {
+                	pmphUserManagerVO.setEmail("-");
+                } else {
+                	throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                            CheckedExceptionResult.ILLEGAL_PARAM, "邮箱格式不正确");	
+				}
+            } 
         }
         if (StringUtil.isEmpty(pmphUserManagerVO.getRealname())) {
             pmphUserManagerVO.setRealname(pmphUserManagerVO.getUsername());
@@ -696,6 +761,8 @@ public class PmphUserServiceImpl implements PmphUserService {
         }
         // 获取用户角色
         List<PmphRole> rolelist = roleService.getPmphRoleByUserId(sessionPmphUser.getId());
+        //获取当前用户的首页的 权限
+        List<Map<String,Object>> userPermissionList = roleService.userPermission(sessionPmphUser.getId());
         // 用于装所有的数据map
         Map<String, Object> map = new HashMap<>();
         // 教师认证总数量
@@ -759,15 +826,15 @@ public class PmphUserServiceImpl implements PmphUserService {
         pageParameter3.setParameter(topicDeclarationVO);
         // 由主任受理
         if (pmphIdentity.getIsDirector()) {
-            PageParameter<TopicDirectorVO> pageParameterTopicDirectorVO = new PageParameter<>();
+            PageParameter<TopicDirectorVO> pageParameterTopicDirectorVO = new PageParameter<>(1,100);
             PageResult<TopicDirectorVO> PageResultTopicDirectorVO =
-            topicService.listIsDirectorTopic(sessionPmphUser.getId(), pageParameterTopicDirectorVO);
+                    topicService.listIsDirectorTopic(sessionPmphUser.getId(), pageParameterTopicDirectorVO);
             map.put("topicList", PageResultTopicDirectorVO);
         }
         // 由运维人员受理
         if (pmphIdentity.getIsOpts()) {
             PageParameter<TopicOPtsManagerVO> pageParameterTopicOPtsManagerVO =
-            new PageParameter<>();
+            new PageParameter<>(1,100);
             PageResult<TopicOPtsManagerVO> PageResultTopicOPtsManagerVO =
             topicService.listIsOptsTopic(sessionPmphUser.getId(), pageParameterTopicOPtsManagerVO);
             map.put("topicList", PageResultTopicOPtsManagerVO);
@@ -775,17 +842,19 @@ public class PmphUserServiceImpl implements PmphUserService {
         }
         // 由编辑受理
         if (pmphIdentity.getIsEditor()) {
-            PageParameter<TopicEditorVO> pageParameterTopicEditorVO = new PageParameter<>();
+            PageParameter<TopicEditorVO> pageParameterTopicEditorVO = new PageParameter<>(1,100);
             PageResult<TopicEditorVO> PageResultTopicEditorVO =
             topicService.listIsEditor(sessionPmphUser.getId(), pageParameterTopicEditorVO);
             map.put("topicList", PageResultTopicEditorVO);
         }
         // 是否是系统管理员
         if (pmphIdentity.getIsAdmin()) {
+            pageParameter3.setPageSize(100);
             PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO =
             topicService.listMyTopic(progress, pageParameter3, null);
             map.put("topicList", pageResultTopicDeclarationVO);
         }
+
         // 因前端需要判断，当没有选题申报给空数据
         if (ObjectUtil.isNull(map.get("topicList"))) {
             PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO = new PageResult<>();
@@ -814,6 +883,7 @@ public class PmphUserServiceImpl implements PmphUserService {
         map.put("pmphUser", sessionPmphUser);
         // 把用户角色存入map
         map.put("pmphRole", rolelist);
+        map.put("userPermission",userPermissionList);
         // 把选题申报的当前身份存入map
         map.put("pmphIdentity", pmphIdentity);
         // 存入用户上次操作时间
