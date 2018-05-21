@@ -441,12 +441,59 @@
 		a.textbook_name,
 		a.textbook_round textbookRound,
 		a.is_chief_published,
-		sum(IF(b.id is not null ,1,0))
-		applyNum,
+		/*sum(IF(b.id is not null ,1,0))*/
+		app.applyNum,
 		a.planning_editor planningEditor,
 		planningEditor.realname
 		planningEditorName ,
 		IF(a.is_chief_published,
+		concat(
+		'&lt;span class="editors_sql_label" &gt;主编：',
+		(GROUP_CONCAT(
+		IF(
+		g.chosen_position &amp; 4 &gt;0,
+		IF(g.id
+		or a.is_published or a.is_chief_published,
+		CONCAT('&lt;font color="red"&gt;',g.realname,'&lt;/font&gt;'),NULL ),
+		null
+		) ORDER BY if(g.chosen_position>8,g.chosen_position-8,g.chosen_position) desc,g.rank asc))
+		,'&lt;/span &gt;'
+		,
+		'&lt;span class="editors_sql_label" &gt;副主编：',
+		(GROUP_CONCAT(
+		IF(
+		g.chosen_position&amp;2 &gt;0,
+		IF(g.id
+		or a.is_published or a.is_chief_published,
+		CONCAT('&lt;font color="red"&gt;',g.realname,'&lt;/font&gt;'),NULL ),
+		null
+		) ORDER BY if(g.chosen_position>8,g.chosen_position-8,g.chosen_position) desc,g.rank asc))
+		,'&lt;/span&gt;'
+		)
+		,
+		concat(
+		'&lt;span class="editors_sql_label" &gt;主编：',
+		(GROUP_CONCAT(
+		IF(
+		b.chosen_position&amp;4&gt;0,
+
+		CONCAT('&lt;font color="black"&gt;',b.realname,'&lt;/font&gt;'),
+		null
+		) ORDER BY if(b.chosen_position>8,b.chosen_position-8,b.chosen_position) desc,b.rank asc))
+		,'&lt;/span&gt;'
+		,
+		'&lt;span class="editors_sql_label" &gt;副主编：',
+		(GROUP_CONCAT(
+		IF(
+		b.chosen_position&amp;2&gt;0,
+
+		CONCAT('&lt;font color="black"&gt;',b.realname,'&lt;/font&gt;'),
+		null
+		) ORDER BY if(b.chosen_position>8,b.chosen_position-8,b.chosen_position) desc,b.rank asc))
+		,'&lt;/span&gt;'
+		)
+		) editorsAndAssociateEditors,
+		/*IF(a.is_chief_published,
 		(GROUP_CONCAT(
 		IF(
 		g.chosen_position in (2,3,4,5,6,7,10,11,12,13,14,15),
@@ -464,7 +511,7 @@
 		null
 		) ORDER BY if(b.chosen_position>8,b.chosen_position-8,b.chosen_position) desc,b.rank asc))
 
-		) editorsAndAssociateEditors,
+		) editorsAndAssociateEditors,*/
 		sum(IF(g.chosen_position in (2,3,4,5,6,7,10,11,12,13,14,15),1,0))
 		editorsAndAssociateEditorsNum,
 		(select cname from (select GROUP_CONCAT(	CONCAT('&lt;font color="black"&gt;',c.realname,'&lt;/font&gt;')) as cname,b1.textbook_id from
@@ -515,6 +562,14 @@
 		declaration where is_deleted = 0 and is_staging =
 		0 and online_progress
 		!=0) c on c.id = b1.declaration_id) b on b.textbook_id = a.id and (a.is_published=false and a.is_chief_published=false)
+
+		left join
+		(select dp.textbook_id ,count(dp.id) applyNum
+		from dec_position dp left join declaration d on dp.declaration_id = d.id
+		where d.online_progress !=0
+		group by dp.textbook_id)app
+		on app.textbook_id = a.id
+
 		where d.is_deleted =0 and d.is_published =1
 		and d.id =
 		#{parameter.materialId}
