@@ -327,4 +327,12 @@
 		and is_deleted = false
 		order by is_founder DESC ,is_admin DESC;
 	</select>
+	<!--查找本套教材成员-->
+	<select id="queryMaterialMembers" parameterType="java.lang.Long"  resultType="java.util.Map">
+		select *
+		from declaration d
+		left join textbook t on  t.material_id=d.material_id
+		where t.id=#{bookId}
+		order by d.gmt_create DESC
+	</select>
 </mapper>

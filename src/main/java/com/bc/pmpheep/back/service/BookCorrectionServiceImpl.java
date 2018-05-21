@@ -228,7 +228,9 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 		map.put("result", result);
 		map.put("bookname", StringUtil.toAllCheck(bookname));
 		map.put("editorId", editorId);
-		if (null != isOver && isOver) {
+		if(null != isOver) {
+			map.put("isOver", "");
+		}else if (null != isOver && isOver) {
 			map.put("isOver", 1); // APP的已完成
 
 		} else {
