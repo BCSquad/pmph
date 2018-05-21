@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -210,5 +211,10 @@ public interface PmphGroupMemberService {
 	 */
 	String updatePmphGroupMemberDisplayName(Long groupId,Long userId, Long id , String displayName, String sessionId)
 			throws CheckedServiceException;
-
+	/**
+	 * 查找本套教材成员
+	 * @param bookId
+	 * @return
+	 */
+	List<Map<String,Object>> queryMaterialMembers(Long bookId) throws CheckedServiceException;
 }
