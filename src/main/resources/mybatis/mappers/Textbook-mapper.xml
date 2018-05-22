@@ -446,6 +446,8 @@
 		a.planning_editor planningEditor,
 		planningEditor.realname
 		planningEditorName ,
+
+
 		IF(a.is_chief_published,
 		concat(
 		'&lt;span class="editors_sql_label" &gt;主编：',
@@ -457,7 +459,7 @@
 		or a.is_published or a.is_chief_published,
 		CONCAT('&lt;font color="red"&gt;',g.realname,'&lt;/font&gt;'),NULL ),
 		null
-		) ORDER BY if(g.chosen_position>8,g.chosen_position-8,g.chosen_position) desc,g.rank asc)),'')
+		) ORDER BY if(g.chosen_position>8,g.chosen_position-8,g.chosen_position) desc,g.rank asc)),'待遴选')
 		,'&lt;/span &gt;'
 		,
 		'&lt;span class="editors_sql_label" &gt;副主编：',
@@ -469,7 +471,7 @@
 		or a.is_published or a.is_chief_published,
 		CONCAT('&lt;font color="red"&gt;',g.realname,'&lt;/font&gt;'),NULL ),
 		null
-		) ORDER BY if(g.chosen_position>8,g.chosen_position-8,g.chosen_position) desc,g.rank asc)),'')
+		) ORDER BY if(g.chosen_position>8,g.chosen_position-8,g.chosen_position) desc,g.rank asc)),'待遴选')
 		,'&lt;/span&gt;'
 		)
 		,
@@ -482,7 +484,7 @@
 
 		CONCAT('&lt;font color="black"&gt;',b.realname,'&lt;/font&gt;'),
 		null
-		) ORDER BY if(b.chosen_position>8,b.chosen_position-8,b.chosen_position) desc,b.rank asc)),'')
+		) ORDER BY if(b.chosen_position>8,b.chosen_position-8,b.chosen_position) desc,b.rank asc)),'待遴选')
 		,'&lt;/span&gt;'
 		,
 		'&lt;span class="editors_sql_label" &gt;副主编：',
@@ -493,7 +495,7 @@
 
 		CONCAT('&lt;font color="black"&gt;',b.realname,'&lt;/font&gt;'),
 		null
-		) ORDER BY if(b.chosen_position>8,b.chosen_position-8,b.chosen_position) desc,b.rank asc)),'')
+		) ORDER BY if(b.chosen_position>8,b.chosen_position-8,b.chosen_position) desc,b.rank asc)),'待遴选')
 		,'&lt;/span&gt;'
 		)
 		) editorsAndAssociateEditors,
