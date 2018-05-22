@@ -1,10 +1,7 @@
 package com.bc.pmpheep.back.service;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
@@ -213,8 +210,11 @@ public interface PmphGroupMemberService {
 			throws CheckedServiceException;
 	/**
 	 * 查找本套教材成员
-	 * @param bookId
+	 * @param groupId
+	 * @param pageNumber
+	 * @param pageSize
+	 * @param name
 	 * @return
 	 */
-	List<Map<String,Object>> queryMaterialMembers(Long bookId) throws CheckedServiceException;
+	Map<String,Object> queryMaterialMembers(Long groupId, Integer pageNumber, Integer pageSize, String name) throws CheckedServiceException;
 }
