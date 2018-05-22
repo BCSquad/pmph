@@ -330,8 +330,8 @@
 	<!--查找本套教材成员-->
 	<select id="queryMaterialMembers" parameterType="java.util.Map"  resultType="java.util.Map">
 		select
-		d.id,
-		d.user_id as userId,
+		d.id as declaration_id,
+		d.user_id as id,
 		d.realname as realname,
 		w.username as username,
 		o.org_name as orgName,
@@ -362,7 +362,7 @@
 			)
 
 			<if test="searchParam !=null and searchParam!=''">
-			  and 	(w.realname  like contact('%',#{searchParam},'%') or w.username like contact('%',#{searchParam},'%') )
+			  and 	(w.realname  like CONCAT('%',#{searchParam},'%') or w.username like CONCAT('%',#{searchParam},'%') )
 			</if>
 		order by d.gmt_create DESC
 		limit #{index} , #{size}
@@ -387,7 +387,7 @@
 			and t1.is_writer = true and t1.group_id =  #{groupId}
 			)
 		<if test="searchParam !=null and searchParam!=''">
-			and 	(w.realname  like contact('%',#{searchParam},'%') or w.username like contact('%',#{searchParam},'%') )
+			and 	(w.realname  like CONCAT('%',#{searchParam},'%') or w.username like CONCAT('%',#{searchParam},'%') )
 		</if>
 	</select>
 </mapper>

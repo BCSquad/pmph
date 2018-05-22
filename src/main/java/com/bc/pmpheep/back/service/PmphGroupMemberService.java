@@ -216,5 +216,5 @@ public interface PmphGroupMemberService {
 	 * @param name
 	 * @return
 	 */
-	List<Map<String,Object>> queryMaterialMembers(Long groupId, Integer pageNumber, Integer pageSize, String name) throws CheckedServiceException;
+	Map<String,Object> queryMaterialMembers(Long groupId, Integer pageNumber, Integer pageSize, String name) throws CheckedServiceException;
 }

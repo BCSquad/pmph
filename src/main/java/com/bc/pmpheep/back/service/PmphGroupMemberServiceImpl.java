@@ -695,7 +695,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	}
 
 	@Override
-	public List<Map<String,Object>> queryMaterialMembers(Long groupId, Integer pageNumber, Integer pageSize, String searchParam) throws CheckedServiceException {
+	public Map<String,Object> queryMaterialMembers(Long groupId, Integer pageNumber, Integer pageSize, String searchParam) throws CheckedServiceException {
 		Map<String,Object> params=new HashMap<>();
 		if (ObjectUtil.isNull(groupId)){
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
@@ -704,13 +704,16 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 		params.put("groupId",groupId);
 		params.put("searchParam",StringUtil.toAllCheck(searchParam));
 		int total=pmphGroupMemberDao.queryMaterialMembersTotal(params);
+		Map<String,Object> resultMap = new HashMap<String,Object>();
 		List<Map<String,Object >> memberlist=new ArrayList<>();
 		if(total>0){
 			params.put("index",(pageNumber-1)*pageSize);
 			params.put("size",pageSize);
 			memberlist=pmphGroupMemberDao.queryMaterialMembers(params);
 		}
-		return memberlist;
+        resultMap.put("memberlist",memberlist);
+        resultMap.put("total",total);
+		return resultMap;
 	}
 
 }
