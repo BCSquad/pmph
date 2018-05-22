@@ -306,6 +306,17 @@ public interface DecPositionService {
      */
     List<DecPosition> getDecPositionByTextbookId(Long textbookId) throws CheckedServiceException;
 
+	/**
+	 * 通过书籍id 查询主编副主编
+	 *
+	 * @param id
+	 * @return
+	 * @throws CheckedServiceException
+	 */
+	List<DecPosition> getMainDecPositionByTextbookId(Long textbookId) throws CheckedServiceException;
+
+
+
     /**
      * 
      * <pre>

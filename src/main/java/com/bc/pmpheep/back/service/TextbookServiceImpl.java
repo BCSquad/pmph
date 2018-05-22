@@ -187,6 +187,16 @@ public class TextbookServiceImpl implements TextbookService {
 					throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
 							CheckedExceptionResult.NULL_PARAM, "还未发布主编/副主编，不能进行公布");
 				}
+
+
+				List<DecPosition> decMainPosition = decPositionService.getMainDecPositionByTextbookId(textbook.getId());
+				//确认是否有主编副主编
+				if (decMainPosition.size() == 0) {
+					throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+							CheckedExceptionResult.NULL_PARAM, "还未遴选主编/副主编，不能进行公布");
+				}
+
+				//textbookDao.
 				List<DecPosition> decPosition = decPositionService.getDecPositionByTextbookId(textbook.getId());
 				// 是否确认编委
 				if (decPosition.size() == 0) {
