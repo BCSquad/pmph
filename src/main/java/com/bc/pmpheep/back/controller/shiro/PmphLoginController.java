@@ -134,12 +134,14 @@ public class PmphLoginController {
                     throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                             CheckedExceptionResult.NULL_PARAM, "用户名密码错误!");
                 }
-                if ("sso".equals(wechatUserId)) {
-                    username = new DesRun(username).depsw;
-                    password = new DesRun(password).depsw;
-            }
+
             }
         }
+        if ("sso".equals(wechatUserId)) {
+            username = new DesRun(username).depsw;
+            password = new DesRun(password).depsw;
+        }
+
 
         PmphUser pmphUser = null;
         if (StringUtil.notEmpty(wechatUserId) && !"sso".equals(wechatUserId)) {
