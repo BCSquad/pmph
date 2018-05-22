@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -698,6 +699,12 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 			}
 		}
 		return result;
+	}
+
+	@Override
+	public List<Map<String,Object>> queryMaterialMembers(Long bookId) throws CheckedServiceException {
+		List<Map<String,Object >>  memberlist=pmphGroupMemberDao.queryMaterialMembers(bookId);
+		return memberlist;
 	}
 
 }
