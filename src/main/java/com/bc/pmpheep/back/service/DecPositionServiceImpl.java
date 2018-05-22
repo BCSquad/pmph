@@ -445,8 +445,10 @@ public class DecPositionServiceImpl implements DecPositionService {
         }*/
         // 编委遴选界面 (0:未选中)
         Integer unselectedHold_0 = 0;
+//        if (CollectionUtil.isEmpty(decPositions) && unselectedHold_0 == unselectedHold
+//            && 2 == editorOrSubeditorType && 1 == selectionType) {// 编委遴选界面，没有人员被选中也可以进行暂存
         if (CollectionUtil.isEmpty(decPositions) && unselectedHold_0 == unselectedHold
-            && 2 == editorOrSubeditorType && 1 == selectionType) {// 编委遴选界面，没有人员被选中也可以进行暂存
+                && 1 == selectionType) {
             // 查询书籍下所有申报id
             List<Long> ids =
             decPositionService.getDecPositionIdByBookId(textbookId, editorOrSubeditorType);
