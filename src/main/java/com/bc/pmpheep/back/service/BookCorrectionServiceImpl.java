@@ -6,7 +6,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.vo.BookFeedBack;
+import org.apache.commons.lang.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -228,7 +230,7 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 		map.put("result", result);
 		map.put("bookname", StringUtil.toAllCheck(bookname));
 		map.put("editorId", editorId);
-		if(null == isOver) {
+		if(ObjectUtil.isNull(isOver)) {
 			map.put("isOver", "");
 		}else if (null != isOver && isOver) {
 			map.put("isOver", 1); // APP的已完成
