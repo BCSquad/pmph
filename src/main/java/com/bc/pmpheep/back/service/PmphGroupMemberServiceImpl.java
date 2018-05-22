@@ -702,8 +702,12 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	}
 
 	@Override
-	public List<Map<String,Object>> queryMaterialMembers(Long bookId) throws CheckedServiceException {
-		List<Map<String,Object >>  memberlist=pmphGroupMemberDao.queryMaterialMembers(bookId);
+	public List<Map<String,Object>> queryMaterialMembers(Long groupId) throws CheckedServiceException {
+		int total=pmphGroupMemberDao.queryMaterialMembersTotal(groupId);
+		List<Map<String,Object >> memberlist=new ArrayList<>();
+		if(total>0){
+			memberlist=pmphGroupMemberDao.queryMaterialMembers(groupId);
+		}
 		return memberlist;
 	}
 

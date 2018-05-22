@@ -507,8 +507,8 @@ public class GroupController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取本套教材成员")
 	@RequestMapping(value = "/member/getMaterialMember", method = RequestMethod.GET)
-	public ResponseBean getMaterialMember( @RequestParam(name = "bookId") Long bookId,HttpServletRequest request){
+	public ResponseBean getMaterialMember( @RequestParam(name = "groupId") Long groupId,HttpServletRequest request){
 		String sessionId = CookiesUtil.getSessionId(request);
-		return new ResponseBean(pmphGroupMemberService.queryMaterialMembers(bookId));
+		return new ResponseBean(pmphGroupMemberService.queryMaterialMembers(groupId));
 	}
 }

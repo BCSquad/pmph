@@ -213,8 +213,8 @@ public interface PmphGroupMemberService {
 			throws CheckedServiceException;
 	/**
 	 * 查找本套教材成员
-	 * @param bookId
+	 * @param groupId
 	 * @return
 	 */
-	List<Map<String,Object>> queryMaterialMembers(Long bookId) throws CheckedServiceException;
+	List<Map<String,Object>> queryMaterialMembers(Long groupId) throws CheckedServiceException;
 }
