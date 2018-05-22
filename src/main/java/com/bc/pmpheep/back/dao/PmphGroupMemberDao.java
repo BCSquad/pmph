@@ -152,12 +152,12 @@ public interface PmphGroupMemberDao {
 	 * @param groupId
 	 * @return
 	 */
-    List<Map<String,Object>> queryMaterialMembers(Long groupId);
+    List<Map<String,Object>> queryMaterialMembers(Map<String, Object> groupId);
 
 	/**
 	 * 查找本套教材成员的数量
 	 * @param groupId
 	 * @return
 	 */
-	int queryMaterialMembersTotal(Long groupId);
+	int queryMaterialMembersTotal(Map<String, Object> groupId);
 }
