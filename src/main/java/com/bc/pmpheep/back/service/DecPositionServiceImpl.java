@@ -446,7 +446,7 @@ public class DecPositionServiceImpl implements DecPositionService {
         // 编委遴选界面 (0:未选中)
         Integer unselectedHold_0 = 0;
         if (CollectionUtil.isEmpty(decPositions) && unselectedHold_0 == unselectedHold
-            && 2 == editorOrSubeditorType && 1 == selectionType) {// 编委遴选界面，没有人员被选中也可以进行暂存
+            /*&& 2 == editorOrSubeditorType*/ && 1 == selectionType) {// 编委遴选界面，没有人员被选中也可以进行暂存
             // 查询书籍下所有申报id
             List<Long> ids =
             decPositionService.getDecPositionIdByBookId(textbookId, editorOrSubeditorType);
@@ -457,7 +457,7 @@ public class DecPositionServiceImpl implements DecPositionService {
         } else {
             if (CollectionUtil.isEmpty(decPositions)) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-                                                  CheckedExceptionResult.NULL_PARAM, "遴选职位为空");
+                                                  CheckedExceptionResult.NULL_PARAM, "请选择一个主编/副主编发布"/*"遴选职位为空"*/);
             }
             // (1:确定，2：发布)
             Integer selectionType_1 = 1;
@@ -1119,6 +1119,18 @@ public class DecPositionServiceImpl implements DecPositionService {
         }
         return decPositionDao.getDecPositionByTextbookId(textbookId);
     }
+
+    @Override
+    public List<DecPosition> getMainDecPositionByTextbookId(Long textbookId)
+            throws CheckedServiceException {
+        if (null == textbookId) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+                    CheckedExceptionResult.NULL_PARAM, "书籍id不能为空");
+        }
+        return decPositionDao.getMainDecPositionByTextbookId(textbookId);
+    }
+
+
 
     @Override
     public PageResult<TextBookDecPositionVO> listDeclarationByTextbookIds(

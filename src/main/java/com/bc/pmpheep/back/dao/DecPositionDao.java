@@ -543,6 +543,13 @@ public interface DecPositionDao {
     List<DecPosition> getDecPositionByTextbookId( Long textbookId);
 
     /**
+     * 根据书籍id查询主编副主编
+     * @param textbookId
+     * @return
+     */
+    List<DecPosition> getMainDecPositionByTextbookId( Long textbookId);
+
+    /**
      * 
      * <pre>
      * 功能描述：根据书籍ID查询对应书籍申报人员信息
