@@ -1210,12 +1210,20 @@
 		and dp.`textbook_id` =#{textBookId}
 	</select>
 
-	<!-- 根据书籍id查询 -->
+	<!-- 根据书籍id查询编委 -->
 	<select id="getDecPositionByTextbookId" parameterType="java.lang.Long"
 		resultType="DecPosition">
 		select * from dec_position dp
-		where dp.chosen_position in
-		(1,3,5,7,9,10,11,12,13,14,15)
+		where dp.chosen_position &amp; 1 >0
+		and dp.textbook_id=#{textbookId}
+	</select>
+
+	<!-- 根据书籍id查询主编和副主编 -->
+	<select id="getMainDecPositionByTextbookId" parameterType="java.lang.Long"
+			resultType="DecPosition">
+		select * from dec_position dp
+		where (dp.chosen_position &amp; 4>0 || dp.chosen_position &amp; 2>0)
+
 		and dp.textbook_id=#{textbookId}
 	</select>
 
