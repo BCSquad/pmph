@@ -2,9 +2,11 @@ package com.bc.pmpheep.back.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.bc.pmpheep.back.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,15 +22,6 @@ import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.service.common.SystemMessageService;
-import com.bc.pmpheep.back.util.BinaryUtil;
-import com.bc.pmpheep.back.util.CollectionUtil;
-import com.bc.pmpheep.back.util.Const;
-import com.bc.pmpheep.back.util.ObjectUtil;
-import com.bc.pmpheep.back.util.PageParameterUitl;
-import com.bc.pmpheep.back.util.RouteUtil;
-import com.bc.pmpheep.back.util.SessionUtil;
-import com.bc.pmpheep.back.util.StringUtil;
-import com.bc.pmpheep.back.vo.BookPositionVO;
 import com.bc.pmpheep.back.vo.PmphGroupListVO;
 import com.bc.pmpheep.back.vo.PmphGroupMemberManagerVO;
 import com.bc.pmpheep.back.vo.PmphGroupMemberVO;
@@ -702,9 +695,25 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	}
 
 	@Override
-	public List<Map<String,Object>> queryMaterialMembers(Long bookId) throws CheckedServiceException {
-		List<Map<String,Object >>  memberlist=pmphGroupMemberDao.queryMaterialMembers(bookId);
-		return memberlist;
+	public Map<String,Object> queryMaterialMembers(Long groupId, Integer pageNumber, Integer pageSize, String searchParam) throws CheckedServiceException {
+		Map<String,Object> params=new HashMap<>();
+		if (ObjectUtil.isNull(groupId)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+					CheckedExceptionResult.NULL_PARAM, "小组未选择");
+		}
+		params.put("groupId",groupId);
+		params.put("searchParam",StringUtil.toAllCheck(searchParam));
+		int total=pmphGroupMemberDao.queryMaterialMembersTotal(params);
+		Map<String,Object> resultMap = new HashMap<String,Object>();
+		List<Map<String,Object >> memberlist=new ArrayList<>();
+		if(total>0){
+			params.put("index",(pageNumber-1)*pageSize);
+			params.put("size",pageSize);
+			memberlist=pmphGroupMemberDao.queryMaterialMembers(params);
+		}
+        resultMap.put("memberlist",memberlist);
+        resultMap.put("total",total);
+		return resultMap;
 	}
 
 }
