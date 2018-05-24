@@ -2,6 +2,13 @@ package com.bc.pmpheep.wx.service;
 
 
 import com.alibaba.fastjson.JSON;
+import com.bc.pmpheep.back.util.HttpUtil;
+import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.service.exception.CheckedExceptionResult;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
+import com.bc.pmpheep.wechat.util.WXURLUtil;
+import com.bc.pmpheep.wx.util.SendWXMessageUtil;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
@@ -11,7 +18,10 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.util.EntityUtils;
 
 import java.security.MessageDigest;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class WXQYUserService extends WXBaseService {
@@ -20,15 +30,59 @@ public class WXQYUserService extends WXBaseService {
     static final String URL_USERINFO_GET = "https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo?access_token=%s&code=%s&agentid=%s";
 
 
-    public Map findUser(String userid) {
+    /**
+     * @param hrefType 超链接类型 0 没有超链接 1 前台app 超链接 2 后台app超链接
+     * @param hrefContentType 超链接内容 1 查看,2审核
+     * @param touser 成员ID列表
+     * @param toparty 部门ID列表
+     * @param totag 标签ID列表
+     * @param msgtype text
+     * @param text 内容
+     * @param safe  表示是否是保密消息，0表示否，1表示是，默认0
+     * @return
+     */
+    public Map sendTextMessage(String hrefType,String hrefContentType,String touser,String toparty,String totag,String msgtype,String text,short safe){
+        Map<String,Object> map = new HashMap<String,Object>();
+        if(!StringUtil.isEmpty(touser)){
+           touser = touser.replaceAll(",","|");
+        }
+
+        if(!StringUtil.isEmpty(toparty)){
+            toparty = toparty.replaceAll(",","|");
+        }
+
+        if(!StringUtil.isEmpty(totag)){
+            totag = totag.replaceAll(",","|");
+        }
+        String url = WXURLUtil.SEND_MSG_URL.replaceAll("ACCESS_TOKEN",this.getAccessToken(false));
+        map.put("url" ,url);
+        map.put("touser" ,touser);
+        map.put("toparty" ,toparty);
+        map.put("totag" ,totag);
+        map.put("msgtype" ,msgtype);
+        map.put("agentid",this.agentid);
+        map.put("hrefType" ,hrefType);
+        map.put("hrefContentType" ,hrefContentType);
+        map.put("content" ,text);
+        map.put("safe" ,safe);
+        return SendWXMessageUtil.sendWxTextMessage(map);
+    }
+
+
+    public Map findUser(String userid) throws  CheckedServiceException{
         String url = String.format(URL_USER_GET, this.getAccessToken(false), userid);
+        if(StringUtil.isEmpty(userid)){
+            throw new CheckedServiceException("微信请求", CheckedExceptionResult.NULL_PARAM,"userid为空");
+        }
         try {
+
             HttpGet get = new HttpGet(url);
             HttpResponse res = client.execute(get);
             HttpEntity entity = res.getEntity();
             String responseContent = EntityUtils.toString(entity, "UTF-8");
             if (res.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 Map user = JSON.parseObject(responseContent, Map.class);
+                return  user;
             }
         } catch (Exception ex) {
 
@@ -89,6 +143,7 @@ public class WXQYUserService extends WXBaseService {
             throw new RuntimeException(e);
         }
     }
+
 
 
 }

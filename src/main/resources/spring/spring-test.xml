@@ -65,6 +65,26 @@
         <property name="testOnBorrow" value="${sql.testOnBorrow}" />
         <property name="testOnReturn" value="${sql.testOnReturn}" />
     </bean>
+
+    <bean id="qywxservice" class="com.bc.pmpheep.wx.service.WXQYUserService">
+        <!--<property name="wxId" value="wxfe824fa78b0280b5"/>-->
+        <!--<property name="agentid" value="1000003"/>-->
+        <!--<property name="secret" value="malb2NNlog8zWWmFz34XMbFELP93AqXQo-xPXlpG5Pc"/>-->
+        <property name="wxId" value="wx72eaeae98b5382c9"/>
+        <property name="agentid" value="1000002"/>
+        <property name="secret" value="PIVznRHFPzbwqZKs4dM0QAwuc1_atVZI_ksu5i24Ts0"/>
+
+    </bean>
+
+    <!-- 配置 Spring 的 EhCacheManagerFactoryBean ,须要 spring-context-support 的支持 -->
+    <bean id="ehCacheManagerFactoryBean" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:ehcache.xml"/>
+    </bean>
+
+    <!-- 配置 Spring 的 EhCacheCacheManager,须要 spring-context-support 的支持 -->
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+        <property name="cacheManager" ref="ehCacheManagerFactoryBean"/>
+    </bean>
     
     <!-- MyBatis 集成 Spring 必须配置的项 1 、配置 SqlSessionFactory 实例 -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
