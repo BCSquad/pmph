@@ -193,7 +193,7 @@ public class WriterUserController {
 	@RequestMapping(value = "/list/writerUser", method = RequestMethod.GET)
 	public ResponseBean writerUser(Long groupId, @RequestParam("pageSize") Integer pageSize,
 			@RequestParam("pageNumber") Integer pageNumber, @RequestParam("name") String name,
-			@RequestParam("rank") Integer rank, @RequestParam("orgName") String orgName) {
+			@RequestParam("rank") Integer rank, @RequestParam("orgName") String orgName, @RequestParam("handphone") String handphone, @RequestParam("email") String email) {
 		PageParameter pageParameter = new PageParameter<>();
 		WriterUserManagerVO writerUserManagerVO = new WriterUserManagerVO();
 		if (StringUtil.notEmpty(name)) {
@@ -201,6 +201,12 @@ public class WriterUserController {
 		}
 		if (StringUtil.notEmpty(orgName)) {
 			writerUserManagerVO.setOrgName(orgName.replaceAll(" ", ""));
+		}
+		if (StringUtil.notEmpty(handphone)) {
+			writerUserManagerVO.setHandphone(handphone.replaceAll(" ", ""));
+		}
+		if (StringUtil.notEmpty(email)) {
+			writerUserManagerVO.setEmail(email.replaceAll(" ", ""));
 		}
 		writerUserManagerVO.setRank(rank);
 		pageParameter.setPageNumber(pageNumber);

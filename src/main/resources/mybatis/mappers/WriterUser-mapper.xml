@@ -290,7 +290,7 @@
 			<if test=" fax!= null and  fax!=''">
 				fax= #{fax},
 			</if>
-			<if test=" handphone!= null and handphone !=''">
+			<if test=" handphone!= null ">
 				handphone = #{handphone},
 			</if>
 			<if test=" telephone!= null and  telephone!=''">
@@ -299,7 +299,7 @@
 			<if test=" idcard!= null and idcard !=''">
 				idcard= #{idcard},
 			</if>
-			<if test=" email!= null and email !=''">
+			<if test=" email!= null ">
 				email= #{email},
 			</if>
 			<if test=" address!= null and  address!=''">
@@ -628,6 +628,12 @@
 			w.realname like
 			concat('%',#{parameter.name},'%' ) )
 		</if>
+		<if test="parameter.email !=null and parameter.email !='' ">
+			and w.email like concat('%',#{parameter.email},'%' )
+		</if>
+		<if test="parameter.handphone !=null and parameter.handphone !='' ">
+			and w.handphone like concat('%',#{parameter.handphone},'%' )
+		</if>
 		<if test="parameter.orgName !=null and parameter.orgName !=''">
 			and o.org_name like concat('%', #{parameter.orgName},'%')
 		</if>
@@ -658,6 +664,12 @@
 			and (w.username like concat('%',#{parameter.name},'%' ) or
 			w.realname like
 			concat('%',#{parameter.name},'%' ) )
+		</if>
+		<if test="parameter.email !=null and parameter.email !='' ">
+			and w.email like concat('%',#{parameter.email},'%' )
+		</if>
+		<if test="parameter.handphone !=null and parameter.handphone !='' ">
+			and w.handphone like concat('%',#{parameter.handphone},'%' )
 		</if>
 		<if test="parameter.orgName !=null and parameter.orgName !=''">
 			and o.org_name like concat('%', #{parameter.orgName},'%')
