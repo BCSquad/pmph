@@ -193,7 +193,7 @@ public class WriterUserController {
 	@RequestMapping(value = "/list/writerUser", method = RequestMethod.GET)
 	public ResponseBean writerUser(Long groupId, @RequestParam("pageSize") Integer pageSize,
 			@RequestParam("pageNumber") Integer pageNumber, @RequestParam("name") String name,
-			@RequestParam("rank") Integer rank, @RequestParam("orgName") String orgName, @RequestParam("handphone") String handphone, @RequestParam("email") String email) {
+			@RequestParam("rank") Integer rank, @RequestParam("orgName") String orgName, @RequestParam(value = "handphone",required = false) String handphone, @RequestParam(value = "email",required = false) String email) {
 		PageParameter pageParameter = new PageParameter<>();
 		WriterUserManagerVO writerUserManagerVO = new WriterUserManagerVO();
 		if (StringUtil.notEmpty(name)) {
