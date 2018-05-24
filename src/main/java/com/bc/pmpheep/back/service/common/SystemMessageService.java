@@ -481,7 +481,7 @@ public final class SystemMessageService {
 					"认证的教师为空");
 		}
 		// 存入消息主体
-		String msgContent = "抱歉，您提交的教师认证资料已被[<font color='red'>" + auditorOrgName + "</font>]管理员退回，请您核对后重试";// 退回
+		String msgContent = "抱歉，您提交的教师认证资料已被[<font color='red'>" + auditorOrgName + "</font>]管理员退回，请您核对后重新提交";// 退回
 		if (isPass) {// 通过
 			msgContent = "恭喜！您提交的教师认证资料已通过[<font color='red'>" + auditorOrgName + "</font>]管理员审核";
 		}
