@@ -188,7 +188,7 @@
 			<if test=" orgId != null and orgId !=''">
 				org_id= #{orgId},
 			</if>
-			<if test=" email != null and email !=''">
+			<if test=" email != null ">
 				email= #{email},
 			</if>
 			<if test=" realname != null and realname !=''">
@@ -206,7 +206,7 @@
 			<if test=" fax != null and fax !=''">
 				fax= #{fax},
 			</if>
-			<if test=" handphone != null and handphone !=''">
+			<if test=" handphone != null ">
 				handphone = #{handphone},
 			</if>
 

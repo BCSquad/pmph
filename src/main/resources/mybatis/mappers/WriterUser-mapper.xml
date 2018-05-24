@@ -290,7 +290,7 @@
 			<if test=" fax!= null and  fax!=''">
 				fax= #{fax},
 			</if>
-			<if test=" handphone!= null and handphone !=''">
+			<if test=" handphone!= null ">
 				handphone = #{handphone},
 			</if>
 			<if test=" telephone!= null and  telephone!=''">
@@ -299,7 +299,7 @@
 			<if test=" idcard!= null and idcard !=''">
 				idcard= #{idcard},
 			</if>
-			<if test=" email!= null and email !=''">
+			<if test=" email!= null ">
 				email= #{email},
 			</if>
 			<if test=" address!= null and  address!=''">

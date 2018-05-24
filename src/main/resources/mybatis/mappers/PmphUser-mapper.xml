@@ -501,10 +501,10 @@
 			<if test=" departmentId!= null and departmentId !=''">
 				department_id = #{departmentId},
 			</if>
-			<if test=" handphone!= null and handphone !=''">
+			<if test=" handphone!= null ">
 				handphone = #{handphone},
 			</if>
-			<if test=" email!= null and email !=''">
+			<if test=" email!= null ">
 				email= #{email},
 			</if>
 			<if test=" note!= null and  note!=''">
