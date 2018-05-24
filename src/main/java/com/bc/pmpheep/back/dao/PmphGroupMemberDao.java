@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.constraints.Past;
 
@@ -146,4 +147,17 @@ public interface PmphGroupMemberDao {
 	 */
 	List<PmphGroupMember> listPmphGroupMembers(Long groupId);
 
+	/**
+	 * 查找本套教材成员
+	 * @param groupId
+	 * @return
+	 */
+    List<Map<String,Object>> queryMaterialMembers(Map<String, Object> groupId);
+
+	/**
+	 * 查找本套教材成员的数量
+	 * @param groupId
+	 * @return
+	 */
+	int queryMaterialMembersTotal(Map<String, Object> groupId);
 }

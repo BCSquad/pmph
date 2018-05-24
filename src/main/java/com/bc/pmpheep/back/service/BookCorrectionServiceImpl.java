@@ -6,7 +6,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.vo.BookFeedBack;
+import org.apache.commons.lang.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -72,7 +74,7 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 	private WriterUserTrendstService writerUserTrendstService;
 
 	@Override
-	public Integer replyWriter(Long id, Boolean result, String editorReply) throws CheckedServiceException {
+	public Integer replyWriter(Long id, Boolean result, String editorReply,String authorReply) throws CheckedServiceException {
 		if (null == id) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION,
 					CheckedExceptionResult.NULL_PARAM, "主键为空");
@@ -81,6 +83,11 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION,
 					CheckedExceptionResult.NULL_PARAM, "检查结果为空");
 		}
+//		if (StringUtil.isEmpty(authorReply)) {
+//			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION,
+//					CheckedExceptionResult.NULL_PARAM, "回复内容为空");
+//		}
+
 		if (StringUtil.isEmpty(editorReply)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION,
 					CheckedExceptionResult.NULL_PARAM, "回复内容为空");
@@ -110,6 +117,15 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 		bookCorrection.setIsEditorReplied(true);
 		bookCorrection.setEditorReply(editorReply);
 		bookCorrection.setIsEditorHandling(true);
+		if (!StringUtil.isEmpty(authorReply)) {
+			if (authorReply.length() > 500) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION,
+						CheckedExceptionResult.NULL_PARAM, "回复内容超过最长限制500");
+			}
+			bookCorrection.setIsAuthorReplied(true);
+			bookCorrection.setAuthorReply(authorReply);
+		}
+
 
 		WriterUserTrendst writerUserTrendst = new WriterUserTrendst();
 		writerUserTrendst.setUserId(submitUserId);
@@ -120,7 +136,7 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 		if (result) {// 有问题
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("title", CheckedExceptionBusiness.BOOKCORRECTION);
-			map.put("content", "您的图书纠错已核实。");
+			map.put("content", "您提交的纠错信息已回复。");
 			map.put("img", 1);
 			detail = new Gson().toJson(map);
 			// 更新评论数
@@ -129,7 +145,7 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 		} else {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("title", CheckedExceptionBusiness.BOOKCORRECTION);
-			map.put("content", "您的图书纠错未核实到该问题。");
+			map.put("content", "您提交的纠错信息已回复。");
 			map.put("img", 2);
 			detail = new Gson().toJson(map);
 		}
@@ -214,7 +230,9 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 		map.put("result", result);
 		map.put("bookname", StringUtil.toAllCheck(bookname));
 		map.put("editorId", editorId);
-		if (null != isOver && isOver) {
+		if(ObjectUtil.isNull(isOver)) {
+			map.put("isOver", "");
+		}else if (null != isOver && isOver) {
 			map.put("isOver", 1); // APP的已完成
 
 		} else {

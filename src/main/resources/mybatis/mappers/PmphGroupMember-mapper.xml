@@ -45,7 +45,7 @@
 			<if test="isAdmin != null">
 				#{isAdmin},
 			</if>
-			<if test="displayName != null and displayName !=''">
+			<if test="displayName != null ">
 				#{displayName},
 			</if>
 		</trim>
@@ -326,5 +326,68 @@
 		group_id=#{groupId}
 		and is_deleted = false
 		order by is_founder DESC ,is_admin DESC;
+	</select>
+	<!--查找本套教材成员-->
+	<select id="queryMaterialMembers" parameterType="java.util.Map"  resultType="java.util.Map">
+		select
+		d.id as declaration_id,
+		d.user_id as id,
+		d.realname as realname,
+		w.username as username,
+		o.org_name as orgName,
+		case when (dp.chosen_position = 4) and dp.rank = 1 then '主编(第一主编)'
+		when (dp.chosen_position = 4) then '主编'
+		when (dp.chosen_position = 12) and dp.rank = 1 then '主编(第一主编)，数字编委'
+		when (dp.chosen_position =12) then '主编，数字编委'
+		when (dp.chosen_position = 2) then '副主编'
+		when (dp.chosen_position = 10) then '副主编，数字编委'
+		when (dp.chosen_position = 1) then '编委'
+		when (dp.chosen_position = 9) then '编委，数字编委'
+		else '无' end position
+		FROM
+		declaration d
+		LEFT JOIN dec_position dp ON d.id = dp.declaration_id
+		LEFT JOIN pmph_group p ON dp.textbook_id = p.book_id
+		LEFT JOIN writer_user w ON w.id = d.user_id
+		left join org o on w.org_id = o.id
+		where p.id= #{groupId}
+		and not EXISTS (
+			SELECT
+			id
+			FROM
+			pmph_group_member t1
+			WHERE
+			t1.user_id = d.user_id  and t1.is_deleted=0
+			and t1.is_writer = true and t1.group_id = #{groupId}
+			)
+
+			<if test="searchParam !=null and searchParam!=''">
+			  and 	(w.realname  like CONCAT('%',#{searchParam},'%') or w.username like CONCAT('%',#{searchParam},'%') )
+			</if>
+		order by d.gmt_create DESC
+		limit #{index} , #{size}
+	</select>
+	<!--查找本套教材成员的数量-->
+	<select id="queryMaterialMembersTotal" parameterType="java.util.Map"  resultType="int">
+		select count(d.id)
+		FROM
+		declaration d
+		LEFT JOIN dec_position dp ON d.id = dp.declaration_id
+		LEFT JOIN pmph_group p ON dp.textbook_id = p.book_id
+		LEFT JOIN writer_user w ON w.id = d.user_id
+		left join org o on w.org_id = o.id
+		where p.id= #{groupId} and
+		not EXISTS (
+			SELECT
+			id
+			FROM
+			pmph_group_member t1
+			WHERE
+			t1.user_id = d.user_id  and t1.is_deleted=0
+			and t1.is_writer = true and t1.group_id =  #{groupId}
+			)
+		<if test="searchParam !=null and searchParam!=''">
+			and 	(w.realname  like CONCAT('%',#{searchParam},'%') or w.username like CONCAT('%',#{searchParam},'%') )
+		</if>
 	</select>
 </mapper>

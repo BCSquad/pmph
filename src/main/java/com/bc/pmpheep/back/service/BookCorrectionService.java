@@ -37,7 +37,7 @@ public interface BookCorrectionService {
 	 * @param editorReply
 	 * @return 更新行数
 	 */
-	Integer replyWriter(Long id ,Boolean result , String editorReply)throws CheckedServiceException;
+	Integer replyWriter(Long id ,Boolean result , String editorReply,String authorReply)throws CheckedServiceException;
 	
 	/**
 	 * 获取审核纠错跟踪页面的分页数据
