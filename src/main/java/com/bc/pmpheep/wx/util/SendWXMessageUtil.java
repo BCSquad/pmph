@@ -85,7 +85,7 @@ public class SendWXMessageUtil {
         }
         switch (hrefType){
             case "0":href="%s";break;
-            case "1":href="<a href=\"http://medu.ipmph.com/wx/#/loginm\">%s</a>";break;
+            case "1":href="<a href=\"http://medu.ipmph.com/meduwx\">%s</a>";break;
             case "2":href="<a href=\"http://medu.ipmph.com/wx/#/loginm\">%s</a>";break;
             default: href="%s";break;
         }
