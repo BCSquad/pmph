@@ -29,8 +29,10 @@ public class WXQYUserService extends WXBaseService {
     static final String URL_USER_GET = "https://qyapi.weixin.qq.com/cgi-bin/user/get?access_token=%s&userid=%s";
     static final String URL_USERINFO_GET = "https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo?access_token=%s&code=%s&agentid=%s";
 
+
     /**
-     *
+     * @param hrefType 超链接类型 0 没有超链接 1 前台app 超链接 2 后台app超链接
+     * @param hrefContentType 超链接内容 1 查看,2审核
      * @param touser 成员ID列表
      * @param toparty 部门ID列表
      * @param totag 标签ID列表
@@ -39,7 +41,7 @@ public class WXQYUserService extends WXBaseService {
      * @param safe  表示是否是保密消息，0表示否，1表示是，默认0
      * @return
      */
-    public Map sendTextMessage(String touser,String toparty,String totag,String msgtype,String text,short safe){
+    public Map sendTextMessage(String hrefType,String hrefContentType,String touser,String toparty,String totag,String msgtype,String text,short safe){
         Map<String,Object> map = new HashMap<String,Object>();
         if(!StringUtil.isEmpty(touser)){
            touser = touser.replaceAll(",","|");
@@ -59,6 +61,8 @@ public class WXQYUserService extends WXBaseService {
         map.put("totag" ,totag);
         map.put("msgtype" ,msgtype);
         map.put("agentid",this.agentid);
+        map.put("hrefType" ,hrefType);
+        map.put("hrefContentType" ,hrefContentType);
         map.put("content" ,text);
         map.put("safe" ,safe);
         return SendWXMessageUtil.sendWxTextMessage(map);

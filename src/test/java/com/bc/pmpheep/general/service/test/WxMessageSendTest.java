@@ -28,13 +28,13 @@ public class WxMessageSendTest extends BaseTest{
     @Test
     public void sendTextMessageTest(){
 
-        String touser = "LiHuan";
+        String touser = "XiaoChengYan";
         String toparty = "";
         String totag = "";
         String msgtype = "text";
-        String text = "您好，这是一个测试推送消息，可以忽略！";
+        String text = "您好,这是一个测试群发推送消息，可以忽略！";
         short safe = 0;
-        Map<String,Object> map  = service.sendTextMessage(touser,toparty,totag,msgtype,text,safe);
+        Map<String,Object> map  = service.sendTextMessage("","1",touser,toparty,totag,msgtype,text,safe);
         System.out.println(JSON.toJSONString(map));
     }
 

@@ -60,7 +60,9 @@ public class SendWXMessageUtil {
             throw new CheckedServiceException("微信推送消息", CheckedExceptionResult.NULL_PARAM,"推送内容超过2048个字节");
         }
         Map<String,Object> map = new HashMap<String,Object>();
-        map.put("content",MapUtils.getString(params,"content",""));
+        String content = MapUtils.getString(params,"content","");
+        content = content + String.format(SendWXMessageUtil.getHrefType(MapUtils.getString(params,"hrefType","")),SendWXMessageUtil.getHrefContent(MapUtils.getString(params,"hrefContentType","")));
+        map.put("content",content);
         params.put("text",map);
         params.put("agentid",Integer.parseInt(params.get("agentid").toString()));
         params.remove("content");
@@ -69,5 +71,43 @@ public class SendWXMessageUtil {
         String responseContent = HttpUtil.doPost(url, JSON.toJSON(params));
         Map backResult = JSON.parseObject(responseContent, Map.class);
         return backResult;
+    }
+
+    /**
+     *
+     * @param hrefType 超链接类型 0 没有超链接 1 前台app 超链接 2 后台app超链接
+     * @return
+     */
+    public static String getHrefType(String hrefType){
+        String href = "%s";
+        if(StringUtil.isEmpty(hrefType)){
+            hrefType = "0";
+        }
+        switch (hrefType){
+            case "0":href="%s";break;
+            case "1":href="<a href=\"http://medu.ipmph.com/wx/#/loginm\">%s</a>";break;
+            case "2":href="<a href=\"http://medu.ipmph.com/wx/#/loginm\">%s</a>";break;
+            default: href="%s";break;
+        }
+        return href;
+    }
+
+    /**
+     *
+     * @param hrefContentType  1 查看 2 请审核
+     * @return
+     */
+    public static String getHrefContent(String hrefContentType){
+        String hrefContent = "";
+        if(StringUtil.isEmpty(hrefContentType)){
+            hrefContentType = "0";
+        }
+        switch (hrefContentType){
+            case "0":hrefContent="";break;
+            case "1":hrefContent="查看";break;
+            case "2":hrefContent="请审核";break;
+            default: hrefContent="";break;
+        }
+        return hrefContent;
     }
 }
