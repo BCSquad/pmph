@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd"
+       profile="production">
+    <bean id="qywxservice" class="com.bc.pmpheep.wx.service.WXQYUserService">
+        <!--<property name="wxId" value="wxfe824fa78b0280b5"/>-->
+        <!--<property name="agentid" value="1000003"/>-->
+        <!--<property name="secret" value="malb2NNlog8zWWmFz34XMbFELP93AqXQo-xPXlpG5Pc"/>-->
+        <property name="wxId" value="wx72eaeae98b5382c9"/>
+        <property name="agentid" value="1000002"/>
+        <property name="secret" value="PIVznRHFPzbwqZKs4dM0QAwuc1_atVZI_ksu5i24Ts0"/>
+
+    </bean>
+
+    <bean id="WXTriggerJob" class="com.bc.pmpheep.wx.service.WXGetTokenJob">
+        <constructor-arg name="commonService" ref="qywxservice"></constructor-arg>
+    </bean>
+    <task:executor id="executor" pool-size="5"/>
+    <task:scheduler id="scheduler" pool-size="10"/>
+    <task:scheduled-tasks>
+        <task:scheduled ref="WXTriggerJob" method="getTokenAndTicket" fixed-rate="7200000"/>
+    </task:scheduled-tasks>
+
+    <!-- 配置 Spring 的 EhCacheManagerFactoryBean ,须要 spring-context-support 的支持 -->
+    <bean id="ehCacheManagerFactoryBean" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:ehcache.xml"/>
+    </bean>
+
+    <!-- 配置 Spring 的 EhCacheCacheManager,须要 spring-context-support 的支持 -->
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+        <property name="cacheManager" ref="ehCacheManagerFactoryBean"/>
+    </bean>
+
+</beans>

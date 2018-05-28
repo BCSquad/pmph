@@ -530,7 +530,8 @@
 		bianWeis,
 		sum(IF(g.chosen_position in (1,3,5,7) ,1,0)) bianWeisNum ,
 		e.id groupId,
-		IF(!a.is_published,null,f.repub) repub
+		/*IF(!a.is_published,null,f.repub) */
+		f.repub
 		from textbook a
 
 		LEFT JOIN material d on d.id =
