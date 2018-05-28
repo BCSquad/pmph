@@ -327,14 +327,14 @@ public class FileDownLoadController {
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "申报表批量导出excel")
 	@RequestMapping(value = "/excel/declaration", method = RequestMethod.GET)
 	public void declarationExcel(Long materialId, String textBookids, String realname, String position, String title,
-			String orgName, String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress,
+			String orgName, String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress,@RequestParam(value = "isSelect", required = false) Boolean isSelect,
 			HttpServletRequest request, HttpServletResponse response) {
 		Workbook workbook = null;
 		try {
 			workbook = excelHelper.fromDeclarationEtcBOList(materialService.getMaterialById(materialId),
 					materialExtensionService.getMaterialExtensionByMaterialId(materialId),
 					declarationService.declarationEtcBO(materialId, textBookids, realname, position, title, orgName,
-							unitName, positionType, onlineProgress, offlineProgress),
+							unitName, positionType, onlineProgress, offlineProgress,isSelect),
 					"专家信息表");
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");
@@ -406,10 +406,10 @@ public class FileDownLoadController {
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "申报表批量导出word")
 	@RequestMapping(value = "/word/declaration", method = RequestMethod.GET)
 	public String declarationWord(Long materialId, String textBookids, String realname, String position, String title,
-			String orgName, String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress) {
+			String orgName, String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress,@RequestParam(value = "isSelect", required = false) Boolean isSelect) {
 		String id = String.valueOf(System.currentTimeMillis()).concat(String.valueOf(RandomUtil.getRandomNum()));
 		taskExecutor.execute(new SpringThread(zipHelper, wordHelper, materialService, textbookService,
-				declarationService, materialId, textBookids, realname, position, title, orgName, unitName, positionType,
+				declarationService,isSelect, materialId, textBookids, realname, position, title, orgName, unitName, positionType,
 				onlineProgress, offlineProgress, id, materialExtensionService));
 		return '"' + id + '"';
 	}

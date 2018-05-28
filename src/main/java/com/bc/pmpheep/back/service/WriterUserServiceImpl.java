@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -351,7 +352,12 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 			total = writerUserDao.getListWriterUserTotal(pageParameter);
 			if (total > 0) {
 				List<WriterUserManagerVO> list = writerUserDao.getListWriterUser(pageParameter);
-				for (WriterUserManagerVO vo : list) {
+				for (int i = 0;i<list.size();i++) {
+					WriterUserManagerVO vo = list.get(i);
+					String voS = com.alibaba.fastjson.JSON.toJSONString(vo).replaceAll("-","");
+					vo = com.alibaba.fastjson.JSON.parseObject(voS,WriterUserManagerVO.class);
+					list.remove(i);
+					list.add(i,vo);
 					switch (vo.getRank()) {
 					case 0:
 						vo.setRankName("普通用户");
@@ -378,7 +384,12 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 			total = writerUserDao.getLsitisTeacherTotal(pageParameter);
 			if (total > 0) {
 				List<WriterUserManagerVO> list = writerUserDao.getLsitisTeacher(pageParameter);
-				for (WriterUserManagerVO vo : list) {
+				for (int i = 0;i<list.size();i++) {
+					WriterUserManagerVO vo = list.get(i);
+					String voS = com.alibaba.fastjson.JSON.toJSONString(vo).replaceAll("-","");
+					vo = com.alibaba.fastjson.JSON.parseObject(voS,WriterUserManagerVO.class);
+					list.remove(i);
+					list.add(i,vo);
 					switch (vo.getRank()) {
 					case 0:
 						vo.setRankName("普通用户");

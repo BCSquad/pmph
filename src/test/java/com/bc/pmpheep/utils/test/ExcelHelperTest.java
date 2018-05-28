@@ -95,7 +95,7 @@ public class ExcelHelperTest extends BaseTest {
                         null,
                         null,
                         null,
-                        null),
+                        null,null),
                 "专家信息表");
         String path = this.getClass().getResource("/").getPath().concat("DeclarationEtcBOList.xls");
         FileOutputStream out = new FileOutputStream(path);

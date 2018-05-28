@@ -203,7 +203,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 	@Override
 	public PageResult<DeclarationListVO> pageDeclaration(Integer pageNumber, Integer pageSize, Long materialId,
 														 String textBookids, String realname, String position, String title, String orgName, Long orgId,
-														 String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress, Boolean haveFile, String tag,
+														 String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress, Boolean haveFile,Boolean isSelected, String tag,
 														 HttpServletRequest request)
 			throws CheckedServiceException {
 		if (null == request.getSession(false)) {
@@ -267,6 +267,9 @@ public class DeclarationServiceImpl implements DeclarationService {
 		}
 		if (null != haveFile) {
 			map.put("haveFile", haveFile); // 有无教材大纲
+		}
+		if (null != isSelected) {
+			map.put("isSelected", isSelected); // 是否被遴选中
 		}
 		// 包装参数实体
 		PageParameter<Map<String, Object>> pageParameter = new PageParameter<Map<String, Object>>(pageNumber, pageSize,
@@ -823,7 +826,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 	@Override
 	public List<DeclarationEtcBO> declarationEtcBO(Long materialId, String textBookids, String realname,
 			String position, String title, String orgName, String unitName, Integer positionType,
-			Integer onlineProgress, Integer offlineProgress)
+			Integer onlineProgress, Integer offlineProgress,Boolean isSelect)
 			throws CheckedServiceException, IllegalArgumentException, IllegalAccessException {
 		List<DeclarationEtcBO> declarationEtcBOs = new ArrayList<>();
 		Gson gson = new Gson();
@@ -832,11 +835,12 @@ public class DeclarationServiceImpl implements DeclarationService {
 		}.getType());
 		List<DeclarationOrDisplayVO> declarationOrDisplayVOs = declarationDao.getDeclarationOrDisplayVOByMaterialId(
 				materialId, bookIds, realname, position, title, orgName, unitName, positionType, onlineProgress,
-				offlineProgress);
+				offlineProgress,isSelect);
 		List<Long> decIds = new ArrayList<>();
 		for (DeclarationOrDisplayVO declarationOrDisplayVO : declarationOrDisplayVOs) {
 			decIds.add(declarationOrDisplayVO.getId());
 		}
+		Material material = materialService.getMaterialById(materialId);
 		// 学习经历
 		ArrayList<DecEduExp> decEduExps = (ArrayList<DecEduExp>) decEduExpDao.getListDecEduExpByDeclarationIds(decIds);
 		// 工作经历

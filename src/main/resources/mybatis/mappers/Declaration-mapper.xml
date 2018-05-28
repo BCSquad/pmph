@@ -482,6 +482,19 @@
 			w.username
 			like concat('%',#{realname},'%') )
 		</if>
+
+		<if test="isSelected !=null ">
+			<if test="isSelected">
+				and EXISTS (select dp.id  from dec_position_published dp where dp.declaration_id = d.id
+				and
+				dp.textbook_id = t.id)
+			</if>
+			<if test = "!isSelected">
+				and  not EXISTS (select dp.id  from dec_position_published dp where dp.declaration_id = d.id
+				and
+				dp.textbook_id = t.id)
+			</if>
+		</if>
 		<!-- 职务 -->
 		<if test="position != null and position != ''  ">
 			and d.position like concat('%',#{position},'%')
@@ -562,6 +575,18 @@
 					 open="(" close=")" separator=",">
 				#{item}
 			</foreach>
+		</if>
+		<if test="parameter.isSelected !=null ">
+			<if test="parameter.isSelected">
+				and EXISTS (select dp.id  from dec_position_published dp where dp.declaration_id = a.id
+				and
+				dp.textbook_id = d.id)
+			</if>
+			<if test = "!parameter.isSelected">
+				and not EXISTS (select dp.id  from dec_position_published dp where dp.declaration_id = a.id
+				and
+				dp.textbook_id = d.id)
+			</if>
 		</if>
 		<!-- 账号或者姓名 -->
 		<if test="parameter.realname != null ">
@@ -680,6 +705,18 @@
 				open="(" close=")" separator=",">
 				#{item}
 			</foreach>
+		</if>
+		<if test="parameter.isSelected !=null ">
+			<if test="parameter.isSelected">
+				and EXISTS (select dp.id  from dec_position_published dp where dp.declaration_id = a.id
+				and
+				 dp.textbook_id = d.id)
+			</if>
+			<if test = "!parameter.isSelected">
+				and not EXISTS (select dp.id  from dec_position_published dp where dp.declaration_id = a.id
+				and
+				dp.textbook_id = d.id)
+			</if>
 		</if>
 		<!-- 账号或者姓名 -->
 		<if test="parameter.realname != null ">

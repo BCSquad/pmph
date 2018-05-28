@@ -74,6 +74,7 @@ public class DeclarationController {
     @RequestParam(value = "onlineProgress", required = false) Integer onlineProgress,
     @RequestParam(value = "offlineProgress", required = false) Integer offlineProgress,
     @RequestParam(value = "haveFile", required = false) Boolean haveFile,
+    @RequestParam(value = "isSelect", required = false) Boolean isSelect,
     @RequestParam(value = "tag" ,required = false) String tag,HttpServletRequest request) {
         return new ResponseBean(declarationService.pageDeclaration(pageNumber,
                                                                    pageSize,
@@ -88,7 +89,7 @@ public class DeclarationController {
                                                                    positionType,
                                                                    onlineProgress,
                                                                    offlineProgress,
-                                                                   haveFile,tag,request));
+                                                                   haveFile,isSelect,tag,request));
     }
 
     /**
