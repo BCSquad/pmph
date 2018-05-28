@@ -1,6 +1,8 @@
 package com.bc.pmpheep.back.util;
 
 import java.text.DecimalFormat;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -348,6 +350,26 @@ public final class StringUtil {
             ip = ip.split(",")[0];
         }
         return ip;
+    }
+
+    /**
+     * 判断字符串是否是整形
+     * @param string
+     * @return
+     */
+    public static boolean isInt(String string) {
+        if (string == null)
+            return false;
+
+        String regEx1 = "[\\-|\\+]?\\d+";
+        Pattern p;
+        Matcher m;
+        p = Pattern.compile(regEx1);
+        m = p.matcher(string);
+        if (m.matches())
+            return true;
+        else
+            return false;
     }
 
 }
