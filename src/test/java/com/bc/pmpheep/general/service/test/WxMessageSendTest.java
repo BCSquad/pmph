@@ -38,5 +38,14 @@ public class WxMessageSendTest extends BaseTest{
         System.out.println(JSON.toJSONString(map));
     }
 
+    @Test
+    public void getUserByWXCode(){
+        Map<String,String> map = service.getUserByWXCode("LiHuan");
+        System.out.println(JSON.toJSONString(map));
+
+    }
+
+
+
 
 }

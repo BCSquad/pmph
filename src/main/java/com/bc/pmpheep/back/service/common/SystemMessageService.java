@@ -527,7 +527,7 @@ public final class SystemMessageService {
 					CheckedExceptionResult.NULL_PARAM, "认证的管理员为空");
 		}
 		// 存入消息主体
-		String msgContent = "抱歉，您提交的管理员认证资料已被退回，退回原因："+backReason+"，请您修改后重试";// 退回
+		String msgContent = "抱歉，您提交的管理员认证资料已被退回，退回原因："+backReason+"，请您修改后重新提交";// 退回
 		if (isPass) {// 通过
 			msgContent = "恭喜！您提交的管理员认证资料已通过审核";
 		}
@@ -909,7 +909,7 @@ public final class SystemMessageService {
 		if (null == cmsContent) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "文章不存在");
 		}
-		String msgContent = "抱歉，您的文章《<font color='red'>" + cmsContent.getTitle() + "</font>》没有通过审核，请您修改后重试 ";
+		String msgContent = "抱歉，您的文章《<font color='red'>" + cmsContent.getTitle() + "</font>》没有通过审核，请您修改后提交 ";
 		if (isPass) {
 			msgContent = "恭喜！您的文章《<font color='red'>" + cmsContent.getTitle() + "</font>》已通过审核 ";
 		}
