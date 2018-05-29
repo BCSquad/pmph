@@ -47,6 +47,9 @@
 			<if test="gmtUpdate!=null">
 				gmt_update,
 			</if>
+			<if test="openid!=null">
+				openid,
+			</if>
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
@@ -87,13 +90,16 @@
 				#{isDeleted},
 			</if>
 			<if test="isDirector!=null">
-				#{isDirector}
+				#{isDirector},
 			</if>
 			<if test="gmtCreate!=null">
 				#{gmtCreate},
 			</if>
 			<if test="gmtUpdate!=null">
 				#{gmtUpdate},
+			</if>
+			<if test="openid!=null">
+				#{openid},
 			</if>
 		</trim>
 	</sql>
@@ -153,6 +159,9 @@
 			</if>
 			<if test="isDirector!=null">
 				is_director = #{isDirector},
+			</if>
+			<if test="openid!=null">
+				openid = #{openid},
 			</if>
 		</set>
 		WHERE
@@ -214,7 +223,8 @@
 		note,
 		sort,
 		avatar,
-		is_deleted
+		is_deleted,
+		openid
 		FROM
 		pmph_user
 		WHERE
@@ -231,7 +241,8 @@
 		email,
 		note,
 		sort,
-		is_deleted
+		is_deleted,
+		openid
 		FROM
 		pmph_user
 		where

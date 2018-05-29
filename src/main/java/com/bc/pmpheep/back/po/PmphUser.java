@@ -81,6 +81,8 @@ public class PmphUser implements java.io.Serializable {
      */
     private Boolean isDirector = false;
 
+    private String openid;
+
     public PmphUser() {
     }
 
@@ -278,4 +280,11 @@ public class PmphUser implements java.io.Serializable {
                + loginType + "]";
     }
 
+    public String getOpenid() {
+        return openid;
+    }
+
+    public void setOpenid(String openid) {
+        this.openid = openid;
+    }
 }
