@@ -113,7 +113,7 @@ public class WordHelperTest extends BaseTest {
     @Test
     @Ignore
     public void test() throws CheckedServiceException, IllegalArgumentException, IllegalAccessException {
-        List<DeclarationEtcBO> list = declarationService.declarationEtcBO(2L, null, null, null, null, null, null, null, null, null);
+        List<DeclarationEtcBO> list = declarationService.declarationEtcBO(2L, null, null, null, null, null, null, null, null, null,null);
         Material material = materialService.getMaterialById(2L);
         StringBuilder str = new StringBuilder();
         str.append(material.getIsEduExpUsed() ? "1" : "0");

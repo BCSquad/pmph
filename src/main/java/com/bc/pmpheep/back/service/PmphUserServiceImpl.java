@@ -596,7 +596,12 @@ public class PmphUserServiceImpl implements PmphUserService {
         int total = pmphUserDao.getListPmphUserTotal(pageParameter);
         if (total > 0) {
             List<PmphUserManagerVO> list = pmphUserDao.getListPmphUser(pageParameter);
-            for (PmphUserManagerVO pmphUserManagerVO : list) {
+            for (int i =0;i<list.size();i++) {
+                PmphUserManagerVO pmphUserManagerVO = list.get(i);
+                String pmphUserManagerVOS = com.alibaba.fastjson.JSON.toJSONString(pmphUserManagerVO).replaceAll("-","");
+                pmphUserManagerVO = com.alibaba.fastjson.JSON.parseObject(pmphUserManagerVOS,PmphUserManagerVO.class);
+                list.remove(i);
+                list.add(i,pmphUserManagerVO);
                 List<PmphRoleVO> pmphRoles =
                 pmphRoleDao.listPmphUserRoleByUserId(pmphUserManagerVO.getId());
                 pmphUserManagerVO.setPmphRoles(pmphRoles);

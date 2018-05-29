@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bc.pmpheep.back.vo.WriterUserManagerVO;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.OfficeXmlFileException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -199,7 +200,7 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService, A
 	 * @return 需要的Page对象
 	 */
 	@Override
-	public PageResult<OrgAndOrgUserVO> getListOrgUser(PageParameter<OrgAndOrgUserVO> pageParameter)
+	public PageResult<OrgAndOrgUserVO>  getListOrgUser(PageParameter<OrgAndOrgUserVO> pageParameter)
 			throws CheckedServiceException {
 		String username = pageParameter.getParameter().getUsername();
 		if (StringUtil.notEmpty(username)) {
@@ -223,6 +224,13 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService, A
 		if (total > 0) {
 			pageResult.setTotal(total);
 			List<OrgAndOrgUserVO> list = orgUserDao.getListOrgUser(pageParameter);
+			for(int i = 0;i<list.size();i++){
+				OrgAndOrgUserVO vo = list.get(i);
+				String voS = com.alibaba.fastjson.JSON.toJSONString(vo).replaceAll("-","");
+				vo = com.alibaba.fastjson.JSON.parseObject(voS,OrgAndOrgUserVO.class);
+				list.remove(i);
+				list.add(i,vo);
+			}
 			pageResult.setRows(list);
 		}
 		// if (StringUtil.isEmpty(orgTypeName)) {// 当没有机构类型的时候 学校和医院生效

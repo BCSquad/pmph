@@ -122,7 +122,7 @@ public interface DeclarationService {
 	 */
 	public PageResult<DeclarationListVO> pageDeclaration(Integer pageNumber, Integer pageSize, Long materialId,
 			String textBookids, String realname, String position, String title, String orgName, Long orgId,
-			String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress, Boolean haveFile,String tag,
+			String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress, Boolean haveFile,Boolean isSelected,String tag,
 														 HttpServletRequest request)
 			throws CheckedServiceException;
 
@@ -171,7 +171,7 @@ public interface DeclarationService {
 	 */
 	List<DeclarationEtcBO> declarationEtcBO(Long materialId, String textBookids, String realname, String position,
 			String title, String orgName, String unitName, Integer positionType, Integer onlineProgress,
-			Integer offlineProgress) throws CheckedServiceException, IllegalArgumentException, IllegalAccessException;
+			Integer offlineProgress,Boolean isSelect) throws CheckedServiceException, IllegalArgumentException, IllegalAccessException;
 
 	/**
 	 * 根据教材申报id与姓名查询作家申报信息

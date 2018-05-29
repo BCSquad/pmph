@@ -42,6 +42,7 @@ public class SpringThread implements Runnable {
 	private Integer onlineProgress;
 	private Integer offlineProgress;
 	private String id;
+	private Boolean isSelect;
 
 	public Long getMaterialId() {
 		return materialId;
@@ -131,8 +132,9 @@ public class SpringThread implements Runnable {
 		this.id = id;
 	}
 
+
 	public SpringThread(ZipHelper zipHelper, WordHelper wordHelper, MaterialService materialService,
-			TextbookService textbookService, DeclarationService declarationService, Long materialId, String textBookids,
+			TextbookService textbookService, DeclarationService declarationService,Boolean isSelect, Long materialId, String textBookids,
 			String realname, String position, String title, String orgName, String unitName, Integer positionType,
 			Integer onlineProgress, Integer offlineProgress, String id,
 			MaterialExtensionService materialExtensionService) {
@@ -154,6 +156,7 @@ public class SpringThread implements Runnable {
 		this.offlineProgress = offlineProgress;
 		this.id = id;
 		this.materialExtensionService = materialExtensionService;
+		this.isSelect = isSelect;
 	}
 
 	@Override
@@ -198,7 +201,7 @@ public class SpringThread implements Runnable {
 		try {
 			declarationEtcBOs = this.declarationService.declarationEtcBO(this.materialId, this.textBookids,
 					this.realname, this.position, this.title, this.orgName, this.unitName, this.positionType,
-					this.onlineProgress, this.offlineProgress);
+					this.onlineProgress, this.offlineProgress,this.isSelect);
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");
 		}
@@ -247,4 +250,12 @@ public class SpringThread implements Runnable {
 		Const.WORD_EXPORT_MAP.put(this.id, zipDownload);
 	}
 
+
+	public Boolean getSelect() {
+		return isSelect;
+	}
+
+	public void setSelect(Boolean select) {
+		isSelect = select;
+	}
 }

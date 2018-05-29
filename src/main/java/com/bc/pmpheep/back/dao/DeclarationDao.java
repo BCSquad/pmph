@@ -103,7 +103,7 @@ public interface DeclarationDao {
 			@Param("bookIds") List<Long> bookIds, @Param("realname") String realname,
 			@Param("position") String position, @Param("title") String title, @Param("orgName") String orgName,
 			@Param("unitName") String unitName, @Param("positionType") Integer positionType,
-			@Param("onlineProgress") Integer onlineProgress, @Param("offlineProgress") Integer offlineProgress);
+			@Param("onlineProgress") Integer onlineProgress, @Param("offlineProgress") Integer offlineProgress,@Param("isSelected") Boolean isSelect);
 
 	/**
 	 * 根据教材申报id与姓名查询作家申报信息

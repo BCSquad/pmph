@@ -3,6 +3,13 @@ package com.bc.pmpheep.general.service.test;
 import com.alibaba.fastjson.JSON;
 import com.bc.pmpheep.test.BaseTest;
 import com.bc.pmpheep.wx.service.WXQYUserService;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,6 +24,7 @@ public class WxMessageSendTest extends BaseTest{
     @Autowired
     WXQYUserService service;
 
+    protected static final HttpClient client = HttpClientBuilder.create().build();
 
     @Test
     public void findUser(){
@@ -38,5 +46,20 @@ public class WxMessageSendTest extends BaseTest{
         System.out.println(JSON.toJSONString(map));
     }
 
+    @Test
+    public void findUserByUserId(){
+        HttpGet get = new HttpGet("/findUserByUserId?userId=testOpenId");
+        try{
+        HttpResponse res = client.execute(get);
+        HttpEntity entity = res.getEntity();
+        String responseContent = EntityUtils.toString(entity, "UTF-8");
+        if (res.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+            Map user = JSON.parseObject(responseContent, Map.class);
+        }
+        }catch(Exception exception){
+
+        }
+
+    }
 
 }

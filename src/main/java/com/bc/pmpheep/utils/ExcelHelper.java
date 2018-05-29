@@ -540,7 +540,7 @@ public class ExcelHelper {
 		}
 		Workbook workbook = new HSSFWorkbook();
 		Sheet sheet = workbook.createSheet(sheetName);
-		sheet = generateDeclarationEtcBOHeader(extensions, sheet); // 生成表头
+		sheet = generateDeclarationEtcBOHeader(dataSource.get(0).getClass().getDeclaredFields(),extensions, sheet); // 生成表头
 		headerStyleSetup(workbook, 2); // 设置表头样式
 		Field[] fields = dataSource.get(0).getClass().getDeclaredFields();
 		/* 设置行计数器 */
@@ -565,93 +565,147 @@ public class ExcelHelper {
 					if (StringUtil.notEmpty(headerName)) {
 						switch (headerName) {
 						case "学习经历": {
-							List<DecEduExp> list = (List<DecEduExp>) field.get(object);
-							columnProperties = fillDecEduExpData(list, row, columnProperties);
+							//if(material.getIsEduExpUsed()){
+								List<DecEduExp> list = (List<DecEduExp>) field.get(object);
+								columnProperties = fillDecEduExpData(list, row, columnProperties);
+							//}
+
 							break;
 						}
 						case "工作经历": {
-							List<DecWorkExp> list = (List<DecWorkExp>) field.get(object);
-							columnProperties = fillDecWorkExpData(list, row, columnProperties);
+							//if(material.getIsWorkExpUsed()){
+								List<DecWorkExp> list = (List<DecWorkExp>) field.get(object);
+								columnProperties = fillDecWorkExpData(list, row, columnProperties);
+							//}
+
 							break;
 						}
 						case "教学经历": {
-							List<DecTeachExp> list = (List<DecTeachExp>) field.get(object);
-							columnProperties = fillDecTeachExpData(list, row, columnProperties);
+							//if(material.getIsTeachExpUsed()){
+								List<DecTeachExp> list = (List<DecTeachExp>) field.get(object);
+								columnProperties = fillDecTeachExpData(list, row, columnProperties);
+							//}
+
 							break;
 						}
 						case "个人成就": {
-							DecAchievement decAchievement = (DecAchievement) field.get(object);
-							columnProperties = fillDecAchievementData(decAchievement, row, columnProperties);
+							//if(material.getIsAchievementUsed()){
+								DecAchievement decAchievement = (DecAchievement) field.get(object);
+								columnProperties = fillDecAchievementData(decAchievement, row, columnProperties);
+							//}
+
 							break;
 						}
 						case "学术兼职": {
-							List<DecAcade> list = (List<DecAcade>) field.get(object);
-							columnProperties = fillDecAcadeData(list, row, columnProperties);
+							//if(material.getIsAcadeUsed()){
+								List<DecAcade> list = (List<DecAcade>) field.get(object);
+								columnProperties = fillDecAcadeData(list, row, columnProperties);
+							//}
+
 							break;
 						}
 						case "本套上版教材参编情况": {
-							List<DecLastPosition> list = (List<DecLastPosition>) field.get(object);
-							columnProperties = fillDecLastPositionData(list, row, columnProperties);
+							//if(material.getIsLastPositionUsed()){
+								List<DecLastPosition> list = (List<DecLastPosition>) field.get(object);
+								columnProperties = fillDecLastPositionData(list, row, columnProperties);
+							//}
+
 							break;
 						}
 						case "精品课程建设情况": {
-							List<DecCourseConstruction> list = (List<DecCourseConstruction>) field.get(object);
-							columnProperties = fillDecCourseConstructionData(list, row, columnProperties);
+							//if(material.getIsCourseUsed()){
+								List<DecCourseConstruction> list = (List<DecCourseConstruction>) field.get(object);
+								columnProperties = fillDecCourseConstructionData(list, row, columnProperties);
+							//}
+
 							break;
 						}
 						case "主编国家级规划教材情况": {
-							List<DecNationalPlan> list = (List<DecNationalPlan>) field.get(object);
-							columnProperties = fillDecNationalPlanData(list, row, columnProperties);
+							//if(material.getIsNationalPlanUsed()){
+								List<DecNationalPlan> list = (List<DecNationalPlan>) field.get(object);
+								columnProperties = fillDecNationalPlanData(list, row, columnProperties);
+							//}
+
 							break;
 						}
 						case "人卫社教材编写情况": {
-							List<DecTextbookPmph> list = (List<DecTextbookPmph>) field.get(object);
-							columnProperties = fillDecTextbookPmphData(list, row, columnProperties);
+							//if(material.getIsPmphTextbookUsed()){
+								List<DecTextbookPmph> list = (List<DecTextbookPmph>) field.get(object);
+								columnProperties = fillDecTextbookPmphData(list, row, columnProperties);
+							//}
+
 							break;
 						}
 						case "其他社教材编写情况": {
-							List<DecTextbook> list = (List<DecTextbook>) field.get(object);
-							columnProperties = fillDecTextbookData(list, row, columnProperties);
+							//if(material.getIsTextbookUsed()){
+								List<DecTextbook> list = (List<DecTextbook>) field.get(object);
+								columnProperties = fillDecTextbookData(list, row, columnProperties);
+							//}
+
 							break;
 						}
 						case "参加人卫慕课、数字教材编写情况": {
-							DecMoocDigital decMoocDigital = (DecMoocDigital) field.get(object);
-							columnProperties = fillDecMoocDigitalData(decMoocDigital, row, columnProperties);
+							//if(material.getIsMoocDigitalUsed()){
+								DecMoocDigital decMoocDigital = (DecMoocDigital) field.get(object);
+								columnProperties = fillDecMoocDigitalData(decMoocDigital, row, columnProperties);
+							//}
+
 							break;
 						}
 						case "科研情况": {
-							List<DecResearch> list = (List<DecResearch>) field.get(object);
-							columnProperties = fillDecResearchData(list, row, columnProperties);
+							//if(material.getIsResearchUsed()){
+								List<DecResearch> list = (List<DecResearch>) field.get(object);
+								columnProperties = fillDecResearchData(list, row, columnProperties);
+							//}
+
 							break;
 						}
 						case "学术专著": {
-							List<DecMonograph> list = (List<DecMonograph>) field.get(object);
-							columnProperties = fillDecMonographData(list, row, columnProperties);
+							if(material.getIsMonographUsed()){
+								List<DecMonograph> list = (List<DecMonograph>) field.get(object);
+								columnProperties = fillDecMonographData(list, row, columnProperties);
+							}
+
 							break;
 						}
 						case "出版行业获奖情况": {
-							List<DecPublishReward> list = (List<DecPublishReward>) field.get(object);
-							columnProperties = fillDecPublishRewardData(list, row, columnProperties);
+							//if(material.getIsPublishRewardUsed()){
+								List<DecPublishReward> list = (List<DecPublishReward>) field.get(object);
+								columnProperties = fillDecPublishRewardData(list, row, columnProperties);
+							//}
+
 							break;
 						}
 						case "SCI论文投稿及影响因子情况": {
-							List<DecSci> list = (List<DecSci>) field.get(object);
-							columnProperties = fillDecSciData(list, row, columnProperties);
+							//if(material.getIsSciUsed()){
+								List<DecSci> list = (List<DecSci>) field.get(object);
+								columnProperties = fillDecSciData(list, row, columnProperties);
+						//	}
+
 							break;
 						}
 						case "临床医学获奖情况": {
-							List<DecClinicalReward> list = (List<DecClinicalReward>) field.get(object);
-							columnProperties = fillDecClinicalRewardData(list, row, columnProperties);
+							//if(material.getIsClinicalRewardUsed()){
+								List<DecClinicalReward> list = (List<DecClinicalReward>) field.get(object);
+								columnProperties = fillDecClinicalRewardData(list, row, columnProperties);
+							//}
+
 							break;
 						}
 						case "学术荣誉授予情况": {
-							List<DecAcadeReward> list = (List<DecAcadeReward>) field.get(object);
-							columnProperties = fillDecAcadeRewardData(list, row, columnProperties);
+							//if(material.getIsAcadeRewardUsed()){
+								List<DecAcadeReward> list = (List<DecAcadeReward>) field.get(object);
+								columnProperties = fillDecAcadeRewardData(list, row, columnProperties);
+							//}
+
 							break;
 						}
 						case "编写内容意向": {
-							DecIntention decIntention = (DecIntention) field.get(object);
-							columnProperties = fillDecIntentionData(decIntention, row, columnProperties);
+							if(material.getIsIntentionUsed()){
+								DecIntention decIntention = (DecIntention) field.get(object);
+								columnProperties = fillDecIntentionData(decIntention, row, columnProperties);
+							}
+
 							break;
 						}
 						case "作家扩展项": {
@@ -730,8 +784,8 @@ public class ExcelHelper {
 		return sheet;
 	}
 
-	private Sheet generateDeclarationEtcBOHeader(List<MaterialExtension> extensions, Sheet sheet) {
-		Field[] fields = DeclarationEtcBO.class.getDeclaredFields();
+	private Sheet generateDeclarationEtcBOHeader(Field[] fields ,List<MaterialExtension> extensions, Sheet sheet) {
+		//Field[] fields = DeclarationEtcBO.class.getDeclaredFields();
 		Row r1 = sheet.createRow(0);
 		Row r2 = sheet.createRow(1);
 		Cell numcell = r1.createCell(0);
@@ -1242,11 +1296,11 @@ public class ExcelHelper {
 			startColumn += 3;
 		}
 		if (!material.getIsLastPositionUsed()) {
-			for (int i = 0; i < 2; i++) {
+			for (int i = 0; i < 5; i++) {
 				workbook.getSheetAt(0).setColumnHidden(startColumn++, true);
 			}
 		} else {
-			startColumn += 2;
+			startColumn += 5;
 		}
 		if (!material.getIsCourseUsed()) {
 			for (int i = 0; i < 3; i++) {
@@ -1263,18 +1317,18 @@ public class ExcelHelper {
 			startColumn += 3;
 		}
 		if (!material.getIsPmphTextbookUsed()) {
-			for (int i = 0; i < 5; i++) {
-				workbook.getSheetAt(0).setColumnHidden(startColumn++, true);
-			}
-		} else {
-			startColumn += 5;
-		}
-		if (!material.getIsTextbookUsed()) {
 			for (int i = 0; i < 6; i++) {
 				workbook.getSheetAt(0).setColumnHidden(startColumn++, true);
 			}
 		} else {
 			startColumn += 6;
+		}
+		if (!material.getIsTextbookUsed()) {
+			for (int i = 0; i < 7; i++) {
+				workbook.getSheetAt(0).setColumnHidden(startColumn++, true);
+			}
+		} else {
+			startColumn += 7;
 		}
 		if (!material.getIsMoocDigitalUsed()) {
 			workbook.getSheetAt(0).setColumnHidden(startColumn++, true);
