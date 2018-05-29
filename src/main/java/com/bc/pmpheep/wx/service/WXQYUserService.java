@@ -45,10 +45,12 @@ public class WXQYUserService extends WXBaseService {
         Map<String,Object> map = new HashMap<String,Object>();
         if(!StringUtil.isEmpty(touser)){
            touser = touser.replaceAll(",","|");
+           touser = touser.replaceAll("[/[|/]]","");
         }
 
         if(!StringUtil.isEmpty(toparty)){
             toparty = toparty.replaceAll(",","|");
+            toparty = toparty.replaceAll("[/[|/]]","");
         }
 
         if(!StringUtil.isEmpty(totag)){

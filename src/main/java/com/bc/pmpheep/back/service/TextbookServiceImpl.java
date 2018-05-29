@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.bc.pmpheep.wx.service.WXQYUserService;
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.collections.comparators.ComparatorChain;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -110,6 +111,9 @@ public class TextbookServiceImpl implements TextbookService {
 	
 	@Autowired
 	private WriterUserTrendstService writerUserTrendstService;
+
+	@Autowired
+	WXQYUserService wxqyUserService;
 	
 	/**
 	 * 
@@ -498,6 +502,22 @@ public class TextbookServiceImpl implements TextbookService {
 		// roleDao.addUserRole(textbook.getPlanningEditor(),
 		// list.get(0).getId());//给策划编辑绑定权限
 		// }
+
+		String touser = "";
+		String msg = "";
+		if (!ObjectUtil.isNull(textbook.getPlanningEditor())){
+			Long planningEditorId = textbook.getPlanningEditor();
+			Long textbookId = textbook.getId();
+			PmphUser planningEditor = pmphUserService.get(planningEditorId);
+			touser = planningEditor.getOpenid();
+			Textbook originalTextbook = textbookService.getTextbookById(textbookId);
+			//***（策划编辑人名[多个逗号隔开]）已被为《***》（教材名称）的策划编辑
+			msg = planningEditor.getRealname()+"已被为《"+originalTextbook.getTextbookName()+"》的策划编辑。";
+			if (StringUtil.notEmpty(touser)){
+				wxqyUserService.sendTextMessage("0","0",touser,"","","text",msg,(short)0);
+			}
+		}
+
 		return textbookDao.updateTextbook(textbook);
 	}
 
