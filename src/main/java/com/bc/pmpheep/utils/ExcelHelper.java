@@ -565,98 +565,98 @@ public class ExcelHelper {
 					if (StringUtil.notEmpty(headerName)) {
 						switch (headerName) {
 						case "学习经历": {
-							if(material.getIsEduExpUsed()){
+							//if(material.getIsEduExpUsed()){
 								List<DecEduExp> list = (List<DecEduExp>) field.get(object);
 								columnProperties = fillDecEduExpData(list, row, columnProperties);
-							}
+							//}
 
 							break;
 						}
 						case "工作经历": {
-							if(material.getIsWorkExpUsed()){
+							//if(material.getIsWorkExpUsed()){
 								List<DecWorkExp> list = (List<DecWorkExp>) field.get(object);
 								columnProperties = fillDecWorkExpData(list, row, columnProperties);
-							}
+							//}
 
 							break;
 						}
 						case "教学经历": {
-							if(material.getIsTeachExpUsed()){
+							//if(material.getIsTeachExpUsed()){
 								List<DecTeachExp> list = (List<DecTeachExp>) field.get(object);
 								columnProperties = fillDecTeachExpData(list, row, columnProperties);
-							}
+							//}
 
 							break;
 						}
 						case "个人成就": {
-							if(material.getIsAchievementUsed()){
+							//if(material.getIsAchievementUsed()){
 								DecAchievement decAchievement = (DecAchievement) field.get(object);
 								columnProperties = fillDecAchievementData(decAchievement, row, columnProperties);
-							}
+							//}
 
 							break;
 						}
 						case "学术兼职": {
-							if(material.getIsAcadeUsed()){
+							//if(material.getIsAcadeUsed()){
 								List<DecAcade> list = (List<DecAcade>) field.get(object);
 								columnProperties = fillDecAcadeData(list, row, columnProperties);
-							}
+							//}
 
 							break;
 						}
 						case "本套上版教材参编情况": {
-							if(material.getIsLastPositionUsed()){
+							//if(material.getIsLastPositionUsed()){
 								List<DecLastPosition> list = (List<DecLastPosition>) field.get(object);
 								columnProperties = fillDecLastPositionData(list, row, columnProperties);
-							}
+							//}
 
 							break;
 						}
 						case "精品课程建设情况": {
-							if(material.getIsCourseUsed()){
+							//if(material.getIsCourseUsed()){
 								List<DecCourseConstruction> list = (List<DecCourseConstruction>) field.get(object);
 								columnProperties = fillDecCourseConstructionData(list, row, columnProperties);
-							}
+							//}
 
 							break;
 						}
 						case "主编国家级规划教材情况": {
-							if(material.getIsNationalPlanUsed()){
+							//if(material.getIsNationalPlanUsed()){
 								List<DecNationalPlan> list = (List<DecNationalPlan>) field.get(object);
 								columnProperties = fillDecNationalPlanData(list, row, columnProperties);
-							}
+							//}
 
 							break;
 						}
 						case "人卫社教材编写情况": {
-							if(material.getIsPmphTextbookUsed()){
+							//if(material.getIsPmphTextbookUsed()){
 								List<DecTextbookPmph> list = (List<DecTextbookPmph>) field.get(object);
 								columnProperties = fillDecTextbookPmphData(list, row, columnProperties);
-							}
+							//}
 
 							break;
 						}
 						case "其他社教材编写情况": {
-							if(material.getIsTextbookUsed()){
+							//if(material.getIsTextbookUsed()){
 								List<DecTextbook> list = (List<DecTextbook>) field.get(object);
 								columnProperties = fillDecTextbookData(list, row, columnProperties);
-							}
+							//}
 
 							break;
 						}
 						case "参加人卫慕课、数字教材编写情况": {
-							if(material.getIsMoocDigitalUsed()){
+							//if(material.getIsMoocDigitalUsed()){
 								DecMoocDigital decMoocDigital = (DecMoocDigital) field.get(object);
 								columnProperties = fillDecMoocDigitalData(decMoocDigital, row, columnProperties);
-							}
+							//}
 
 							break;
 						}
 						case "科研情况": {
-							if(material.getIsResearchUsed()){
+							//if(material.getIsResearchUsed()){
 								List<DecResearch> list = (List<DecResearch>) field.get(object);
 								columnProperties = fillDecResearchData(list, row, columnProperties);
-							}
+							//}
 
 							break;
 						}
@@ -669,34 +669,34 @@ public class ExcelHelper {
 							break;
 						}
 						case "出版行业获奖情况": {
-							if(material.getIsPublishRewardUsed()){
+							//if(material.getIsPublishRewardUsed()){
 								List<DecPublishReward> list = (List<DecPublishReward>) field.get(object);
 								columnProperties = fillDecPublishRewardData(list, row, columnProperties);
-							}
+							//}
 
 							break;
 						}
 						case "SCI论文投稿及影响因子情况": {
-							if(material.getIsSciUsed()){
+							//if(material.getIsSciUsed()){
 								List<DecSci> list = (List<DecSci>) field.get(object);
 								columnProperties = fillDecSciData(list, row, columnProperties);
-							}
+						//	}
 
 							break;
 						}
 						case "临床医学获奖情况": {
-							if(material.getIsClinicalRewardUsed()){
+							//if(material.getIsClinicalRewardUsed()){
 								List<DecClinicalReward> list = (List<DecClinicalReward>) field.get(object);
 								columnProperties = fillDecClinicalRewardData(list, row, columnProperties);
-							}
+							//}
 
 							break;
 						}
 						case "学术荣誉授予情况": {
-							if(material.getIsAcadeRewardUsed()){
+							//if(material.getIsAcadeRewardUsed()){
 								List<DecAcadeReward> list = (List<DecAcadeReward>) field.get(object);
 								columnProperties = fillDecAcadeRewardData(list, row, columnProperties);
-							}
+							//}
 
 							break;
 						}
