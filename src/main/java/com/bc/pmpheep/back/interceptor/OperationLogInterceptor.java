@@ -123,7 +123,12 @@ public class OperationLogInterceptor extends HandlerInterceptorAdapter {
                 String businessType = "";// 业务类型
                 HttpSession session = null;
                 try {
-                    session = request.getSession();
+                    if(null == request.getSession(false)){
+                        session = request.getSession();
+                    }else{
+                        session = request.getSession(false);
+                    }
+
                 } catch (Exception e) {
                     logger.warn("session为空时出现异常：{}", e.getMessage());
                 }

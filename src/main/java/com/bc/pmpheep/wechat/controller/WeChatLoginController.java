@@ -1,10 +1,15 @@
 package com.bc.pmpheep.wechat.controller;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.alibaba.fastjson.JSON;
+import com.bc.pmpheep.back.po.PmphRole;
+import com.bc.pmpheep.back.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +24,6 @@ import com.bc.pmpheep.back.po.PmphUserWechat;
 import com.bc.pmpheep.back.service.PmphRoleService;
 import com.bc.pmpheep.back.service.PmphUserService;
 import com.bc.pmpheep.back.service.PmphUserWechatService;
-import com.bc.pmpheep.back.util.Const;
-import com.bc.pmpheep.back.util.DesRun;
-import com.bc.pmpheep.back.util.ObjectUtil;
-import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -122,6 +123,48 @@ public class WeChatLoginController {
                                                                             username + password
                                                                             + wechatUserId
                                                                             + "<pmpheep>").enpsw);
+
+                /*--------------------------- 登录权限控制 session cookie ------------------------------------*/
+                pmphUser.setLoginType(Const.LOGIN_TYPE_PMPH);
+                if (!RouteUtil.DEFAULT_USER_AVATAR.equals(pmphUser.getAvatar())) {
+                    pmphUser.setAvatar(RouteUtil.userAvatar(pmphUser.getAvatar()));
+                }
+
+                // 根据用户Id查询对应角色(是否为管理员)
+                List<PmphRole> pmphRoles = pmphRoleService.getPmphRoleByUserId(pmphUser.getId());
+                if (pmphRoles.isEmpty()) {
+                    pmphRoleService.addUserRole(pmphUser.getId(), 2L);// 添加默认权限
+                    pmphRoles = pmphRoleService.getPmphRoleByUserId(pmphUser.getId());
+                }
+                List<Long> roleIds = new ArrayList<Long>();
+                for (PmphRole pmphRole : pmphRoles) {
+                    roleIds.add(pmphRole.getId());
+                    if (ObjectUtil.notNull(pmphRole)) {
+                        if (Const.LOGIN_USER_IS_ADMIN.equals(pmphRole.getRoleName())
+                                || Const.LOGIN_USER_IS_ADMINS.equals(pmphRole.getRoleName())
+                                || Const.LOGIN_SYS_USER_IS_ADMIN.equals(pmphRole.getRoleName())) {
+                            pmphUser.setIsAdmin(true);
+                        } else {
+                            pmphUser.setIsAdmin(false);
+                        }
+                    }
+                    if (Const.TRUE == pmphUser.getIsAdmin()) {
+                        break;
+                    }
+                }
+                // 根据用户Id查询对应权限Id
+                List<Long> pmphUserPermissionIds =
+                        pmphUserService.getPmphUserPermissionByUserId(pmphUser.getId());
+                request.getSession().setAttribute(Const.SESSION_PMPH_USER, pmphUser);
+                // 验证成功在Session中保存用户Token信息
+                request.getSession().setAttribute(Const.SEESION_PMPH_USER_TOKEN,
+                        new DesRun(password, username).enpsw);
+                model.addAttribute(Const.USER_SEESION_ID, request.getSession().getId());
+                model.addAttribute(Const.SESSION_PMPH_USER, JSON.toJSON(pmphUser));
+                model.addAttribute(Const.SEESION_PMPH_USER_TOKEN, new DesRun(password, username).enpsw);
+                model.addAttribute("pmphUserPermissionIds", pmphUserPermissionIds);
+                /*---------------------------------------------------------------*/
+
             } catch (Exception e) {
                 logger.error("SSO登陆失败，异常信息'{}'", e.getMessage());
             }

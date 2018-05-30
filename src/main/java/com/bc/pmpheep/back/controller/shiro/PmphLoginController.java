@@ -215,6 +215,24 @@ public class PmphLoginController {
         // }
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/SSOIndex", method = RequestMethod.GET)
+    public ResponseBean SSOIndex(String oldSessionId,String token,HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(oldSessionId);
+        HttpSession session = request.getSession(false);
+        if(session==null){
+            session = request.getSession();
+        }
+        // 验证成功在Session中保存用户信息
+        session.setAttribute(Const.SESSION_PMPH_USER, pmphUser);
+        // 验证成功在Session中保存用户Token信息
+        session.setAttribute(Const.SEESION_PMPH_USER_TOKEN,
+                token);
+        resultMap.put(Const.USER_SEESION_ID, session.getId());
+        return new ResponseBean(resultMap);
+    }
+
     /**
      * <pre>
      * 功能描述：SSO登陆
