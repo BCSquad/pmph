@@ -102,7 +102,7 @@
               Cookie.set('sessionId','${userSessionId}',2)
               Cookie.set('token','${sessionPmphUserToken}',2)
                 //window.location.href='http://192.168.100.135/#/login?username='+'${username}'+'&password='+'${password}'+'&token='+'${token}'+'&wechatUserId='+'${UserId}';
-                window.location.href='http://192.168.100.109:8089/#/index?sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
+                window.location.href='http://192.168.100.135/#/index?sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
             }
 
 		</script>
