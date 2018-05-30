@@ -9,7 +9,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.*;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.bc.pmpheep.back.vo.*;
 import com.bc.pmpheep.wx.service.WXQYUserService;
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.collections.comparators.ComparatorChain;
@@ -231,6 +235,11 @@ public class TextbookServiceImpl implements TextbookService {
 		}
 		// textbookDao.updateBookPublished(textBooks);
 		// textbookDao.updateTextbook(textbook);
+
+		/*下面是向主任、项目编辑、策划编辑 发送企业微信推送*/
+		//向列表中书籍的主任、项目编辑、策划编辑，发送微信推送，内容拼接如下
+		localMethodToLeaderWXMsg(pmphUser, textbooks, "结果公布");
+
 		/** 下面是发布更新最终结果表的数据 */
 		// 获取这些书的申报者
 		List<DecPosition> lst = decPositionService.listDecPositionsByTextBookIds(textBookIds);
@@ -511,8 +520,9 @@ public class TextbookServiceImpl implements TextbookService {
 			PmphUser planningEditor = pmphUserService.get(planningEditorId);
 			touser = planningEditor.getOpenid();
 			Textbook originalTextbook = textbookService.getTextbookById(textbookId);
+			String materialName = materialService.getMaterialNameById(originalTextbook.getMaterialId());
 			//***（策划编辑人名[多个逗号隔开]）已被为《***》（教材名称）的策划编辑
-			msg = planningEditor.getRealname()+"已被为《"+originalTextbook.getTextbookName()+"》的策划编辑。";
+			msg = planningEditor.getRealname()+"已被选为“"+materialName+"”-《"+originalTextbook.getTextbookName()+"》的策划编辑。";
 			if (StringUtil.notEmpty(touser)){
 				wxqyUserService.sendTextMessage("0","0",touser,"","","text",msg,(short)0);
 			}
@@ -694,12 +704,60 @@ public class TextbookServiceImpl implements TextbookService {
 							CheckedExceptionResult.NULL_PARAM, "还未确认编委，不能名单确认");
 				}
 			}
+
 		}
+		//向列表中书籍的主任、项目编辑、策划编辑，发送微信推送，内容拼接如下
+		localMethodToLeaderWXMsg(pmphUser, textbooks, "名单确认");
+
 		Integer count = 0;
 		if (CollectionUtil.isNotEmpty(textbooks)) {
 			count = textbookDao.updateTextbooks(textbooks);
 		}
 		return count;
+	}
+
+	/**
+	 * 向列表中书籍的主任、项目编辑、策划编辑，发送微信推送，内容拼接如下
+	 * @param pmphUser 操作者(登录人)
+	 * @param textbooks 对列表中书籍
+	 * @param operateText 进行了如下操作
+	 */
+	private void localMethodToLeaderWXMsg(PmphUser pmphUser, List<Textbook> textbooks, String operateText) {
+		if (textbooks.size() > 0) {
+            MaterialVO materialVo = materialService.getMaterialVO(textbooks.get(0).getMaterialId());
+            for (Textbook textbook : textbooks) {
+                String msg = "";
+                String touser = "";
+                Set<String> touserIdSet = new HashSet<String>();
+                Set<String> touserOpenidSet = new HashSet<String>();
+                touserIdSet.add(String.valueOf(materialVo.getDirector()));
+                //项目编辑集合 [{"id":319,"realname":"ADiTest","materialId":75,"editorId":610}]
+                List<Map> projectEditorsJA = JSON.parseArray(materialVo.getMaterialProjectEditors(), Map.class);
+                for (Map m : projectEditorsJA) {
+                    touserIdSet.add(m.get("editorId").toString());
+                    //projectEditorNames += m.get("realname").toString()+",";
+                }
+                //projectEditorNames.substring(0,projectEditorNames.lastIndexOf(",")>0?projectEditorNames.lastIndexOf(","):projectEditorNames.length());
+                if (touserIdSet.size() > 1) { //排除操作者自己，但如果除此以外没有别人，仍然给操作者自己发推送
+                    touserIdSet.remove(pmphUser.getId().toString());
+                }
+                for (String id : touserIdSet) { //通过主任、项目编辑、策划编辑的id集合（set无重复id）查询其企业微信号id集合
+                    PmphUser pu = pmphUserService.get(Long.parseLong(id));
+                    if (StringUtil.notEmpty(pu.getOpenid())) {
+                        touserOpenidSet.add(pu.getOpenid());
+                    }
+                }
+				touserOpenidSet.remove(null);
+                touser = touserOpenidSet.toString();
+                // 推送内容： ***（名单确人名）进行了《***》的***（操作）
+                msg = pmphUser.getRealname() + "进行了“" + materialVo.getMaterial().getMaterialName() + "”-《" + textbook.getTextbookName() + "》的"+operateText;
+
+                if (touserOpenidSet.size()>0) {
+                    wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg, (short) 0);
+                }
+
+            }
+        }
 	}
 
 	public List<BookListVO> getBookListVOs(Long materialId) throws CheckedServiceException {

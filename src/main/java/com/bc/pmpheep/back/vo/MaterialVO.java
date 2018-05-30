@@ -20,6 +20,8 @@ import com.bc.pmpheep.back.po.MaterialExtra;
 public class MaterialVO implements Serializable{
 	//教材
 	private Material material;
+	//教材主任id
+	private long director;
 	//教材主任
 	private String directorName; 
 	//教材类型字符串 [1,2,3,4]
@@ -172,8 +174,12 @@ public class MaterialVO implements Serializable{
 				+ projectEditorPowers + "}";
 	}
 
-	
 
-	
-	
+	public long getDirector() {
+		return director;
+	}
+
+	public void setDirector(long director) {
+		this.director = director;
+	}
 }
