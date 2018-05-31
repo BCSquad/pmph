@@ -326,7 +326,8 @@
 		tu.username,
 		tu.`password`,
 		tu.realname,
-		tu.`is_disabled`
+		tu.`is_disabled`,
+		tu.openid
 		FROM
 		pmph_user tu
 		LEFT JOIN
