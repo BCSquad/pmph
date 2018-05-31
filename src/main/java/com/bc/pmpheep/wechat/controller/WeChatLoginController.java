@@ -77,6 +77,9 @@ public class WeChatLoginController {
         if (isTrue) {
             HttpSession session = request.getSession();
             String wechatUserId = (String) session.getAttribute("UserId");// 企业微信账号
+            if(StringUtil.isEmpty(wechatUserId)){ //app 访问登录
+                wechatUserId = request.getParameter("UserId");
+            }
             if (StringUtil.isEmpty(wechatUserId)) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                                   CheckedExceptionResult.NULL_PARAM, "网络异常，请重新再试!");

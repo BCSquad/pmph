@@ -33,6 +33,8 @@ public class PmphEditorVO implements Serializable {
 	private String realName;
 	// 编辑电话
 	private String handPhone;
+	//编辑的openid
+	private String openid;
 
 	public Long getId() {
 		return id;
@@ -74,4 +76,11 @@ public class PmphEditorVO implements Serializable {
 		this.handPhone = handPhone;
 	}
 
+	public String getOpenid() {
+		return openid;
+	}
+
+	public void setOpenid(String openid) {
+		this.openid = openid;
+	}
 }

@@ -107,7 +107,7 @@ public class TopicController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "运维人员分配选题给部门")
 	@RequestMapping(value = "/put/optsHandling", method = RequestMethod.PUT)
-	public ResponseBean optsHandling(HttpServletRequest request, Long id, Long departmentId) {
+	public ResponseBean optsHandling(HttpServletRequest request, Long id, Long departmentId,String openid,String bookname) {
 		String sessionId = CookiesUtil.getSessionId(request);
 		TopicLog topicLog = new TopicLog();
 		topicLog.setTopicId(id);
@@ -116,7 +116,8 @@ public class TopicController {
 		topic.setId(id);
 		topic.setDepartmentId(departmentId);
 		topic.setIsDirectorHandling(true);
-		return new ResponseBean(topicService.update(topicLog, sessionId, topic));
+		topic.setBookname(bookname);
+		return new ResponseBean(topicService.update(topicLog, sessionId, topic,openid));
 	}
 
 	/**
@@ -174,12 +175,13 @@ public class TopicController {
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "主任分配选题给部门编辑")
 	@RequestMapping(value = "/put/directorHandling", method = RequestMethod.PUT)
 	public ResponseBean directorHandling(HttpServletRequest request, Long id, Long editorId,
-			Boolean isRejectedByDirector, String reasonDirector) {
+			Boolean isRejectedByDirector, String reasonDirector,String openid,String bookname) {
 		String sessionId = CookiesUtil.getSessionId(request);
 		TopicLog topicLog = new TopicLog();
 		topicLog.setTopicId(id);
 		Topic topic = new Topic();
 		topic.setId(id);
+		topic.setBookname(bookname);
 		if (ObjectUtil.isNull(isRejectedByDirector)) {
 			isRejectedByDirector = false;
 		}
@@ -195,8 +197,9 @@ public class TopicController {
 			topic.setEditorId(editorId);
 			topic.setIsRejectedByEditor(false);
 			topic.setIsEditorHandling(true);
+			topic.setIsDirectorHandling(false);
 		}
-		return new ResponseBean(topicService.update(topicLog, sessionId, topic));
+		return new ResponseBean(topicService.update(topicLog, sessionId, topic,openid));
 	}
 
 	/**
@@ -285,7 +288,7 @@ public class TopicController {
 				topic.setAuthProgress(authProgress);
 			}
 		}
-		return new ResponseBean(topicService.update(topicLog, sessionId, topic));
+		return new ResponseBean(topicService.update(topicLog, sessionId, topic,""));
 	}
 
 	/**

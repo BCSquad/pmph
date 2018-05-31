@@ -171,13 +171,15 @@
 		SELECT
 		d.id,
 		d.dp_name,
-		t.realname
+		t.realname,
+		t.openid
 		FROM
 		pmph_department d
 		LEFT JOIN (
 		SELECT
 		u.department_id,
-		u.realname
+		u.realname,
+		u.openid
 		FROM
 		pmph_user u
 		WHERE
