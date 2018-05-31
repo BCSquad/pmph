@@ -63,7 +63,7 @@ public class WXFrontMsgPushController {
         String url = "/materialrouter/materialnav/"+decId+"/presscheck";
         if (touserOpenidSet.size() > 0) {
             Map resultMap = wxqyUserService.sendTextMessage("2", "2", touser, "", "", "text", msg, (short) 0);
-            return resultMap.get("errcode")==0;
+            return ((int)resultMap.get("errcode"))==0;
         }
         return false;
     }
