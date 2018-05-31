@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +44,7 @@ public class WXFrontMsgPushController {
     }
 
     @RequestMapping(value = "/projectEditorPleaseAdit/{id}",method = RequestMethod.GET)
-    public boolean projectEditorPleaseAdit(HttpServletRequest request, @PathVariable(value = "id",required = true)Long decId){
+    public boolean projectEditorPleaseAdit(HttpServletRequest request, @PathVariable(value = "id",required = true)Long decId, HttpServletResponse response){
         //企业微信推送对象的微信id集合
         Set<String> touserOpenidSet = new HashSet<String>();
         Declaration dec = declarationService.getDeclarationById(decId);
@@ -59,12 +60,13 @@ public class WXFrontMsgPushController {
         touserOpenidSet.remove(null);
         String touser = touserOpenidSet.toString();
         //***（作者人名）已提交《****》（教材名）的申报表，请审核
-        String msg = dec.getRealname()+"已提交《"+material.getMaterialName()+"》的申报表，请审核";
+        String msg = dec.getRealname()+"已提交《"+material.getMaterialName()+"》的申报表，";//“请审核” 已被超链接补齐，此处不需显示
         String url = "/materialrouter/materialnav/"+decId+"/presscheck";
         if (touserOpenidSet.size() > 0) {
             Map resultMap = wxqyUserService.sendTextMessage("2", "2", touser, "", "", "text", msg, (short) 0);
             return resultMap.get("errcode")==0;
         }
+
         return false;
     }
 }
