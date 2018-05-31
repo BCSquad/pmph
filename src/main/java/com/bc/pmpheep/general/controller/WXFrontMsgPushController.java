@@ -69,6 +69,12 @@ public class WXFrontMsgPushController {
 
         return false;
     }
+
+
+//    @RequestMapping(value = "/projectEditorPleaseAdit/{id}",method = RequestMethod.GET)
+//    public boolean wxBookErrorShenHe(String submitName,String bookId,HttpServletRequest request){
+//
+//    }
 }
 
 

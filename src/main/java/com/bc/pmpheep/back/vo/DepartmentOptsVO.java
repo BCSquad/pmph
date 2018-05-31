@@ -35,24 +35,47 @@ public class DepartmentOptsVO implements Serializable {
 	 * 主任名称
 	 */
 	private String realname;
+
+	/**
+	 * 主任id
+	 *
+	 * @return
+	 */
+	private String openid;
+
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
+
 	public String getDpName() {
 		return dpName;
 	}
+
 	public void setDpName(String dpName) {
 		this.dpName = dpName;
 	}
+
 	public String getRealname() {
 		return realname;
 	}
+
 	public void setRealname(String realname) {
 		this.realname = realname;
 	}
-	
-	
+
+
+	public String getOpenid() {
+		return openid;
+	}
+
+	public void setOpenid(String openid) {
+		this.openid = openid;
+	}
 }
+
+
+

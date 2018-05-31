@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.bc.pmpheep.wx.service.WXQYUserService;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,6 +64,9 @@ public class TopicServiceImpl implements TopicService {
 	WriterUserTrendstService writerUserTrendstService;
 	@Autowired
 	TopicSimilarBookService topicSimilarBookService;
+
+	@Autowired
+	WXQYUserService service;
 
 	@Override
 	public PageResult<TopicOPtsManagerVO> listOpts(String sessionId, PageParameter<TopicOPtsManagerVO> pageParameter)
@@ -244,13 +248,13 @@ public class TopicServiceImpl implements TopicService {
 	}
 
 	@Override
-	public String update(TopicLog topicLog, String sessionId, Topic topic) throws CheckedServiceException {
+	public String update(TopicLog topicLog, String sessionId, Topic topic,String openid) throws CheckedServiceException {
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (ObjectUtil.isNull(pmphUser)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
 					"用户为空！");
 		}
-		topicLog.setUserId(pmphUser.getId());
+			topicLog.setUserId(pmphUser.getId());
 		if (ObjectUtil.isNull(topic) || ObjectUtil.isNull(topic.getId())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
 					"该选题不存在");
@@ -277,6 +281,11 @@ public class TopicServiceImpl implements TopicService {
 		String result = "FIAL";
 		if (topicDao.update(topic) > 0) {
 			topicLogService.add(topicLog);
+			//分配部门负责人 不为空 给其发企业微信消息
+			if(!StringUtil.isEmpty(openid)){
+				String content = "《"+topic.getBookname()+"》选题"+(topic.getIsDirectorHandling()!=null||topic.getIsDirectorHandling()?"已分配到您的部门":"已分配给您");
+				service.sendTextMessage("2","3",openid,null,null,"text",content,(short)0);
+			}
 			result = "SUCCESS";
 		}
 		WriterUserTrendst writerUserTrendst = new WriterUserTrendst();

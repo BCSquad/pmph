@@ -41,6 +41,8 @@ public class DeclarationListVO implements java.io.Serializable {
     private Integer offlineProgress;
     //书籍名称
     private String textbookName;
+    private Integer orgId;
+
     
 	public String getTextbookName() {
 		return textbookName;
@@ -168,7 +170,13 @@ public class DeclarationListVO implements java.io.Serializable {
 				+ "', onlineProgress:" + onlineProgress + ", offlineProgress:"
 				+ offlineProgress + "}";
 	}
-    
-	
 
+
+	public Integer getOrgId() {
+		return orgId;
+	}
+
+	public void setOrgId(Integer orgId) {
+		this.orgId = orgId;
+	}
 }

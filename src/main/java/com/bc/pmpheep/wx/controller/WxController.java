@@ -79,6 +79,8 @@ public class WxController {
     }
 
 
+
+
     private static String randString(int len) {
         String baseNumber = "02468135791357902468";
         Assert.state(len > 1, "随机数长度不能小于1");

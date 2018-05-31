@@ -106,6 +106,7 @@ public class SendWXMessageUtil {
             case "0":hrefContent="";break;
             case "1":hrefContent="查看";break;
             case "2":hrefContent="请审核";break;
+            case "3":hrefContent="请处理";break;
             default: hrefContent="";break;
         }
         return hrefContent;
