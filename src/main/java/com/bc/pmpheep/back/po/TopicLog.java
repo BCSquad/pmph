@@ -45,6 +45,7 @@ public class TopicLog implements Serializable {
 	 */
 	private Timestamp gmtCreate;
 
+
 	public TopicLog() {
 		super();
 	}

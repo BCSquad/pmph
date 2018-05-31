@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
+import com.bc.pmpheep.wx.service.WXQYUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -78,6 +80,12 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
     private ContentService                  contentService;
     @Autowired
     private CmsExtraService                 cmsExtraService;
+    @Autowired
+    WXQYUserService wxqyUserService;
+    @Autowired
+    private MaterialProjectEditorService materialProjectEditorService;
+    @Autowired
+    private PmphUserService pmphUserService;
 
     private static final String             NOTICE = "notice";
     private static final String             NOTE   = "note";
@@ -454,6 +462,48 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
             count = materialOrgService.addMaterialOrgs(materialOrgList);
             if (count > 0) {
                 systemMessageService.materialSend(materialId, listOrgIds);
+
+                /*以下向主任和项目编辑发送微信推送*/
+                //企业微信推送对象的微信id集合
+                Set<String> touserOpenidSet = new HashSet<String>();
+                String touser = "";
+                Set<String> touserIdSet = new HashSet<String>();
+                String contactUserNamesStr = "";
+                String projectEditorNamesStr="";
+                List<MaterialContact> materialContactList = materialContactService.listMaterialContactByMaterialId(materialId);
+                List<MaterialProjectEditorVO> materialProjectEditorVOList = materialProjectEditorService.listMaterialProjectEditors(materialId);
+
+                Material material = materialService.getMaterialById(materialId);
+                // 获取主任
+                PmphUser director = pmphUserService.get(material.getDirector());
+                //主任加入企业微信推送对象集合
+                touserOpenidSet.add(director.getOpenid());
+
+                for (MaterialProjectEditorVO materialProjectEditorVO:materialProjectEditorVOList) {
+                    projectEditorNamesStr += materialProjectEditorVO.getRealname()+",";
+                    PmphUser projectEditorUser = pmphUserService.get(materialProjectEditorVO.getEditorId());
+                    //项目编辑加入企业微信推送对象集合
+                    touserOpenidSet.add(projectEditorUser.getOpenid());
+                }
+
+                for (MaterialContact materialContact: materialContactList) {
+                    contactUserNamesStr += materialContact.getContactUserName()+",";
+                }
+
+                projectEditorNamesStr = projectEditorNamesStr.substring(0, projectEditorNamesStr.lastIndexOf(",") > 0 ? projectEditorNamesStr.lastIndexOf(",") : projectEditorNamesStr.length());
+                contactUserNamesStr = contactUserNamesStr.substring(0, contactUserNamesStr.lastIndexOf(",") > 0 ? contactUserNamesStr.lastIndexOf(",") : contactUserNamesStr.length());
+
+                String msg1 = director.getRealname() + "已被选为“" + material.getMaterialName() + "”的主任。";
+                String msg2 = projectEditorNamesStr + "已被选为“" + material.getMaterialName() + "”的项目编辑。";
+                String msg3 = contactUserNamesStr + "已被选为“" + material.getMaterialName() + "”的联系人。";
+                touserOpenidSet.remove(null);
+                touser = touserOpenidSet.toString();
+                if (touserOpenidSet.size() > 0) {
+                    wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg1, (short) 0);
+                    wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg2, (short) 0);
+                    wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg3, (short) 0);
+                }
+
             }
         } else {// 不为空
             List<Long> newOrgIds = new ArrayList<Long>();// 新选中的机构

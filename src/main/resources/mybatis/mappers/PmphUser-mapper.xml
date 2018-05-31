@@ -326,7 +326,8 @@
 		tu.username,
 		tu.`password`,
 		tu.realname,
-		tu.`is_disabled`
+		tu.`is_disabled`,
+		tu.openid
 		FROM
 		pmph_user tu
 		LEFT JOIN
@@ -589,7 +590,7 @@
 	<!-- 选题申报部门主任获取部门编辑列表 -->
 	<select id="listEditors" resultType="PmphEditorVO">
 		SELECT a.id,a.department_id,a.realname,a.handphone,b.dp_name
-		departmentName
+		departmentName,a.openid
 		FROM pmph_user a
 		LEFT JOIN pmph_department b ON
 		a.department_id = b.id

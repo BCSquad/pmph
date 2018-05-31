@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 
 import com.bc.pmpheep.back.util.*;
+import com.bc.pmpheep.wx.service.WXQYUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -104,6 +106,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 	@Autowired
 	private MaterialTypeService materialTypeService;
 
+	@Autowired
+	WXQYUserService wxqyUserService;
+
 	/**
 	 * 
 	 * @param  //Material
@@ -122,6 +127,8 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			// MultipartFile[] noticeFiles,
 			// MultipartFile[] noteFiles,
 			boolean isUpdate) throws CheckedServiceException, IOException {
+		//企业微信推送对象的微信id集合
+		Set<String> touserOpenidSet = new HashSet<String>();
 		if (null == request.getSession(false)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
 					"会话过期");
@@ -317,6 +324,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		// 联系人转换
 		String materialContacts = materialVO.getMaterialContacts();
 		materialContactService.deleteMaterialContactsByMaterialId(materialId); // 删除已经有的联系人
+		String contactUserNamesStr = ""; //联系人姓名字符串，以,分隔
 		if (StringUtil.isEmpty(materialContacts)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
 					"教材联系人参数有误");
@@ -367,10 +375,12 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			materialContact.setMaterialId(materialId);
 			// 保存联系人
 			materialContactService.addMaterialContact(materialContact);
+			contactUserNamesStr += materialContact.getContactUserName()+",";
 		}
 		// 项目编辑转换
 		materialProjectEditorService.deleteMaterialProjectEditorByMaterialId(materialId); // 先删除该教材下的项目编辑
 		String materialProjectEditors = materialVO.getMaterialProjectEditors();
+		String projectEditorNamesStr = "";
 		if (StringUtil.isEmpty(materialProjectEditors)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
 					"教材项目编辑参数有误");
@@ -388,6 +398,10 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			materialProjectEditor.setMaterialId(materialId);
 			// 保存项目编辑
 			materialProjectEditorService.addMaterialProjectEditor(materialProjectEditor);
+			PmphUser projectEditorUser = pmphUserService.get(materialProjectEditorVO.getEditorId());
+			//项目编辑加入企业微信推送对象集合
+			touserOpenidSet.add(projectEditorUser.getOpenid());
+			projectEditorNamesStr += materialProjectEditorVO.getRealname()+",";
 			// // 项目编辑绑定角色
 			// String rolename="项目编辑";//通过roleName查询roleid
 			// List<PmphRole> pmphRoleList=pmphRoleService.getList(rolename);
@@ -507,6 +521,29 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			cmsContent.setAuthDate(DateUtil.date2Str(DateUtil.str4Date(cmsContent.getAuthDate()),"yyyy-MM-dd HH:mm:ss"));
 			cmsContentService.updateCmsContent(cmsContent);
 		}
+
+		/*以下向主任和项目编辑发送微信推送*/
+        if (isUpdate) {
+			String touser = "";
+			Set<String> touserIdSet = new HashSet<String>();
+			//主任加入企业微信推送对象集合
+			touserOpenidSet.add(director.getOpenid());
+			;
+			projectEditorNamesStr = projectEditorNamesStr.substring(0, projectEditorNamesStr.lastIndexOf(",") > 0 ? projectEditorNamesStr.lastIndexOf(",") : projectEditorNamesStr.length());
+			contactUserNamesStr = contactUserNamesStr.substring(0, contactUserNamesStr.lastIndexOf(",") > 0 ? contactUserNamesStr.lastIndexOf(",") : contactUserNamesStr.length());
+			String msg1 = director.getRealname() + "已被选为“" + material.getMaterialName() + "”的主任。";
+			String msg2 = projectEditorNamesStr + "已被选为“" + material.getMaterialName() + "”的项目编辑。";
+			String msg3 = contactUserNamesStr + "已被选为“" + material.getMaterialName() + "”的联系人。";
+			touserOpenidSet.remove(null);
+			touser = touserOpenidSet.toString();
+			if (touserOpenidSet.size() > 0) {
+				wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg1, (short) 0);
+				wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg2, (short) 0);
+				wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg3, (short) 0);
+			}
+		}
+
+
 
 		/**
 		 * // 判断教材备注附件和教材通知附件 List<MaterialNoticeAttachment>
@@ -990,10 +1027,12 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		}
 		String materialNoteAttachments = gson.toJson(materialNoteAttachmentList);
 
-		return new MaterialVO(material, director == null ? null : director.getRealname(), mtype, materialExtra,
+		MaterialVO result = new MaterialVO(material, director == null ? null : director.getRealname(), mtype, materialExtra,
 				materialContacts, materialExtensions, materialProjectEditorVOs, materialNoticeAttachments,
 				materialNoteAttachments, StringUtil.tentToBinary(material.getPlanPermission()),
 				StringUtil.tentToBinary(material.getProjectPermission()));
+		result.setDirector(material==null?0:material.getDirector());
+		return result;
 	}
 
 	@Override
