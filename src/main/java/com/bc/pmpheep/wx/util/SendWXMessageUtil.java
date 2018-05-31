@@ -94,7 +94,7 @@ public class SendWXMessageUtil {
 
     /**
      *
-     * @param hrefContentType  1 查看 2 请审核
+     * @param hrefContentType  1 查看 2 请审核 3请处理
      * @return
      */
     public static String getHrefContent(String hrefContentType){

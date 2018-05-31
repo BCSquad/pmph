@@ -730,6 +730,11 @@ public class TextbookServiceImpl implements TextbookService {
                 String touser = "";
                 Set<String> touserIdSet = new HashSet<String>();
                 Set<String> touserOpenidSet = new HashSet<String>();
+                //策划编辑
+				if(textbook.getPlanningEditor()!=null){
+					touserIdSet.add(String.valueOf(textbook.getPlanningEditor()));
+				}
+                //主任
                 touserIdSet.add(String.valueOf(materialVo.getDirector()));
                 //项目编辑集合 [{"id":319,"realname":"ADiTest","materialId":75,"editorId":610}]
                 List<Map> projectEditorsJA = JSON.parseArray(materialVo.getMaterialProjectEditors(), Map.class);
