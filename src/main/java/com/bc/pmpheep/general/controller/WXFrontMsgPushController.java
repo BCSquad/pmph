@@ -1,18 +1,17 @@
 package com.bc.pmpheep.general.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.bc.pmpheep.back.dao.BookDao;
 import com.bc.pmpheep.back.po.*;
 import com.bc.pmpheep.back.service.*;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
 import com.bc.pmpheep.back.vo.MaterialVO;
 import com.bc.pmpheep.wx.service.WXQYUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,6 +40,9 @@ public class WXFrontMsgPushController {
     private WriterUserService writerUserService;
     @Autowired
     private BookEditorService bookEditorService;
+
+    @Autowired
+    private BookDao bookDao;
 
     @RequestMapping(value = "/hello", method = RequestMethod.GET)
     public void helloBack(HttpServletRequest request) {
@@ -156,6 +158,29 @@ public class WXFrontMsgPushController {
         }
 
         return false;
+    }
+
+
+    @GetMapping("/bookError")
+    @ResponseBody
+    public Map bookEoor(Long submitId,Long bookId,HttpServletRequest request){
+    //这本图书的图书的策划编辑
+        Book book = bookDao.getBookById(bookId);
+        Set<String> touserOpenidSet = new HashSet<String>();
+        WriterUser submiter = writerUserService.get(submitId);
+        List<PmphUser> admins = pmphUserService.getListByRole(1l);
+        for (PmphUser admin: admins) {
+            touserOpenidSet.add(admin.getOpenid());
+        }
+        touserOpenidSet.remove(null);
+        String touser = touserOpenidSet.toString();
+        String msg = submiter.getRealname()+"已经提交了《"+ (ObjectUtil.isNull(book)?"":book.getBookname())+"》的图书纠错信息，";
+        Map resultMap = null;
+        if (touserOpenidSet.size()>0) {
+            resultMap = wxqyUserService.sendTextMessage("2", "2", touser, "", "", "text", msg, (short) 0);
+
+        }
+        return resultMap;
     }
 
 
