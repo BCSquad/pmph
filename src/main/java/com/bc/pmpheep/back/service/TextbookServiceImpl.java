@@ -561,10 +561,21 @@ public class TextbookServiceImpl implements TextbookService {
 		// 教材主任检查
 		Material material = materialService.getMaterialById(materialId);
 		if (null == power) {
-			if (null != material && null != material.getDirector() && pmphUser.getId().equals(material.getDirector())) {
-				power = 2; // 我是教材的主任
+			if (null != material && null != material.getDirector()) {
+				//2948 N198-组织机构核对完成后，在教材申报发通知的时候，选择的主任（可能是主任，某个部门的普通员工），要求选择的主任的所有归属单位的主任都有和选择主任的权限一样。
+				List<PmphUser> parentDeptsDirectors = pmphUserService.getSomebodyParentDeptsPmphUserOfSomeRole(material.getDirector(), null, "主任");
+				for (PmphUser PDDirector : parentDeptsDirectors) {
+					if (pmphUser.getId().equals(PDDirector.getId())) {
+						power = 2; // 我是教材的主任 的部门或上级部门的主任
+						break;
+					}
+				}
+				if (pmphUser.getId().equals(material.getDirector())) {
+					power = 2; // 我是教材的主任 本人
+				}
 			}
 		}
+
 		// 教材项目编辑检查
 		if (null == power) {
 			List<MaterialProjectEditorVO> materialProjectEditors = materialProjectEditorService

@@ -214,4 +214,13 @@ public interface PmphUserDao {
      * </pre>
      */
     PmphUser getPmphUserByUsername(String username);
+
+    /**
+     * 根据某人id查出其 本部门及上级各部门的某角色的用户
+     * @param SbId A某 pmphUser的id
+     * @param role_id 角色id （角色名称和id 仅需一个 另一个保留为null）
+     * @param role_name 角色名称 （角色名称和id 仅需一个 另一个保留为null）
+     * @return
+     */
+    List<PmphUser> getSomebodyParentDeptsPmphUserOfSomeRole(@Param(value = "userId") Long sbId,@Param(value = "role_id") Long role_id,@Param(value = "role_name") String role_name);
 }
