@@ -136,7 +136,7 @@ public class WXFrontMsgPushController {
     }
 
     /**
-     * 前台用户提交选题申报后
+     * 前台用户提交选题申报后，向有管理员身份的社内用户推送微信消息
      */
     @RequestMapping(value = "topicSubmit/{tid}/{uid}",method = RequestMethod.GET)
     @ResponseBody
