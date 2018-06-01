@@ -161,9 +161,10 @@ public class WXFrontMsgPushController {
     }
 
 
-    @GetMapping("/bookError")
+    @GetMapping("/bookError/{bookId}/{submitId}")
     @ResponseBody
-    public Map bookEoor(Long submitId,Long bookId,HttpServletRequest request){
+    public Map bookEoor(@PathVariable(value = "submitId") Long submitId,
+                        @PathVariable(value = "bookId") Long bookId,HttpServletRequest request){
     //这本图书的图书的策划编辑
         Book book = bookDao.getBookById(bookId);
         Set<String> touserOpenidSet = new HashSet<String>();
