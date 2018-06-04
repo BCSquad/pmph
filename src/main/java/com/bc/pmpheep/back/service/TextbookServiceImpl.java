@@ -120,8 +120,8 @@ public class TextbookServiceImpl implements TextbookService {
 	WXQYUserService wxqyUserService;
 	
 	/**
-	 * 
-	 * @param Textbook
+	 *
+	 * @param textbook
 	 *            实体对象
 	 * @return 带主键的 Textbook
 	 * @throws CheckedServiceException
@@ -481,7 +481,7 @@ public class TextbookServiceImpl implements TextbookService {
 	}
 
 	/**
-	 * @param Textbook
+	 * @param textbook
 	 * @return 影响行数
 	 * @throws CheckedServiceException
 	 */

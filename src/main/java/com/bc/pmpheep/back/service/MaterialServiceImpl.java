@@ -537,9 +537,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			touserOpenidSet.remove(null);
 			touser = touserOpenidSet.toString();
 			if (touserOpenidSet.size() > 0) {
-				wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg1, (short) 0);
-				wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg2, (short) 0);
-				wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg3, (short) 0);
+				wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg1, (short) 0,"");
+				wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg2, (short) 0,"");
+				wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg3, (short) 0,"");
 			}
 		}
 
