@@ -74,34 +74,83 @@ public class WeChatLoginController {
         String userAgent = request.getHeader("user-agent").toLowerCase();// 判断是否从企业微信App登陆
         Boolean isTrue =
         userAgent == null || userAgent.indexOf("micromessenger") == -1 ? false : true;
+        PmphUser pmphUser = null;
+        String username = null;
+        String password =null;
         if (isTrue) {
             HttpSession session = request.getSession();
             String wechatUserId = (String) session.getAttribute("UserId");// 企业微信账号
             if(StringUtil.isEmpty(wechatUserId)){ //app 访问登录
                 wechatUserId = request.getParameter("UserId");
             }
-            if (StringUtil.isEmpty(wechatUserId)) {
-                throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                                  CheckedExceptionResult.NULL_PARAM, "网络异常，请重新再试!");
-            }
-            model.addAttribute("Userid", wechatUserId);
-            PmphUserWechat pmphUserWechat =
-            pmphUserWechatService.getPmphUserWechatByWechatId(wechatUserId);
-            if (ObjectUtil.isNull(pmphUserWechat)) {
-                model.addAttribute("isLogin", "0");
-            } else {
-                PmphUser pu = pmphUserService.getPmphUserByUsername(pmphUserWechat.getUsername());
-                if (ObjectUtil.notNull(pu)) {
-                    String username = new DesRun(null, pmphUserWechat.getUsername()).enpsw;
-                    String password = pu.getPassword();
-                    model.addAttribute(Const.PMPH_WECHAT_USER_TOKEN,
-                                       new DesRun(password, username + password + wechatUserId
-                                                            + "<pmpheep>").enpsw);
-                    model.addAttribute("username", username);
-                    model.addAttribute("password", password);
-                    model.addAttribute("isLogin", "1");
+            // 微信企业号直接访问app登录
+            String appType = request.getParameter("appType");
+            if(StringUtil.isEmpty(appType)){
+                if (StringUtil.isEmpty(wechatUserId)) {
+                    throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                            CheckedExceptionResult.NULL_PARAM, "网络异常，请重新再试!");
                 }
+                model.addAttribute("Userid", wechatUserId);
+                PmphUserWechat pmphUserWechat =
+                        pmphUserWechatService.getPmphUserWechatByWechatId(wechatUserId);
+
+                if (ObjectUtil.isNull(pmphUserWechat)) {
+                    model.addAttribute("isLogin", "0");
+                } else {
+                    pmphUser = pmphUserService.getPmphUserByUsername(pmphUserWechat.getUsername());
+                    if (ObjectUtil.notNull(pmphUser)) {
+                        username = new DesRun(null, pmphUserWechat.getUsername()).enpsw;
+                        password = pmphUser.getPassword();
+                        model.addAttribute(Const.PMPH_WECHAT_USER_TOKEN,
+                                new DesRun(password, username + password + wechatUserId
+                                        + "<pmpheep>").enpsw);
+                        model.addAttribute("username", username);
+                        model.addAttribute("password", password);
+                        model.addAttribute("isLogin", "1");
+                    }
+                }
+            }else{
+                if (StringUtil.isEmpty(wechatUserId)) {
+                    throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                            CheckedExceptionResult.NULL_PARAM, "网络异常，请重新再试!");
+                }
+                model.addAttribute("Userid", wechatUserId);
+                PmphUserWechat pmphUserWechat =
+                        pmphUserWechatService.getPmphUserWechatByWechatId(wechatUserId);
+
+                if (ObjectUtil.isNull(pmphUserWechat)) {
+                    model.addAttribute("isLogin", "3");
+                } else {
+                    pmphUser = pmphUserService.getPmphUserByUsername(pmphUserWechat.getUsername());
+                    if (ObjectUtil.notNull(pmphUser)) {
+                        username = new DesRun(null, pmphUserWechat.getUsername()).enpsw;
+                        password = pmphUser.getPassword();
+                        model.addAttribute(Const.PMPH_WECHAT_USER_TOKEN,
+                                new DesRun(password, username + password + wechatUserId
+                                        + "<pmpheep>").enpsw);
+                        model.addAttribute("username", username);
+                        model.addAttribute("password", password);
+                        model.addAttribute("isLogin", "4");
+                    }
+                }
+                if("1".equals(appType)){
+                    String materialId = request.getParameter("materialId");
+                    String declarationId = request.getParameter("declarationId");
+                    model.addAttribute("materialId",materialId);
+                    model.addAttribute("declarationId",declarationId);
+                }else if("2".equals(appType)){
+
+                }else if("3".equals(appType)){
+                    String bookName = request.getParameter("bookName");
+                    String type = request.getParameter("type");
+                    String id = request.getParameter("id");
+                    model.addAttribute("bookName",bookName);
+                    model.addAttribute("type",type);
+                    model.addAttribute("id",id);
+                }
+                model.addAttribute("appType",appType);
             }
+
         } else {// SSO 登陆
             model.addAttribute("isLogin", "2");
             HttpSingleSignOnService service = new HttpSingleSignOnService();
@@ -109,15 +158,15 @@ public class WeChatLoginController {
                 Principal principal = service.singleSignOn(request);
                 String userName = principal.getName();
                 assert userName != null;
-                PmphUser pmphUser = pmphUserService.getPmphUserByUsername(userName);
+                 pmphUser = pmphUserService.getPmphUserByUsername(userName);
                 if (ObjectUtil.isNull(pmphUser)) {// 为空就新建一个用户
                     pmphUser =
                     pmphUserService.add(new PmphUser(userName, new DesRun(null, "888888").enpsw,
                                                      userName, "DEFAULT"));
                     pmphRoleService.addUserRole(pmphUser.getId(), 2L);// 添加默认权限
                 }
-                String username = new DesRun(null, pmphUser.getUsername()).enpsw;
-                String password = pmphUser.getPassword();
+                 username = new DesRun(null, pmphUser.getUsername()).enpsw;
+                 password = pmphUser.getPassword();
                 String wechatUserId = "sso";
                 model.addAttribute("username", username);
                 model.addAttribute("password", password);
@@ -127,51 +176,53 @@ public class WeChatLoginController {
                                                                             + wechatUserId
                                                                             + "<pmpheep>").enpsw);
 
-                /*--------------------------- 登录权限控制 session cookie ------------------------------------*/
-                pmphUser.setLoginType(Const.LOGIN_TYPE_PMPH);
-                if (!RouteUtil.DEFAULT_USER_AVATAR.equals(pmphUser.getAvatar())) {
-                    pmphUser.setAvatar(RouteUtil.userAvatar(pmphUser.getAvatar()));
-                }
 
-                // 根据用户Id查询对应角色(是否为管理员)
-                List<PmphRole> pmphRoles = pmphRoleService.getPmphRoleByUserId(pmphUser.getId());
-                if (pmphRoles.isEmpty()) {
-                    pmphRoleService.addUserRole(pmphUser.getId(), 2L);// 添加默认权限
-                    pmphRoles = pmphRoleService.getPmphRoleByUserId(pmphUser.getId());
-                }
-                List<Long> roleIds = new ArrayList<Long>();
-                for (PmphRole pmphRole : pmphRoles) {
-                    roleIds.add(pmphRole.getId());
-                    if (ObjectUtil.notNull(pmphRole)) {
-                        if (Const.LOGIN_USER_IS_ADMIN.equals(pmphRole.getRoleName())
-                                || Const.LOGIN_USER_IS_ADMINS.equals(pmphRole.getRoleName())
-                                || Const.LOGIN_SYS_USER_IS_ADMIN.equals(pmphRole.getRoleName())) {
-                            pmphUser.setIsAdmin(true);
-                        } else {
-                            pmphUser.setIsAdmin(false);
-                        }
-                    }
-                    if (Const.TRUE == pmphUser.getIsAdmin()) {
-                        break;
-                    }
-                }
-                // 根据用户Id查询对应权限Id
-                List<Long> pmphUserPermissionIds =
-                        pmphUserService.getPmphUserPermissionByUserId(pmphUser.getId());
-                request.getSession().setAttribute(Const.SESSION_PMPH_USER, pmphUser);
-                // 验证成功在Session中保存用户Token信息
-                request.getSession().setAttribute(Const.SEESION_PMPH_USER_TOKEN,
-                        new DesRun(password, username).enpsw);
-                model.addAttribute(Const.USER_SEESION_ID, request.getSession().getId());
-                model.addAttribute(Const.SESSION_PMPH_USER, JSON.toJSON(pmphUser));
-                model.addAttribute(Const.SEESION_PMPH_USER_TOKEN, new DesRun(password, username).enpsw);
-                model.addAttribute("pmphUserPermissionIds", pmphUserPermissionIds);
-                /*---------------------------------------------------------------*/
 
             } catch (Exception e) {
                 logger.error("SSO登陆失败，异常信息'{}'", e.getMessage());
             }
         }
+
+         /*--------------------------- 登录权限控制 session cookie ------------为了直接跳转到某个vue页面---------------------*/
+        pmphUser.setLoginType(Const.LOGIN_TYPE_PMPH);
+        if (!RouteUtil.DEFAULT_USER_AVATAR.equals(pmphUser.getAvatar())) {
+            pmphUser.setAvatar(RouteUtil.userAvatar(pmphUser.getAvatar()));
+        }
+
+        // 根据用户Id查询对应角色(是否为管理员)
+        List<PmphRole> pmphRoles = pmphRoleService.getPmphRoleByUserId(pmphUser.getId());
+        if (pmphRoles.isEmpty()) {
+            pmphRoleService.addUserRole(pmphUser.getId(), 2L);// 添加默认权限
+            pmphRoles = pmphRoleService.getPmphRoleByUserId(pmphUser.getId());
+        }
+        List<Long> roleIds = new ArrayList<Long>();
+        for (PmphRole pmphRole : pmphRoles) {
+            roleIds.add(pmphRole.getId());
+            if (ObjectUtil.notNull(pmphRole)) {
+                if (Const.LOGIN_USER_IS_ADMIN.equals(pmphRole.getRoleName())
+                        || Const.LOGIN_USER_IS_ADMINS.equals(pmphRole.getRoleName())
+                        || Const.LOGIN_SYS_USER_IS_ADMIN.equals(pmphRole.getRoleName())) {
+                    pmphUser.setIsAdmin(true);
+                } else {
+                    pmphUser.setIsAdmin(false);
+                }
+            }
+            if (Const.TRUE == pmphUser.getIsAdmin()) {
+                break;
+            }
+        }
+        // 根据用户Id查询对应权限Id
+        List<Long> pmphUserPermissionIds =
+                pmphUserService.getPmphUserPermissionByUserId(pmphUser.getId());
+        request.getSession().setAttribute(Const.SESSION_PMPH_USER, pmphUser);
+        // 验证成功在Session中保存用户Token信息
+        request.getSession().setAttribute(Const.SEESION_PMPH_USER_TOKEN,
+                new DesRun(password, username).enpsw);
+        model.addAttribute(Const.USER_SEESION_ID, request.getSession().getId());
+        model.addAttribute(Const.SESSION_PMPH_USER, JSON.toJSON(pmphUser));
+        model.addAttribute(Const.SEESION_PMPH_USER_TOKEN, new DesRun(password, username).enpsw);
+        model.addAttribute("pmphUserPermissionIds", pmphUserPermissionIds);
+                /*---------------------------------------------------------------*/
         return "wechat";
     }
 }

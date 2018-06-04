@@ -87,7 +87,9 @@ public class SendWXMessageUtil {
             case "0":href="%s";break;
             case "1":href="<a href=\"http://medu.ipmph.com/meduwx\">%s</a>";break;
             case "2":href="<a href=\"http://medu.ipmph.com/wx/#/loginm\">%s</a>";break;
-            case "3":href="<a href=\"http://localhost:8087/pmpheep?type=1\">%s</a>";break;
+            case "3":href="<a href=\"http://localhost:8087/pmpheep?appType=1&materialId=%s&declarationId=%s\">%s</a>";break; //教材审核
+            case "4":href="<a href=\"http://localhost:8087/pmpheep?appType=2\">%s</a>";break; //选题申报
+            case "5":href="<a href=\"http://localhost:8087/pmpheep?appType=3&bookName=%s&type=%s&id=%s\n\">%s</a>";break; //图书纠错
             default: href="%s";break;
         }
         return href;
