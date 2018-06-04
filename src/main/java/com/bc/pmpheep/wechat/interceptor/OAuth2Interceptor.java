@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.bc.pmpheep.back.util.StringUtil;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -73,7 +74,8 @@ public class OAuth2Interceptor implements HandlerInterceptor {
             if (annotation != null) {
                 // System.out.println("OAuthRequired：你的访问需要获取登录信息！");
                 Object objUid = session.getAttribute("UserId");
-                if (objUid == null) {
+                String appType = request.getParameter("appType");
+                if (objUid == null|| !StringUtil.isEmpty(appType)) {
                     String resultUrl = request.getRequestURL().toString();
                     String param = request.getQueryString();
                     if (param != null) {
