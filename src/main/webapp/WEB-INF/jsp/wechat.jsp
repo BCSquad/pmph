@@ -128,11 +128,11 @@
                     ||(2=='${appType}')
                     ||(3=='${appType}'&&!Empty('${bookName}')&&!Empty('${type}')&&!Empty('${id}'))))){
                 if(1=='${appType}'){
-                    window.location.href== 'http://120.76.221.250/wx/#/material/${materialId}/expert?declarationId=${declarationId}&sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
+                    window.location.href== 'http://192.168.0.117:8087/wx/#/material/${materialId}/expert?declarationId=${declarationId}&sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
                 }else if(3=='${appType}'){
-                    window.location.href== 'http://120.76.221.250/wx/#/checkbook?bookName=${bookName}&type=${type}&id=${id}&sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
+                    window.location.href== 'http://192.168.0.117:8087/wx/#/checkbook?bookName=${bookName}&type=${type}&id=${id}&sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
                 }else{
-                    window.location.href== 'http://120.76.221.250/wx/#/topic/list?sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
+                    window.location.href== 'http://192.168.0.117:8087/wx/#/topic/list?sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
                 }
 
             }else if((3 == '${isLogin}'||4 == '${isLogin}') && !Empty('${appType}')){ //从企业微信登录 app vue 如果找不到对应的参数则进入首页
