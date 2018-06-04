@@ -1,6 +1,7 @@
 package com.bc.pmpheep.general.service.test;
 
 import com.alibaba.fastjson.JSON;
+import com.bc.pmpheep.back.controller.PropertiesImplController;
 import com.bc.pmpheep.test.BaseTest;
 import com.bc.pmpheep.wx.service.WXQYUserService;
 import org.apache.http.HttpEntity;
@@ -14,7 +15,10 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Created by cyx  on 2018/5/24
@@ -58,6 +62,19 @@ public class WxMessageSendTest extends BaseTest{
         }
         }catch(Exception exception){
 
+        }
+
+    }
+
+    @Test
+    public void TestPP(){
+        Properties pp = new Properties();
+        InputStream fis  = WxMessageSendTest.class.getClassLoader().getResourceAsStream("pmphapi-config.properties");
+        try {
+            pp.load(fis);
+            System.out.println(pp.getProperty("rootAdrr").toString());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
     }
