@@ -312,7 +312,7 @@ public class PmphUserServiceImpl implements PmphUserService {
     /**
      * 根据主键 id 加载用户对象
      * 
-     * @param id
+     * @param request
      * @return
      */
     @Override
@@ -1000,5 +1000,13 @@ public class PmphUserServiceImpl implements PmphUserService {
 
 
         return result;
-    };
+    }
+
+    @Override
+    public PmphUser getPmphUserByOpenid(String wechatUserId) {
+        PmphUser pmphUser = pmphUserDao.getPmphUserByOpenid(wechatUserId);
+        return pmphUser;
+    }
+
+    ;
 }

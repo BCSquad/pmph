@@ -77,7 +77,7 @@ public class WeChatLoginController {
         PmphUser pmphUser = null;
         String username = null;
         String password =null;
-        if (isTrue) {
+       // if (isTrue) {
             HttpSession session = request.getSession();
             String wechatUserId = (String) session.getAttribute("UserId");// 企业微信账号
             if(StringUtil.isEmpty(wechatUserId)){ //app 访问登录
@@ -119,7 +119,19 @@ public class WeChatLoginController {
                         pmphUserWechatService.getPmphUserWechatByWechatId(wechatUserId);
 
                 if (ObjectUtil.isNull(pmphUserWechat)) {
-                    model.addAttribute("isLogin", "3");
+
+                    pmphUser = pmphUserService.getPmphUserByOpenid(wechatUserId);
+
+                    if (ObjectUtil.notNull(pmphUser)) {
+                        username = new DesRun(null, pmphUser.getUsername()).enpsw;
+                        password = pmphUser.getPassword();
+                        model.addAttribute(Const.PMPH_WECHAT_USER_TOKEN,
+                                new DesRun(password, username + password + wechatUserId
+                                        + "<pmpheep>").enpsw);
+                        model.addAttribute("username", username);
+                        model.addAttribute("password", password);
+                        model.addAttribute("isLogin", "3");
+                    }
                 } else {
                     pmphUser = pmphUserService.getPmphUserByUsername(pmphUserWechat.getUsername());
                     if (ObjectUtil.notNull(pmphUser)) {
@@ -150,7 +162,7 @@ public class WeChatLoginController {
                 }
                 model.addAttribute("appType",appType);
             }
-
+/*
         } else {// SSO 登陆
             model.addAttribute("isLogin", "2");
             HttpSingleSignOnService service = new HttpSingleSignOnService();
@@ -181,7 +193,7 @@ public class WeChatLoginController {
             } catch (Exception e) {
                 logger.error("SSO登陆失败，异常信息'{}'", e.getMessage());
             }
-        }
+        }*/
 
          /*--------------------------- 登录权限控制 session cookie ------------为了直接跳转到某个vue页面---------------------*/
         pmphUser.setLoginType(Const.LOGIN_TYPE_PMPH);

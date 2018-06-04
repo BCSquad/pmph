@@ -77,11 +77,18 @@ public class WXFrontMsgPushController {
         String touser = touserOpenidSet.toString();
         //***（作者人名）已提交《****》（教材名）的申报表，请审核
         String msg = dec.getRealname() + "已提交《" + material.getMaterialName() + "》的申报表，";//“请审核” 已被超链接补齐，此处不需显示
-        String url = "/materialrouter/materialnav/" + decId + "/presscheck";
-        if (touserOpenidSet.size() > 0) {
-            Map resultMap = wxqyUserService.sendTextMessage("2", "2", touser, "", "", "text", msg, (short) 0,"");
+        //String url = "/materialrouter/materialnav/" + decId + "/presscheck";
+        //&UserId&materialId=&declarationId=
+        String paramUrlFormat = "&UserId=%s&materialId=%s&declarationId=%s";
+        for (String t: touserOpenidSet) {
+            String paramUrl=String.format(paramUrlFormat,t,dec.getMaterialId(),dec.getId());
+            Map resultMap = wxqyUserService.sendTextMessage("2", "2", t, "", "", "text", msg, (short) 0,paramUrl);
             return ((int) resultMap.get("errcode")) == 0;
         }
+        /*if (touserOpenidSet.size() > 0) {
+            Map resultMap = wxqyUserService.sendTextMessage("2", "2", touser, "", "", "text", msg, (short) 0,"");
+            return ((int) resultMap.get("errcode")) == 0;
+        }*/
 
         return false;
     }
@@ -127,10 +134,14 @@ public class WXFrontMsgPushController {
         // 推送内容： 《***》（书名）的***（主编）已提交编委预选名单
         msg = "“"+ materialVo.getMaterial().getMaterialName() + "”-《" + textbook.getTextbookName() + "》的第一主编 "+firstEditor.getRealname()+" 已提交编委预选名单";
 
-        if (touserOpenidSet.size()>0) {
-            Map resultMap = wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg, (short) 0,"");
+        for (String t: touserOpenidSet) {
+            Map resultMap = wxqyUserService.sendTextMessage("0", "0", t, "", "", "text", msg, (short) 0,"");
             return ((int) resultMap.get("errcode")) == 0;
         }
+        /*if (touserOpenidSet.size()>0) {
+            Map resultMap = wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg, (short) 0,"");
+            return ((int) resultMap.get("errcode")) == 0;
+        }*/
 
         return false;
     }
@@ -151,20 +162,26 @@ public class WXFrontMsgPushController {
         touserOpenidSet.remove(null);
         String touser = touserOpenidSet.toString();
         String msg = submiter.getRealname()+"已经提交了选题申报表，";
-
-        if (touserOpenidSet.size()>0) {
-            Map resultMap = wxqyUserService.sendTextMessage("2", "3", touser, "", "", "text", msg, (short) 0,"");
+        String paramUrlFormat = "&UserId=%s";
+        for (String t: touserOpenidSet) {
+            String paramUrl=String.format(paramUrlFormat,t);
+            Map resultMap = wxqyUserService.sendTextMessage("2", "3", t, "", "", "text", msg, (short) 0,paramUrl);
             return ((int) resultMap.get("errcode")) == 0;
         }
+        /*if (touserOpenidSet.size()>0) {
+            Map resultMap = wxqyUserService.sendTextMessage("2", "3", touser, "", "", "text", msg, (short) 0,"");
+            return ((int) resultMap.get("errcode")) == 0;
+        }*/
 
         return false;
     }
 
 
-    @GetMapping("/bookError/{bookId}/{submitId}")
+    @GetMapping("/bookError/{bookId}/{submitId}/{correctId}")
     @ResponseBody
     public Map bookEoor(@PathVariable(value = "submitId") Long submitId,
-                        @PathVariable(value = "bookId") Long bookId,HttpServletRequest request){
+                        @PathVariable(value = "bookId") Long bookId,
+                        @PathVariable(value = "correctId")Long correctId ,HttpServletRequest request){
     //这本图书的图书的策划编辑
         Book book = bookDao.getBookById(bookId);
         Set<String> touserOpenidSet = new HashSet<String>();
@@ -177,10 +194,16 @@ public class WXFrontMsgPushController {
         String touser = touserOpenidSet.toString();
         String msg = submiter.getRealname()+"已经提交了《"+ (ObjectUtil.isNull(book)?"":book.getBookname())+"》的图书纠错信息，";
         Map resultMap = null;
-        if (touserOpenidSet.size()>0) {
-            resultMap = wxqyUserService.sendTextMessage("2", "2", touser, "", "", "text", msg, (short) 0,"");
+        String paramUrlFormat = "&UserId=%s&bookName=%s&type=%s&id=%s";
+        for (String t: touserOpenidSet) {
+            String paramUrl=String.format(paramUrlFormat,t,book.getBookname(),"check",correctId);
+            resultMap = wxqyUserService.sendTextMessage("5", "2", t, "", "", "text", msg, (short) 0,paramUrl);
 
         }
+        /*if (touserOpenidSet.size()>0) {
+            resultMap = wxqyUserService.sendTextMessage("2", "2", touser, "", "", "text", msg, (short) 0,"");
+
+        }*/
         return resultMap;
     }
 

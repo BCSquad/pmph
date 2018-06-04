@@ -498,6 +498,12 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
                 String msg3 = contactUserNamesStr + "已被选为“" + material.getMaterialName() + "”的联系人。";
                 touserOpenidSet.remove(null);
                 touser = touserOpenidSet.toString();
+                /*for (String t: touserOpenidSet) {
+                    wxqyUserService.sendTextMessage("0", "0", t, "", "", "text", msg1, (short) 0,"");
+                    wxqyUserService.sendTextMessage("0", "0", t, "", "", "text", msg2, (short) 0,"");
+                    wxqyUserService.sendTextMessage("0", "0", t, "", "", "text", msg3, (short) 0,"");
+
+                }*/
                 if (touserOpenidSet.size() > 0) {
                     wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg1, (short) 0,"");
                     wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg2, (short) 0,"");

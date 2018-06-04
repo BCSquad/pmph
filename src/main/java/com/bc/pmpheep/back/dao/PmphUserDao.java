@@ -223,4 +223,11 @@ public interface PmphUserDao {
      * @return
      */
     List<PmphUser> getSomebodyParentDeptsPmphUserOfSomeRole(@Param(value = "userId") Long sbId,@Param(value = "role_id") Long role_id,@Param(value = "role_name") String role_name);
+
+    /**
+     * 通过企业微信用户id查询社内用户
+     * @param wechatUserId
+     * @return
+     */
+    PmphUser getPmphUserByOpenid(@Param(value = "wechatUserId") String wechatUserId);
 }

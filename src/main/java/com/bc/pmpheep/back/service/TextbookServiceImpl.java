@@ -768,6 +768,10 @@ public class TextbookServiceImpl implements TextbookService {
                 // 推送内容： ***（名单确人名）进行了《***》的***（操作）
                 msg = pmphUser.getRealname() + "进行了“" + materialVo.getMaterial().getMaterialName() + "”-《" + textbook.getTextbookName() + "》的"+operateText;
 
+				/*for (String t: touserOpenidSet) {
+					wxqyUserService.sendTextMessage("0", "0", t, "", "", "text", msg, (short) 0,"");
+
+				}*/
                 if (touserOpenidSet.size()>0) {
                     wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg, (short) 0,"");
                 }

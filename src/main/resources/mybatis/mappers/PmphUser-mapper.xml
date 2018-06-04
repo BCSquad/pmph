@@ -670,4 +670,10 @@
 		group by u.id
 	</select>
 
+	<select id="getPmphUserByOpenid" parameterType="String" resultType="PmphUser">
+		select * from pmph_user
+		where openid=#{wechatUserId}
+
+	</select>
+
 </mapper>

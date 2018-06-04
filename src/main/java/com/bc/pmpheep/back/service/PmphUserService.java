@@ -325,4 +325,11 @@ public interface PmphUserService {
      * @return
      */
     List<PmphUser> getSomebodyParentDeptsPmphUserOfSomeRole(Long SbId, Long role_id, String role_name);
+
+    /**
+     * 通过企业微信用户id查询社内用户
+     * @param wechatUserId
+     * @return
+     */
+    PmphUser getPmphUserByOpenid(String wechatUserId);
 }
