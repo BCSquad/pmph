@@ -120,8 +120,8 @@ public class TextbookServiceImpl implements TextbookService {
 	WXQYUserService wxqyUserService;
 	
 	/**
-	 * 
-	 * @param Textbook
+	 *
+	 * @param textbook
 	 *            实体对象
 	 * @return 带主键的 Textbook
 	 * @throws CheckedServiceException
@@ -481,7 +481,7 @@ public class TextbookServiceImpl implements TextbookService {
 	}
 
 	/**
-	 * @param Textbook
+	 * @param textbook
 	 * @return 影响行数
 	 * @throws CheckedServiceException
 	 */
@@ -524,7 +524,7 @@ public class TextbookServiceImpl implements TextbookService {
 			//***（策划编辑人名[多个逗号隔开]）已被为《***》（教材名称）的策划编辑
 			msg = planningEditor.getRealname()+"已被选为“"+materialName+"”-《"+originalTextbook.getTextbookName()+"》的策划编辑。";
 			if (StringUtil.notEmpty(touser)){
-				wxqyUserService.sendTextMessage("0","0",touser,"","","text",msg,(short)0);
+				wxqyUserService.sendTextMessage("0","0",touser,"","","text",msg,(short)0,"");
 			}
 		}
 
@@ -769,7 +769,7 @@ public class TextbookServiceImpl implements TextbookService {
                 msg = pmphUser.getRealname() + "进行了“" + materialVo.getMaterial().getMaterialName() + "”-《" + textbook.getTextbookName() + "》的"+operateText;
 
                 if (touserOpenidSet.size()>0) {
-                    wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg, (short) 0);
+                    wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg, (short) 0,"");
                 }
 
             }

@@ -284,7 +284,7 @@ public class TopicServiceImpl implements TopicService {
 			//分配部门负责人 不为空 给其发企业微信消息
 			if(!StringUtil.isEmpty(openid)){
 				String content = "《"+topic.getBookname()+"》选题"+(topic.getIsDirectorHandling()!=null||topic.getIsDirectorHandling()?"已分配到您的部门":"已分配给您");
-				service.sendTextMessage("2","3",openid,null,null,"text",content,(short)0);
+				service.sendTextMessage("2","3",openid,null,null,"text",content,(short)0,"");
 			}
 			result = "SUCCESS";
 		}
