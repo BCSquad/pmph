@@ -75,7 +75,7 @@ public class OAuth2Interceptor implements HandlerInterceptor {
                 // System.out.println("OAuthRequired：你的访问需要获取登录信息！");
                 Object objUid = session.getAttribute("UserId");
                 String appType = request.getParameter("appType");
-                if (objUid == null|| !StringUtil.isEmpty(appType)) {
+                if (objUid == null&& StringUtil.isEmpty(appType)) {
                     String resultUrl = request.getRequestURL().toString();
                     String param = request.getQueryString();
                     if (param != null) {
