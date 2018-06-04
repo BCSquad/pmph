@@ -45,6 +45,7 @@ public class DeclarationResultSchoolVO implements Serializable{
 	private Integer state;
 	//是否展示
 	private Boolean isShow = false;
+	private String bookname;
 	public DeclarationResultSchoolVO() {
 		super();
 	}
@@ -128,5 +129,12 @@ public class DeclarationResultSchoolVO implements Serializable{
 	public void setIsShow(Boolean isShow) {
 		this.isShow = isShow;
 	}
-	
+
+	public String getBookname() {
+		return bookname;
+	}
+
+	public void setBookname(String bookname) {
+		this.bookname = bookname;
+	}
 }

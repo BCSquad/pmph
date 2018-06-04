@@ -936,8 +936,10 @@ public class DecPositionServiceImpl implements DecPositionService {
             }
             for (DeclarationResultSchoolVO chosen : chosens) {
                 for (DeclarationResultSchoolVO preset : presets) {
+
                     if (preset.getOrgId().equals(chosen.getOrgId())) {
                         delList.add(preset);
+                        chosen.setBookname(preset.getBookname());
                         if (StringUtil.isEmpty(chosen.getEditorList())) {
                             chosen.setEditorList("-");
                         }
@@ -954,6 +956,7 @@ public class DecPositionServiceImpl implements DecPositionService {
                     }
                 }
                 chosen.setState(1);
+
                 list.add(chosen);
             }
             if (flag) {

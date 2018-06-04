@@ -87,6 +87,7 @@ public class SendWXMessageUtil {
             case "0":href="%s";break;
             case "1":href="<a href=\"http://medu.ipmph.com/meduwx\">%s</a>";break;
             case "2":href="<a href=\"http://medu.ipmph.com/wx/#/loginm\">%s</a>";break;
+            case "3":href="<a href=\"http://localhost:8087/pmpheep?type=1\">%s</a>";break;
             default: href="%s";break;
         }
         return href;
