@@ -61,7 +61,7 @@ public class SendWXMessageUtil {
         }
         Map<String,Object> map = new HashMap<String,Object>();
         String content = MapUtils.getString(params,"content","");
-        content = content + String.format(SendWXMessageUtil.getHrefType(MapUtils.getString(params,"hrefType","")),SendWXMessageUtil.getHrefContent(MapUtils.getString(params,"hrefContentType","")));
+        content = content + String.format(SendWXMessageUtil.getHrefType(MapUtils.getString(params,"hrefType","")),SendWXMessageUtil.getHrefContent(MapUtils.getString(params,"paramUrl","")),SendWXMessageUtil.getHrefContent(MapUtils.getString(params,"hrefContentType","")));
         map.put("content",content);
         params.put("text",map);
         params.put("agentid",Integer.parseInt(params.get("agentid").toString()));
@@ -85,11 +85,11 @@ public class SendWXMessageUtil {
         }
         switch (hrefType){
             case "0":href="%s";break;
-            case "1":href="<a href=\"http://medu.ipmph.com/meduwx\">%s</a>";break;
-            case "2":href="<a href=\"http://medu.ipmph.com/wx/#/loginm\">%s</a>";break;
-            case "3":href="<a href=\"http://localhost:8087/pmpheep?appType=1&materialId=%s&declarationId=%s\">%s</a>";break; //教材审核
-            case "4":href="<a href=\"http://localhost:8087/pmpheep?appType=2\">%s</a>";break; //选题申报
-            case "5":href="<a href=\"http://localhost:8087/pmpheep?appType=3&bookName=%s&type=%s&id=%s\n\">%s</a>";break; //图书纠错
+            case "1":href="<a href=\"http://medu.ipmph.com/meduwx%s\">%s</a>";break;
+            case "2":href="<a href=\"http://medu.ipmph.com/wx/#/loginm%s\">%s</a>";break;
+            case "3":href="<a href=\"http://localhost:8087/pmpheep?appType=1%s\">%s</a>";break; //教材审核  &materialId=&declarationId=
+            case "4":href="<a href=\"http://localhost:8087/pmpheep?appType=2%s\">%s</a>";break; //选题申报
+            case "5":href="<a href=\"http://localhost:8087/pmpheep?appType=3%s\">%s</a>";break; //图书纠错 &bookName=&type=&id=
             default: href="%s";break;
         }
         return href;

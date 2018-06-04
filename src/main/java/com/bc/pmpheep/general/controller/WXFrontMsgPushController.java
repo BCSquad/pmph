@@ -79,7 +79,7 @@ public class WXFrontMsgPushController {
         String msg = dec.getRealname() + "已提交《" + material.getMaterialName() + "》的申报表，";//“请审核” 已被超链接补齐，此处不需显示
         String url = "/materialrouter/materialnav/" + decId + "/presscheck";
         if (touserOpenidSet.size() > 0) {
-            Map resultMap = wxqyUserService.sendTextMessage("2", "2", touser, "", "", "text", msg, (short) 0);
+            Map resultMap = wxqyUserService.sendTextMessage("2", "2", touser, "", "", "text", msg, (short) 0,"");
             return ((int) resultMap.get("errcode")) == 0;
         }
 
@@ -128,7 +128,7 @@ public class WXFrontMsgPushController {
         msg = "“"+ materialVo.getMaterial().getMaterialName() + "”-《" + textbook.getTextbookName() + "》的第一主编 "+firstEditor.getRealname()+" 已提交编委预选名单";
 
         if (touserOpenidSet.size()>0) {
-            Map resultMap = wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg, (short) 0);
+            Map resultMap = wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg, (short) 0,"");
             return ((int) resultMap.get("errcode")) == 0;
         }
 
@@ -153,7 +153,7 @@ public class WXFrontMsgPushController {
         String msg = submiter.getRealname()+"已经提交了选题申报表，";
 
         if (touserOpenidSet.size()>0) {
-            Map resultMap = wxqyUserService.sendTextMessage("2", "3", touser, "", "", "text", msg, (short) 0);
+            Map resultMap = wxqyUserService.sendTextMessage("2", "3", touser, "", "", "text", msg, (short) 0,"");
             return ((int) resultMap.get("errcode")) == 0;
         }
 
@@ -178,7 +178,7 @@ public class WXFrontMsgPushController {
         String msg = submiter.getRealname()+"已经提交了《"+ (ObjectUtil.isNull(book)?"":book.getBookname())+"》的图书纠错信息，";
         Map resultMap = null;
         if (touserOpenidSet.size()>0) {
-            resultMap = wxqyUserService.sendTextMessage("2", "2", touser, "", "", "text", msg, (short) 0);
+            resultMap = wxqyUserService.sendTextMessage("2", "2", touser, "", "", "text", msg, (short) 0,"");
 
         }
         return resultMap;
