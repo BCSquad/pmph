@@ -80,11 +80,66 @@
                 get: getSessionStorage,
                 set: setSessionStorage
             }
+            function Empty(v) {
+                switch (typeof v) {
+                    case 'undefined':
+                        return true;
+                        break;
+                    case 'string':
+                        if (v.length == 0)
+                            return true;
+                        break;
+                    case 'boolean':
+                        if (!v)
+                            return true;
+                        break;
+                    case 'number':
+                        if (0 === v)
+                            return true;
+                        break;
+                    case 'object':
+                        if (null == v)
+                            return true;
+                        if (undefined !== v.length && v.length == 0)
+                            return true;
+                        for (var k in v) {
+                            return false;
+                        }
+                        return false;
+                        break;
+                }
+                return false;
+            }
 
         </script>
         <script type="text/javascript">
         	//alert('${UserId}');
-                  if(0 == '${isLogin}'){
+            var userData={
+                userSessionId:'${userSessionId}' ,
+                sessionPmphUserToken:'${sessionPmphUserToken}',
+                sessionPmphUser:${sessionPmphUser} ,
+                pmphUserPermissionIds:${pmphUserPermissionIds}
+            }
+            mySessionStorage.set('currentUser',userData,'json');
+            Cookie.set('sessionId','${userSessionId}',2)
+            Cookie.set('token','${sessionPmphUserToken}',2)
+            if((3 == '${isLogin}'||4 == '${isLogin}') &&
+                ((1=='${appType}' && !Empty('${materialId}' &&!Empty('${declarationId}'))
+                    ||(2=='${appType}')
+                    ||(3=='${appType}'&&!Empty('${bookName}')&&!Empty('${type}')&&!Empty('${id}'))))){
+                if(1=='${appType}'){
+                    window.location.href= 'http://192.168.0.117:8087/wx/#/material/${materialId}/expert?declarationId=${declarationId}&sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
+                }else if(3=='${appType}'){
+                    console.log('http://192.168.0.117:8087/wx/#/checkbook?bookName=${bookName}&type=${type}&id=${id}&sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}'
+                )
+                    window.location.href= 'http://192.168.0.117:8087/wx/#/checkbook?bookName=${bookName}&type=${type}&id=${id}&sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
+                }else{
+                    window.location.href= 'http://192.168.0.117:8087/wx/#/topic/list?sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
+                }
+
+            }else if((3 == '${isLogin}'||4 == '${isLogin}') && !Empty('${appType}')){ //从企业微信登录 app vue 如果找不到对应的参数则进入首页
+                      window.location.href='http://120.76.221.250/wx/#index?sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
+            }else if(0 == '${isLogin}'){
                 //alert(1);
                 window.location.href='http://192.168.100.109:8089/#/login?wechatUserId='+'${UserId}';
                 //window.location.href='http://120.76.221.250/#/login';
@@ -92,15 +147,7 @@
                 window.location.href='http://192.168.100.109:8089/#/login?username='+'${username}'+'&password='+'${password}'+'&wechatUserId='+'${UserId}'+'&token='+'${token}';
             }else if(2=='${isLogin}'){
                 //和vue 同步 解决单点登录一闪的问题 、sessionStorage是Html5的特性,IE7以下浏览器不支持
-              var userData={
-                  userSessionId:'${userSessionId}' ,
-                  sessionPmphUserToken:'${sessionPmphUserToken}',
-                  sessionPmphUser:${sessionPmphUser} ,
-                  pmphUserPermissionIds:${pmphUserPermissionIds}
-              }
-              mySessionStorage.set('currentUser',userData,'json');
-              Cookie.set('sessionId','${userSessionId}',2)
-              Cookie.set('token','${sessionPmphUserToken}',2)
+
                 //window.location.href='http://192.168.100.135/#/login?username='+'${username}'+'&password='+'${password}'+'&token='+'${token}'+'&wechatUserId='+'${UserId}';
                 window.location.href='http://192.168.100.135/#/index?sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
             }

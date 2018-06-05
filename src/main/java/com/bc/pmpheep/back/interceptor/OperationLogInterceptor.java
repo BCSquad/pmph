@@ -130,6 +130,7 @@ public class OperationLogInterceptor extends HandlerInterceptorAdapter {
                     }
 
                 } catch (Exception e) {
+                    e.printStackTrace();
                     logger.warn("session为空时出现异常：{}", e.getMessage());
                 }
                 if (ObjectUtil.notNull(session)) {

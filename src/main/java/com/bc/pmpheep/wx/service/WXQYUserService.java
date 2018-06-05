@@ -39,9 +39,10 @@ public class WXQYUserService extends WXBaseService {
      * @param msgtype text
      * @param text 内容
      * @param safe  表示是否是保密消息，0表示否，1表示是，默认0
+     *              paramUrl 参数预留
      * @return
      */
-    public Map sendTextMessage(String hrefType,String hrefContentType,String touser,String toparty,String totag,String msgtype,String text,short safe){
+    public Map sendTextMessage(String hrefType,String hrefContentType,String touser,String toparty,String totag,String msgtype,String text,short safe,String paramUrl){
         Map<String,Object> map = new HashMap<String,Object>();
         if(!StringUtil.isEmpty(touser)){
            touser = touser.replaceAll(",","|");
@@ -58,6 +59,7 @@ public class WXQYUserService extends WXBaseService {
         }
         String url = WXURLUtil.SEND_MSG_URL.replaceAll("ACCESS_TOKEN",this.getAccessToken(false));
         map.put("url" ,url);
+        map.put("paramUrl",paramUrl);
         map.put("touser" ,touser);
         map.put("toparty" ,toparty);
         map.put("totag" ,totag);

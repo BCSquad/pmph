@@ -1,18 +1,17 @@
 package com.bc.pmpheep.general.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.bc.pmpheep.back.dao.BookDao;
 import com.bc.pmpheep.back.po.*;
 import com.bc.pmpheep.back.service.*;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
 import com.bc.pmpheep.back.vo.MaterialVO;
 import com.bc.pmpheep.wx.service.WXQYUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,6 +40,9 @@ public class WXFrontMsgPushController {
     private WriterUserService writerUserService;
     @Autowired
     private BookEditorService bookEditorService;
+
+    @Autowired
+    private BookDao bookDao;
 
     @RequestMapping(value = "/hello", method = RequestMethod.GET)
     public void helloBack(HttpServletRequest request) {
@@ -75,11 +77,18 @@ public class WXFrontMsgPushController {
         String touser = touserOpenidSet.toString();
         //***（作者人名）已提交《****》（教材名）的申报表，请审核
         String msg = dec.getRealname() + "已提交《" + material.getMaterialName() + "》的申报表，";//“请审核” 已被超链接补齐，此处不需显示
-        String url = "/materialrouter/materialnav/" + decId + "/presscheck";
-        if (touserOpenidSet.size() > 0) {
-            Map resultMap = wxqyUserService.sendTextMessage("2", "2", touser, "", "", "text", msg, (short) 0);
+        //String url = "/materialrouter/materialnav/" + decId + "/presscheck";
+        //&UserId&materialId=&declarationId=
+        String paramUrlFormat = "&UserId=%s&materialId=%s&declarationId=%s";
+        for (String t: touserOpenidSet) {
+            String paramUrl=String.format(paramUrlFormat,t,dec.getMaterialId(),dec.getId());
+            Map resultMap = wxqyUserService.sendTextMessage("2", "2", t, "", "", "text", msg, (short) 0,paramUrl);
             return ((int) resultMap.get("errcode")) == 0;
         }
+        /*if (touserOpenidSet.size() > 0) {
+            Map resultMap = wxqyUserService.sendTextMessage("2", "2", touser, "", "", "text", msg, (short) 0,"");
+            return ((int) resultMap.get("errcode")) == 0;
+        }*/
 
         return false;
     }
@@ -125,16 +134,20 @@ public class WXFrontMsgPushController {
         // 推送内容： 《***》（书名）的***（主编）已提交编委预选名单
         msg = "“"+ materialVo.getMaterial().getMaterialName() + "”-《" + textbook.getTextbookName() + "》的第一主编 "+firstEditor.getRealname()+" 已提交编委预选名单";
 
-        if (touserOpenidSet.size()>0) {
-            Map resultMap = wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg, (short) 0);
+        for (String t: touserOpenidSet) {
+            Map resultMap = wxqyUserService.sendTextMessage("0", "0", t, "", "", "text", msg, (short) 0,"");
             return ((int) resultMap.get("errcode")) == 0;
         }
+        /*if (touserOpenidSet.size()>0) {
+            Map resultMap = wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg, (short) 0,"");
+            return ((int) resultMap.get("errcode")) == 0;
+        }*/
 
         return false;
     }
 
     /**
-     * 前台用户提交选题申报后
+     * 前台用户提交选题申报后，向有管理员身份的社内用户推送微信消息
      */
     @RequestMapping(value = "topicSubmit/{tid}/{uid}",method = RequestMethod.GET)
     @ResponseBody
@@ -149,13 +162,49 @@ public class WXFrontMsgPushController {
         touserOpenidSet.remove(null);
         String touser = touserOpenidSet.toString();
         String msg = submiter.getRealname()+"已经提交了选题申报表，";
-
-        if (touserOpenidSet.size()>0) {
-            Map resultMap = wxqyUserService.sendTextMessage("2", "3", touser, "", "", "text", msg, (short) 0);
+        String paramUrlFormat = "&UserId=%s";
+        for (String t: touserOpenidSet) {
+            String paramUrl=String.format(paramUrlFormat,t);
+            Map resultMap = wxqyUserService.sendTextMessage("2", "3", t, "", "", "text", msg, (short) 0,paramUrl);
             return ((int) resultMap.get("errcode")) == 0;
         }
+        /*if (touserOpenidSet.size()>0) {
+            Map resultMap = wxqyUserService.sendTextMessage("2", "3", touser, "", "", "text", msg, (short) 0,"");
+            return ((int) resultMap.get("errcode")) == 0;
+        }*/
 
         return false;
+    }
+
+
+    @GetMapping("/bookError/{bookId}/{submitId}/{correctId}")
+    @ResponseBody
+    public Map bookEoor(@PathVariable(value = "submitId") Long submitId,
+                        @PathVariable(value = "bookId") Long bookId,
+                        @PathVariable(value = "correctId")Long correctId ,HttpServletRequest request){
+    //这本图书的图书的策划编辑
+        Book book = bookDao.getBookById(bookId);
+        Set<String> touserOpenidSet = new HashSet<String>();
+        WriterUser submiter = writerUserService.get(submitId);
+        List<PmphUser> admins = pmphUserService.getListByRole(1l);
+        for (PmphUser admin: admins) {
+            touserOpenidSet.add(admin.getOpenid());
+        }
+        touserOpenidSet.remove(null);
+        String touser = touserOpenidSet.toString();
+        String msg = submiter.getRealname()+"已经提交了《"+ (ObjectUtil.isNull(book)?"":book.getBookname())+"》的图书纠错信息，";
+        Map resultMap = null;
+        String paramUrlFormat = "&UserId=%s&bookName=%s&type=%s&id=%s";
+        for (String t: touserOpenidSet) {
+            String paramUrl=String.format(paramUrlFormat,t,book.getBookname(),"check",correctId);
+            resultMap = wxqyUserService.sendTextMessage("5", "2", t, "", "", "text", msg, (short) 0,paramUrl);
+
+        }
+        /*if (touserOpenidSet.size()>0) {
+            resultMap = wxqyUserService.sendTextMessage("2", "2", touser, "", "", "text", msg, (short) 0,"");
+
+        }*/
+        return resultMap;
     }
 
 

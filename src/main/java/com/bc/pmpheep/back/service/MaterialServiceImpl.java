@@ -536,10 +536,16 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			String msg3 = contactUserNamesStr + "已被选为“" + material.getMaterialName() + "”的联系人。";
 			touserOpenidSet.remove(null);
 			touser = touserOpenidSet.toString();
+			/*for (String t: touserOpenidSet) {
+				wxqyUserService.sendTextMessage("0", "0", t, "", "", "text", msg1, (short) 0,"");
+				wxqyUserService.sendTextMessage("0", "0", t, "", "", "text", msg2, (short) 0,"");
+				wxqyUserService.sendTextMessage("0", "0", t, "", "", "text", msg3, (short) 0,"");
+
+			}*/
 			if (touserOpenidSet.size() > 0) {
-				wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg1, (short) 0);
-				wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg2, (short) 0);
-				wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg3, (short) 0);
+				wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg1, (short) 0,"");
+				wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg2, (short) 0,"");
+				wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg3, (short) 0,"");
 			}
 		}
 
@@ -689,9 +695,21 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		}
 		// 教材主任检查
 		Material material = this.getMaterialById(materialId);
-		if (null != material && null != material.getDirector() && pmphUser.getId().equals(material.getDirector())) {
-			projectEditorPowers = 255; // 我是教材的主任
-			role = (0 == role.intValue() ? 2 : role);
+
+		if (null != material && null != material.getDirector()) {
+			//2948 N198-组织机构核对完成后，在教材申报发通知的时候，选择的主任（可能是主任，某个部门的普通员工），要求选择的主任的所有归属单位的主任都有和选择主任的权限一样。
+			List<PmphUser> parentDeptsDirectors =pmphUserService.getSomebodyParentDeptsPmphUserOfSomeRole(material.getDirector(),null,"主任");
+			for (PmphUser PDDirector: parentDeptsDirectors) {
+				if(pmphUser.getId().equals(PDDirector.getId())){
+					projectEditorPowers = 255; // 我是教材的主任 的部门或上级部门的主任
+					role = (0 == role.intValue() ? 2 : role);
+					break;
+				}
+			}
+			if(pmphUser.getId().equals(material.getDirector())){
+				projectEditorPowers = 255; // 我是教材的主任 本人
+				role = (0 == role.intValue() ? 2 : role);
+			}
 		}
 		// 教材项目编辑检查
 		List<MaterialProjectEditorVO> materialProjectEditors = materialProjectEditorService
@@ -855,6 +873,20 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			}
 		}
 		list = addMaterialContact(list, sessionId);
+
+		//2948 N198-组织机构核对完成后，在教材申报发通知的时候，选择的主任（可能是主任，某个部门的普通员工），要求选择的主任的所有归属单位的主任都有和选择主任的权限一样。
+		for (MaterialListVO m: list) {
+			if (null != m && null != m.getDirector()) {
+				List<PmphUser> parentDeptsDirectors = pmphUserService.getSomebodyParentDeptsPmphUserOfSomeRole(m.getDirector(), null, "主任");
+				for (PmphUser PDDirector : parentDeptsDirectors) {
+					if (pmphUser.getId().equals(PDDirector.getId())) {
+						m.setIsMy(true);// 我是教材的主任 的部门或上级部门的主任
+						break;
+					}
+				}
+			}
+		}
+
 		pageResult.setRows(list);
 		pageResult.setTotal(total);
 		return pageResult;
