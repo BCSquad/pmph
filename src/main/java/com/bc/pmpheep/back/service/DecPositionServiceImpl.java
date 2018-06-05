@@ -963,6 +963,14 @@ public class DecPositionServiceImpl implements DecPositionService {
                 presets.removeAll(delList);
                 list.addAll(presets);
             }
+            //对list 数据进行排序
+            Collections.sort(list, new Comparator<DeclarationResultSchoolVO>() {
+                @Override
+                public int compare(DeclarationResultSchoolVO o1, DeclarationResultSchoolVO o2) {
+                    int i = o1.getSchoolName().compareTo(o2.getSchoolName());
+                    return i;
+                }
+            });
             pageResult.setRows(list);
             pageResult.setTotal(total);
         }
