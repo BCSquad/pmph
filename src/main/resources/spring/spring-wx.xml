@@ -5,14 +5,14 @@
        profile="production">
     <bean id="qywxservice" class="com.bc.pmpheep.wx.service.WXQYUserService">
         <!--正式库及业务测试-->
-        <!--<property name="wxId" value="wxfe824fa78b0280b5"/>-->
-        <!--<property name="agentid" value="1000003"/>-->
-        <!--<property name="secret" value="malb2NNlog8zWWmFz34XMbFELP93AqXQo-xPXlpG5Pc"/>-->
+        <property name="wxId" value="wxfe824fa78b0280b5"/>
+        <property name="agentid" value="1000003"/>
+        <property name="secret" value="malb2NNlog8zWWmFz34XMbFELP93AqXQo-xPXlpG5Pc"/>
 
         <!--120测试-->
-        <property name="wxId" value="wx72eaeae98b5382c9"/>
+      <!--  <property name="wxId" value="wx72eaeae98b5382c9"/>
         <property name="agentid" value="1000002"/>
-        <property name="secret" value="PIVznRHFPzbwqZKs4dM0QAwuc1_atVZI_ksu5i24Ts0"/>
+        <property name="secret" value="PIVznRHFPzbwqZKs4dM0QAwuc1_atVZI_ksu5i24Ts0"/>-->
 
     </bean>
 
