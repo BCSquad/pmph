@@ -981,12 +981,13 @@
 		resultType="DeclarationResultSchoolVO">
 		SELECT * FROM (
 		SELECT @rowno:=@rowno+1 AS
-		row,t1.materialid,t1.orgid,t1.schoolname,t1.editorlist,
+		row,t1.materialid,t1.orgid,t1.schoolname,t1.bookname,t1.editorlist,
 		t1.subeditorlist,t1.editoriallist,t1.isdigitaleditorlist
 		FROM (
 		SELECT '-' editorlist,'-' subeditorlist,'-' editoriallist,'-'
 		isdigitaleditorlist,
-		d.id materialid,e.id orgid,e.org_name schoolname
+		d.id materialid,e.id orgid,e.org_name schoolname,
+		c.textbook_name bookname
 		FROM declaration a
 		LEFT JOIN dec_position b ON a.id = b.declaration_id
 		LEFT JOIN textbook c ON b.textbook_id = c.id
@@ -1000,7 +1001,9 @@
 		<if test="parameter.schoolName !=null and parameter.schoolName !=''">
 			and e.org_name like concat ('%',#{parameter.schoolName},'%')
 		</if>
-		GROUP BY a.org_id ORDER BY SUM(if((b.preset_position IN
+		GROUP BY
+		a.org_id,
+		c.textbook_name ORDER BY SUM(if((b.preset_position IN
 		(4,5,6,7,12,13,14,15)),1,0)) DESC,
 		SUM(if((b.preset_position IN
 		(2,3,6,7,10,11,14,15)),1,0)) DESC,
@@ -1008,7 +1011,7 @@
 		(1,3,5,7,9,11,13,15)),1,0)) DESC,
 		SUM(if((b.preset_position IN
 		(8,9,10,11,12,13,14,15)),1,0)) DESC)t1,
-		(SELECT @rowno:=0)t2)t3
+		(SELECT @rowno:=0)t2)t3 order by t3.schoolname,t3.bookname ASC
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
@@ -1169,9 +1172,11 @@
 	<!-- 申报结果按学校统计（按当选数排序,分页） -->
 	<select id="getSchoolListChosenPage" parameterType="pageParameter"
 		resultType="DeclarationResultSchoolVO">
+
+
 		SELECT * FROM(
 		SELECT @rowno:=@rowno+1 AS
-		row,t1.materialid,t1.orgid,t1.schoolname,t1.editorlist,
+		row,t1.materialid,t1.orgid,t1.schoolname,	t1.bookname,t1.editorlist,
 		t1.subeditorlist,t1.editoriallist,t1.isdigitaleditorlist
 		FROM (
 		SELECT GROUP_CONCAT(if((b.chosen_position IN
@@ -1182,7 +1187,8 @@
 		(1,9)),a.realname,null)) editoriallist,
 		GROUP_CONCAT(if((b.chosen_position IN (8,9,10,12)),a.realname,null))
 		isdigitaleditorlist,
-		d.id materialid,e.id orgid,e.org_name schoolname
+		d.id materialid,e.id orgid,e.org_name schoolname,
+		c.textbook_name bookname
 		FROM declaration a
 		LEFT JOIN dec_position_published b ON a.id = b.declaration_id
 		LEFT JOIN textbook c ON b.textbook_id = c.id
@@ -1196,13 +1202,17 @@
 			and e.org_name like concat
 			('%',#{parameter.schoolName},'%')
 		</if>
-		GROUP BY a.org_id ORDER BY SUM(if((b.chosen_position in (4,12)),1,0))
+		GROUP BY
+		a.org_id,
+		c.textbook_name ORDER BY SUM(if((b.chosen_position in (4,12)),1,0))
 		DESC,
 		SUM(if((b.chosen_position in (2,10)),1,0)) DESC,
 		SUM(if((b.chosen_position in (1,9)),1,0)) DESC,
 		SUM(if((b.chosen_position in (8,9,10,12)),1,0)) DESC)t1,
 		(SELECT
-		@rowno:=0)t2 )t3
+		@rowno:=0)t2 )t3 ORDER BY
+		t3.schoolname,
+		t3.bookname ASC
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>

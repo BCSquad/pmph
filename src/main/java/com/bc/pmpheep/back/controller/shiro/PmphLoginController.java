@@ -253,14 +253,14 @@ public class PmphLoginController {
         }
         Map<String, Object> resultMap = new HashMap<String, Object>();
         HttpSingleSignOnService service = new HttpSingleSignOnService();
-        // String url = service.getSingleSignOnURL();
+         String url = service.getSingleSignOnURL();
         try {
             Principal principal = service.singleSignOn(request);
             String userName = principal.getName();
             PmphUser pmphUser = pmphUserService.login(userName, null);
             if (ObjectUtil.isNull(pmphUser)) {// 为空就新建一个用户
                 pmphUser =
-                        pmphUserService.add(new PmphUser(userName, "888888", userName, "DEFAULT"));
+                        pmphUserService.add(new PmphUser(userName, "888888",false,"",0L,"","", "DEFAULT","",999,false));
                 pmphRoleService.addUserRole(pmphUser.getId(), 2L);// 添加默认权限
             }
             pmphUser.setLoginType(Const.LOGIN_TYPE_PMPH);
@@ -299,7 +299,7 @@ public class PmphLoginController {
             resultMap.put(Const.SEESION_PMPH_USER_TOKEN, new DesRun(userName, userName).enpsw);
             resultMap.put("pmphUserPermissionIds", pmphUserPermissionIds);
             return new ResponseBean(resultMap);
-        } catch (SingleSignOnException e) {
+        } catch (Exception e) {
             return new ResponseBean(e);
         }
     }

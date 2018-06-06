@@ -77,7 +77,7 @@ public class WeChatLoginController {
         PmphUser pmphUser = null;
         String username = null;
         String password =null;
-       // if (isTrue) {
+        if (isTrue) {
             HttpSession session = request.getSession();
             String wechatUserId = (String) session.getAttribute("UserId");// 企业微信账号
             if(StringUtil.isEmpty(wechatUserId)){ //app 访问登录
@@ -162,19 +162,18 @@ public class WeChatLoginController {
                 }
                 model.addAttribute("appType",appType);
             }
-/*
+
         } else {// SSO 登陆
             model.addAttribute("isLogin", "2");
             HttpSingleSignOnService service = new HttpSingleSignOnService();
             try {
                 Principal principal = service.singleSignOn(request);
-                String userName = principal.getName();
+                String userName =principal.getName();
                 assert userName != null;
                  pmphUser = pmphUserService.getPmphUserByUsername(userName);
                 if (ObjectUtil.isNull(pmphUser)) {// 为空就新建一个用户
                     pmphUser =
-                    pmphUserService.add(new PmphUser(userName, new DesRun(null, "888888").enpsw,
-                                                     userName, "DEFAULT"));
+                            pmphUserService.add(new PmphUser(userName, "888888",false,"",0L,"","", "DEFAULT","",999,false));
                     pmphRoleService.addUserRole(pmphUser.getId(), 2L);// 添加默认权限
                 }
                  username = new DesRun(null, pmphUser.getUsername()).enpsw;
@@ -193,7 +192,7 @@ public class WeChatLoginController {
             } catch (Exception e) {
                 logger.error("SSO登陆失败，异常信息'{}'", e.getMessage());
             }
-        }*/
+        }
 
          /*--------------------------- 登录权限控制 session cookie ------------为了直接跳转到某个vue页面---------------------*/
         pmphUser.setLoginType(Const.LOGIN_TYPE_PMPH);

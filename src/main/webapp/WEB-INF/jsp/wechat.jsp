@@ -12,6 +12,12 @@
         <title>PMPH E-education Platform</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <script type="text/javascript">
+            var appLogin = "120.76.221.250";//app 测试微信访问
+           // var appLogin = "120.76.221.250";
+           // var appLogin = "127.0.0.1:8088"; // app开发
+            //var pcLogin = "192.168.100.109:8089";
+            //var pcLogin = "120.76.221.250:8089";//测试
+            var pcLogin = "127.0.0.1:8089"; //开发
             var Cookie ={
                 /**
                  * getCookie
@@ -128,28 +134,27 @@
                     ||(2=='${appType}')
                     ||(3=='${appType}'&&!Empty('${bookName}')&&!Empty('${type}')&&!Empty('${id}'))))){
                 if(1=='${appType}'){
-                    window.location.href= 'http://192.168.0.117:8087/wx/#/material/${materialId}/expert?declarationId=${declarationId}&sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
+                    window.location.href= 'http://'+appLogin+'/wx/#/material/${materialId}/expert?declarationId=${declarationId}&sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
                 }else if(3=='${appType}'){
-                    console.log('http://192.168.0.117:8087/wx/#/checkbook?bookName=${bookName}&type=${type}&id=${id}&sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}'
-                )
-                    window.location.href= 'http://192.168.0.117:8087/wx/#/checkbook?bookName=${bookName}&type=${type}&id=${id}&sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
+                    <%--console.log('http://'+appLogin+'/wx/#/checkbook?bookName=${bookName}&type=${type}&id=${id}&sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}'--%>
+                <%--)--%>
+                    window.location.href= 'http://'+appLogin+'/wx/#/checkbook?bookName=${bookName}&type=${type}&id=${id}&sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
                 }else{
-                    window.location.href= 'http://192.168.0.117:8087/wx/#/topic/list?sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
+                    window.location.href= 'http://'+appLogin+'/wx/#/topic/list?sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
                 }
 
             }else if((3 == '${isLogin}'||4 == '${isLogin}') && !Empty('${appType}')){ //从企业微信登录 app vue 如果找不到对应的参数则进入首页
-                      window.location.href='http://120.76.221.250/wx/#index?sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
+                      window.location.href='http://'+appLogin+'/wx/#index?sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
             }else if(0 == '${isLogin}'){
                 //alert(1);
-                window.location.href='http://192.168.100.109:8089/#/login?wechatUserId='+'${UserId}';
+                window.location.href='http://'+pcLogin+'/#/login?wechatUserId='+'${UserId}';
                 //window.location.href='http://120.76.221.250/#/login';
             }else if(1=='${isLogin}'){
-                window.location.href='http://192.168.100.109:8089/#/login?username='+'${username}'+'&password='+'${password}'+'&wechatUserId='+'${UserId}'+'&token='+'${token}';
+                window.location.href='http://'+pcLogin+'/#/login?username='+'${username}'+'&password='+'${password}'+'&wechatUserId='+'${UserId}'+'&token='+'${token}';
             }else if(2=='${isLogin}'){
                 //和vue 同步 解决单点登录一闪的问题 、sessionStorage是Html5的特性,IE7以下浏览器不支持
-
                 //window.location.href='http://192.168.100.135/#/login?username='+'${username}'+'&password='+'${password}'+'&token='+'${token}'+'&wechatUserId='+'${UserId}';
-                window.location.href='http://192.168.100.109:8089/#/index?sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
+                window.location.href='http://'+pcLogin+'/#/index?sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
             }
 
 		</script>
