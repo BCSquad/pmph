@@ -549,57 +549,11 @@ public class TextbookServiceImpl implements TextbookService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
 					"用户为空");
 		}
-		// 教材权限的检查
-		List<PmphRole> pmphRoles = pmphUserService.getListUserRole(pmphUser.getId());
-		Integer power = null;
-		// 系统管理员权限检查
-		for (PmphRole pmphRole : pmphRoles) {
-			if (null != pmphRole && null != pmphRole.getRoleName() && "系统管理员".equals(pmphRole.getRoleName())) {
-				power = 1; // 我是系统管理原
-			}
-		}
-		// 教材主任检查
-		Material material = materialService.getMaterialById(materialId);
-		if (null == power) {
-			if (null != material && null != material.getDirector()) {
-				//2948 N198-组织机构核对完成后，在教材申报发通知的时候，选择的主任（可能是主任，某个部门的普通员工），要求选择的主任的所有归属单位的主任都有和选择主任的权限一样。
-				List<PmphUser> parentDeptsDirectors = pmphUserService.getSomebodyParentDeptsPmphUserOfSomeRole(material.getDirector(), null, "主任");
-				for (PmphUser PDDirector : parentDeptsDirectors) {
-					if (pmphUser.getId().equals(PDDirector.getId())) {
-						power = 2; // 我是教材的主任 的部门或上级部门的主任
-						break;
-					}
-				}
-				if (pmphUser.getId().equals(material.getDirector())) {
-					power = 2; // 我是教材的主任 本人
-				}
-			}
-		}
 
-		// 教材项目编辑检查
-		if (null == power) {
-			List<MaterialProjectEditorVO> materialProjectEditors = materialProjectEditorService
-					.listMaterialProjectEditors(materialId);
-			if (null != materialProjectEditors && materialProjectEditors.size() > 0) {
-				for (MaterialProjectEditorVO materialProjectEditor : materialProjectEditors) {
-					if (null != materialProjectEditor && null != materialProjectEditor.getEditorId()
-							&& materialProjectEditor.getEditorId().equals(pmphUser.getId())) {
-						power = 3; // 我是教材的项目编辑
-					}
-				}
-			}
-		}
-		// 教材策划编辑检查
-		if (null == power) {
-			Integer num = materialService.getPlanningEditorSum(materialId, pmphUser.getId());
-			if (null != num && num > 0) {
-				power = 4; // 我是教材的策划编辑编辑
-			}
-		}
-		if (null == power) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-					"该教材您没操作权限");
-		}
+
+		Material material = materialService.getMaterialById(materialId);
+		Integer power = getPower(materialId, pmphUser, material);
+
 
 		// 拼装复合参数
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -676,6 +630,60 @@ public class TextbookServiceImpl implements TextbookService {
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 		return pageResult;
 
+	}
+
+	private Integer getPower(Long materialId, PmphUser pmphUser, Material material) {
+		// 教材权限的检查
+		List<PmphRole> pmphRoles = pmphUserService.getListUserRole(pmphUser.getId());
+		Integer power = null;
+		// 系统管理员权限检查
+		for (PmphRole pmphRole : pmphRoles) {
+			if (null != pmphRole && null != pmphRole.getRoleName() && "系统管理员".equals(pmphRole.getRoleName())) {
+				power = 1; // 我是系统管理原
+			}
+		}
+		// 教材主任检查
+		if (null == power) {
+			if (null != material && null != material.getDirector()) {
+				//2948 N198-组织机构核对完成后，在教材申报发通知的时候，选择的主任（可能是主任，某个部门的普通员工），要求选择的主任的所有归属单位的主任都有和选择主任的权限一样。
+				List<PmphUser> parentDeptsDirectors = pmphUserService.getSomebodyParentDeptsPmphUserOfSomeRole(material.getDirector(), null, "主任");
+				for (PmphUser PDDirector : parentDeptsDirectors) {
+					if (pmphUser.getId().equals(PDDirector.getId())) {
+						power = 2; // 我是教材的主任 的部门或上级部门的主任
+						break;
+					}
+				}
+				if (pmphUser.getId().equals(material.getDirector())) {
+					power = 2; // 我是教材的主任 本人
+				}
+			}
+		}
+
+		// 教材项目编辑检查
+		if (null == power) {
+			List<MaterialProjectEditorVO> materialProjectEditors = materialProjectEditorService
+					.listMaterialProjectEditors(materialId);
+			if (null != materialProjectEditors && materialProjectEditors.size() > 0) {
+				for (MaterialProjectEditorVO materialProjectEditor : materialProjectEditors) {
+					if (null != materialProjectEditor && null != materialProjectEditor.getEditorId()
+							&& materialProjectEditor.getEditorId().equals(pmphUser.getId())) {
+						power = 3; // 我是教材的项目编辑
+					}
+				}
+			}
+		}
+		// 教材策划编辑检查
+		if (null == power) {
+			Integer num = materialService.getPlanningEditorSum(materialId, pmphUser.getId());
+			if (null != num && num > 0) {
+				power = 4; // 我是教材的策划编辑编辑
+			}
+		}
+		if (null == power) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"该教材您没操作权限");
+		}
+		return power;
 	}
 
 	@Override
@@ -1335,6 +1343,72 @@ public class TextbookServiceImpl implements TextbookService {
 
 		}
 		return textbookDao.updatRevisionTimesByTextBookId(number, textBookId);
+	}
+
+	@Override
+	public List<Map<String,Object>> listBookPositionIds(Integer pageNumber, Integer pageSize, Integer state, String textBookIds, String bookName, Long materialId, String sessionId) {
+		// 验证用户
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		Material material = materialService.getMaterialById(materialId);
+		Integer power = getPower(materialId, pmphUser, material);
+		// 拼装复合参数
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("materialId", materialId); // 教材id
+
+		if (null != state && !state.equals(0)) {
+			map.put("state", state); // 书籍状态
+		}
+		String bookNameTemp = StringUtil.toAllCheck(bookName);
+		if (null != bookNameTemp) {
+			map.put("bookName", bookNameTemp); // 书籍名称
+		}
+		map.put("pmphUserId", pmphUser.getId()); // 用户id
+		PageParameter<Map<String, Object>> pageParameter = new PageParameter<Map<String, Object>>(pageNumber, pageSize,
+				map);
+		List<Map<String,Object>> rows = textbookDao.listBookPosition_up1_ids(pageParameter);
+		// 下面进行授权
+		for (Map<String,Object> row : rows) {
+			String rowpower = "000000";
+			if (power == 1 || power == 2) { // 管理员或者主任
+				rowpower = "11111111";
+			} else if (power == 3) { // 教材项目编辑
+				// 因为项目编辑的权限不是全部 ，因此要检查我是不是这本书的策划编辑，如果是 ，这本书我的权利就是项目编辑+策划编辑的权利
+				Integer tempProjectPermission = material.getProjectPermission();
+				if (null != row && null != row.get("planningEditor") && null != pmphUser.getId()
+						&& ((Long)(row.get("planningEditor"))).intValue() == pmphUser.getId().intValue()) { // 我又是策划编辑
+					tempProjectPermission = (tempProjectPermission | material.getPlanPermission());
+				}
+				rowpower = StringUtil.tentToBinary(tempProjectPermission);
+			} else if (power == 4) { // 教材策划编辑
+				rowpower = StringUtil.tentToBinary(material.getPlanPermission());
+			}
+			// 把权限拿出来一个个判断
+			// 分配策划编辑的权限
+			String s1 = rowpower.substring(0, 1);
+			String s2 = rowpower.substring(1, 2);
+			String s3 = rowpower.substring(2, 3);
+			String s4 = rowpower.substring(3, 4);
+			String s5 = rowpower.substring(4, 5);
+			String s6 = rowpower.substring(5, 6);
+			String s7 = rowpower.substring(6, 7);
+			String s8 = rowpower.substring(7, 8);// qiangzhijiesu
+			if (material.getIsForceEnd() || material.getIsAllTextbookPublished()) { // 教材结束或者强制结束
+				s2 = "0";
+				s3 = "0";
+				s4 = "0";
+				s5 = "0";
+				s6 = "0";
+			} else if ((boolean)row.get("isLocked") || (boolean)row.get("isPublished")) { // 书籍已经发布了或者确认了名单
+				s2 = (power == 1 || power == 2) ? s2 : "0";
+				s3 = (power == 1 || power == 2) ? s3 : "0";
+				s4 = (power == 1 || power == 2) ? s4 : "0";
+				s5 = "0";
+			}
+			rowpower = s1 + s2 + s3 + s4 + s5 + s6 + s7 + s8;
+			row.put("myPower",rowpower);
+		}
+
+		return rows;
 	}
 
 }

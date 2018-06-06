@@ -612,6 +612,50 @@
 			limit #{start},#{pageSize}
 		</if>
 	</select>
+	<!-- 职位遴选界面书籍分页列表 不分页 仅查id -->
+	<select id="listBookPosition_up1_ids" parameterType="PageParameter"
+			resultType="Map">
+		select
+		a.id textBookId
+		,a.planning_editor planningEditor
+		,a.is_locked isLocked
+		,a.is_published isPublished
+		from textbook a
+		LEFT JOIN material d on d.id =
+		a.material_id
+		where d.is_deleted =0 and d.is_published =1
+		and d.id =
+			#{parameter.materialId}
+		<if test="parameter.power == 4 and parameter.pmphUserId !=null ">
+		and a.planning_editor = #{parameter.pmphUserId}
+	</if>
+		<if test="parameter.state !=null ">
+			<if test="parameter.state == 1 ">
+				and a.is_locked = 0
+			</if>
+			<if test="parameter.state == 2 ">
+				and a.is_locked = 1
+			</if>
+			<if test="parameter.state == 3 ">
+				and a.is_published =1
+			</if>
+			<if test="parameter.state == 4 ">
+				and d.is_force_end =1
+			</if>
+		</if>
+		<if test="parameter.list !=null and  parameter.list.size() > 0 ">
+			and a.id in
+			<foreach collection="parameter.list" item="item" index="index"
+					 open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<if test="parameter.bookName !=null ">
+			and a.textbook_name like concat ('%',#{parameter.bookName},'%')
+		</if>
+		GROUP BY a.id ORDER BY a.sort
+	</select>
+
 	<!-- 根据书籍id查询textbook -->
 	<select id="getTextbooks" resultType="Textbook">
 		select * from textbook
