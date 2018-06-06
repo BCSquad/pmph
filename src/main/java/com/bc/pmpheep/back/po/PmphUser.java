@@ -104,6 +104,23 @@ public class PmphUser implements java.io.Serializable {
     }
 
     public PmphUser(String username, String password, Boolean isDisabled, String realname,
+                    Long departmentId, String handphone, String email, String avatar, String note, Integer sort,
+                    Boolean isDeleted) {
+        this.username = username;
+        this.password = password;
+        this.isDisabled = isDisabled;
+        this.realname = realname;
+        this.departmentId = departmentId;
+        this.handphone = handphone;
+        this.email = email;
+        this.avatar = avatar;
+        this.note = note;
+        this.sort = sort;
+        this.isDeleted = isDeleted;
+
+
+    }
+    public PmphUser(String username, String password, Boolean isDisabled, String realname,
     Long departmentId, String handphone, String email, String avatar, String note, Integer sort,
     Boolean isDeleted, Date gmtCreate, Date gmtUpdate, Short loginType) {
         this.username = username;
