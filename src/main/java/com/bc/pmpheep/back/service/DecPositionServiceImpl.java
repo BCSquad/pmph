@@ -939,7 +939,8 @@ public class DecPositionServiceImpl implements DecPositionService {
 
                     if (preset.getOrgId().equals(chosen.getOrgId())) {
                         delList.add(preset);
-                        chosen.setBookname(preset.getBookname());
+
+                        //chosen.setBookname(preset.getBookname());
                         if (StringUtil.isEmpty(chosen.getEditorList())) {
                             chosen.setEditorList("-");
                         }
