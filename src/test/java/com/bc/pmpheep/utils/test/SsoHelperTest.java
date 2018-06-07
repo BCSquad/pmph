@@ -1,6 +1,8 @@
 package com.bc.pmpheep.utils.test;
 
+import com.alibaba.fastjson.JSON;
 import com.bc.pmpheep.back.po.OrgUser;
+import com.bc.pmpheep.general.dto.SsoUser;
 import com.bc.pmpheep.test.BaseTest;
 import com.bc.pmpheep.utils.SsoHelper;
 import javax.annotation.Resource;
@@ -36,5 +38,11 @@ public class SsoHelperTest extends BaseTest {
     @Test
     public void resetPassword() {
         Assert.assertTrue("修改SSO用户密码失败", ssoHelper.resetPassword("gugia", "123123"));
+    }
+
+    @Test
+    public  void getUserInfo(){
+        System.out.println("111222"+JSON.toJSON(ssoHelper.getUserInfo("zhangyan","123456")));
+
     }
 }
