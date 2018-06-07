@@ -496,6 +496,14 @@ public class DeclarationServiceImpl implements DeclarationService {
 			// 发送系统消息
 			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), false, returnCause); 
 		}
+
+		//撤销某(人)申报表的所有遴选，dec_positiond的choosePosition设为0，dec_pisition_published相应删除
+		if(5 == onlineProgress.intValue()||4 == onlineProgress.intValue()||2 == onlineProgress.intValue()){
+			List<DecPosition> decPosition = decPositionDao.listDecPositions(id);
+			int dismissCount = decPositionDao.dismissPositionByDeclarationId(id);
+		}
+
+
 		return declarationCon;
 	}
 

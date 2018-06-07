@@ -578,4 +578,11 @@ public interface DecPositionDao {
     获取当前教材下的主编
      */
     List<Map<String,Object>> getIsZhuBian(@Param("materialId") Long materialId);
+
+    /**
+     * 撤销某(人)申报表的所有遴选，dec_positiond的choosePosition设为0，dec_pisition_published相应删除
+     * @param declarationId
+     * @return
+     */
+    int dismissPositionByDeclarationId(Long declarationId);
 }
