@@ -42,7 +42,7 @@ public class SsoHelperTest extends BaseTest {
 
     @Test
     public  void getUserInfo(){
-        System.out.println("111222"+JSON.toJSON(ssoHelper.getUserInfo("zhangyan","123456")));
+        System.out.println(JSON.toJSON(ssoHelper.getUserInfo("18301477677","123456")));
 
     }
 }
