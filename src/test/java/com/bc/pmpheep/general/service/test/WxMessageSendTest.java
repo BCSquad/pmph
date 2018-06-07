@@ -65,6 +65,12 @@ public class WxMessageSendTest extends BaseTest{
         }
 
     }
+    @Test
+    public void findUserTest(){
+        Map user = service.findUser("LiuXiaoKang");
+        System.out.println(JSON.toJSONString(user));
+
+    }
 
     @Test
     public void TestPP(){
