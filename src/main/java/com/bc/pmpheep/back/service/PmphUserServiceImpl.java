@@ -472,6 +472,35 @@ public class PmphUserServiceImpl implements PmphUserService {
         return user;
     }
 
+    /**
+     * 登录逻辑
+     *
+     * 1、先根据用户名查询用户对象
+     *
+     * 2、如果有用户对象，则继续匹配密码
+     *
+     * @param username
+     * @param password
+     * @return
+     */
+    @Override
+    public PmphUser login2(String username, String password) throws CheckedServiceException {
+        PmphUser user = pmphUserDao.getByUsernameAndPassword(username, password);
+        // 密码匹配的工作交给 Shiro 去完成
+        if (ObjectUtil.isNull(user)) {
+            // 因为缓存切面的原因,在这里就抛出用户名不存在的异常
+//            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+//                    CheckedExceptionResult.NULL_PARAM, "用户名或密码不正确！");
+        } else {
+            if (user.getIsDisabled()) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                        CheckedExceptionResult.ILLEGAL_PARAM,
+                        "用户已经被禁用，请联系管理员启用该账号");
+            }
+        }
+        return user;
+    }
+
     @Override
     public PmphUser login(String openid) throws CheckedServiceException {
         PmphUser user = pmphUserDao.getByOpenid(openid);

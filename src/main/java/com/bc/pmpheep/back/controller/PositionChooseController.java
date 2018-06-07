@@ -73,6 +73,33 @@ public class PositionChooseController {
 	}
 
 	/**
+	 * 功能描述： 初始化书籍职位列表时，同步查出所有页书籍主键
+	 *
+	 * @param pageNumber
+	 * @param pageSize
+	 * @param state
+	 * @param textBookIds
+	 * @param materialId
+	 * @param request
+	 * @return
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "加载书籍职位列表")
+	@RequestMapping(value = "/listAllIdList", method = RequestMethod.GET)
+	public ResponseBean listBookPosition_up_AllIdList(@RequestParam(value = "pageNumber", required = true) Integer pageNumber,
+							 @RequestParam(value = "pageSize", required = true) Integer pageSize,
+							 @RequestParam(value = "materialId", required = true) Long materialId,
+							 @RequestParam(value = "state", required = false) Integer state,
+							 @RequestParam(value = "textBookIds", required = false) String textBookIds, // [1,2,3,4,5]
+							 @RequestParam(value = "bookName", required = false) String bookName, // [1,2,3,4,5]
+							 HttpServletRequest request) {
+		String sessionId = CookiesUtil.getSessionId(request);
+		return new ResponseBean(textbookService.listBookPositionIds(pageNumber, pageSize, state, textBookIds, bookName,
+				materialId, sessionId));
+	}
+
+
+	/**
 	 * 功能描述：通过教材id 修改是否强制结束
 	 * 
 	 * @param materialId

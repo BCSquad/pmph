@@ -168,6 +168,15 @@ public interface PmphUserService {
      */
     PmphUser login(String username, String password) throws CheckedServiceException;
 
+    /**
+     * 登录逻辑 1、先根据用户名查询用户对象 2、如果有用户对象，则继续匹配密码
+     *
+     * @param username
+     * @param password
+     * @return
+     */
+    PmphUser login2(String username, String password) throws CheckedServiceException;
+
     PmphUser login(String openid) throws CheckedServiceException;
 
     int updateUserOpenid(String openid,String username);
