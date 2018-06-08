@@ -60,6 +60,7 @@ public class SsoHelper {
     volatile Boolean result;
     volatile String message = "";
     volatile SsoUser ssoUser;
+    volatile Map resultmap;
 
     @PostConstruct
     public void postConstruct() {
@@ -189,7 +190,7 @@ public class SsoHelper {
         return result;
     }
 
-    public SsoUser getUserInfo(String loginID, String password) {
+    public Map getUserInfo(String loginID, String password) {
         if (StringUtil.isEmpty(loginID) || StringUtil.isEmpty(password)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                     CheckedExceptionResult.NULL_PARAM, "查询SSO用户时用户名和密码均不能为空");
@@ -203,6 +204,7 @@ public class SsoHelper {
         request.setParams(map);
         result = null;
         ssoUser = null;
+        resultmap = new HashMap();
         Call<SsoResponse> call = ssoService.getUserInfo(request);
         call.enqueue(new Callback<SsoResponse>() {
             @Override
@@ -216,10 +218,12 @@ public class SsoHelper {
                     return;
                 }
                 if (null != response.body()) {
-                    SsoResponse<SsoUser> ssoResponse = response.body();
+                    //SsoResponse<SsoUser> ssoResponse = response.body();
+                    SsoResponse<Map> ssoResponse = response.body();
                     result = ssoResponse.getSuccess();
                     message = ssoResponse.getMessage();
-                    ssoUser = ssoResponse.getUserData();
+                    resultmap = ssoResponse.getUserData();
+                    //ssoUser = ssoResponse.getUserData();
                     logger.info("sso.success={}", result);
                     logger.info("sso.message={}", message);
                     logger.info("sso.userdata={}", gson.toJson(ssoResponse.getUserData()));
@@ -237,6 +241,7 @@ public class SsoHelper {
         });
         while (null == result) {
         }
-        return ssoUser;
+       // return ssoUser;
+        return resultmap;
     }
 }

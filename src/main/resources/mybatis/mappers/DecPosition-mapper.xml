@@ -432,6 +432,7 @@
 		dc.`org_id`= org.`id` and dc.`online_progress` > 0
 		WHERE
 		<!-- dc.`online_progress` != 0 AND -->
+		dc.online_progress = 3 and
 		dc.`is_staging`= FALSE
 		AND
 		dp.`textbook_id` = #{textbookId}
@@ -1333,5 +1334,11 @@
 		WHERE
 			d.material_id = #{materialId}
 	</select>
+
+	<!--撤销某(人)申报表的所有遴选，dec_positiond的choosePosition设为0，dec_pisition_published相应删除-->
+	<update id="dismissPositionByDeclarationId" parameterType="Long" >
+		update dec_position set chosen_position = 0 where declaration_id = #{declarationId} and chosen_position != 0;
+		delete from dec_position_published where declaration_id = #{declarationId};
+	</update>
 
 </mapper>

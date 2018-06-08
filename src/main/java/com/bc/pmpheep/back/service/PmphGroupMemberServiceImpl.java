@@ -625,9 +625,9 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 				if(null== member || member.getId() == null ) {
 					if(StringUtil.isEmpty(pmphGroupMember.getDisplayName())) {
 						if(isWriter) {
-							pmphGroupMember.setDisplayName(writerUserService.get(pmphGroupMember.getUserId()).getRealname());
+							pmphGroupMember.setDisplayName(StringUtil.isEmpty(writerUserService.get(pmphGroupMember.getUserId()).getRealname())?"":writerUserService.get(pmphGroupMember.getUserId()).getUsername());
 						}else {
-							pmphGroupMember.setDisplayName(pmphUserService.get(pmphGroupMember.getUserId()).getRealname());
+							pmphGroupMember.setDisplayName(StringUtil.isEmpty(pmphUserService.get(pmphGroupMember.getUserId()).getRealname())?"":pmphUserService.get(pmphGroupMember.getUserId()).getUsername());
 						}
 					}
 					pmphGroupMember.setGroupId(groupId);

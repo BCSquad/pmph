@@ -3,13 +3,17 @@ package com.bc.pmpheep.wechat.controller;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import com.alibaba.fastjson.JSON;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.util.*;
+import com.bc.pmpheep.utils.SsoHelper;
+import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +60,8 @@ public class WeChatLoginController {
     PmphUserWechatService pmphUserWechatService;
     @Autowired
     PmphRoleService       pmphRoleService;
+    @Resource
+    SsoHelper ssoHelper;
 
     /**
      * 
@@ -169,11 +175,13 @@ public class WeChatLoginController {
             try {
                 Principal principal = service.singleSignOn(request);
                 String userName =principal.getName();
+
                 assert userName != null;
                  pmphUser = pmphUserService.getPmphUserByUsername(userName);
+                 Map map = ssoHelper.getUserInfo(userName,"123456");
                 if (ObjectUtil.isNull(pmphUser)) {// 为空就新建一个用户
                     pmphUser =
-                            pmphUserService.add(new PmphUser(userName, "888888",false,"",0L,"","", "DEFAULT","",999,false));
+                            pmphUserService.add(new PmphUser(userName, "888888",false, MapUtils.getString(map,"RealName",""),0L, MapUtils.getString(map,"Mobile",""),MapUtils.getString(map,"Emial",""), "DEFAULT","",999,false));
                     pmphRoleService.addUserRole(pmphUser.getId(), 2L);// 添加默认权限
                 }
                  username = new DesRun(null, pmphUser.getUsername()).enpsw;
