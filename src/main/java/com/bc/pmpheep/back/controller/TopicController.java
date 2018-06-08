@@ -197,7 +197,7 @@ public class TopicController {
 			topic.setEditorId(editorId);
 			topic.setIsRejectedByEditor(false);
 			topic.setIsEditorHandling(true);
-			topic.setIsDirectorHandling(false);
+			//topic.setIsDirectorHandling(null);
 		}
 		return new ResponseBean(topicService.update(topicLog, sessionId, topic,openid));
 	}

@@ -661,10 +661,10 @@ public class ExcelHelper {
 							break;
 						}
 						case "学术专著": {
-							if(material.getIsMonographUsed()){
+							//if(material.getIsMonographUsed()){
 								List<DecMonograph> list = (List<DecMonograph>) field.get(object);
 								columnProperties = fillDecMonographData(list, row, columnProperties);
-							}
+							//}
 
 							break;
 						}
@@ -701,10 +701,10 @@ public class ExcelHelper {
 							break;
 						}
 						case "编写内容意向": {
-							if(material.getIsIntentionUsed()){
+							//if(material.getIsIntentionUsed()){
 								DecIntention decIntention = (DecIntention) field.get(object);
 								columnProperties = fillDecIntentionData(decIntention, row, columnProperties);
-							}
+							//}
 
 							break;
 						}
