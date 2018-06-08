@@ -218,10 +218,11 @@ public class SsoHelper {
                     return;
                 }
                 if (null != response.body()) {
-                    SsoResponse<SsoUser> ssoResponse = response.body();
+                    //SsoResponse<SsoUser> ssoResponse = response.body();
+                    SsoResponse<Map> ssoResponse = response.body();
                     result = ssoResponse.getSuccess();
                     message = ssoResponse.getMessage();
-                    resultmap = (Map) ssoResponse.getUserData();
+                    resultmap = ssoResponse.getUserData();
                     //ssoUser = ssoResponse.getUserData();
                     logger.info("sso.success={}", result);
                     logger.info("sso.message={}", message);
