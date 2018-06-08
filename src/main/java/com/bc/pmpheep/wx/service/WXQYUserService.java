@@ -45,17 +45,22 @@ public class WXQYUserService extends WXBaseService {
     public Map sendTextMessage(String hrefType,String hrefContentType,String touser,String toparty,String totag,String msgtype,String text,short safe,String paramUrl){
         Map<String,Object> map = new HashMap<String,Object>();
         if(!StringUtil.isEmpty(touser)){
-           touser = touser.replaceAll(",","|");
-           touser = touser.replaceAll("[\\[|\\]]","");
+           touser = touser.replaceAll("\\s+(?=,)|(?<=,)\\s+", "");//去掉 , 前后的空格
+           touser = touser.replaceAll(",","|"); // , 替换成 |
+           touser = touser.replaceAll("[\\[\\]]",""); //去掉[ 和 ]
+
         }
 
         if(!StringUtil.isEmpty(toparty)){
+            toparty = toparty.replaceAll("\\s+(?=,)|(?<=,)\\s+", "");
             toparty = toparty.replaceAll(",","|");
-            toparty = toparty.replaceAll("[\\[|\\]]","");
+            toparty = toparty.replaceAll("[\\[\\]]","");
         }
 
         if(!StringUtil.isEmpty(totag)){
+            totag = totag.replaceAll("\\s+(?=,)|(?<=,)\\s+", "");
             totag = totag.replaceAll(",","|");
+            totag = totag.replaceAll("[\\[\\]]","");
         }
         String url = WXURLUtil.SEND_MSG_URL.replaceAll("ACCESS_TOKEN",this.getAccessToken(false));
         map.put("url" ,url);
