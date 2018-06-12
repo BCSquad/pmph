@@ -103,7 +103,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 
 	@Override
 	public String updateBookById(Long[] ids, Long type, Boolean isOnSale, Boolean isNew, Boolean isPromote,
-			Long materialId, Boolean isKey) throws CheckedServiceException {
+			Long materialId, Boolean isKey,Boolean isStick) throws CheckedServiceException {
 		if (ArrayUtil.isEmpty(ids)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM, "id为空");
 		}
@@ -129,13 +129,15 @@ public class BookServiceImpl extends BaseService implements BookService {
 		}
 		String result = "FAIL";
 		for (Long id : ids) {
+			Book ob = bookDao.getBookById(id);
 			Book book = new Book();
 			book.setId(id);
 			book.setType(type);
-			book.setIsNew(isNew);
-			book.setIsKey(isKey);
+			book.setIsNew(isNew!=ob.getIsNew()?isNew:null); //新书 重点 等 只有修改时才改变排序 传入与数据库里一致时 应不传入update
+			book.setIsKey(isKey!=ob.getIsKey()?isKey:null);
+			book.setIsStick(isStick!=ob.getIsStick()?isStick:null);
 			book.setIsOnSale(isOnSale);
-			book.setIsPromote(isPromote);
+			book.setIsPromote(isPromote!=ob.getIsPromote()?isPromote:null);
 			book.setMaterialId(materialId);
 			bookDao.updateBook(book);
 		}
@@ -244,7 +246,6 @@ public class BookServiceImpl extends BaseService implements BookService {
 	 * 
 	 * 功能描述: 获取数据
 	 *
-	 * @param editNumbers
 	 * @param config
 	 * @return
 	 * @throws IOException
