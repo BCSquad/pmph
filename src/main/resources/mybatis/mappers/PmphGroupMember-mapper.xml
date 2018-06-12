@@ -45,7 +45,7 @@
 			<if test="isAdmin != null">
 				#{isAdmin},
 			</if>
-			<if test="displayName != null ">
+			<if test="displayName != null  and displayName !=''">
 				#{displayName},
 			</if>
 		</trim>
