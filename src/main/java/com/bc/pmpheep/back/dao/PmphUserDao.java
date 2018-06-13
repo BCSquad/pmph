@@ -213,7 +213,7 @@ public interface PmphUserDao {
      * @return PmphUser对象
      * </pre>
      */
-    PmphUser getPmphUserByUsername(String username);
+    PmphUser getPmphUserByUsername(@Param("username") String username, @Param("id") Long id);
 
     /**
      * 根据某人id查出其 本部门及上级各部门的某角色的用户

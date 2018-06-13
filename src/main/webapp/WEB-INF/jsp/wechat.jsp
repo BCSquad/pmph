@@ -144,13 +144,15 @@
                 }
 
             }else if((3 == '${isLogin}'||4 == '${isLogin}') && !Empty('${appType}')){ //从企业微信登录 app vue 如果找不到对应的参数则进入首页
-                      window.location.href='http://'+appLogin+'/wx/#index?sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
+                      window.location.href='http://'+appLogin+'/wx/#/index?sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
             }else if(0 == '${isLogin}'){
                 //alert(1);
-                window.location.href='http://'+pcLogin+'/#/login?wechatUserId='+'${UserId}';
+                //window.location.href='http://'+pcLogin+'/#/login?wechatUserId='+'${UserId}';
                 //window.location.href='http://120.76.221.250/#/login';
+                window.location.href='http://'+appLogin+'/wx/#/login?wechatUserId='+'${UserId}';  //这个地方应该跳转到app登录页面进行认证绑定
             }else if(1=='${isLogin}'){
-                window.location.href='http://'+pcLogin+'/#/login?username='+'${username}'+'&password='+'${password}'+'&wechatUserId='+'${UserId}'+'&token='+'${token}';
+                //window.location.href='http://'+pcLogin+'/#/login?username='+'${username}'+'&password='+'${password}'+'&wechatUserId='+'${UserId}'+'&token='+'${token}';
+                window.location.href='http://'+appLogin+'/wx/#/index?sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';// 这个地方应该直接跳转到app 首页
             }else if(2=='${isLogin}'){
                 //和vue 同步 解决单点登录一闪的问题 、sessionStorage是Html5的特性,IE7以下浏览器不支持
                 //window.location.href='http://192.168.100.135/#/login?username='+'${username}'+'&password='+'${password}'+'&token='+'${token}'+'&wechatUserId='+'${UserId}';

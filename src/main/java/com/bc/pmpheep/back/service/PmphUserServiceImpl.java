@@ -997,12 +997,12 @@ public class PmphUserServiceImpl implements PmphUserService {
     }
 
     @Override
-    public PmphUser getPmphUserByUsername(String username) throws CheckedServiceException {
+    public PmphUser getPmphUserByUsername(String username,Long id) throws CheckedServiceException {
         if (StringUtil.isEmpty(username)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户名为空！");
         }
-        return pmphUserDao.getPmphUserByUsername(username);
+        return pmphUserDao.getPmphUserByUsername(username,id);
     }
 
     @Override

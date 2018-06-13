@@ -317,7 +317,7 @@ public interface PmphUserService {
      * @return PmphUser对象
      * </pre>
      */
-    PmphUser getPmphUserByUsername(String username) throws CheckedServiceException;
+    PmphUser getPmphUserByUsername(String username,Long id) throws CheckedServiceException;
 
     /**
      * 更新部门
