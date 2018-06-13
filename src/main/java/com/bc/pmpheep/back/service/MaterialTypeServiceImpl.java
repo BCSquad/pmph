@@ -124,7 +124,7 @@ public class MaterialTypeServiceImpl extends BaseService implements MaterialType
 	 * 
 	 * 功能描述：使用递归的方法将书籍类别转化为树状图 使用示范：
 	 *
-	 * @param departmentVO
+	 * @param materialTypeVO
 	 *            ids (为后面删除做准备) 父级部门
 	 */
 	private void recursionMaterialTypeVO(MaterialTypeVO materialTypeVO, List<Long> ids) {

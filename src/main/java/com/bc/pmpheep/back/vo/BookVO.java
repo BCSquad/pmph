@@ -64,6 +64,8 @@ public class BookVO implements Serializable {
 	 */
 	private Integer sortKey;
 
+	private Boolean isStick;
+
 	public Long getId() {
 		return id;
 	}
@@ -176,4 +178,11 @@ public class BookVO implements Serializable {
 		this.sortKey = sortKey;
 	}
 
+	public Boolean getStick() {
+		return isStick;
+	}
+
+	public void setStick(Boolean stick) {
+		isStick = stick;
+	}
 }
