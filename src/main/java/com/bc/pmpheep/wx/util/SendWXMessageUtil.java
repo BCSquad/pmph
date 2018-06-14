@@ -1,13 +1,16 @@
 package com.bc.pmpheep.wx.util;
 
 import com.alibaba.fastjson.JSON;
+import com.bc.pmpheep.back.service.WxSendMessageService;
 import com.bc.pmpheep.back.util.HttpUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.wechat.util.WXURLUtil;
+import com.bc.pmpheep.back.dao.SendWxMessageDao;
 import org.apache.commons.collections.MapUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,6 +32,8 @@ import java.util.Properties;
  * Created by cyx  on 2018/5/24
  */
 public class SendWXMessageUtil {
+
+
 
     /**
      * 发送文本消息
@@ -67,6 +72,7 @@ public class SendWXMessageUtil {
         content = content + String.format(SendWXMessageUtil.getHrefType(MapUtils.getString(params,"hrefType",""))
                 ,MapUtils.getString(params,"paramUrl","")
                 ,SendWXMessageUtil.getHrefContent(MapUtils.getString(params,"hrefContentType","")));
+
         map.put("content",content);
         params.put("text",map);
         params.put("agentid",Integer.parseInt(params.get("agentid").toString()));
@@ -74,7 +80,24 @@ public class SendWXMessageUtil {
         String url = params.get("url").toString();
         params.remove("url");
         String responseContent = HttpUtil.doPost(url, JSON.toJSON(params));
-        Map backResult = JSON.parseObject(responseContent, Map.class);
+        Map backResult = new HashMap();
+        Properties pp = new Properties();
+        String isNeedSendMessage = "";
+        InputStream fis  = SendWXMessageUtil.class.getClassLoader().getResourceAsStream("pmphapi-config.properties");
+        try {
+            pp.load(fis);
+            isNeedSendMessage =pp.getProperty("isNeedSendMessage").toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if("true".equals(isNeedSendMessage)){
+            backResult = JSON.parseObject(responseContent, Map.class);
+        }else{ //消息已经记录，但是不给客户的企业微信发送消息(客户现在不想企业微信收到消息)
+            backResult.put("errcode","0");
+            backResult.put("errmsg","ok");
+            backResult.put("invaliduser","");
+        }
+
         return backResult;
     }
 

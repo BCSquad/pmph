@@ -2,6 +2,7 @@ package com.bc.pmpheep.wx.service;
 
 
 import com.alibaba.fastjson.JSON;
+import com.bc.pmpheep.back.service.WxSendMessageService;
 import com.bc.pmpheep.back.util.HttpUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
@@ -16,9 +17,11 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.security.MessageDigest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,6 +32,8 @@ public class WXQYUserService extends WXBaseService {
     static final String URL_USER_GET = "https://qyapi.weixin.qq.com/cgi-bin/user/get?access_token=%s&userid=%s";
     static final String URL_USERINFO_GET = "https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo?access_token=%s&code=%s&agentid=%s";
 
+    @Autowired
+    WxSendMessageService wxSendMessageService;
 
     /**
      * @param hrefType 超链接类型 0 没有超链接 1 前台app 超链接 2 后台app超链接
@@ -74,7 +79,15 @@ public class WXQYUserService extends WXBaseService {
         map.put("hrefContentType" ,hrefContentType);
         map.put("content" ,text);
         map.put("safe" ,safe);
+//        String msgdbtype = "1".equals(MapUtils.getString(map,"hrefContentType",""))?"0":"1";
+//        map.put("msgdbtype",msgdbtype);
+//        wxSendMessageService.insertMessage(map);
+//        map.remove("msgdbType");
         return SendWXMessageUtil.sendWxTextMessage(map);
+    }
+
+    public Integer batchInsertWxMessage(String content,int msgdbtype,List<Long> useridList){
+       return  wxSendMessageService.batchInsertWxMessage(content,msgdbtype,useridList);
     }
 
 

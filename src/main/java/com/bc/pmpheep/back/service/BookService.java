@@ -115,7 +115,7 @@ public interface BookService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	String updateBookById(Long[] ids, Long type, Boolean isOnSale, Boolean isNew, Boolean isPromote, Long materialId,Boolean isKey)
+	String updateBookById(Long[] ids, Long type, Boolean isOnSale, Boolean isNew, Boolean isPromote, Long materialId,Boolean isKey,Boolean isStick)
 			throws CheckedServiceException;
 
 	/**

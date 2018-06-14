@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by cyx  on 2018/5/24
@@ -83,6 +85,15 @@ public class WxMessageSendTest extends BaseTest{
             e.printStackTrace();
         }
 
+    }
+    @Test
+    public void testRex(){
+        Pattern pattern_theSpaceBeSideComma= Pattern.compile("\\s+(?=,)|(?<=,)\\s+");
+        Matcher m = pattern_theSpaceBeSideComma.matcher("a bc ,  |d  f  g");
+        String t = " a bc ,  | d  f  g ";
+        String re = t.replaceAll("\\s+(?=,)|(?<=,)\\s+", "");
+        System.out.println("result:"+m.replaceAll(""));
+        System.out.println("re="+re);
     }
 
 }

@@ -2,6 +2,7 @@ package com.bc.pmpheep.wechat.controller;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -103,7 +104,7 @@ public class WeChatLoginController {
                 if (ObjectUtil.isNull(pmphUserWechat)) {
                     model.addAttribute("isLogin", "0");
                 } else {
-                    pmphUser = pmphUserService.getPmphUserByUsername(pmphUserWechat.getUsername());
+                    pmphUser = pmphUserService.getPmphUserByUsername(pmphUserWechat.getUsername(),pmphUserWechat.getUserid());
                     if (ObjectUtil.notNull(pmphUser)) {
                         username = new DesRun(null, pmphUserWechat.getUsername()).enpsw;
                         password = pmphUser.getPassword();
@@ -139,7 +140,7 @@ public class WeChatLoginController {
                         model.addAttribute("isLogin", "3");
                     }
                 } else {
-                    pmphUser = pmphUserService.getPmphUserByUsername(pmphUserWechat.getUsername());
+                    pmphUser = pmphUserService.getPmphUserByUsername(pmphUserWechat.getUsername(),pmphUserWechat.getUserid());
                     if (ObjectUtil.notNull(pmphUser)) {
                         username = new DesRun(null, pmphUserWechat.getUsername()).enpsw;
                         password = pmphUser.getPassword();
@@ -177,8 +178,9 @@ public class WeChatLoginController {
                 String userName =principal.getName();
 
                 assert userName != null;
-                 pmphUser = pmphUserService.getPmphUserByUsername(userName);
-                 Map map = ssoHelper.getUserInfo(userName,"123456");
+                 pmphUser = pmphUserService.getPmphUserByUsername(userName,null);
+                // Map map = ssoHelper.getUserInfo(userName,"123456");
+                Map map = new HashMap(); // 预留
                 if (ObjectUtil.isNull(pmphUser)) {// 为空就新建一个用户
                     pmphUser =
                             pmphUserService.add(new PmphUser(userName, "888888",false, MapUtils.getString(map,"RealName",""),0L, MapUtils.getString(map,"Mobile",""),MapUtils.getString(map,"Emial",""), "DEFAULT","",999,false));

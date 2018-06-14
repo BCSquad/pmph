@@ -25,6 +25,11 @@ public class PmphUserWechat implements Serializable {
     private String            wechatId;
 
     /**
+     * 用户id
+     */
+    private Long userid;
+
+    /**
      * @return the id
      */
     public Long getId() {
@@ -104,4 +109,11 @@ public class PmphUserWechat implements Serializable {
                + "]";
     }
 
+    public Long getUserid() {
+        return userid;
+    }
+
+    public void setUserid(Long userid) {
+        this.userid = userid;
+    }
 }

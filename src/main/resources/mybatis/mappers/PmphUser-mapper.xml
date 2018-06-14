@@ -266,8 +266,12 @@
 
 	<!-- 根据username查询PmphUser对象 -->
 	<select id="getPmphUserByUsername" resultType="PmphUser"
-		parameterType="java.lang.String">
-		SELECT * FROM pmph_user WHERE username = #{username}
+		parameterType="map">
+		SELECT * FROM pmph_user WHERE
+		1=1
+		<if test="username != null and username != '' "> and username = #{username}</if>
+		<if test="id != null and id != '' "> and id = #{id}</if>
+
 	</select>
 
 	<select id="getByUsernameAndPassword" resultType="PmphUser"

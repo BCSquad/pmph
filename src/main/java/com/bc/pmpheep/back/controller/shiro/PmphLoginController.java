@@ -145,9 +145,21 @@ public class PmphLoginController {
         }
 
         PmphUser pmphUser = null;
-        if (StringUtil.notEmpty(wechatUserId) && !"sso".equals(wechatUserId)) {
+        if (StringUtil.notEmpty(wechatUserId) && !"sso".equals(wechatUserId)) { //由个人微信我的企业号 登录过来
             if (StringUtil.notEmpty(username)) {//用户绑定
-                pmphUser = pmphUserService.login(username, null);
+                // 如果是微信登录过来 且wechatUserId 与 username 同时不为空，此时 维护 pmph_user_wechat 表
+                PmphUserWechat pmphUserWechat = new PmphUserWechat();
+                pmphUserWechat.setUsername(username);
+                pmphUserWechat.setWechatId(wechatUserId);
+
+                if (StringUtil.isEmpty(username) || StringUtil.isEmpty(password)) {
+                    throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                            CheckedExceptionResult.NULL_PARAM, "请输入用户名和密码!");
+                }
+                pmphUser = pmphUserService.login(username, new DesRun("", password).enpsw);
+                pmphUserWechat.setUserid(pmphUser.getId());
+                pmphUserWechatService.add(pmphUserWechat); //微信绑定
+                //pmphUser = pmphUserService.login(username, null);
             } else {//已经绑定
                 pmphUser = pmphUserService.login(wechatUserId);
                 username = "";
