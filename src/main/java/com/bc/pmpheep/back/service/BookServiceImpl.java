@@ -100,7 +100,70 @@ public class BookServiceImpl extends BaseService implements BookService {
 		pageResult.setTotal(total);
 		return pageResult;
 	}
+	@Override
+	public PageResult<BookVO> recommendlist(PageParameter<BookVO> pageParameter) throws CheckedServiceException {
+		if (ObjectUtil.isNull(pageParameter.getParameter())) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		if(ObjectUtil.isNull(pageParameter.getParameter().getId())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
 
+		int total = bookDao.recommendTotal(pageParameter);
+		PageResult<BookVO> pageResult = new PageResult<>();
+		if (total > 0) {
+			PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+			pageResult.setRows(bookDao.recommendlist(pageParameter));
+		}
+		pageResult.setTotal(total);
+		return pageResult;
+	}
+
+	@Override
+	public Boolean recommendcheck(Long currentBookId,int selectType,Long recommendBookId,
+								  Boolean ischeckteachbook,Boolean ischeckxgcommend,
+								  Boolean ischeckrwcommend) throws CheckedServiceException {
+
+		if (ObjectUtil.isNull(currentBookId)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		if (ObjectUtil.isNull(selectType)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		if (ObjectUtil.isNull(recommendBookId)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		if (ObjectUtil.isNull(ischeckteachbook)&&ObjectUtil.isNull(ischeckxgcommend)&&ObjectUtil.isNull(ischeckrwcommend)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		Boolean returnZt = false;
+		switch (selectType) {
+			case 1:
+				returnZt = ischeckteachbook; break;
+
+			case 2:
+				returnZt = ischeckxgcommend; break;
+			case 3:
+				returnZt = ischeckrwcommend; break;
+		}
+		if(returnZt){
+			//数据库中是否存在关系 如果存在 就不用插入，如果不存在就插入
+			Boolean isExisting = bookDao.recommendisExist(currentBookId, selectType, recommendBookId);
+			if(!isExisting){
+				bookDao.insertrecommend(currentBookId, selectType, recommendBookId);
+			}
+		}else{
+			//取消 书籍之间的关系 删除 关系
+			Boolean isExisting = bookDao.recommendisExist(currentBookId, selectType, recommendBookId);
+			if(isExisting){
+				bookDao.deleterecommend(currentBookId, selectType, recommendBookId);
+			}
+		}
+
+
+		return returnZt;
+
+	}
 	@Override
 	public String updateBookById(Long[] ids, Long type, Boolean isOnSale, Boolean isNew, Boolean isPromote,
 			Long materialId, Boolean isKey,Boolean isStick) throws CheckedServiceException {

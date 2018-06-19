@@ -239,4 +239,33 @@ public interface BookDao {
 	 *
 	 */
 	void deleted();
+
+    List<BookVO> recommendlist(PageParameter<BookVO> pageParameter);
+
+	int recommendTotal(PageParameter<BookVO> pageParameter);
+
+	/**
+	 * 查询书籍是否存在关系
+	 * @param currentBookId
+	 * @param selectType
+	 * @param recommendBookId
+	 * @return
+	 */
+	Boolean recommendisExist(@Param("currentBookId") Long currentBookId,@Param("selectType") int selectType,@Param("recommendBookId") Long recommendBookId);
+
+	/**
+	 * 插入书籍关系
+	 * @param currentBookId
+	 * @param selectType
+	 * @param recommendBookId
+	 */
+	void insertrecommend(@Param("currentBookId") Long currentBookId,@Param("selectType") int selectType,@Param("recommendBookId") Long recommendBookId);
+
+	/**
+	 * 删除书籍关系
+	 * @param currentBookId
+	 * @param selectType
+	 * @param recommendBookId
+	 */
+	void deleterecommend(@Param("currentBookId") Long currentBookId,@Param("selectType") int selectType,@Param("recommendBookId") Long recommendBookId);
 }
