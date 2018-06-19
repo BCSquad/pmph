@@ -55,7 +55,7 @@ public interface TopicService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	String update(TopicLog topicLog, String sessionId, Topic topic,String userId) throws CheckedServiceException;
+	String update(TopicLog topicLog, String sessionId, Topic topic,String openId,Long adminId) throws CheckedServiceException;
 
 	/**
 	 * 

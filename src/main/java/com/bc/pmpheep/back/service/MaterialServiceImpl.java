@@ -108,6 +108,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 
 	@Autowired
 	WXQYUserService wxqyUserService;
+	@Autowired
+	WxSendMessageService wxSendMessageService;
+
 
 	/**
 	 * 
@@ -129,6 +132,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			boolean isUpdate) throws CheckedServiceException, IOException {
 		//企业微信推送对象的微信id集合
 		Set<String> touserOpenidSet = new HashSet<String>();
+		List<Long> useridList = new ArrayList<Long>();
 		if (null == request.getSession(false)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
 					"会话过期");
@@ -401,6 +405,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			PmphUser projectEditorUser = pmphUserService.get(materialProjectEditorVO.getEditorId());
 			//项目编辑加入企业微信推送对象集合
 			touserOpenidSet.add(projectEditorUser.getOpenid());
+			useridList.add(projectEditorUser.getId());
 			projectEditorNamesStr += materialProjectEditorVO.getRealname()+",";
 			// // 项目编辑绑定角色
 			// String rolename="项目编辑";//通过roleName查询roleid
@@ -528,7 +533,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			Set<String> touserIdSet = new HashSet<String>();
 			//主任加入企业微信推送对象集合
 			touserOpenidSet.add(director.getOpenid());
-			;
+			useridList.add(director.getId());
 			projectEditorNamesStr = projectEditorNamesStr.substring(0, projectEditorNamesStr.lastIndexOf(",") > 0 ? projectEditorNamesStr.lastIndexOf(",") : projectEditorNamesStr.length());
 			contactUserNamesStr = contactUserNamesStr.substring(0, contactUserNamesStr.lastIndexOf(",") > 0 ? contactUserNamesStr.lastIndexOf(",") : contactUserNamesStr.length());
 			String msg1 = director.getRealname() + "已被选为“" + material.getMaterialName() + "”的主任。";
@@ -536,17 +541,15 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			String msg3 = contactUserNamesStr + "已被选为“" + material.getMaterialName() + "”的联系人。";
 			touserOpenidSet.remove(null);
 			touser = touserOpenidSet.toString();
-			/*for (String t: touserOpenidSet) {
-				wxqyUserService.sendTextMessage("0", "0", t, "", "", "text", msg1, (short) 0,"");
-				wxqyUserService.sendTextMessage("0", "0", t, "", "", "text", msg2, (short) 0,"");
-				wxqyUserService.sendTextMessage("0", "0", t, "", "", "text", msg3, (short) 0,"");
 
-			}*/
 			if (touserOpenidSet.size() > 0) {
 				wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg1, (short) 0,"");
 				wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg2, (short) 0,"");
 				wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg3, (short) 0,"");
 			}
+			wxSendMessageService.batchInsertWxMessage(msg1,0,useridList,"0","0","");
+			wxSendMessageService.batchInsertWxMessage(msg2,0,useridList,"0","0","");
+			wxSendMessageService.batchInsertWxMessage(msg3,0,useridList,"0","0","");
 		}
 
 

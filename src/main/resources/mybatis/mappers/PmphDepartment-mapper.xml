@@ -172,6 +172,7 @@
 		d.id,
 		d.dp_name,
 		t.realname,
+		t.id adminId,
 		t.openid
 		FROM
 		pmph_department d
@@ -179,7 +180,8 @@
 		SELECT
 		u.department_id,
 		u.realname,
-		u.openid
+		u.openid,
+		u.id
 		FROM
 		pmph_user u
 		WHERE

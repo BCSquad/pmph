@@ -37,11 +37,16 @@ public class DepartmentOptsVO implements Serializable {
 	private String realname;
 
 	/**
-	 * 主任id
+	 * 主任企业微信id
 	 *
 	 * @return
 	 */
 	private String openid;
+
+	/**
+	 * 主任社内用户id
+	 */
+	private Long adminId;
 
 	public Long getId() {
 		return id;
@@ -74,6 +79,14 @@ public class DepartmentOptsVO implements Serializable {
 
 	public void setOpenid(String openid) {
 		this.openid = openid;
+	}
+
+	public Long getAdminId() {
+		return adminId;
+	}
+
+	public void setAdminId(Long adminId) {
+		this.adminId = adminId;
 	}
 }
 

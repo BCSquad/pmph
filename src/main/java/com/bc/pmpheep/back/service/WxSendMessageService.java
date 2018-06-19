@@ -10,5 +10,5 @@ public interface WxSendMessageService {
 
     public Integer insertMessage(Map<String, Object> map);
 
-    Integer batchInsertWxMessage(String content, int msgdbtype, List<Long> useridList);
+    Integer batchInsertWxMessage(String content, int msgdbtype, List<Long> useridList,String hrefType,String hrefContentType,String paramUrl);
 }

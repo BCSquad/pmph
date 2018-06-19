@@ -2,6 +2,8 @@ package com.bc.pmpheep.wx.service;
 
 
 import com.alibaba.fastjson.JSON;
+import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.service.PmphUserService;
 import com.bc.pmpheep.back.service.WxSendMessageService;
 import com.bc.pmpheep.back.util.HttpUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
@@ -20,6 +22,7 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.security.MessageDigest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +37,9 @@ public class WXQYUserService extends WXBaseService {
 
     @Autowired
     WxSendMessageService wxSendMessageService;
+
+    @Autowired
+    PmphUserService pmphUserService;
 
     /**
      * @param hrefType 超链接类型 0 没有超链接 1 前台app 超链接 2 后台app超链接
@@ -86,8 +92,8 @@ public class WXQYUserService extends WXBaseService {
         return SendWXMessageUtil.sendWxTextMessage(map);
     }
 
-    public Integer batchInsertWxMessage(String content,int msgdbtype,List<Long> useridList){
-       return  wxSendMessageService.batchInsertWxMessage(content,msgdbtype,useridList);
+    public Integer batchInsertWxMessage(String content,int msgdbtype,List<Long> useridList,String hrefType,String hrefContentType,String paramUrl){
+       return  wxSendMessageService.batchInsertWxMessage(content,msgdbtype,useridList,hrefType,hrefContentType,paramUrl);
     }
 
 

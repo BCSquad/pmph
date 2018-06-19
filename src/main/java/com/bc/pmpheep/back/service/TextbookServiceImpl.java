@@ -118,6 +118,9 @@ public class TextbookServiceImpl implements TextbookService {
 
 	@Autowired
 	WXQYUserService wxqyUserService;
+
+	@Autowired
+	WxSendMessageService wxSendMessageService;
 	
 	/**
 	 *
@@ -513,12 +516,14 @@ public class TextbookServiceImpl implements TextbookService {
 		// }
 
 		String touser = "";
+		List<Long> useridList = new ArrayList<Long>();
 		String msg = "";
 		if (!ObjectUtil.isNull(textbook.getPlanningEditor())){
 			Long planningEditorId = textbook.getPlanningEditor();
 			Long textbookId = textbook.getId();
 			PmphUser planningEditor = pmphUserService.get(planningEditorId);
 			touser = planningEditor.getOpenid();
+			useridList.add(planningEditor.getId());
 			Textbook originalTextbook = textbookService.getTextbookById(textbookId);
 			String materialName = materialService.getMaterialNameById(originalTextbook.getMaterialId());
 			//***（策划编辑人名[多个逗号隔开]）已被为《***》（教材名称）的策划编辑
@@ -526,6 +531,7 @@ public class TextbookServiceImpl implements TextbookService {
 			if (StringUtil.notEmpty(touser)){
 				wxqyUserService.sendTextMessage("0","0",touser,"","","text",msg,(short)0,"");
 			}
+			wxSendMessageService.batchInsertWxMessage(msg,0,useridList,"0","0","");
 		}
 
 		return textbookDao.updateTextbook(textbook);
@@ -749,6 +755,7 @@ public class TextbookServiceImpl implements TextbookService {
                 String touser = "";
                 Set<String> touserIdSet = new HashSet<String>();
                 Set<String> touserOpenidSet = new HashSet<String>();
+                List<Long> useridList = new ArrayList<Long>();
                 //策划编辑
 				if(textbook.getPlanningEditor()!=null){
 					touserIdSet.add(String.valueOf(textbook.getPlanningEditor()));
@@ -769,6 +776,7 @@ public class TextbookServiceImpl implements TextbookService {
                     PmphUser pu = pmphUserService.get(Long.parseLong(id));
                     if (StringUtil.notEmpty(pu.getOpenid())) {
                         touserOpenidSet.add(pu.getOpenid());
+						useridList.add(pu.getId());
                     }
                 }
 				touserOpenidSet.remove(null);
@@ -776,13 +784,11 @@ public class TextbookServiceImpl implements TextbookService {
                 // 推送内容： ***（名单确人名）进行了《***》的***（操作）
                 msg = pmphUser.getRealname() + "进行了“" + materialVo.getMaterial().getMaterialName() + "”-《" + textbook.getTextbookName() + "》的"+operateText;
 
-				/*for (String t: touserOpenidSet) {
-					wxqyUserService.sendTextMessage("0", "0", t, "", "", "text", msg, (short) 0,"");
 
-				}*/
                 if (touserOpenidSet.size()>0) {
                     wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg, (short) 0,"");
                 }
+				wxSendMessageService.batchInsertWxMessage(msg,0,useridList,"0","0","");
 
             }
         }

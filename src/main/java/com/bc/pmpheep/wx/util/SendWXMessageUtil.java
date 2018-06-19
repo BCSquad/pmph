@@ -79,7 +79,7 @@ public class SendWXMessageUtil {
         params.remove("content");
         String url = params.get("url").toString();
         params.remove("url");
-        String responseContent = HttpUtil.doPost(url, JSON.toJSON(params));
+        String responseContent = "";
         Map backResult = new HashMap();
         Properties pp = new Properties();
         String isNeedSendMessage = "";
@@ -91,6 +91,7 @@ public class SendWXMessageUtil {
             e.printStackTrace();
         }
         if("true".equals(isNeedSendMessage)){
+            responseContent= HttpUtil.doPost(url, JSON.toJSON(params));
             backResult = JSON.parseObject(responseContent, Map.class);
         }else{ //消息已经记录，但是不给客户的企业微信发送消息(客户现在不想企业微信收到消息)
             backResult.put("errcode","0");
