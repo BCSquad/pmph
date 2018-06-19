@@ -16,6 +16,9 @@ import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.vo.BookVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Controller
 @RequestMapping(value = "/books")
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -67,6 +70,48 @@ public class BookController {
 		bookVO.setIsPromote(isPromote);
 		pageParameter.setParameter(bookVO);
 		return new ResponseBean(bookService.listBookVO(pageParameter));
+	}
+
+	/**
+	 * 功能描述: 初始化/条件查询推荐书籍信息
+	 * @param recommendPageSize
+	 * @param recommendPageNumber
+	 * @param currentBookId
+	 * @param ischeckteachbook
+	 * @param ischeckxgcommend
+	 * @param ischeckrwcommend
+	 * @param name
+	 * @return
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "初始化/条件查询推荐书籍信息")
+	@RequestMapping(value = "/recommendlist", method = RequestMethod.GET)
+	public ResponseBean recommendlist(Integer recommendPageSize, Integer recommendPageNumber, Long currentBookId,Boolean ischeckteachbook,Boolean ischeckxgcommend,Boolean ischeckrwcommend,String name) {
+		PageParameter<BookVO> pageParameter = new PageParameter<>(recommendPageNumber, recommendPageSize);
+		BookVO bookVO = new BookVO();
+		bookVO.setName(name);
+		bookVO.setId(currentBookId);
+		bookVO.setIscheckteachbook(ischeckteachbook);
+		bookVO.setIscheckrwcommend(ischeckrwcommend);
+		bookVO.setIscheckxgcommend(ischeckxgcommend);
+		pageParameter.setParameter(bookVO);
+		return new ResponseBean(bookService.recommendlist(pageParameter));
+	}
+	/**
+	 * 功能描述: 初始化/条件查询推荐书籍信息
+	 * @param currentBookId
+	 * @param ischeckteachbook
+	 * @param ischeckxgcommend
+	 * @param ischeckrwcommend
+	 * @return
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "初始化/条件查询推荐书籍信息")
+	@RequestMapping(value = "/recommendcheck", method = RequestMethod.GET)
+	public ResponseBean recommendcheck(Long currentBookId,int selectType,Long recommendBookId,Boolean ischeckteachbook,Boolean ischeckxgcommend,Boolean ischeckrwcommend) {
+
+
+		return new ResponseBean(bookService.recommendcheck( currentBookId, selectType, recommendBookId, ischeckteachbook, ischeckxgcommend, ischeckrwcommend));
 	}
 
 	/**

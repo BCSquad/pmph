@@ -66,6 +66,12 @@ public class BookVO implements Serializable {
 
 	private Boolean isStick;
 
+	private Boolean ischeckteachbook;
+
+	private Boolean ischeckxgcommend;
+
+	private Boolean ischeckrwcommend;
+
 	public Long getId() {
 		return id;
 	}
@@ -184,5 +190,29 @@ public class BookVO implements Serializable {
 
 	public void setStick(Boolean stick) {
 		isStick = stick;
+	}
+
+	public Boolean getIscheckteachbook() {
+		return ischeckteachbook;
+	}
+
+	public void setIscheckteachbook(Boolean ischeckteachbook) {
+		this.ischeckteachbook = ischeckteachbook;
+	}
+
+	public Boolean getIscheckxgcommend() {
+		return ischeckxgcommend;
+	}
+
+	public void setIscheckxgcommend(Boolean ischeckxgcommend) {
+		this.ischeckxgcommend = ischeckxgcommend;
+	}
+
+	public Boolean getIscheckrwcommend() {
+		return ischeckrwcommend;
+	}
+
+	public void setIscheckrwcommend(Boolean ischeckrwcommend) {
+		this.ischeckrwcommend = ischeckrwcommend;
 	}
 }

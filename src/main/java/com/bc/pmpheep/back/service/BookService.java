@@ -12,6 +12,8 @@ import com.bc.pmpheep.back.vo.BookPreferenceAnalysisVO;
 import com.bc.pmpheep.back.vo.BookVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
+import java.util.Map;
+
 public interface BookService {
 
 	/**
@@ -186,4 +188,13 @@ public interface BookService {
 	 * @throws CheckedServiceException
 	 */
 	String bookExcel(MultipartFile file) throws CheckedServiceException;
+
+	/**
+	 *  推荐图书 查询
+	 * @param pageParameter
+	 * @return
+	 */
+	PageResult<BookVO> recommendlist(PageParameter<BookVO> pageParameter);
+
+    Boolean recommendcheck(Long currentBookId,int selectType,Long recommendBookId,Boolean ischeckteachbook,Boolean ischeckxgcommend,Boolean ischeckrwcommend);
 }
