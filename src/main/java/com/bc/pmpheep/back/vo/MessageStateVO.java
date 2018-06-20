@@ -33,6 +33,8 @@ public class MessageStateVO implements Serializable {
 	private Timestamp reciveTime;
 	// 接收人
 	private String name;
+	//接收人的账号
+	private String username;
 	// 接收人单位
 	private String dptname;
 	// 接收人电话
@@ -168,4 +170,11 @@ public class MessageStateVO implements Serializable {
 				+ ", count:" + count + "}";
 	}
 
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
 }

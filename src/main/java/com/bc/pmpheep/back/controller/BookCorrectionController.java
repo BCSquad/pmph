@@ -1,7 +1,20 @@
 package com.bc.pmpheep.back.controller;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import com.bc.pmpheep.back.po.Material;
+import com.bc.pmpheep.back.po.Textbook;
+import com.bc.pmpheep.back.vo.BookFeedBack;
+import com.bc.pmpheep.general.controller.FileDownLoadController;
+import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
+import com.bc.pmpheep.service.exception.CheckedExceptionResult;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
+import com.bc.pmpheep.utils.ExcelHelper;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +26,9 @@ import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.service.BookCorrectionService;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
+import java.io.OutputStream;
+import java.util.List;
+
 @Controller
 @RequestMapping(value = "/bookCorrection")
 @SuppressWarnings({"rawtypes","unchecked"})
@@ -20,6 +36,9 @@ public class BookCorrectionController {
 
 	@Autowired
 	BookCorrectionService bookCorrectionService;
+	@Resource
+	ExcelHelper excelHelper;
+	Logger logger = LoggerFactory.getLogger(BookCorrectionController.class);
 	// 当前业务类型
 	private static final String BUSSINESS_TYPE = "图书纠错";
 
@@ -64,7 +83,9 @@ public class BookCorrectionController {
 							 @RequestParam(value = "result",     required = false)	Boolean result) {
 		return new ResponseBean(bookCorrectionService.bookFeedBaskList(request,pageNumber,pageSize,result));
 	}
-	
+
+
+
 	/**
 	 * 根据id获取审核详情
 	 * @introduction 

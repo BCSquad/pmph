@@ -9,6 +9,8 @@ import com.bc.pmpheep.back.vo.BookCorrectionTrackVO;
 import com.bc.pmpheep.back.vo.BookFeedBack;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
+import java.util.List;
+
 /**
  * BookCorrectionService 接口
  *@author MrYang 
@@ -142,4 +144,6 @@ public interface BookCorrectionService {
 	 * @return
 	 */
 	Integer replyBookFeedBackWriter(Long id, String authorReply,HttpServletRequest request);
+
+	List<BookFeedBack> exportfeedback(Boolean result);
 }
