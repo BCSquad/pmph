@@ -15,10 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 @RequestMapping("frontWxMsg")
@@ -40,6 +37,8 @@ public class WXFrontMsgPushController {
     private WriterUserService writerUserService;
     @Autowired
     private BookEditorService bookEditorService;
+    @Autowired
+    WxSendMessageService wxSendMessageService;
 
     @Autowired
     private BookDao bookDao;
@@ -67,11 +66,12 @@ public class WXFrontMsgPushController {
         dec.getRealname();
         Material material = materialService.getMaterialById(dec.getMaterialId());
         List<MaterialProjectEditorVO> materialProjectEditorVOList = materialProjectEditorService.listMaterialProjectEditors(dec.getMaterialId());
-
+        List<Long> useridList = new ArrayList<Long>();
         for (MaterialProjectEditorVO materialProjectEditorVO : materialProjectEditorVOList) {
             PmphUser projectEditorUser = pmphUserService.get(materialProjectEditorVO.getEditorId());
             //项目编辑加入企业微信推送对象集合
             touserOpenidSet.add(projectEditorUser.getOpenid());
+            useridList.add(projectEditorUser.getId());
         }
         touserOpenidSet.remove(null);
         String touser = touserOpenidSet.toString();
@@ -79,16 +79,18 @@ public class WXFrontMsgPushController {
         String msg = dec.getRealname() + "已提交《" + material.getMaterialName() + "》的申报表，";//“请审核” 已被超链接补齐，此处不需显示
         //String url = "/materialrouter/materialnav/" + decId + "/presscheck";
         //&UserId&materialId=&declarationId=
-        String paramUrlFormat = "&UserId=%s&materialId=%s&declarationId=%s";
+        //String paramUrlFormat = "&UserId=%s&materialId=%s&declarationId=%s";
+        String paramUrlFormat = "/#/material/%s/expert?declarationId=%s";
+        String hrefType = "2";
+        String hrefContentType = "2";
         for (String t: touserOpenidSet) {
             String paramUrl=String.format(paramUrlFormat,t,dec.getMaterialId(),dec.getId());
-            Map resultMap = wxqyUserService.sendTextMessage("2", "2", t, "", "", "text", msg, (short) 0,paramUrl);
-            return ((int) resultMap.get("errcode")) == 0;
+            Map resultMap = wxqyUserService.sendTextMessage(hrefType, hrefContentType, t, "", "", "text", msg, (short) 0,paramUrl);
+            //return ((int) resultMap.get("errcode")) == 0;
         }
-        /*if (touserOpenidSet.size() > 0) {
-            Map resultMap = wxqyUserService.sendTextMessage("2", "2", touser, "", "", "text", msg, (short) 0,"");
-            return ((int) resultMap.get("errcode")) == 0;
-        }*/
+        String paramUrl=String.format(paramUrlFormat,"",dec.getMaterialId(),dec.getId());
+        wxSendMessageService.batchInsertWxMessage(msg,"0".equals(hrefType)?0:1,useridList,hrefType,hrefContentType,paramUrl);
+
 
         return false;
     }
@@ -123,8 +125,13 @@ public class WXFrontMsgPushController {
             touserIdSet.add(m.get("editorId").toString());
         }
         touserIdSet.remove(null);
+
+
+        List<Long> useridList = new ArrayList<Long>();
+
         for (String id : touserIdSet) { //通过主任、项目编辑、策划编辑的id集合（set无重复id）查询其企业微信号id集合
             PmphUser pu = pmphUserService.get(Long.parseLong(id));
+            useridList.add(pu.getId());
             if (StringUtil.notEmpty(pu.getOpenid())) {
                 touserOpenidSet.add(pu.getOpenid());
             }
@@ -134,14 +141,14 @@ public class WXFrontMsgPushController {
         // 推送内容： 《***》（书名）的***（主编）已提交编委预选名单
         msg = "“"+ materialVo.getMaterial().getMaterialName() + "”-《" + textbook.getTextbookName() + "》的第一主编 "+firstEditor.getRealname()+" 已提交编委预选名单";
 
+        String hrefType = "0";
+        String hrefContentType = "0";
         for (String t: touserOpenidSet) {
-            Map resultMap = wxqyUserService.sendTextMessage("0", "0", t, "", "", "text", msg, (short) 0,"");
+            Map resultMap = wxqyUserService.sendTextMessage(hrefType, hrefContentType, t, "", "", "text", msg, (short) 0,"");
             return ((int) resultMap.get("errcode")) == 0;
         }
-        /*if (touserOpenidSet.size()>0) {
-            Map resultMap = wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg, (short) 0,"");
-            return ((int) resultMap.get("errcode")) == 0;
-        }*/
+
+        wxSendMessageService.batchInsertWxMessage(msg,"0".equals(hrefType)?0:1,useridList,hrefType,hrefContentType,"");
 
         return false;
     }
@@ -156,22 +163,26 @@ public class WXFrontMsgPushController {
         Set<String> touserOpenidSet = new HashSet<String>();
         WriterUser submiter = writerUserService.get(uid);
         List<PmphUser> admins = pmphUserService.getListByRole(1l);
+        List<Long> useridList = new ArrayList<Long>();
         for (PmphUser admin: admins) {
             touserOpenidSet.add(admin.getOpenid());
+            useridList.add(admin.getId());
         }
         touserOpenidSet.remove(null);
         String touser = touserOpenidSet.toString();
         String msg = submiter.getRealname()+"已经提交了选题申报表，";
         String paramUrlFormat = "&UserId=%s";
+        String hrefType = "2";
+        String hrefContentType = "3";
         for (String t: touserOpenidSet) {
             String paramUrl=String.format(paramUrlFormat,t);
-            Map resultMap = wxqyUserService.sendTextMessage("2", "3", t, "", "", "text", msg, (short) 0,paramUrl);
-            return ((int) resultMap.get("errcode")) == 0;
+            Map resultMap = wxqyUserService.sendTextMessage(hrefType, hrefContentType, t, "", "", "text", msg, (short) 0,paramUrl);
+            //return ((int) resultMap.get("errcode")) == 0;
         }
-        /*if (touserOpenidSet.size()>0) {
-            Map resultMap = wxqyUserService.sendTextMessage("2", "3", touser, "", "", "text", msg, (short) 0,"");
-            return ((int) resultMap.get("errcode")) == 0;
-        }*/
+        String paramUrl = String.format(paramUrlFormat,"");
+        wxSendMessageService.batchInsertWxMessage(msg,"0".equals(hrefType)?0:1,useridList,hrefType,hrefContentType,paramUrl);
+
+
 
         return false;
     }
@@ -184,29 +195,43 @@ public class WXFrontMsgPushController {
                         @PathVariable(value = "correctId")Long correctId ,HttpServletRequest request){
     //这本图书的图书的策划编辑
         Book book = bookDao.getBookById(bookId);
+
+
+
         Set<String> touserOpenidSet = new HashSet<String>();
         WriterUser submiter = writerUserService.get(submitId);
         List<PmphUser> admins = pmphUserService.getListByRole(1l);
+        List<Long> useridList = new ArrayList<Long>();
         for (PmphUser admin: admins) {
             touserOpenidSet.add(admin.getOpenid());
+            useridList.add(admin.getId());
         }
         touserOpenidSet.remove(null);
         String touser = touserOpenidSet.toString();
         String msg = submiter.getRealname()+"已经提交了《"+ (ObjectUtil.isNull(book)?"":book.getBookname())+"》的图书纠错信息，";
         Map resultMap = null;
         String paramUrlFormat = "&UserId=%s&bookName=%s&type=%s&id=%s";
+        String hrefType = "5";
+        String hrefContentType = "2";
         for (String t: touserOpenidSet) {
             String paramUrl=String.format(paramUrlFormat,t,book.getBookname(),"check",correctId);
-            resultMap = wxqyUserService.sendTextMessage("5", "2", t, "", "", "text", msg, (short) 0,paramUrl);
-
+            resultMap = wxqyUserService.sendTextMessage(hrefType, hrefContentType, t, "", "", "text", msg, (short) 0,paramUrl);
         }
-        /*if (touserOpenidSet.size()>0) {
-            resultMap = wxqyUserService.sendTextMessage("2", "2", touser, "", "", "text", msg, (short) 0,"");
+        String paramUrl = String.format(paramUrlFormat,"",book.getBookname(),"check",correctId);
+        wxSendMessageService.batchInsertWxMessage(msg,"0".equals(hrefType)?0:1,useridList,hrefType,hrefContentType,paramUrl);
 
-        }*/
+
         return resultMap;
     }
 
+    /*String[] openids = touser.split("\\|");
+    List<Long> useridList = new ArrayList<Long>();
+        for (String opend:openids) {
+        PmphUser user = pmphUserService.getPmphUserByOpenid(opend);
+        useridList.add(user.getId());
+    }
+
+        wxSendMessageService.batchInsertWxMessage(text,"0".equals(hrefType)?0:1,useridList,hrefType,hrefContentType,paramUrl);*/
 
 
 

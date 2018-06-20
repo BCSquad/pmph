@@ -67,6 +67,8 @@ public class TopicServiceImpl implements TopicService {
 
 	@Autowired
 	WXQYUserService service;
+	@Autowired
+	WxSendMessageService wxSendMessageService;
 
 	@Override
 	public PageResult<TopicOPtsManagerVO> listOpts(String sessionId, PageParameter<TopicOPtsManagerVO> pageParameter)
@@ -248,7 +250,7 @@ public class TopicServiceImpl implements TopicService {
 	}
 
 	@Override
-	public String update(TopicLog topicLog, String sessionId, Topic topic,String openid) throws CheckedServiceException {
+	public String update(TopicLog topicLog, String sessionId, Topic topic,String openid,Long adminId) throws CheckedServiceException {
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (ObjectUtil.isNull(pmphUser)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
@@ -279,12 +281,18 @@ public class TopicServiceImpl implements TopicService {
 			}
 		}
 		String result = "FIAL";
+		List<Long> useridList =new ArrayList<Long>();
+		useridList.add(adminId);
+
 		if (topicDao.update(topic) > 0) {
 			topicLogService.add(topicLog);
+			String content = "《"+topic.getBookname()+"》选题"+(topic.getIsDirectorHandling()!=null&&topic.getIsDirectorHandling()?"已分配到您的部门":"已分配给您");
 			//分配部门负责人 不为空 给其发企业微信消息
 			if(!StringUtil.isEmpty(openid)){
-				String content = "《"+topic.getBookname()+"》选题"+(topic.getIsDirectorHandling()!=null&&topic.getIsDirectorHandling()?"已分配到您的部门":"已分配给您");
 				service.sendTextMessage("2","3",openid,null,null,"text",content,(short)0,"&"+openid);
+			}
+			if (adminId!=null){
+				wxSendMessageService.batchInsertWxMessage(content,0,useridList,"2","3","");
 			}
 			result = "SUCCESS";
 		}

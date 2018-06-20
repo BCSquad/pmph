@@ -107,7 +107,7 @@ public class TopicController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "运维人员分配选题给部门")
 	@RequestMapping(value = "/put/optsHandling", method = RequestMethod.PUT)
-	public ResponseBean optsHandling(HttpServletRequest request, Long id, Long departmentId,String openid,String bookname) {
+	public ResponseBean optsHandling(HttpServletRequest request, Long id, Long departmentId,String openid,String bookname,Long adminId) {
 		String sessionId = CookiesUtil.getSessionId(request);
 		TopicLog topicLog = new TopicLog();
 		topicLog.setTopicId(id);
@@ -117,7 +117,7 @@ public class TopicController {
 		topic.setDepartmentId(departmentId);
 		topic.setIsDirectorHandling(true);
 		topic.setBookname(bookname);
-		return new ResponseBean(topicService.update(topicLog, sessionId, topic,openid));
+		return new ResponseBean(topicService.update(topicLog, sessionId, topic,openid,adminId));
 	}
 
 	/**
@@ -199,7 +199,7 @@ public class TopicController {
 			topic.setIsEditorHandling(true);
 			//topic.setIsDirectorHandling(null);
 		}
-		return new ResponseBean(topicService.update(topicLog, sessionId, topic,openid));
+		return new ResponseBean(topicService.update(topicLog, sessionId, topic,openid,editorId));
 	}
 
 	/**
@@ -288,7 +288,7 @@ public class TopicController {
 				topic.setAuthProgress(authProgress);
 			}
 		}
-		return new ResponseBean(topicService.update(topicLog, sessionId, topic,""));
+		return new ResponseBean(topicService.update(topicLog, sessionId, topic,"",null));
 	}
 
 	/**

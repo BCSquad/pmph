@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -343,6 +345,30 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		Long authorId = pmphUser.getId();
 		return bookCorrectionDao.replyBookFeedBackWriter(id,authorReply,authorId);
+	}
+
+	@Override
+	public List<BookFeedBack> exportfeedback(Boolean result) {
+		Map<String, Object> map = new HashMap<String, Object>(4);
+		map.put("start", null);
+		map.put("pageSize", null);
+		map.put("result", result);
+		List<BookFeedBack> rows = null;
+		Integer total = bookCorrectionDao.bookFeedBackListTotal(map);
+		if (null != total && total > 0) {
+			rows = bookCorrectionDao.bookFeedBackList(map);
+			for(BookFeedBack bookFeedBack:rows){
+				bookFeedBack.setResultS(bookFeedBack.getResult() == 1?"已审核":"未审核");
+				SimpleDateFormat lsdStrFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				try {
+					bookFeedBack.setAuthDateS(ObjectUtil.isNull(bookFeedBack.getAuthDate())?"":lsdStrFormat.format(bookFeedBack.getAuthDate()));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return rows;
 	}
 
 	@Override

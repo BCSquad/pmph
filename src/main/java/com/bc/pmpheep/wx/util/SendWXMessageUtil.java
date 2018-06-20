@@ -79,7 +79,7 @@ public class SendWXMessageUtil {
         params.remove("content");
         String url = params.get("url").toString();
         params.remove("url");
-        String responseContent = HttpUtil.doPost(url, JSON.toJSON(params));
+        String responseContent = "";
         Map backResult = new HashMap();
         Properties pp = new Properties();
         String isNeedSendMessage = "";
@@ -91,6 +91,7 @@ public class SendWXMessageUtil {
             e.printStackTrace();
         }
         if("true".equals(isNeedSendMessage)){
+            responseContent= HttpUtil.doPost(url, JSON.toJSON(params));
             backResult = JSON.parseObject(responseContent, Map.class);
         }else{ //消息已经记录，但是不给客户的企业微信发送消息(客户现在不想企业微信收到消息)
             backResult.put("errcode","0");
@@ -123,11 +124,11 @@ public class SendWXMessageUtil {
         }
         switch (hrefType){
             case "0":href="%s";break;
-            case "1":href="<a href=\"http://medu.ipmph.com/meduwx%s\">%s</a>";break;
-            case "2":href="<a href=\"http://medu.ipmph.com/wx/#/loginm%s\">%s</a>";break;
-            case "3":href="<a href=\"http://"+rootAdrr+"/pmpheep/sso/login?appType=1%s\">%s</a>";break; //教材审核  &UserId&materialId=&declarationId=
-            case "4":href="<a href=\"http://"+rootAdrr+"/pmpheep/sso/login?appType=2%s\">%s</a>";break; //选题申报  &UserId
-            case "5":href="<a href=\"http://"+rootAdrr+"/pmpheep/sso/login?appType=3%s\">%s</a>";break; //图书纠错 &UserId&bookName=&type=&id=
+            case "1":href="<a class=\"wxmsg_a\" href=\"http://"+rootAdrr+"/meduwx%s\">%s</a>";break;
+            case "2":href="<a class=\"wxmsg_a\" href=\"http://"+rootAdrr+"/wx/#%s\">%s</a>";break;
+            case "3":href="<a class=\"wxmsg_a\" href=\"http://"+rootAdrr+"/pmpheep/sso/login?appType=1%s\">%s</a>";break; //教材审核  &UserId&materialId=&declarationId=
+            case "4":href="<a class=\"wxmsg_a\" href=\"http://"+rootAdrr+"/pmpheep/sso/login?appType=2%s\">%s</a>";break; //选题申报  &UserId
+            case "5":href="<a class=\"wxmsg_a\" href=\"http://"+rootAdrr+"/pmpheep/sso/login?appType=3%s\">%s</a>";break; //图书纠错 &UserId&bookName=&type=&id=
             default: href="%s";break;
         }
         return href;

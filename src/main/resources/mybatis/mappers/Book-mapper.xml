@@ -496,6 +496,111 @@
 		LIMIT #{start},#{pageSize}
 	</select>
 
+	<!-- 分页查询 -->
+	<select id="recommendlist" parameterType="PageParameter"
+			resultType="BookVO">
+		-- 当前和这本书相关的放最前面 每本书三个推荐，查询列表排除自己这本书
+		SELECT
+		*
+		FROM
+		(
+		SELECT
+		! ISNULL(bb1.id) AS ischeckteachbook,
+		! ISNULL(bb2.id) AS ischeckxgcommend,
+		! ISNULL(bb3.id) AS ischeckrwcommend,
+		b.*
+		FROM
+		book b
+		LEFT JOIN book_book_relationship bb1 ON b.id = bb1.related_book_id
+		AND bb1.type = 1
+		AND bb1.main_book_id = #{parameter.id}
+		LEFT JOIN book_book_relationship bb2 ON b.id = bb2.related_book_id
+		AND bb2.type = 2
+		AND bb2.main_book_id = #{parameter.id}
+		LEFT JOIN book_book_relationship bb3 ON b.id = bb3.related_book_id
+		AND bb3.type = 3
+		AND bb3.main_book_id = #{parameter.id}
+		WHERE
+		1 = 1
+		AND b.id != #{parameter.id}
+		<if test="parameter.name !=null and parameter.name !='' ">
+			and (b.isbn like concat('%',#{parameter.name},'%') or
+			b.bookname like
+			concat('%',#{parameter.name},'%'))
+		</if>
+		GROUP BY
+		b.id
+		) t
+		WHERE
+		1 = 1
+		<if test="parameter.ischeckteachbook !=null ">
+		  and 	ischeckteachbook = #{parameter.ischeckteachbook}
+		</if>
+		<if test="parameter.ischeckxgcommend !=null ">
+			and 	ischeckxgcommend = #{parameter.ischeckxgcommend}
+		</if>
+		<if test="parameter.ischeckrwcommend !=null ">
+			and 	ischeckxgcommend = #{parameter.ischeckrwcommend}
+		</if>
+		ORDER BY
+		t.ischeckteachbook DESC,
+		t.ischeckxgcommend DESC,
+		t.ischeckrwcommend DESC
+		LIMIT #{start},#{pageSize}
+	</select>
+
+	<!-- 分页查询 -->
+	<select id="recommendTotal" parameterType="PageParameter"
+			resultType="Integer">
+		-- 当前和这本书相关的放最前面 每本书三个推荐，查询列表排除自己这本书
+		SELECT
+		count(*)
+		FROM
+		(
+		SELECT
+		! ISNULL(bb1.id) AS ischeckteachbook,
+		! ISNULL(bb2.id) AS ischeckxgcommend,
+		! ISNULL(bb3.id) AS ischeckrwcommend,
+		b.*
+		FROM
+		book b
+		LEFT JOIN book_book_relationship bb1 ON b.id = bb1.related_book_id
+		AND bb1.type = 1
+		AND bb1.main_book_id = #{parameter.id}
+		LEFT JOIN book_book_relationship bb2 ON b.id = bb2.related_book_id
+		AND bb2.type = 2
+		AND bb2.main_book_id = #{parameter.id}
+		LEFT JOIN book_book_relationship bb3 ON b.id = bb3.related_book_id
+		AND bb3.type = 3
+		AND bb3.main_book_id = #{parameter.id}
+		WHERE
+		1 = 1
+		AND b.id != #{parameter.id}
+		<if test="parameter.name !=null and parameter.name !='' ">
+			and (b.isbn like concat('%',#{parameter.name},'%') or
+			b.bookname like
+			concat('%',#{parameter.name},'%'))
+		</if>
+		GROUP BY
+		b.id
+		) t
+		WHERE
+		1 = 1
+		<if test="parameter.ischeckteachbook !=null ">
+			and 	ischeckteachbook = #{parameter.ischeckteachbook}
+		</if>
+		<if test="parameter.ischeckxgcommend !=null ">
+			and 	ischeckxgcommend = #{parameter.ischeckxgcommend}
+		</if>
+		<if test="parameter.ischeckrwcommend !=null ">
+			and 	ischeckxgcommend = #{parameter.ischeckrwcommend}
+		</if>
+		ORDER BY
+		t.ischeckteachbook DESC,
+		t.ischeckxgcommend DESC,
+		t.ischeckrwcommend DESC
+
+	</select>
 	<!-- 查询总数 -->
 	<select id="getBookVOTotal" parameterType="PageParameter"
 		resultType="Integer">
@@ -561,6 +666,44 @@
 		ORDER BY
 		b.bookmarks DESC) t
 	</select>
+	<!--查询书籍是否存在关系-->
+	<select id="recommendisExist" parameterType="map" resultType="boolean">
+		SELECT
+			CASE
+		WHEN count(*) > 0 THEN
+			TRUE
+		ELSE
+			FALSE
+		END
+		FROM
+			book_book_relationship bb
+		WHERE
+			bb.main_book_id = #{currentBookId}
+		AND bb.related_book_id = #{recommendBookId}
+		AND bb.type = #{selectType}
+	</select>
+
+	<!--插入书籍关系-->
+	<insert id="insertrecommend"  parameterType="map">
+		INSERT INTO book_book_relationship (
+					main_book_id,
+					related_book_id,
+					type
+				)
+				VALUES
+					( #{currentBookId}, #{recommendBookId}, #{selectType})
+	</insert>
+
+	<!--删除书籍关系-->
+	<delete id="deleterecommend"  parameterType="map">
+			DELETE
+				FROM
+					book_book_relationship
+				WHERE
+					main_book_id = #{currentBookId}
+				AND related_book_id = #{recommendBookId}
+				AND type = #{selectType}
+	</delete>
 
 	<!-- 查询总数 -->
 	<select id="getBookPreferenceAnalysis" resultType="BookPreferenceAnalysisVO">
