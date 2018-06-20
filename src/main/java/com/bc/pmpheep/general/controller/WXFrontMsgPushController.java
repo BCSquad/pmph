@@ -79,7 +79,8 @@ public class WXFrontMsgPushController {
         String msg = dec.getRealname() + "已提交《" + material.getMaterialName() + "》的申报表，";//“请审核” 已被超链接补齐，此处不需显示
         //String url = "/materialrouter/materialnav/" + decId + "/presscheck";
         //&UserId&materialId=&declarationId=
-        String paramUrlFormat = "&UserId=%s&materialId=%s&declarationId=%s";
+        //String paramUrlFormat = "&UserId=%s&materialId=%s&declarationId=%s";
+        String paramUrlFormat = "/#/material/%s/expert?declarationId=%s";
         String hrefType = "2";
         String hrefContentType = "2";
         for (String t: touserOpenidSet) {
