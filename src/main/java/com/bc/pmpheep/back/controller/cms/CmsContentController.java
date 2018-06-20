@@ -1,9 +1,12 @@
 package com.bc.pmpheep.back.controller.cms;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.bc.pmpheep.back.vo.BookVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -224,6 +227,30 @@ public class CmsContentController {
         } catch (IOException e) {
             return new ResponseBean(e);
         }
+    }
+    /**
+     * 功能描述: 初始化/条件查询推荐文章
+     * @param recommendPageSize
+     * @param recommendPageNumber
+     * @return
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "初始化/条件查询推荐文章")
+    @RequestMapping(value = "/recommendlist", method = RequestMethod.GET)
+    public ResponseBean recommendlist(Integer recommendPageSize, Integer recommendPageNumber, Long currentCmsId,Boolean relationCms,String cmsTitle,String cmsAuthorName) {
+        return new ResponseBean(cmsContentService.recommendlist( recommendPageSize,  recommendPageNumber,  currentCmsId, relationCms, cmsTitle,cmsAuthorName));
+    }
+    /**
+     * 功能描述: 推荐文章
+
+     * @return
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "推荐文章")
+    @RequestMapping(value = "/recommendcheck", method = RequestMethod.GET)
+    public ResponseBean recommendcheck(Long currentCmsId,Boolean relationCms,Long relationCmsId) {
+
+        return new ResponseBean(cmsContentService.recommendcheck( currentCmsId, relationCms, relationCmsId));
     }
 
     /**

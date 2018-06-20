@@ -540,7 +540,7 @@
 			and 	ischeckxgcommend = #{parameter.ischeckxgcommend}
 		</if>
 		<if test="parameter.ischeckrwcommend !=null ">
-			and 	ischeckxgcommend = #{parameter.ischeckrwcommend}
+			and 	ischeckrwcommend = #{parameter.ischeckrwcommend}
 		</if>
 		ORDER BY
 		t.ischeckteachbook DESC,
@@ -593,7 +593,7 @@
 			and 	ischeckxgcommend = #{parameter.ischeckxgcommend}
 		</if>
 		<if test="parameter.ischeckrwcommend !=null ">
-			and 	ischeckxgcommend = #{parameter.ischeckrwcommend}
+			and 	ischeckrwcommend = #{parameter.ischeckrwcommend}
 		</if>
 		ORDER BY
 		t.ischeckteachbook DESC,

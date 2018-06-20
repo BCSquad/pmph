@@ -98,7 +98,7 @@ public class BookController {
 		return new ResponseBean(bookService.recommendlist(pageParameter));
 	}
 	/**
-	 * 功能描述: 初始化/条件查询推荐书籍信息
+	 * 功能描述: 推荐书籍
 	 * @param currentBookId
 	 * @param ischeckteachbook
 	 * @param ischeckxgcommend
@@ -106,7 +106,7 @@ public class BookController {
 	 * @return
 	 */
 	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "初始化/条件查询推荐书籍信息")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "推荐书籍")
 	@RequestMapping(value = "/recommendcheck", method = RequestMethod.GET)
 	public ResponseBean recommendcheck(Long currentBookId,int selectType,Long recommendBookId,Boolean ischeckteachbook,Boolean ischeckxgcommend,Boolean ischeckrwcommend) {
 

@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.bc.pmpheep.back.vo.BookVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -935,5 +936,56 @@ public class CmsContentServiceImpl implements CmsContentService {
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
         return cmsContentDao.listCmsContentByTitle(title);
+    }
+
+    @Override
+    public  PageResult<Map<String, Object>> recommendlist(Integer recommendPageSize, Integer recommendPageNumber, Long currentCmsId, Boolean relationCms, String cmsTitle,String cmsAuthorName) {
+        if(ObjectUtil.isNull(currentCmsId)){
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        PageParameter<Map<String,Object>> pageParameter = new PageParameter<>(recommendPageNumber, recommendPageSize);
+        Map<String,Object> params = new HashMap<String,Object>();
+        params.put("currentCmsId",currentCmsId);
+        params.put("relationCms",relationCms);
+        params.put("cmsTitle",cmsTitle);
+        params.put("cmsAuthorName",cmsAuthorName);
+        PageResult<Map<String, Object> > pageResult = new PageResult<>();
+        pageParameter.setParameter(params);
+        int total = cmsContentDao.recommendTotal(pageParameter);
+        if (total > 0) {
+            PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+            pageResult.setRows(cmsContentDao.recommendlist(pageParameter));
+        }
+        pageResult.setTotal(total);
+        return pageResult;
+    }
+
+    @Override
+    public Boolean recommendcheck(Long currentCmsId, Boolean relationCms, Long relationCmsId) {
+        if (ObjectUtil.isNull(currentCmsId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        if (ObjectUtil.isNull(relationCms)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        if (ObjectUtil.isNull(relationCmsId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        if(relationCms){
+            //数据库中是否存在关系 如果存在 就不用插入，如果不存在就插入
+            Boolean isExisting = cmsContentDao.recommendisExist(currentCmsId, relationCmsId);
+            if(!isExisting){
+                cmsContentDao.insertrecommend(currentCmsId, relationCmsId);
+            }
+        }else{
+            //取消 文章之间的关系 删除 关系
+            Boolean isExisting = cmsContentDao.recommendisExist(currentCmsId, relationCmsId);
+            if(isExisting){
+                cmsContentDao.deleterecommend(currentCmsId,relationCmsId);
+            }
+        }
+
+
+        return relationCms;
     }
 }
