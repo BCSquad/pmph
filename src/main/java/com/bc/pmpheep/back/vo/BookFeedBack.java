@@ -1,6 +1,8 @@
 package com.bc.pmpheep.back.vo;
 
+import com.bc.pmpheep.annotation.ExcelHeader;
 import org.apache.ibatis.type.Alias;
+import org.springframework.data.annotation.Transient;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -17,26 +19,43 @@ public class BookFeedBack implements Serializable {
 	/**
      * 主键
      */
+
     private Long    id;
 	/**
 	 * 图书名字
 	 */
+	@ExcelHeader(header = "书名")
 	private String bookname;
+
+	/**
+	 * isbn
+	 */
+	@ExcelHeader(header = "isbn")
+	private String isbn;
 
 	/**
 	 * 反馈人
 	 */
+	@ExcelHeader(header = "反馈人")
 	private String feedBackName;
 
 	/**
 	 * 审核人
 	 */
+	@ExcelHeader(header = "审核人")
 	private String authorname;
 
 	/**
 	 * 审核状态
 	 */
+
 	private Integer result;
+	/**
+	 * 审核状态
+	 */
+	@Transient
+	@ExcelHeader(header = "审核状态")
+	private String resultS;
     /**
      * 图书id
      */
@@ -64,7 +83,10 @@ public class BookFeedBack implements Serializable {
     /**
      * 回复时间
      */
+
     private Date authDate ;
+	@ExcelHeader(header = "审核日期")
+	private String authDateS ;
     /**
      * 是否已逻辑删除
      */
@@ -72,6 +94,7 @@ public class BookFeedBack implements Serializable {
     /**
      * 提交时间
      */
+	@ExcelHeader(header = "提交时间")
     private Timestamp gmtCreate;
 
 	/**
@@ -198,5 +221,29 @@ public class BookFeedBack implements Serializable {
 
 	public void setResult(Integer result) {
 		this.result = result;
+	}
+
+	public String getIsbn() {
+		return isbn;
+	}
+
+	public void setIsbn(String isbn) {
+		this.isbn = isbn;
+	}
+
+	public String getResultS() {
+		return resultS;
+	}
+
+	public void setResultS(String resultS) {
+		this.resultS = resultS;
+	}
+
+	public String getAuthDateS() {
+		return authDateS;
+	}
+
+	public void setAuthDateS(String authDateS) {
+		this.authDateS = authDateS;
 	}
 }

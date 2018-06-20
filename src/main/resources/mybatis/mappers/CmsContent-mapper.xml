@@ -814,4 +814,124 @@
 	<select id="listCmsContentByTitle" parameterType="java.lang.String" resultType="CmsContent">
 		SELECT * FROM  `cms_content` t WHERE t.`category_id`=4 AND t.`title`=#{title}
 	</select>
+
+	<select id="recommendTotal" parameterType="PageParameter" resultType="int">
+		SELECT
+		count(*)
+		FROM
+		(
+		SELECT
+		! ISNULL(bb1.id) AS relationCms,
+		b.title as cmsTitle,
+		b.author_name as cmsAuthorName,
+		b.id as id,
+		b.gmt_create
+		FROM
+		cms_content b
+		LEFT JOIN cms_relationship bb1 ON b.id = bb1.related_cms_id
+		AND bb1.main_cms_id = #{parameter.currentCmsId}
+
+		WHERE
+		1 = 1
+		AND b.id != #{parameter.currentCmsId}
+
+		)t
+		WHERE
+		1 = 1
+		<if test="parameter.relationCms !=null ">
+			and 	relationCms = #{parameter.relationCms}
+		</if>
+		<if test="parameter.cmsAuthorName !=null and parameter.cmsAuthorName !='' ">
+			and (
+			t.cmsAuthorName like
+			concat('%',#{parameter.cmsAuthorName},'%'))
+		</if>
+		<if test="parameter.cmsTitle !=null and parameter.cmsTitle !='' ">
+			and (
+			t.cmsTitle like
+			concat('%',#{parameter.cmsTitle},'%'))
+		</if>
+		ORDER BY
+		t.relationCms DESC,t.gmt_create DESC
+
+	</select>
+
+	<select id="recommendlist" parameterType="PageParameter" resultType="map">
+		SELECT
+		*
+		FROM
+		(
+		SELECT
+		! ISNULL(bb1.id) AS relationCms,
+		b.title as cmsTitle,
+		b.author_name as cmsAuthorName,
+		b.id as id,
+		b.gmt_create
+		FROM
+		cms_content b
+		LEFT JOIN cms_relationship bb1 ON b.id = bb1.related_cms_id
+		AND bb1.main_cms_id = #{parameter.currentCmsId}
+
+		WHERE
+		1 = 1
+		AND b.id != #{parameter.currentCmsId}
+
+		)t
+		WHERE
+		1 = 1
+		<if test="parameter.relationCms !=null ">
+			and 	relationCms = #{parameter.relationCms}
+		</if>
+		<if test="parameter.cmsAuthorName !=null and parameter.cmsAuthorName !='' ">
+			and (
+			t.cmsAuthorName like
+			concat('%',#{parameter.cmsAuthorName},'%'))
+		</if>
+		<if test="parameter.cmsTitle !=null and parameter.cmsTitle !='' ">
+			and (
+			t.cmsTitle like
+			concat('%',#{parameter.cmsTitle},'%'))
+		</if>
+		ORDER BY
+		t.relationCms DESC,t.gmt_create DESC
+		LIMIT #{start},#{pageSize}
+
+	</select>
+
+	<delete id="deleterecommend" parameterType="map">
+		DELETE
+				FROM
+					cms_relationship
+				WHERE
+					main_cms_id = #{currentCmsId}
+				AND related_cms_id = #{relationCmsId}
+
+	</delete>
+
+	<insert id="insertrecommend"  parameterType="map">
+		INSERT INTO cms_relationship (
+		main_cms_id,
+		related_cms_id
+		)
+		VALUES
+		( #{currentCmsId}, #{relationCmsId})
+	</insert>
+
+	<select id="recommendisExist" parameterType="map" resultType="boolean">
+		SELECT
+		CASE
+		WHEN count(*) > 0 THEN
+		TRUE
+		ELSE
+		FALSE
+		END
+		FROM
+		cms_relationship bb
+		WHERE
+		bb.main_cms_id = #{currentCmsId}
+		AND bb.related_cms_id = #{relationCmsId}
+
+	</select>
+
+
 </mapper>

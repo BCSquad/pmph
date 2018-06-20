@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -107,8 +108,6 @@ public interface CmsContentDao {
 	 * 功能描述： 社外内容审核操作(通过/拒绝)
 	 * 使用示范：
 	 *
-	 * @param id 主键ID
-	 * @param authStatus 审核状态
 	 * @return 影响行数
 	 * </pre>
      */
@@ -289,4 +288,14 @@ public interface CmsContentDao {
      * </pre>
      */
     List<CmsContent> listCmsContentByTitle(String title);
+
+    int recommendTotal(PageParameter<Map<String, Object>> pageParameter);
+
+	List<Map<String,Object>> recommendlist(PageParameter<Map<String, Object>> pageParameter);
+
+	Boolean recommendisExist(@Param("currentCmsId") Long currentCmsId,@Param("relationCmsId") Long relationCmsId);
+
+	void insertrecommend(@Param("currentCmsId") Long currentCmsId,@Param("relationCmsId") Long relationCmsId);
+
+	void deleterecommend(@Param("currentCmsId") Long currentCmsId,@Param("relationCmsId") Long relationCmsId);
 }

@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.bc.pmpheep.back.vo.*;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.shiro.session.Session;
 import org.slf4j.Logger;
@@ -63,16 +64,6 @@ import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.RandomUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
-import com.bc.pmpheep.back.vo.BookCorrectionTrackVO;
-import com.bc.pmpheep.back.vo.DeclarationResultBookVO;
-import com.bc.pmpheep.back.vo.DeclarationResultSchoolVO;
-import com.bc.pmpheep.back.vo.DeclarationSituationBookResultVO;
-import com.bc.pmpheep.back.vo.DeclarationSituationSchoolResultVO;
-import com.bc.pmpheep.back.vo.ExcelDecAndTextbookVO;
-import com.bc.pmpheep.back.vo.OrgAndOrgUserVO;
-import com.bc.pmpheep.back.vo.OrgExclVO;
-import com.bc.pmpheep.back.vo.OrgVO;
-import com.bc.pmpheep.back.vo.SurveyQuestionFillVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.general.bean.ZipDownload;
 import com.bc.pmpheep.general.runnable.Front;
@@ -261,6 +252,45 @@ public class FileDownLoadController {
 					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
 		}
 	}
+	/**
+	 *
+	 * Description:设置选题号页面导出选题号
+	 *
+	 * @author:lyc
+	 * @date:2018年1月23日下午6:18:41
+	 * @param
+	 * @return void
+	 */
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "设置选题号页面导出选题号信息")
+	@RequestMapping(value = "/bookCorrection/exportfeedback", method = RequestMethod.GET)
+	public void exportfeedback( HttpServletRequest request, HttpServletResponse response,Boolean result) {
+		//Boolean result = null;
+		List<BookFeedBack> list = bookCorrectionService.exportfeedback(result);
+		Workbook workbook = null;
+		if (list.size() == 0) {
+			list.add(new BookFeedBack());
+		}
+		try {
+			workbook = excelHelper.fromBusinessObjectList(list, "读书反馈");
+
+		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+			logger.warn("数据表格化的时候失败");
+		}
+		String fileName = returnFileName(request,"读书反馈.xls");
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		try (OutputStream out = response.getOutputStream()) {
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常： {}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
+
 
 	/**
 	 * 

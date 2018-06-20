@@ -39,7 +39,7 @@ public class WxMessageTest extends BaseTest {
         List<Long> list = new ArrayList<Long>();
         list.add(1L);
         list.add(2L);
-       Integer resultInt =  wXQYUserService.batchInsertWxMessage("这是一条测试内容",1,list);
+       Integer resultInt =  wXQYUserService.batchInsertWxMessage("这是一条测试内容",1,list,"","","");
        System.out.println(resultInt);
     }
 

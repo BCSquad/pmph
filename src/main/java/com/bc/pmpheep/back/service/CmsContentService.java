@@ -378,4 +378,8 @@ public interface CmsContentService {
      * </pre>
      */
     List<CmsContent> listCmsContentByTitle(String title) throws CheckedServiceException;
+
+    PageResult<Map<String, Object> > recommendlist(Integer recommendPageSize, Integer recommendPageNumber, Long currentCmsId, Boolean relationCms, String cmsTitle,String cmsAuthorName);
+
+    Boolean recommendcheck(Long currentCmsId, Boolean relationCms, Long relationCmsId);
 }
