@@ -675,6 +675,23 @@
 		group by u.id
 	</select>
 
+	<!-- 根据某人id查出其 本部门及上级各部门的部门主任（is_director=1）-->
+	<select id="getSomebodyParentDeptsDirectorPmphUser" parameterType="Long" resultType="PmphUser">
+		select u.id
+		,u.realname realname
+		,u.department_id departmentId
+		,u.is_director isDirector
+		,u.openid
+		from pmph_user u
+		inner join
+		(select concat(d.path,'-',d.id) as fullPath
+		from pmph_user u
+		join pmph_department d on u.department_id = d.id
+		where u.id = #{userId} /*某人user_id*/) preg
+		where u.is_director =1 and preg.fullPath Regexp concat('-',u.department_id,'(-[0-9]+)*$')
+		group by u.id
+	</select>
+
 	<select id="getPmphUserByOpenid" parameterType="String" resultType="PmphUser">
 		select * from pmph_user
 		where openid=#{wechatUserId}
