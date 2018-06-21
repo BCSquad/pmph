@@ -114,5 +114,21 @@
 		select * from material_type where parent_id = #{parentId}
 		order by sort;
 	</select>
+
+
+	<!--查询分类下的教材-->
+	<select id="queryMaterialByMaterialTypeId" parameterType="Long" resultType="int">
+		select count(id) from material
+		where material_type = #{id}
+
+	</select>
+
+	<!--查询分类下的出版图书-->
+	<select id="queryBookByMaterialTypeId" parameterType="Long" resultType="int">
+		select count(id) from book
+		where type = #{id}
+
+	</select>
+
 	
 </mapper>

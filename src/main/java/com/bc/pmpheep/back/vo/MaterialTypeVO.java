@@ -12,6 +12,11 @@ public class MaterialTypeVO implements Serializable {
 	private String path;
 	// 类型名称
 	private String typeName;
+	//排序号
+	private int sort;
+	//备注
+	private String note;
+
 	// 子级
 	private List<MaterialTypeVO> childrenMaterialTypeVO;
 	/**
@@ -67,4 +72,19 @@ public class MaterialTypeVO implements Serializable {
 		this.isLeaf = isLeaf;
 	}
 
+	public int getSort() {
+		return sort;
+	}
+
+	public void setSort(int sort) {
+		this.sort = sort;
+	}
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
 }

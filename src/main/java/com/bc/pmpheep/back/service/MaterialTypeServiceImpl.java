@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bc.pmpheep.back.po.Textbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -89,6 +90,23 @@ public class MaterialTypeServiceImpl extends BaseService implements MaterialType
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_TYPE, CheckedExceptionResult.NULL_PARAM,
 					"主键为空");
 		}
+        List<MaterialTypeVO> childMaterialType = materialTypeDao.listMaterialType(id);
+        if (childMaterialType.size() > 0) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_TYPE,
+                    CheckedExceptionResult.ILLEGAL_PARAM, "分类下还有子分类，不能删除分类");
+        }
+
+        int countMaterial = materialTypeDao.queryMaterialByMaterialTypeId(id);
+        if (countMaterial > 0) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_TYPE,
+                    CheckedExceptionResult.ILLEGAL_PARAM, "分类下有教材，不能删除分类");
+        }
+        int countBook = materialTypeDao.queryBookByMaterialTypeId(id);
+        if (countBook > 0) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_TYPE,
+                    CheckedExceptionResult.ILLEGAL_PARAM, "分类下有已出版的图书，不能删除分类");
+        }
+
 		return materialTypeDao.deleteMaterialTypeById(id);
 	}
 
