@@ -68,7 +68,7 @@ public class MaterialTypeController {
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "根据父级id获取下一级所有教材分类")
     @ResponseBody
     public ResponseBean tree(@RequestParam(value = "parentId",defaultValue = "0") Long parentId) {
-        return new ResponseBean(materialTypeService.listMaterialType(parentId));
+        return new ResponseBean(materialTypeService.lazyListMaterialType(parentId));
     }
 
     /**

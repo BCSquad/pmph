@@ -50,7 +50,7 @@ public interface MaterialTypeService {
 
 	/**
 	 * 
-	 * 获取所有书籍类别
+	 * 获取所有书籍类别(一次性加载层叠各下级类别 用于非懒加载)
 	 * 
 	 * @author 曾庆峰
 	 * @param parentId
@@ -60,4 +60,11 @@ public interface MaterialTypeService {
 	 */
 	MaterialTypeVO listMaterialType(Long parentId) throws CheckedServiceException;
 
+
+	/**
+	 * 获取下一级所有书籍类别(用于tree懒加载)
+	 * @param parentId
+	 * @return
+	 */
+	MaterialTypeVO lazyListMaterialType(Long parentId);
 }
