@@ -442,31 +442,45 @@ AND t.is_withdraw = 1;
 	</select>
 	<select id="getMessageTotal" parameterType="PageParameter"
 		resultType="Integer">
-		SELECT
-		COUNT(*)
-		FROM(
+		SELECT count(*) from (
 		SELECT
 		m.id,
 		m.msg_id,
 		m.title,
 		m.sender_id,
-		u.realname
-		sendName,
+		m.is_withdraw,
+		(
+		CASE
+		WHEN m.`sender_type` = 0 ||m.`sender_type` = 1
+		THEN u.realname
+		WHEN m.`sender_type` = 2
+		THEN wu.`realname`
+		WHEN m.`sender_type` = 3
+		THEN ou.`realname`
+		END
+		) sendName,
 		m.gmt_create sendTime
 		FROM
 		user_message m
 		LEFT JOIN
 		pmph_user u
-		ON u.id = m.sender_id
+		ON
+		u.id = m.sender_id
+		left join writer_user wu
+		ON
+		wu.id = m.sender_id
+		left join org_user ou
+		ON
+		ou.id = m.sender_id
 		WHERE
 		m.is_deleted = 0
 		AND
-		m.msg_type = 1
+		m.msg_type = 1 and m.material_id = 0
 		<if test="parameter.senderIds != null">
 			AND
 			m.sender_id in
 			<foreach collection="parameter.senderIds" item="userId"
-				index="index" open="(" close=")" separator=",">
+					 index="index" open="(" close=")" separator=",">
 				#{userId}
 			</foreach>
 		</if>
@@ -477,10 +491,12 @@ AND t.is_withdraw = 1;
 		m.msg_id,
 		m.sender_id,
 		m.title
-		) t
+		ORDER BY
+		m.`gmt_create` DESC)t where t.sendName is not null
 	</select>
 	<select id="listMessage" parameterType="PageParameter"
 		resultType="UserMessageVO">
+		SELECT * from (
 		SELECT
 		m.id,
 		m.msg_id,
@@ -513,7 +529,7 @@ AND t.is_withdraw = 1;
 		WHERE
 		m.is_deleted = 0
 		AND
-		m.msg_type = 1
+		m.msg_type = 1 and m.material_id = 0
 		<if test="parameter.senderIds != null">
 			AND
 			m.sender_id in
@@ -530,7 +546,7 @@ AND t.is_withdraw = 1;
 		m.sender_id,
 		m.title
 		ORDER BY
-		m.`gmt_create` DESC
+		m.`gmt_create` DESC)t where t.sendName is not null
 		LIMIT
 		#{start},#{pageSize}
 	</select>

@@ -110,6 +110,9 @@
 			<if test="authorname != null and authorname != ''">
 				author_name,
 			</if>
+			<if test="apporpc != null ">
+				apporpc,
+			</if>
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
@@ -220,6 +223,9 @@
 			</if>
 			<if test="authorname != null and authorname != ''">
 				#{authorname},
+			</if>
+			<if test="apporpc != null ">
+				#{apporpc},
 			</if>
 
 		</trim>
@@ -345,6 +351,10 @@
 			<if test="authorname != null and authorname != ''">
 				author_name=#{authorname},
 			</if>
+			<if test="apporpc != null ">
+				apporpc = #{apporpc},
+			</if>
+
 		</set>
 		where
 		id=#{id};
@@ -441,6 +451,7 @@
 		ELSE
 		pu.`realname`
 		END realname,
+		cc.apporpc,
 		cc.`material_id`
 			FROM
 			  `cms_content` cc 

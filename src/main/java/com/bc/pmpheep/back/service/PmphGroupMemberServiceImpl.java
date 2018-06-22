@@ -136,13 +136,17 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 		List<PmphGroupMemberVO> list = pmphGroupMemberDao.listPmphGroupMember(groupId);
 		for (PmphGroupMemberVO pmphGroupMemberVO : list) {
 			if (pmphGroupMemberVO.getIsWriter()) {
+				WriterUser writerUser = writerUserService.get(pmphGroupMemberVO.getUserId());
 				pmphGroupMemberVO.setAvatar(
-						RouteUtil.userAvatar(writerUserService.get(pmphGroupMemberVO.getUserId()).getAvatar()));
+						RouteUtil.userAvatar(writerUser.getAvatar()));
+				pmphGroupMemberVO.setAvatarInfo("用户名: "+(StringUtil.isEmpty(writerUser.getUsername())?"-":writerUser.getUsername())+"<br/>"+"电话: "+(StringUtil.isEmpty(writerUser.getHandphone())?"-":writerUser.getHandphone())+"<br/>"+"邮箱: "+(StringUtil.isEmpty(writerUser.getEmail())?"-":writerUser.getEmail()));
 				pmphGroupMemberVO.setUserType(Const.SENDER_TYPE_2);
 			} else {
+				PmphUser pmphUser = pmphUserService.get(pmphGroupMemberVO.getUserId());
 				pmphGroupMemberVO.setAvatar(
-						RouteUtil.userAvatar(pmphUserService.get(pmphGroupMemberVO.getUserId()).getAvatar()));
+						RouteUtil.userAvatar(pmphUser.getAvatar()));
 				pmphGroupMemberVO.setUserType(Const.SENDER_TYPE_1);
+				pmphGroupMemberVO.setAvatarInfo("用户名: "+(StringUtil.isEmpty(pmphUser.getUsername())?"-":pmphUser.getUsername())+"<br/>"+"电话: "+(StringUtil.isEmpty(pmphUser.getHandphone())?"-":pmphUser.getHandphone())+"<br/>"+"邮箱: "+(StringUtil.isEmpty(pmphUser.getEmail())?"-":pmphUser.getEmail()));
 			}
 		}
 		return list;

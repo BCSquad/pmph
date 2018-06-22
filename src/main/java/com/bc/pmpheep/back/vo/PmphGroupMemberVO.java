@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.vo;
 import java.io.Serializable;
 
 import org.apache.ibatis.type.Alias;
+import org.springframework.data.annotation.Transient;
 
 /**
  * 
@@ -40,6 +41,12 @@ public class PmphGroupMemberVO implements Serializable {
 	 * 小组成员头像
 	 */
 	private String avatar;
+
+	/**
+	 * 小组图像信息
+	 */
+	@Transient
+	private String avatarInfo;
 	/**
 	 * 是否是作家用户
 	 */
@@ -141,4 +148,11 @@ public class PmphGroupMemberVO implements Serializable {
 		this.isDeleted = isDeleted;
 	}
 
+	public String getAvatarInfo() {
+		return avatarInfo;
+	}
+
+	public void setAvatarInfo(String avatarInfo) {
+		this.avatarInfo = avatarInfo;
+	}
 }
