@@ -88,4 +88,18 @@ public interface MaterialTypeDao {
 	 * @return
 	 */
 	int queryBookByMaterialTypeId(Long id);
+
+	/**
+	 * 加载下一级分类
+	 * @param parentId
+	 * @return
+	 */
+	List<MaterialTypeVO> lazyQueryListMaterialType(Long parentId);
+
+	/**
+	 * 查询分类
+	 * @param id
+	 * @return
+	 */
+	MaterialTypeVO getMaterialTypeVoById(Long id);
 }
