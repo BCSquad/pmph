@@ -1025,8 +1025,9 @@ public class PmphUserServiceImpl implements PmphUserService {
      */
     public List<PmphUser> getSomebodyParentDeptsPmphUserOfSomeRole(Long SbId, Long role_id, String role_name){
 
-        List<PmphUser> result = pmphUserDao.getSomebodyParentDeptsPmphUserOfSomeRole(SbId, role_id, role_name);
+        //List<PmphUser> result = pmphUserDao.getSomebodyParentDeptsPmphUserOfSomeRole(SbId, role_id, role_name);
 
+        List<PmphUser> result = pmphUserDao.getSomebodyParentDeptsDirectorPmphUser(SbId);
 
         return result;
     }

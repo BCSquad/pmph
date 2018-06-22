@@ -230,4 +230,11 @@ public interface PmphUserDao {
      * @return
      */
     PmphUser getPmphUserByOpenid(@Param(value = "wechatUserId") String wechatUserId);
+
+    /**
+     * 根据某人id查出其 本部门及上级各部门的部门主任（is_director=1）
+     * @param sbId A某 pmphUser的id
+     * @return
+     */
+    List<PmphUser> getSomebodyParentDeptsDirectorPmphUser(Long sbId);
 }

@@ -776,8 +776,9 @@ public class TextbookServiceImpl implements TextbookService {
                     PmphUser pu = pmphUserService.get(Long.parseLong(id));
                     if (StringUtil.notEmpty(pu.getOpenid())) {
                         touserOpenidSet.add(pu.getOpenid());
-						useridList.add(pu.getId());
+
                     }
+					useridList.add(pu.getId());
                 }
 				touserOpenidSet.remove(null);
                 touser = touserOpenidSet.toString();

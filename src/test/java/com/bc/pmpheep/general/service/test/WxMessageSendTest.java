@@ -96,4 +96,5 @@ public class WxMessageSendTest extends BaseTest{
         System.out.println("re="+re);
     }
 
+
 }

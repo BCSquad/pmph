@@ -114,5 +114,45 @@
 		select * from material_type where parent_id = #{parentId}
 		order by sort;
 	</select>
-	
+
+
+	<!--查询分类下的教材-->
+	<select id="queryMaterialByMaterialTypeId" parameterType="Long" resultType="int">
+		select count(id) from material
+		where material_type = #{id}
+
+	</select>
+
+	<!--查询分类下的出版图书-->
+	<select id="queryBookByMaterialTypeId" parameterType="Long" resultType="int">
+		select count(id) from book
+		where type = #{id}
+
+	</select>
+
+	<!--加载下一级分类-->
+	<select id="lazyQueryListMaterialType" parameterType="Long" resultType="com.bc.pmpheep.back.vo.MaterialTypeVO">
+		select
+		m.*
+		,if(count(cm.id)>0,FALSE ,TRUE ) isLeaf
+		from material_type m
+		left join material_type cm on cm.parent_id = m.id
+		where m.parent_id = #{parentId}
+		group by m.id
+		order by m.sort
+	</select>
+
+	<!--根据id 加载当前分类-->
+	<select id="getMaterialTypeVoById" parameterType="Long" resultType="com.bc.pmpheep.back.vo.MaterialTypeVO">
+		select
+		m.*
+		,if(count(cm.id)>0,FALSE ,TRUE ) isLeaf
+		from material_type m
+		left join material_type cm on cm.parent_id = m.id
+		where m.id = #{id}
+		group by m.id
+	</select>
+
+
+
 </mapper>
