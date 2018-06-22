@@ -55,6 +55,8 @@ public class CmsContent implements java.io.Serializable {
     private Long      bookmarks;
     // 是否分类置顶
     private Boolean   isStick;
+    //类型 0-全部 1-pc 2-app
+    private int apporpc;
     // 分类显示顺序
     private Integer   sort;
     // 置顶到期时间
@@ -658,5 +660,13 @@ public class CmsContent implements java.io.Serializable {
 
     public void setAuthorname(String authorname) {
         this.authorname = authorname;
+    }
+
+    public int getApporpc() {
+        return apporpc;
+    }
+
+    public void setApporpc(int apporpc) {
+        this.apporpc = apporpc;
     }
 }
