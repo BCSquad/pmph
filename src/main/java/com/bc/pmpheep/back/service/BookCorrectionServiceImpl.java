@@ -375,6 +375,7 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 			rows = bookCorrectionDao.bookFeedBackList(map);
 			for(BookFeedBack bookFeedBack:rows){
 				bookFeedBack.setResultS(bookFeedBack.getResult() == 1?"已审核":"未审核");
+				bookFeedBack.setAuthorReply("null".equals(bookFeedBack.getAuthorReply())?"":bookFeedBack.getAuthorReply());
 				SimpleDateFormat lsdStrFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				try {
 					bookFeedBack.setAuthDateS(ObjectUtil.isNull(bookFeedBack.getAuthDate())?"":lsdStrFormat.format(bookFeedBack.getAuthDate()));

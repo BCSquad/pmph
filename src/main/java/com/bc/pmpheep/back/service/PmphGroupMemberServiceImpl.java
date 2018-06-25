@@ -69,9 +69,9 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	@Override
 	public PmphGroupMember addPmphGroupMember(PmphGroupMember pmphGroupMember) throws CheckedServiceException {
 		if (null == pmphGroupMember.getDisplayName()) {
-//			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
-//					"小组内显示名称为空");
-			pmphGroupMember.setDisplayName("");
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+					"小组内显示名称为空");
+			//pmphGroupMember.setDisplayName("");
 		}
 		pmphGroupMemberDao.addPmphGroupMember(pmphGroupMember);
 		return pmphGroupMember;
@@ -228,11 +228,11 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
                         if (pmphGroupMember.getIsWriter()) {
                             WriterUser writerUser =
                             writerUserService.get(pmphGroupMember.getUserId());
-                            pmphGroupMember.setDisplayName(writerUser.getRealname());
+                            pmphGroupMember.setDisplayName(StringUtil.isEmpty(writerUser.getRealname())?writerUser.getUsername():writerUser.getRealname());
                             writers.add(pmphGroupMember.getUserId());
                         } else {
                             PmphUser user = pmphUserService.get(pmphGroupMember.getUserId());
-                            pmphGroupMember.setDisplayName(user.getRealname());
+                            pmphGroupMember.setDisplayName(StringUtil.isEmpty(user.getRealname())?user.getUsername():user.getRealname());
                             pmphs.add(pmphGroupMember.getUserId());
                         }
                         pmphGroupMember.setGroupId(groupId);
@@ -629,9 +629,11 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 				if(null== member || member.getId() == null ) {
 					if(StringUtil.isEmpty(pmphGroupMember.getDisplayName())) {
 						if(isWriter) {
-							pmphGroupMember.setDisplayName(StringUtil.isEmpty(writerUserService.get(pmphGroupMember.getUserId()).getRealname())?"":writerUserService.get(pmphGroupMember.getUserId()).getUsername());
+							WriterUser writerUser=writerUserService.get(pmphGroupMember.getUserId());
+							pmphGroupMember.setDisplayName(StringUtil.isEmpty(writerUser.getRealname())?writerUser.getUsername():writerUser.getRealname());
 						}else {
-							pmphGroupMember.setDisplayName(StringUtil.isEmpty(pmphUserService.get(pmphGroupMember.getUserId()).getRealname())?"":pmphUserService.get(pmphGroupMember.getUserId()).getUsername());
+							PmphUser mUser=pmphUserService.get(pmphGroupMember.getUserId());
+							pmphGroupMember.setDisplayName(StringUtil.isEmpty(mUser.getRealname())?mUser.getUsername():mUser.getRealname());
 						}
 					}
 					pmphGroupMember.setGroupId(groupId);
