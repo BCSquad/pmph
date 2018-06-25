@@ -55,7 +55,8 @@ public class OAuth2Controller {
         String redirectUrl = "";
         if (resultUrl != null) {
             // String reqUrl = request.getLocalAddr();
-            String reqUrl = "20097r18u8.iask.in";// 备案域名
+          //  String reqUrl = "20097r18u8.iask.in";// 备案域名
+            String reqUrl = "120.76.221.250:11000";// 备案域名
             // System.out.println("request.getServletPath()=" + request.getServletPath());
             // System.out.println("request.getRequestURL()=" + request.getRequestURL());
             // System.out.println("request.getLocalAddr()=" + request.getLocalAddr());
