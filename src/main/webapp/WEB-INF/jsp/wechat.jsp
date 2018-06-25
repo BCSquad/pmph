@@ -13,11 +13,11 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <script type="text/javascript">
             var appLogin = "120.76.221.250";//app 测试微信访问
-           // var appLogin = "120.76.221.250";
+           // var appLogin = "192.168.100.109"; //正式
            // var appLogin = "127.0.0.1:8088"; // app开发
-            //var pcLogin = "192.168.100.109:8089";
-            //var pcLogin = "120.76.221.250:8089";//测试
-            var pcLogin = "127.0.0.1:8089"; //开发
+            var pcLogin = "120.76.221.250";//测试
+            //var pcLogin = "192.168.100.135"; //正式
+            //var pcLogin = "127.0.0.1:8089"; //开发
             var Cookie ={
                 /**
                  * getCookie
