@@ -32,6 +32,8 @@ public class CmsContentVO implements Serializable {
     private Long      bookmarks;
     // 是否分类置顶
     private Boolean   isStick;
+    //类型 0-全部 1-pc 2-app
+    private int apporpc;
     // 是否热门
     private Boolean   isHot;
     // 是否推荐
@@ -529,5 +531,13 @@ public class CmsContentVO implements Serializable {
 
     public void setAuthorname(String authorname) {
         this.authorname = authorname;
+    }
+
+    public int getApporpc() {
+        return apporpc;
+    }
+
+    public void setApporpc(int apporpc) {
+        this.apporpc = apporpc;
     }
 }
