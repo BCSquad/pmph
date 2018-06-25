@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.bc.pmpheep.back.po.*;
+import com.bc.pmpheep.back.vo.*;
 import com.bc.pmpheep.wx.service.WXQYUserService;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,21 +16,12 @@ import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.dao.TopicDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
-import com.bc.pmpheep.back.po.PmphUser;
-import com.bc.pmpheep.back.po.Topic;
-import com.bc.pmpheep.back.po.TopicLog;
-import com.bc.pmpheep.back.po.WriterUserTrendst;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
-import com.bc.pmpheep.back.vo.TopicDeclarationVO;
-import com.bc.pmpheep.back.vo.TopicDirectorVO;
-import com.bc.pmpheep.back.vo.TopicEditorVO;
-import com.bc.pmpheep.back.vo.TopicOPtsManagerVO;
-import com.bc.pmpheep.back.vo.TopicTextVO;
 import com.bc.pmpheep.erp.db.SqlHelper;
 import com.bc.pmpheep.erp.service.InfoWorking;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -69,6 +62,12 @@ public class TopicServiceImpl implements TopicService {
 	WXQYUserService service;
 	@Autowired
 	WxSendMessageService wxSendMessageService;
+
+	@Autowired
+	private PmphDepartmentService    pmphDepartmentService;
+
+	@Autowired
+	private PmphUserService          pmphUserService;
 
 	@Override
 	public PageResult<TopicOPtsManagerVO> listOpts(String sessionId, PageParameter<TopicOPtsManagerVO> pageParameter)
@@ -541,7 +540,12 @@ public class TopicServiceImpl implements TopicService {
 
 	@Override
 	public PageResult<TopicDeclarationVO> listCheckTopic(List<Long> authProgress,
-			PageParameter<TopicDeclarationVO> pageParameter) throws CheckedServiceException {
+			PageParameter<TopicDeclarationVO> pageParameter,String sessionId) throws CheckedServiceException {
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (ObjectUtil.isNull(pmphUser)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
+					"用户为空");
+		}
 		if (CollectionUtil.isEmpty(authProgress)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.ILLEGAL_PARAM,
 					"选题申报状态不对");
@@ -550,11 +554,43 @@ public class TopicServiceImpl implements TopicService {
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 		String submitTime1 = DateUtil.date2Str(pageParameter.getParameter().getSubmitTime1(), "yyyy-MM-dd");
 		String submitTime2 = DateUtil.date2Str(pageParameter.getParameter().getSubmitTime2(), "yyyy-MM-dd");
+
+
+		List<Long> editor_id_list = null;
+		Long departmentId = null;
+
+		if(pmphUser.getIsAdmin()){ //登录人是管理员
+			//do nothing ,for now
+		}else if(pmphUser.getIsDirector() && pmphUser.getDepartmentId()==1l){ // 登录人是人卫社部门主任 即最上级主任
+
+		}else if(pmphUser.getIsDirector()){ //登录人是部门主任
+			departmentId = pmphUser.getDepartmentId(); // 部门主任传入其部门id 可见分配到其部门的申报
+			PmphDepartment pmphDepartment =
+					pmphDepartmentService.getPmphDepartmentById(pmphUser.getDepartmentId());
+			PageParameter<PmphUserManagerVO> parameter = new PageParameter<>(1, 10000);
+			PmphUserManagerVO pmphUserManagerVO = new PmphUserManagerVO();
+			pmphUserManagerVO.setPath(pmphDepartment.getPath());
+			pmphUserManagerVO.setDepartmentId(pmphDepartment.getId());
+			parameter.setParameter(pmphUserManagerVO);
+			PageResult<PmphUserManagerVO> listPageResult =
+					pmphUserService.getListPmphUser(parameter, null);
+			List<PmphUserManagerVO> listPmphUserManagerVOs = listPageResult.getRows();
+			if (listPmphUserManagerVOs.size()>0){
+				editor_id_list = new ArrayList<Long>();
+			}
+			for (PmphUserManagerVO pmManagerVO : listPmphUserManagerVOs) {
+				editor_id_list.add(pmManagerVO.getId()); //部门主任传入其属成员id 可见分配给 本人及下级各迭代层级部门成员的申报
+			}
+		}else{ // 普通成员
+			editor_id_list = new ArrayList<Long>();
+			editor_id_list.add(pmphUser.getId()); //编辑本人传入本人id可见分配给 本人的申报
+		}
+
 		Integer total = topicDao.listCheckTopicTotal(authProgress, pageParameter.getParameter().getBookname(),
-				submitTime1,submitTime2);
+				submitTime1,submitTime2,editor_id_list,departmentId);
 		if (total > 0) {
 			List<TopicDeclarationVO> list = topicDao.listCheckTopic(authProgress, pageParameter.getPageSize(),
-					pageParameter.getStart(), pageParameter.getParameter().getBookname(), submitTime1,submitTime2);
+					pageParameter.getStart(), pageParameter.getParameter().getBookname(), submitTime1,submitTime2,editor_id_list,departmentId);
 			list = addState(list);
 			pageResult.setRows(list);
 		}

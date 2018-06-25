@@ -183,12 +183,17 @@ public interface TopicDao {
 	 *
 	 * @param authProgress
 	 *            审核进度
+	 * @param editor_id_list
+	 * @param departmentId
 	 * @return
 	 *
 	 */
 	List<TopicDeclarationVO> listCheckTopic(@Param("authProgress") List<Long> authProgress,
-			@Param("pageSize") Integer pageSize, @Param("start") Integer start, @Param("bookname") String bookname,
-			@Param("submitTime1") String submitTime1,@Param("submitTime2") String submitTime2);
+											@Param("pageSize") Integer pageSize, @Param("start") Integer start, @Param("bookname") String bookname,
+											@Param("submitTime1") String submitTime1,
+											@Param("submitTime2") String submitTime2,
+											@Param("editor_id_list") List<Long> editor_id_list,
+											@Param("departmentId")Long departmentId);
 
 	/**
 	 * 
@@ -197,11 +202,17 @@ public interface TopicDao {
 	 *
 	 * @param authProgress
 	 *            审核进度
+	 * @param editor_id_list
+	 * @param departmentId
 	 * @return
 	 *
 	 */
-	Integer listCheckTopicTotal(@Param("authProgress") List<Long> authProgress, @Param("bookname") String bookname,
-			@Param("submitTime1") String submitTime1,@Param("submitTime2") String submitTime2);
+	Integer listCheckTopicTotal(@Param("authProgress") List<Long> authProgress,
+								@Param("bookname") String bookname,
+								@Param("submitTime1") String submitTime1,
+								@Param("submitTime2") String submitTime2,
+								@Param("editor_id_list") List<Long> editor_id_list,
+								@Param("departmentId")Long departmentId);
 
 	/**
 	 * 

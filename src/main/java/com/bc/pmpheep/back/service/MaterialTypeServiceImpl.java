@@ -158,16 +158,22 @@ public class MaterialTypeServiceImpl extends BaseService implements MaterialType
 			materialTypeVO.setParentId(0l);
 			materialTypeVO.setSort(1);
 			materialTypeVO.setIsLeaf(false);
-			materialTypeVO.setTypeName("教材分类");
+			materialTypeVO.setTypeName("教材分类根目录");
 			materialTypeVO.setNote("根节点");
-			materialTypeVO.setPath("-");
+			materialTypeVO.setPath("/");
 			List<MaterialTypeVO> pm = materialTypeDao.lazyQueryListMaterialType(0l);
 			materialTypeVO.setChildrenMaterialTypeVO(pm);
 		}else{ //若有传入 则parentId为当前点击节点的id
 			materialTypeVO = materialTypeDao.getMaterialTypeVoById(parentId);
 			List<MaterialTypeVO> cm = materialTypeDao.lazyQueryListMaterialType(parentId);
+			for (MaterialTypeVO m:cm) {
+				if("-".equals(m.getNote())){
+					m.setNote("");
+				}
+			}
 			materialTypeVO.setChildrenMaterialTypeVO(cm);
 		}
+
 
 		return materialTypeVO;
 	}

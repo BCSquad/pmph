@@ -80,7 +80,7 @@ public interface TopicService {
 	 *
 	 */
 	PageResult<TopicDeclarationVO> listCheckTopic(List<Long> authProgress,
-			PageParameter<TopicDeclarationVO> pageParameter) throws CheckedServiceException;
+			PageParameter<TopicDeclarationVO> pageParameter ,String sessionId) throws CheckedServiceException;
 
 	/**
 	 * Description:获取主任可以查询到的选题申报信息
