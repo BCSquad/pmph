@@ -43,8 +43,14 @@ public class MaterialTypeController {
         type.setNote(StringUtil.isEmpty(type.getNote())?type.getTypeName():type.getNote());
         type.setSort(type.getSort()!=null?type.getSort():999);
 
-        MaterialType ParentType = materialTypeService.getMaterialTypeById(type.getParentId());
-        String path = ParentType.getPath() + "-" + ParentType.getId();
+        String path = "0";
+        if(type.getParentId()>0){
+            MaterialType ParentType = materialTypeService.getMaterialTypeById(type.getParentId());
+            path = ParentType.getPath() + "-" + ParentType.getId();
+        }else{
+            path = "0";
+        }
+
         type.setPath(path);
 
         MaterialType resultType = materialTypeService.addMaterialType(type);

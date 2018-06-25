@@ -86,7 +86,7 @@
 			<if test=" sort != null">
 				sort= #{sort},
 			</if>
-			<if test=" note != null and note !=''">
+			<if test=" note != null">
 				note = #{note},
 			</if>
 		</set>
