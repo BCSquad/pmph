@@ -611,12 +611,12 @@ public class PmphUserServiceImpl implements PmphUserService {
         if (StringUtil.notEmpty(name)) {
             pageParameter.getParameter().setName(name);
         }
-        String path = pageParameter.getParameter().getPath();
+        /*String path = pageParameter.getParameter().getPath();
         Long departmentId = pageParameter.getParameter().getDepartmentId();
         if (StringUtil.notEmpty(path) && ObjectUtil.notNull(departmentId)) {
             pageParameter.getParameter().setPath(path + "-"
                                                  + java.lang.String.valueOf(departmentId) + '-');
-        }
+        }*/
         if(!ObjectUtil.isNull(groupId)){
             pageParameter.getParameter().setGroupId(groupId);
         }

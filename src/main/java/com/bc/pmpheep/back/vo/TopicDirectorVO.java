@@ -47,6 +47,10 @@ public class TopicDirectorVO implements Serializable {
 	private String typeName;
 	// 提交时间
 	private Timestamp submitTime;
+	// 提交时间 查询起
+	private Timestamp submitTime1;
+	// 提交时间 查询止
+	private Timestamp submitTime2;
 	/**
 	 * 选题申报状态
 	 */
@@ -241,4 +245,19 @@ public class TopicDirectorVO implements Serializable {
 		this.realname = realname;
 	}
 
+	public Timestamp getSubmitTime1() {
+		return submitTime1;
+	}
+
+	public void setSubmitTime1(Timestamp submitTime1) {
+		this.submitTime1 = submitTime1;
+	}
+
+	public Timestamp getSubmitTime2() {
+		return submitTime2;
+	}
+
+	public void setSubmitTime2(Timestamp submitTime2) {
+		this.submitTime2 = submitTime2;
+	}
 }
