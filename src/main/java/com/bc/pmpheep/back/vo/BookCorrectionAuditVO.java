@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 
+import com.bc.pmpheep.annotation.ExcelHeader;
 import org.apache.ibatis.type.Alias;
 
 /**
@@ -21,6 +22,7 @@ public class BookCorrectionAuditVO implements Serializable {
     /**
      * 图书名称
      */
+	@ExcelHeader(header = " 图书名称")
     private String    bookname;
     /**
      * 图书图片
@@ -29,22 +31,28 @@ public class BookCorrectionAuditVO implements Serializable {
     /**
      * 图书作者
      */
+	@ExcelHeader(header = "图书作者")
     private String author;
     /**
      * 图书出版时间
      */
+	//@ExcelHeader(header = "图书出版时间")
     private Date publishDate;
     /**
      * 页码
      */
+	@ExcelHeader(header = "页码")
     private Integer page;
     /**
      * 行数
      */
+	@ExcelHeader(header = "行数")
     private Integer line;
     /**
      * 纠错内容
      */
+
+	@ExcelHeader(header = "纠错内容")
     private String content ;
     /**
      * 附件
@@ -57,14 +65,17 @@ public class BookCorrectionAuditVO implements Serializable {
     /**
      * 提交者姓名
      */
+	@ExcelHeader(header = "提交者姓名")
     private String realname;
     /**
      * 提交时间
      */
+	@ExcelHeader(header = "提交时间")
     private Timestamp gmtCreate;
     /**
      * 第一主编回复内容
      */
+	@ExcelHeader(header = "第一主编回复内容")
     private String authorReply ;
     /**
      * 第一主编是否回复
@@ -81,6 +92,7 @@ public class BookCorrectionAuditVO implements Serializable {
     /**
      * 策划编辑回复内容
      */
+	@ExcelHeader(header = "策划编辑回复内容")
     private String  editorReply ;
     /**
      *检查结果
@@ -89,6 +101,7 @@ public class BookCorrectionAuditVO implements Serializable {
     /**
      * 策划编辑姓名
      */
+	//@ExcelHeader(header = "策划编辑姓名")
     private String editorName;
     
     

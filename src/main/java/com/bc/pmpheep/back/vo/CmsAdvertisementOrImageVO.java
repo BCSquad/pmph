@@ -77,6 +77,10 @@ public class CmsAdvertisementOrImageVO implements Serializable {
 	 */
 	private Boolean isShowHeading;
 	/**
+	 * 应用类型
+	 */
+	private short apporpc;
+	/**
 	 * 创建时间
 	 */
 	private Timestamp gmtCreate;
@@ -284,4 +288,11 @@ public class CmsAdvertisementOrImageVO implements Serializable {
 		super();
 	}
 
+	public short getApporpc() {
+		return apporpc;
+	}
+
+	public void setApporpc(short apporpc) {
+		this.apporpc = apporpc;
+	}
 }

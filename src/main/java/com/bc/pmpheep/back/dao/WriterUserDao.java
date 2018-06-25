@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -194,7 +195,14 @@ public interface WriterUserDao {
 	 */
     Integer isTop(@Param("id") Long id, @Param("isTop") Boolean isTop);
 
-    // /**
+	/**
+	 * 导出个人用户信息
+	 * @param map
+	 * @return
+	 */
+	List<WriterUserManagerVO> exportWriterInfo(Map map);
+
+	// /**
     // *
     // * <pre>
     // * 功能描述：查询总条数

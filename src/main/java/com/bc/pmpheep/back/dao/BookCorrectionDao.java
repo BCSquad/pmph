@@ -153,4 +153,11 @@ public interface BookCorrectionDao {
 	 * @return
 	 */
 	Integer replyBookFeedBackWriter(@Param("id") Long id, @Param("authorReply") String authorReply,@Param("authorId") Long authorId);
+
+	/**
+	 * 导出审核纠错信息
+	 * @param map
+	 * @return
+	 */
+	List<BookCorrectionAuditVO> exportBookCheck(Map<String, Object> map);
 }

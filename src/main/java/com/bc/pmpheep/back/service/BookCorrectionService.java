@@ -146,4 +146,10 @@ public interface BookCorrectionService {
 	Integer replyBookFeedBackWriter(Long id, String authorReply,HttpServletRequest request);
 
 	List<BookFeedBack> exportfeedback(Boolean result);
+
+	/**
+	 * 导出图书纠错信息
+	 * @return
+	 */
+	List<BookCorrectionAuditVO> exportBookCheck(String bookname);
 }
