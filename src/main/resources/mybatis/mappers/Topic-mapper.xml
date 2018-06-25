@@ -814,6 +814,23 @@
 		<if test="bookname != null and bookname !=''">
 			AND t.bookname like concat('%',#{bookname},'%')
 		</if>
+
+		<if test="editor_id_list != null or departmentId !=null ">/*管理员则两个参数都为null，不进行此限制 全部可见 包括未分配的 */
+			and
+				(
+				1=2
+				<if test="editor_id_list != null "> /*编辑本人传入本人id，部门主任传入其属成员id 可见分配给 本人及所管理部门成员的申报*/
+					or t.editor_id in
+					<foreach collection="editor_id_list" item="editor_id" separator="," open="(" close=")" index="i">
+						#{editor_id}
+					</foreach>
+				</if>
+				<if test="departmentId !=null "> /*部门主任传入其部门id 可见分配到其部门的申报*/
+					or t.department_id = #{departmentId}
+				</if>
+				)
+		</if>
+
 		<!--<if test="submitTime != null">
 			AND t.submit_time like concat('%',#{submitTime},'%')
 		</if>-->
@@ -845,6 +862,21 @@
 		<!--<if test="submitTime != null">
 			AND t.submit_time like concat('%',#{submitTime},'%')
 		</if>-->
+		<if test="editor_id_list != null or departmentId !=null ">/*管理员则两个参数都为null，不进行此限制 全部可见 包括未分配的 */
+			and
+			(
+			1=2
+			<if test="editor_id_list != null "> /*编辑本人传入本人id，部门主任传入其属成员id 可见分配给 本人及所管理部门成员的申报*/
+				or t.editor_id in
+				<foreach collection="editor_id_list" item="editor_id" separator="," open="(" close=")" index="i">
+					#{editor_id}
+				</foreach>
+			</if>
+			<if test="departmentId !=null "> /*部门主任传入其部门id 可见分配到其部门的申报*/
+				or t.department_id = #{departmentId}
+			</if>
+			)
+		</if>
 		<if test="submitTime1 != null  and submitTime1 != '' ">
 			AND
 			TO_DAYS(t.submit_time) &gt;= TO_DAYS(#{submitTime1})

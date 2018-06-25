@@ -346,7 +346,7 @@ public class TopicController {
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查看选题申报")
 	@RequestMapping(value = "/list/checkTopic", method = RequestMethod.GET)
 	public ResponseBean checkTopic(String authProgress, String bookname, String submitTime1,String submitTime2, Integer pageSize,
-			Integer pageNumber) {
+			Integer pageNumber,HttpServletRequest request) {
 		String[] strs = authProgress.split(",");
 		List<Long> progress = new ArrayList<>();
 		for (String str : strs) {
@@ -366,7 +366,8 @@ public class TopicController {
 			topicDeclarationVO.setSubmitTime2(DateUtil.str2Timestam(submitTime2));
 		}
 		pageParameter.setParameter(topicDeclarationVO);
-		return new ResponseBean(topicService.listCheckTopic(progress, pageParameter));
+		String sessionId = CookiesUtil.getSessionId(request);
+		return new ResponseBean(topicService.listCheckTopic(progress, pageParameter,sessionId));
 	}
 
 	/**
