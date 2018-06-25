@@ -487,14 +487,17 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 				vo = com.alibaba.fastjson.JSON.parseObject(voS,WriterUserManagerVO.class);
 				list.remove(i);
 				list.add(i,vo);
-				switch(vo.getProgress()){// 0=未提交/1=已提交/2=被退回/3=通过
-					case 0:vo.setProgressName("未提交");break;
-					case 1:vo.setProgressName("已提交");break;
-					case 2:vo.setProgressName("被退回");break;
-					case 3:vo.setProgressName("通过");break;
-					default:vo.setProgressName("未提交");
+				if(!ObjectUtil.isNull(vo.getProgress())){
+					switch(vo.getProgress()){// 0=未提交/1=已提交/2=被退回/3=通过
+						case 0:vo.setProgressName("未提交");break;
+						case 1:vo.setProgressName("已提交");break;
+						case 2:vo.setProgressName("被退回");break;
+						case 3:vo.setProgressName("通过");break;
+						default:vo.setProgressName("未提交");
 
+					}
 				}
+
 				switch (vo.getRank()) {
 					case 0:
 						vo.setRankName("普通用户");
