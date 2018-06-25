@@ -115,7 +115,12 @@ public class WeChatLoginController {
                                         + "<pmpheep>").enpsw);
                         model.addAttribute("username", username);
                         model.addAttribute("password", password);
-                        model.addAttribute("isLogin", "1");
+                        if(StringUtil.isEmpty(request.getParameter("commission"))){
+                            model.addAttribute("isLogin", "1"); //跳转到首页
+                        }else{
+                            model.addAttribute("isLogin", "5"); //跳转到代办页面
+                        }
+
                     }
                 }
             }else{ /*企业微信 */
