@@ -145,8 +145,8 @@ public class PmphLoginController {
         }
 
         PmphUser pmphUser = null;
-        if (StringUtil.notEmpty(wechatUserId) && !"sso".equals(wechatUserId)) { //由个人微信我的企业号 登录过来
-            if (StringUtil.notEmpty(username)) {//用户绑定
+        if (StringUtil.notEmpty(wechatUserId) && !"sso".equals(wechatUserId)) { //由微信--我的企业号 登录过来
+            if (StringUtil.notEmpty(username)) {//用户名 如果不为空，手动输入
                 // 如果是微信登录过来 且wechatUserId 与 username 同时不为空，此时 维护 pmph_user_wechat 表
                 PmphUserWechat pmphUserWechat = new PmphUserWechat();
                 pmphUserWechat.setUsername(username);
@@ -158,7 +158,10 @@ public class PmphLoginController {
                 }
                 pmphUser = pmphUserService.login(username, new DesRun("", password).enpsw);
                 pmphUserWechat.setUserid(pmphUser.getId());
-                pmphUserWechatService.add(pmphUserWechat); //微信绑定
+                if(pmphUserService.login(wechatUserId)==null){ //判断是openid 还是 wechat_id
+                    pmphUserWechatService.add(pmphUserWechat); //微信 我的企业号 绑定userid
+                }
+
                 //pmphUser = pmphUserService.login(username, null);
             } else {//已经绑定
                 pmphUser = pmphUserService.login(wechatUserId);
@@ -221,7 +224,7 @@ public class PmphLoginController {
         resultMap.put(Const.SEESION_PMPH_USER_TOKEN, new DesRun(password, username).enpsw);
         resultMap.put("pmphUserPermissionIds", pmphUserPermissionIds);
         // resultMap.put("materialPermission", materialPermission);
-        return new ResponseBean(resultMap);
+            return new ResponseBean(resultMap);
         // } catch (CheckedServiceException cException) {
         // return new ResponseBean(cException);
         // }

@@ -149,7 +149,7 @@
                 //alert(1);
                 //window.location.href='http://'+pcLogin+'/#/login?wechatUserId='+'${UserId}';
                 //window.location.href='http://120.76.221.250/#/login';
-                window.location.href='http://'+appLogin+'/wx/#/login?wechatUserId='+'${UserId}';  //这个地方应该跳转到app登录页面进行认证绑定
+                window.location.href='http://'+appLogin+'/wx/#/login?wechatUserId='+'${UserId}'+'&isIndexOrCommission='+${isIndexOrCommission};  //app 登录
             }else if(1=='${isLogin}'){
                 //window.location.href='http://'+pcLogin+'/#/login?username='+'${username}'+'&password='+'${password}'+'&wechatUserId='+'${UserId}'+'&token='+'${token}';
                 window.location.href='http://'+appLogin+'/wx/#/index?sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';// 这个地方应该直接跳转到app 首页

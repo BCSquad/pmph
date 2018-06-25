@@ -278,11 +278,11 @@ public class FileDownLoadController {
 		}
 	}
 
+
 	/**
 	 *
 	 * Description:导出个人信息
 	 *
-
 	 */
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出个人信息")
 	@RequestMapping(value = "/users/writer/list/exportWriterUser", method = RequestMethod.GET)
