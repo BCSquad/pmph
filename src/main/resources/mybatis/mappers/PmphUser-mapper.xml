@@ -438,7 +438,7 @@
 		</if>
 		<if
 			test="parameter.path !=null and parameter.path !='' and parameter.departmentId !=null">
-			and (d.path like concat(#{parameter.path},'%') or
+			and (d.path like concat(#{parameter.path},'-',#{parameter.departmentId},'-','%') or
 			d.id=#{parameter.departmentId} or d.parent_id
 			=#{parameter.departmentId} )
 		</if>
@@ -475,7 +475,7 @@
 		</if>
 		<if
 			test="parameter.path !=null and parameter.path !='' and parameter.departmentId != null">
-			and (d.path like concat(#{parameter.path},'%') or
+			and (d.path like concat(#{parameter.path},'-',#{parameter.departmentId},'-','%') or
 			d.id=#{parameter.departmentId} or d.parent_id
 			=#{parameter.departmentId})
 		</if>

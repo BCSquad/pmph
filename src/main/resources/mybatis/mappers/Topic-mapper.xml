@@ -457,8 +457,16 @@
 		<if test="bookname != null and bookname !=''">
 			AND t.bookname like concat('%',#{bookname},'%')
 		</if>
-		<if test="submitTime != null">
+		<!--<if test="submitTime != null and submitTime != ''">
 			AND t.submit_time like concat('%',#{submitTime},'%')
+		</if>-->
+		<if test="submitTime1 != null and submitTime1 != '' ">
+			AND
+			TO_DAYS(t.submit_time) &gt;= TO_DAYS(#{submitTime1})
+		</if>
+		<if test="submitTime2 != null and submitTime2 != '' ">
+			AND
+			TO_DAYS(t.submit_time) &lt;= TO_DAYS(#{submitTime2})
 		</if>
 		ORDER BY t.submit_time desc
 		LIMIT
@@ -487,8 +495,16 @@
 		<if test="bookname != null and bookname !=''">
 			AND t.bookname like concat('%',#{bookname},'%')
 		</if>
-		<if test="submitTime != null">
+		<!--<if test="submitTime != null">
 			AND t.submit_time like concat('%',#{submitTime},'%')
+		</if>-->
+		<if test="submitTime1 != null and submitTime1 != '' ">
+			AND
+			TO_DAYS(t.submit_time) &gt;= TO_DAYS(#{submitTime1})
+		</if>
+		<if test="submitTime2 != null and submitTime2 != '' ">
+			AND
+			TO_DAYS(t.submit_time) &lt;= TO_DAYS(#{submitTime2})
 		</if>
 		ORDER BY t.submit_time DESC
 	</select>
@@ -509,8 +525,16 @@
 		<if test="bookname != null and bookname !=''">
 			AND t.bookname like concat('%',#{bookname},'%')
 		</if>
-		<if test="submitTime != null">
+		<!--<if test="submitTime != null">
 			AND t.submit_time like concat('%',#{submitTime},'%')
+		</if>-->
+		<if test="submitTime1 != null and submitTime1 != '' ">
+			AND
+			TO_DAYS(t.submit_time) &gt;= TO_DAYS(#{submitTime1})
+		</if>
+		<if test="submitTime2 != null and submitTime2 != '' ">
+			AND
+			TO_DAYS(t.submit_time) &lt;= TO_DAYS(#{submitTime2})
 		</if>
 		ORDER BY t.submit_time DESC
 		LIMIT
@@ -533,8 +557,17 @@
 		<if test="bookname != null and bookname !=''">
 			AND t.bookname like concat('%',#{bookname},'%')
 		</if>
-		<if test="submitTime != null">
-			AND t.submit_time like concat('%',#{submitTime},'%')
+		<!--<if test="submitTime != null">
+			AND
+			t.submit_time like concat('%',#{submitTime},'%')
+		</if>-->
+		<if test="submitTime1 != null  and submitTime1 != '' ">
+			AND
+			TO_DAYS(t.submit_time) &gt;= TO_DAYS(#{submitTime1})
+		</if>
+		<if test="submitTime2 != null and submitTime2 != '' ">
+			AND
+			TO_DAYS(t.submit_time) &lt;= TO_DAYS(#{submitTime2})
 		</if>
 		ORDER BY t.submit_time DESC
 	</select>
@@ -781,8 +814,16 @@
 		<if test="bookname != null and bookname !=''">
 			AND t.bookname like concat('%',#{bookname},'%')
 		</if>
-		<if test="submitTime != null">
+		<!--<if test="submitTime != null">
 			AND t.submit_time like concat('%',#{submitTime},'%')
+		</if>-->
+		<if test="submitTime1 != null  and submitTime1 != '' ">
+			AND
+			TO_DAYS(t.submit_time) &gt;= TO_DAYS(#{submitTime1})
+		</if>
+		<if test="submitTime2 != null and submitTime2 != '' ">
+			AND
+			TO_DAYS(t.submit_time) &lt;= TO_DAYS(#{submitTime2})
 		</if>
 		ORDER BY t.submit_time DESC
 		limit
@@ -801,8 +842,16 @@
 		<if test="bookname != null and bookname !=''">
 			AND t.bookname like concat('%',#{bookname},'%')
 		</if>
-		<if test="submitTime != null">
+		<!--<if test="submitTime != null">
 			AND t.submit_time like concat('%',#{submitTime},'%')
+		</if>-->
+		<if test="submitTime1 != null  and submitTime1 != '' ">
+			AND
+			TO_DAYS(t.submit_time) &gt;= TO_DAYS(#{submitTime1})
+		</if>
+		<if test="submitTime2 != null and submitTime2 != '' ">
+			AND
+			TO_DAYS(t.submit_time) &lt;= TO_DAYS(#{submitTime2})
 		</if>
 		ORDER BY t.submit_time DESC
 	</select>
@@ -822,8 +871,16 @@
 		<if test="bookname != null and bookname !=''">
 			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
-		<if test="submitTime != null">
+		<!--<if test="submitTime != null">
 			AND a.submit_time like concat('%',#{submitTime},'%')
+		</if>-->
+		<if test="submitTime1 != null  and submitTime1 != '' ">
+			AND
+			TO_DAYS(a.submit_time) &gt;= TO_DAYS(#{submitTime1})
+		</if>
+		<if test="submitTime2 != null and submitTime2 != '' ">
+			AND
+			TO_DAYS(a.submit_time) &lt;= TO_DAYS(#{submitTime2})
 		</if>
 		ORDER BY a.submit_time DESC
 		LIMIT
@@ -849,8 +906,16 @@
 		<if test="bookname != null and bookname !=''">
 			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
-		<if test="submitTime != null">
+		<!--<if test="submitTime != null">
 			AND a.submit_time like concat('%',#{submitTime},'%')
+		</if>-->
+		<if test="submitTime1 != null  and submitTime1 != '' ">
+			AND
+			TO_DAYS(a.submit_time) &gt;= TO_DAYS(#{submitTime1})
+		</if>
+		<if test="submitTime2 != null and submitTime2 != '' ">
+			AND
+			TO_DAYS(a.submit_time) &lt;= TO_DAYS(#{submitTime2})
 		</if>
 		ORDER BY a.submit_time DESC) t
 	</select>
@@ -873,8 +938,16 @@
 		<if test="bookname != null and bookname !=''">
 			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
-		<if test="submitTime != null">
+		<!--<if test="submitTime != null">
 			AND a.submit_time like concat('%',#{submitTime},'%')
+		</if>-->
+		<if test="submitTime1 != null  and submitTime1 != '' ">
+			AND
+			TO_DAYS(a.submit_time) &gt;= TO_DAYS(#{submitTime1})
+		</if>
+		<if test="submitTime2 != null and submitTime2 != '' ">
+			AND
+			TO_DAYS(a.submit_time) &lt;= TO_DAYS(#{submitTime2})
 		</if>
 		ORDER BY a.submit_time DESC
 		LIMIT
@@ -899,8 +972,16 @@
 		<if test="bookname != null and bookname !=''">
 			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
-		<if test="submitTime != null">
+		<!--<if test="submitTime != null">
 			AND a.submit_time like concat('%',#{submitTime},'%')
+		</if>-->
+		<if test="submitTime1 != null  and submitTime1 != '' ">
+			AND
+			TO_DAYS(a.submit_time) &gt;= TO_DAYS(#{submitTime1})
+		</if>
+		<if test="submitTime2 != null and submitTime2 != '' ">
+			AND
+			TO_DAYS(a.submit_time) &lt;= TO_DAYS(#{submitTime2})
 		</if>
 		ORDER BY a.submit_time DESC) t
 	</select>
@@ -917,8 +998,16 @@
 		<if test="bookname != null and bookname !=''">
 			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
-		<if test="submitTime != null">
+		<!--<if test="submitTime != null">
 			AND a.submit_time like concat('%',#{submitTime},'%')
+		</if>-->
+		<if test="submitTime1 != null  and submitTime1 != '' ">
+			AND
+			TO_DAYS(a.submit_time) &gt;= TO_DAYS(#{submitTime1})
+		</if>
+		<if test="submitTime2 != null and submitTime2 != '' ">
+			AND
+			TO_DAYS(a.submit_time) &lt;= TO_DAYS(#{submitTime2})
 		</if>
 		ORDER BY a.submit_time DESC
 		LIMIT
@@ -935,8 +1024,16 @@
 		<if test="bookname != null and bookname !=''">
 			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
-		<if test="submitTime != null">
+		<!--<if test="submitTime != null">
 			AND a.submit_time like concat('%',#{submitTime},'%')
+		</if>-->
+		<if test="submitTime1 != null  and submitTime1 != '' ">
+			AND
+			TO_DAYS(a.submit_time) &gt;= TO_DAYS(#{submitTime1})
+		</if>
+		<if test="submitTime2 != null and submitTime2 != '' ">
+			AND
+			TO_DAYS(a.submit_time) &lt;= TO_DAYS(#{submitTime2})
 		</if>
 		ORDER BY a.submit_time DESC
 	</select>
@@ -957,8 +1054,16 @@
 		<if test="bookname != null and bookname !=''">
 			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
-		<if test="submitTime != null">
+		<!--<if test="submitTime != null">
 			AND a.submit_time like concat('%',#{submitTime},'%')
+		</if>-->
+		<if test="submitTime1 != null  and submitTime1 != '' ">
+			AND
+			TO_DAYS(a.submit_time) &gt;= TO_DAYS(#{submitTime1})
+		</if>
+		<if test="submitTime2 != null and submitTime2 != '' ">
+			AND
+			TO_DAYS(a.submit_time) &lt;= TO_DAYS(#{submitTime2})
 		</if>
 		ORDER BY a.submit_time DESC
 		LIMIT
@@ -976,8 +1081,16 @@
 		<if test="bookname != null and bookname !=''">
 			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
-		<if test="submitTime != null">
+		<!--<if test="submitTime != null">
 			AND a.submit_time like concat('%',#{submitTime},'%')
+		</if>-->
+		<if test="submitTime1 != null  and submitTime1 != '' ">
+			AND
+			TO_DAYS(a.submit_time) &gt;= TO_DAYS(#{submitTime1})
+		</if>
+		<if test="submitTime2 != null and submitTime2 != '' ">
+			AND
+			TO_DAYS(a.submit_time) &lt;= TO_DAYS(#{submitTime2})
 		</if>
 		ORDER BY a.submit_time DESC
 	</select>

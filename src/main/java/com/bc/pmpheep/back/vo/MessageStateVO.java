@@ -25,6 +25,7 @@ public class MessageStateVO implements Serializable {
 	private Short msgType;
 	// 发送时间
 	private Timestamp sendTime;
+	private String orgusername;
 	/**
 	 * 教材id
 	 */
@@ -176,5 +177,13 @@ public class MessageStateVO implements Serializable {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public String getOrgusername() {
+		return orgusername;
+	}
+
+	public void setOrgusername(String orgusername) {
+		this.orgusername = orgusername;
 	}
 }

@@ -256,6 +256,23 @@ public class OrgServiceImpl extends BaseService implements OrgService {
         }
         return pageResult;
     }
+    @Override
+    public List<OrgVO> exportOrgUser(OrgVO orgVO)
+            throws CheckedServiceException {
+
+        List<OrgVO> orgVOList = orgDao.exportOrgUser(orgVO);
+
+        for(OrgVO rgVO :orgVOList){
+            switch(rgVO.getProgress()){
+                case 0 : rgVO.setProgressName("待审核"); break;
+                case 1 : rgVO.setProgressName("已通过"); break;
+                case 2 : rgVO.setProgressName("已退回"); break;
+            }
+        }
+
+        return orgVOList;
+    }
+
 
     @Override
     public List<OrgVO> listOrgByOrgName(String orgName) throws CheckedServiceException {

@@ -350,9 +350,10 @@ public class DecPositionServiceImpl implements DecPositionService {
         List<DecPositionEditorSelectionVO> unselectedDecPositionEditorSelectionVOs =
                 new ArrayList<DecPositionEditorSelectionVO>();// 未遴选集合
         for (DecPositionEditorSelectionVO de : listEditorSelectionVOs) {
-            if (ObjectUtil.notNull(de.getRank())) {
+            /*if (ObjectUtil.notNull(de.getRank())) {
                 selectedDecPositionEditorSelectionVOs.add(de);
-            } else if (de.getChosenPosition() > 0) {
+            } else */
+            if (de.getChosenPosition() > 0) {
                 selectedDecPositionEditorSelectionVOs.add(de);
             } else {
                 unselectedDecPositionEditorSelectionVOs.add(de);

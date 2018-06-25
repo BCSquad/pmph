@@ -167,5 +167,10 @@ public interface OrgDao {
      */
     List<OrgExclVO> listAllOrgToExcel(@Param("chooseOrg") String[] chooseOrg);
 
-
+    /**
+     * 导出管理员信息
+     * @param orgVO
+     * @return
+     */
+    List<OrgVO> exportOrgUser(OrgVO orgVO);
 }

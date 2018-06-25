@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.vo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import com.bc.pmpheep.annotation.ExcelHeader;
 import org.apache.ibatis.type.Alias;
 
 /**
@@ -16,58 +17,77 @@ public class OrgVO implements Serializable {
     // 主键
     private String    id;
     // 机构名称
+    @ExcelHeader(header = "机构名称")
     private String    orgName;
     // 机构代码
+    @ExcelHeader(header = "机构代码")
     private String    username;
     // 管理员姓名
+    @ExcelHeader(header = "管理员姓名")
     private String    realname;
     // 机构类型id
     private String    orgTypeId;
     // 机构类型名称
+    //@ExcelHeader(header = "机构类型名称")
     private String    orgTypeName;
     // 上级机构id
     private String    parentId;
     // 区域id
     private String    areaId;
     // 所属区域名称
+   // @ExcelHeader(header = "所属区域名称")
     private String    areaName;
     // 联系人
+   // @ExcelHeader(header = "联系人")
     private String    contactPerson;
     // 联系电话
+    //@ExcelHeader(header = "联系电话")
     private String    contactPhone;
     // 审核进度
+
     private Integer   progress;
+    @ExcelHeader(header = "审核进度")
+    private String progressName;
     /**
      * 手机
      */
+    @ExcelHeader(header = "手机")
     private String    handphone;
     /**
      * 邮箱
      */
+    @ExcelHeader(header = "邮箱")
     private String    email;
     /**
      * 职务
      */
+    @ExcelHeader(header = "职务")
     private String    position;
     /**
      * 职称
      */
+    @ExcelHeader(header = " 职称")
     private String    title;
     /**
      * 地址
      */
+    @ExcelHeader(header = "  地址")
     private String    address;
     /**
      * 邮编
      */
+    @ExcelHeader(header = "  邮编")
     private String    postcode;
     /**
      * 委托书
      */
+    @ExcelHeader(header = "  委托书")
     private String    proxy;
     // 备注
+    @ExcelHeader(header = "  备注")
     private String    note;
     // 显示顺序
+    @ExcelHeader(header = "显示顺序")
     private Integer   sort;
     // 条件分页总条数
     private Integer   count;
@@ -376,5 +396,13 @@ public class OrgVO implements Serializable {
                + ", position=" + position + ", title=" + title + ", address=" + address
                + ", postcode=" + postcode + ", note=" + note + ", sort=" + sort + ", count="
                + count + ", gmtCreate=" + gmtCreate + "}";
+    }
+
+    public String getProgressName() {
+        return progressName;
+    }
+
+    public void setProgressName(String progressName) {
+        this.progressName = progressName;
     }
 }

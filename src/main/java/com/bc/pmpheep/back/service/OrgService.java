@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.service;
 
 import java.util.List;
 
+import com.bc.pmpheep.back.vo.WriterUserManagerVO;
 import org.apache.ibatis.annotations.Param;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
@@ -135,4 +136,10 @@ public interface OrgService {
     List<OrgExclVO> listAllOrgToExcel(String chooseOrg) throws CheckedServiceException;
 
 
+    /**
+     * 导出学校信息
+     * @param orgVO
+     * @return
+     */
+    List<OrgVO> exportOrgUser(OrgVO orgVO);
 }

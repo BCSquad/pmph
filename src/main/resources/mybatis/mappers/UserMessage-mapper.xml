@@ -272,7 +272,7 @@ AND t.is_withdraw = 1;
 		then
 		c.username when a.receiver_type =3
 		then
-		d.username end username,
+		'' end username, -- 用户名
 		case when
 		a.receiver_type =1
 		then
@@ -280,15 +280,23 @@ AND t.is_withdraw = 1;
 		then
 		c.realname when a.receiver_type =3
 		then
-		d.realname end name,
+		'' end name, -- 用户真实姓名
 		case when
 		a.receiver_type =1
 		then
-		bd.dp_name when a.receiver_type =2
+		'' when a.receiver_type =2
 		then
-		cd.org_name when a.receiver_type =3
+		'' when a.receiver_type =3
 		then
-		dd.org_name end dptname,
+		d.username end orgusername, -- 机构账号
+		case when
+		a.receiver_type =1
+		then
+		'' when a.receiver_type =2
+		then
+		'' when a.receiver_type =3
+		then
+		d.org_name end dptname, -- 机构名称
 		case
 		when
 		a.receiver_type =1
@@ -306,78 +314,28 @@ AND t.is_withdraw = 1;
 		handphone
 		from
 		user_message a
-		left join
-		(select a.*,1 usertype from pmph_user a) b
-		on
-		b.id=a.receiver_id
-		and
-		b.usertype = a.receiver_type
-		left join
-		pmph_department bd
-		on
-		bd.id=b.department_id
-		left join
-		(select a.*,2
-		usertype from writer_user a) c
-		on
-		c.id=a.receiver_id
-		and
-		c.usertype =
-		a.receiver_type
-		left join
-		org cd
-		on
-		cd.id = c.org_id
-		left join
-		(select a.*,3
-		usertype from org_user a) d
-		on
-		d.id=a.receiver_id
-		and
-		d.usertype =
-		a.receiver_type
-		left join
-		org dd
-		on
-		dd.id = d.org_id,
+		-- 社内用户 发送消息 查询部门名称 为机构名称
+		left join  (select a.*,1 usertype from pmph_user a) b on b.id=a.receiver_id and b.usertype = a.receiver_type
+		-- left join pmph_department bd on bd.id=b.department_id
+		-- 给作家用户发送消息 查询其机构
+		left join (select a.*,2 usertype from writer_user a) c on c.id=a.receiver_id and c.usertype = a.receiver_type
+		-- 	left join org cd on cd.id = c.org_id
+		-- 给机构用户发送消息 查询其机构
+		left join (select a.*,3 usertype,o.org_name  from org_user a LEFT JOIN org o on a.org_id = o.id) d on d.id=a.receiver_id and d.usertype = a.receiver_type
+		-- left join org dd on dd.id = d.org_id,
 		(SELECT
 		count(*) count
 		from
 		user_message a
-		left join
-		(select a.*,1 usertype from pmph_user a) b
-		on
-		b.id=a.receiver_id
-		and
-		b.usertype = a.receiver_type
-		left join
-		pmph_department bd
-		on
-		bd.id=b.department_id
-		left join
-		(select a.*,2
-		usertype from writer_user a) c
-		on
-		c.id=a.receiver_id
-		and
-		c.usertype =
-		a.receiver_type
-		left join
-		org cd
-		on
-		cd.id = c.org_id
-		left join
-		(select a.*,3
-		usertype from org_user a) d
-		on
-		d.id=a.receiver_id
-		and
-		d.usertype =
-		a.receiver_type
-		left join
-		org dd
-		on
-		dd.id = d.org_id
+		-- 社内用户 发送消息 查询部门名称 为机构名称
+		left join  (select a.*,1 usertype from pmph_user a) b on b.id=a.receiver_id and b.usertype = a.receiver_type
+		-- left join pmph_department bd on bd.id=b.department_id
+		-- 给作家用户发送消息 查询其机构
+		left join (select a.*,2 usertype from writer_user a) c on c.id=a.receiver_id and c.usertype = a.receiver_type
+		-- 	left join org cd on cd.id = c.org_id
+		-- 给机构用户发送消息 查询其机构
+		left join (select a.*,3 usertype,o.org_name  from org_user a LEFT JOIN org o on a.org_id = o.id) d on d.id=a.receiver_id and d.usertype = a.receiver_type
+		-- left join org dd on dd.id = d.org_id
 		where
 		is_withdraw =0
 		<if test="parameter !=null ">
@@ -503,6 +461,7 @@ AND t.is_withdraw = 1;
 		m.title,
 		m.sender_id,
 		m.is_withdraw,
+		m.`sender_type`,
 		 (
 			    CASE
 			      WHEN m.`sender_type` = 0 ||m.`sender_type` = 1
