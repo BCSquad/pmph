@@ -271,4 +271,12 @@ public interface WriterUserService {
 	 * @return
 	 */
     Integer isTop(Long id, Boolean isTop);
+
+	/**
+	 * 导出查询个人用户信息
+
+	 * @return
+	 */
+    List<WriterUserManagerVO> exportWriterInfo(String name,
+											   Integer rank,  String orgName,  String handphone, String email);
 }

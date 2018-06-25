@@ -47,6 +47,9 @@
 			<if test="isShowHeading != null">
 				is_show_heading,
 			</if>
+			<if test="apporpc != null">
+				apporpc,
+			</if>
 			<if test="gmtCreate!=null">
 				gmt_create,
 			</if>
@@ -100,6 +103,9 @@
 			</if>
 			<if test="isShowHeading != null">
 				#{isShowHeading},
+			</if>
+			<if test="apporpc != null">
+				#{apporpc},
 			</if>
 			<if test="gmtCreate!=null">
 				#{gmtCreate},
@@ -179,6 +185,9 @@
 				</if>
 				<if test="isShowHeading != null">
 					is_show_heading=#{isShowHeading},
+				</if>
+				<if test="apporpc != null">
+					apporpc=#{apporpc},
 				</if>
 			</set>
 			 where

@@ -220,7 +220,11 @@
 		LEFT JOIN 
 			pmph_user p on p.id=c.editor_id	
 		where 
-			b.id is not null and  !a.is_deleted 
+			b.id is not null and  !a.is_deleted AND(
+
+		( a.editor_reply = NULL or a.editor_reply = '')
+		or a.result = 0
+		)
 		<if test="editorId != null">
 			and c.editor_id = #{editorId}
 		</if>
@@ -386,7 +390,11 @@
 		LEFT JOIN 
 			pmph_user p on p.id=c.editor_id
 		where 
-			b.id is not null and  !a.is_deleted
+			b.id is not null and  !a.is_deleted AND(
+
+		( a.editor_reply = NULL or a.editor_reply = '')
+		or a.result = 0
+		)
 		<if test="editorId != null">
 			and c.editor_id = #{editorId}
 		</if>
@@ -416,7 +424,57 @@
 		</if>
 		ORDER BY
 		a.gmt_create desc
+		<if test="start != null and pageSize!=null">
 		limit #{start} ,#{pageSize}
+		</if>
+	</select>
+
+	<!-- 导出审核纠错信息 -->
+	<select id="exportBookCheck" resultType="BookCorrectionAuditVO" parameterType="map">
+		select
+		DISTINCT
+		a.id,
+		b.bookname,
+		b.author,
+		b.publish_date,
+		b.image_url ,
+		a.page,
+		a.line ,
+		a.content ,
+		concat('/file/download/',a.attachment) attachment,
+		a.attachment_name,
+		d.realname,
+		a.gmt_create ,
+		a.is_author_replied,
+		a.author_reply ,
+		a.is_editor_handling ,
+		a.is_editor_replied ,
+		a.editor_reply,
+		a.result,
+		p.realname editorName
+		from
+		book_correction a
+		LEFT JOIN
+		book b on  b.id = a.book_id
+		LEFT JOIN
+		book_editor c on c.book_id = a.book_id
+		LEFT JOIN
+		writer_user d on d.id    = a.user_id
+		LEFT JOIN
+		pmph_user p on p.id=c.editor_id
+		where
+		b.id is not null and  !a.is_deleted AND(
+
+		( a.editor_reply = NULL or a.editor_reply = '')
+		or a.result = 0
+		)
+		<if test="bookname != null and bookname != '' ">
+			and b.bookname like CONCAT('%',#{bookname},'%')
+		</if>
+
+		ORDER BY
+		a.gmt_create desc
+
 	</select>
 
 	<!-- 获取审核纠错跟踪页面的数据总数 -->

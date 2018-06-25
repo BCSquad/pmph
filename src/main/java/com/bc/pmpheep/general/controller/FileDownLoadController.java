@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.bc.pmpheep.back.service.*;
 import com.bc.pmpheep.back.vo.*;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.shiro.session.Session;
@@ -41,20 +42,6 @@ import com.bc.pmpheep.back.bo.DecPositionBO;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.Textbook;
-import com.bc.pmpheep.back.service.BookCorrectionService;
-import com.bc.pmpheep.back.service.CmsExtraService;
-import com.bc.pmpheep.back.service.DecPositionService;
-import com.bc.pmpheep.back.service.DeclarationService;
-import com.bc.pmpheep.back.service.MaterialExtensionService;
-import com.bc.pmpheep.back.service.MaterialNoteAttachmentService;
-import com.bc.pmpheep.back.service.MaterialNoticeAttachmentService;
-import com.bc.pmpheep.back.service.MaterialOrgService;
-import com.bc.pmpheep.back.service.MaterialService;
-import com.bc.pmpheep.back.service.OrgService;
-import com.bc.pmpheep.back.service.OrgUserService;
-import com.bc.pmpheep.back.service.PmphGroupFileService;
-import com.bc.pmpheep.back.service.SurveyQuestionAnswerService;
-import com.bc.pmpheep.back.service.TextbookService;
 import com.bc.pmpheep.back.sessioncontext.SessionContext;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
@@ -133,6 +120,9 @@ public class FileDownLoadController {
 
 	@Autowired
 	private OrgUserService orgUserService;
+
+	@Autowired
+	private WriterUserService writerUserService;
 
 	/**
 	 * 普通文件下载
@@ -254,14 +244,11 @@ public class FileDownLoadController {
 	}
 	/**
 	 *
-	 * Description:设置选题号页面导出选题号
+	 * Description:导出反馈信息
 	 *
-	 * @author:lyc
-	 * @date:2018年1月23日下午6:18:41
-	 * @param
-	 * @return void
+
 	 */
-	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "设置选题号页面导出选题号信息")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出反馈信息")
 	@RequestMapping(value = "/bookCorrection/exportfeedback", method = RequestMethod.GET)
 	public void exportfeedback( HttpServletRequest request, HttpServletResponse response,Boolean result) {
 		//Boolean result = null;
@@ -277,6 +264,122 @@ public class FileDownLoadController {
 			logger.warn("数据表格化的时候失败");
 		}
 		String fileName = returnFileName(request,"读书反馈.xls");
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		try (OutputStream out = response.getOutputStream()) {
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常： {}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
+
+
+	/**
+	 *
+	 * Description:导出个人信息
+	 *
+	 */
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出个人信息")
+	@RequestMapping(value = "/users/writer/list/exportWriterUser", method = RequestMethod.GET)
+	public void exportfeedback(HttpServletRequest request, HttpServletResponse response, String name,
+							    Integer rank,  String orgName,  String handphone, String email) {
+		//Boolean result = null;
+		List<WriterUserManagerVO> list = writerUserService.exportWriterInfo( name,
+				 rank,   orgName,   handphone,  email);
+		Workbook workbook = null;
+		if (list.size() == 0) {
+			list.add(new WriterUserManagerVO());
+		}
+		try {
+			workbook = excelHelper.fromBusinessObjectList(list, "个人用户信息");
+
+		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+			logger.warn("数据表格化的时候失败");
+		}
+		String fileName = returnFileName(request,"个人用户信息.xls");
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		try (OutputStream out = response.getOutputStream()) {
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常： {}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
+	/**
+	 *
+	 * Description:导出审核管理员信息
+	 *
+
+	 */
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出审核管理员信息")
+	@RequestMapping(value = "/auth/exportOrgUser", method = RequestMethod.GET)
+	public void exportfeedback(HttpServletRequest request, HttpServletResponse response, String orgName,
+							     String realname,  Integer progress) {
+		OrgVO orgVO = new OrgVO();
+		if (StringUtil.notEmpty(orgName)) {
+			orgVO.setOrgName(orgName.replaceAll(" ", ""));
+		}
+		if (StringUtil.notEmpty(realname)) {
+			orgVO.setRealname(realname.replaceAll(" ", ""));
+		}
+		orgVO.setProgress(progress);
+		List<OrgVO> list = orgService.exportOrgUser(orgVO);
+		Workbook workbook = null;
+		if (list.size() == 0) {
+			list.add(new OrgVO());
+		}
+		try {
+			workbook = excelHelper.fromBusinessObjectList(list, "审核管理员信息");
+
+		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+			logger.warn("数据表格化的时候失败");
+		}
+		String fileName = returnFileName(request,"审核管理员信息.xls");
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		try (OutputStream out = response.getOutputStream()) {
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常： {}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
+
+	/**
+	 *
+	 * Description:导出图书纠错审核信息
+	 *
+
+	 */
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出图书纠错审核")
+	@RequestMapping(value = "/bookCorrection/exportBookCheck", method = RequestMethod.GET)
+	public void exportBookCheck(HttpServletRequest request, HttpServletResponse response, String bookname) {
+		List<BookCorrectionAuditVO> list = bookCorrectionService.exportBookCheck(bookname);
+		Workbook workbook = null;
+		if (list.size() == 0) {
+			list.add(new BookCorrectionAuditVO());
+		}
+		try {
+			workbook = excelHelper.fromBusinessObjectList(list, "图书纠错审核信息");
+
+		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+			logger.warn("数据表格化的时候失败");
+		}
+		String fileName = returnFileName(request,"图书纠错审核信息.xls");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);

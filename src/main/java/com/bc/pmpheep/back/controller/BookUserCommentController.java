@@ -44,12 +44,12 @@ public class BookUserCommentController {
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "分页初始化/模糊查询图书评论")
-	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	@RequestMapping(value = "/list", method = RequestMethod.POST)
 	public ResponseBean list(Integer pageSize, Integer pageNumber, String name, Integer isAuth, Boolean isLong) {
 		PageParameter<BookUserCommentVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		BookUserCommentVO bookUserCommentVO = new BookUserCommentVO();
 		bookUserCommentVO.setIsAuth(isAuth);
-		bookUserCommentVO.setName(name.replaceAll(" ", ""));// 去除空格
+		bookUserCommentVO.setName(name.trim());// name.replaceAll(" ", "")去除空格
 		bookUserCommentVO.setIsLong(isLong);
 		pageParameter.setParameter(bookUserCommentVO);
 		return new ResponseBean(bookUserCommentService.listBookUserComment(pageParameter));

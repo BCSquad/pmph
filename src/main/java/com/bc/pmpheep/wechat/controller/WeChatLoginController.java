@@ -1,4 +1,4 @@
-package com.bc.pmpheep.wechat.controller;
+ package com.bc.pmpheep.wechat.controller;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -86,13 +86,13 @@ public class WeChatLoginController {
         String password =null;
         if (isTrue) {
             HttpSession session = request.getSession();
-            String wechatUserId = (String) session.getAttribute("UserId");// 企业微信账号
+            String wechatUserId = (String) session.getAttribute("UserId"); // userId 在session 中可以取到 微信--企业微信号 这个是pmph_user_wechat 表中的wechat_id
             if(StringUtil.isEmpty(wechatUserId)){ //app 访问登录
-                wechatUserId = request.getParameter("UserId");
+                wechatUserId = request.getParameter("UserId"); // userId 在request中可以取到 企业微信 此userId 代表 社内用户字段openid
             }
-            // 微信企业号直接访问app登录
-            String appType = request.getParameter("appType");
-            if(StringUtil.isEmpty(appType)){
+            String appType = request.getParameter("appType"); //为空 微信 -- 企业微信号 不为空 企业微信
+            // 微信--微信企业号直接访问app登录
+            if(StringUtil.isEmpty(appType)){  /*微信 -- 企业微信号*/
                 if (StringUtil.isEmpty(wechatUserId)) {
                     throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                             CheckedExceptionResult.NULL_PARAM, "网络异常，请重新再试!");
@@ -102,8 +102,10 @@ public class WeChatLoginController {
                         pmphUserWechatService.getPmphUserWechatByWechatId(wechatUserId);
 
                 if (ObjectUtil.isNull(pmphUserWechat)) {
-                    model.addAttribute("isLogin", "0");
-                } else {
+                    model.addAttribute("isLogin", "0"); //查找不到对应的社内用户 跳转登录页面
+                    model.addAttribute("isIndexOrCommission",(!StringUtil.isEmpty((String)session.getAttribute("UserId"))?"commission":"") );//commission 从微信 -- 企业微信号 代办
+                    return "wechat";
+                } else { //查找到对应的社内用户，跳转到首页
                     pmphUser = pmphUserService.getPmphUserByUsername(pmphUserWechat.getUsername(),pmphUserWechat.getUserid());
                     if (ObjectUtil.notNull(pmphUser)) {
                         username = new DesRun(null, pmphUserWechat.getUsername()).enpsw;
@@ -116,7 +118,7 @@ public class WeChatLoginController {
                         model.addAttribute("isLogin", "1");
                     }
                 }
-            }else{
+            }else{ /*企业微信 */
                 if (StringUtil.isEmpty(wechatUserId)) {
                     throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                             CheckedExceptionResult.NULL_PARAM, "网络异常，请重新再试!");
@@ -152,14 +154,15 @@ public class WeChatLoginController {
                         model.addAttribute("isLogin", "4");
                     }
                 }
-                if("1".equals(appType)){
+                /*跳转到某个具体的页面*/
+                if("1".equals(appType)){ //教材审核
                     String materialId = request.getParameter("materialId");
                     String declarationId = request.getParameter("declarationId");
                     model.addAttribute("materialId",materialId);
                     model.addAttribute("declarationId",declarationId);
-                }else if("2".equals(appType)){
+                }else if("2".equals(appType)){ //选题申报
 
-                }else if("3".equals(appType)){
+                }else if("3".equals(appType)){ //图书纠错
                     String bookName = request.getParameter("bookName");
                     String type = request.getParameter("type");
                     String id = request.getParameter("id");

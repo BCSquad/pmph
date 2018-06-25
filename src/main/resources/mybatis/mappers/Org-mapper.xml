@@ -192,6 +192,52 @@
 		</if>
 	</select>
 
+	<!--导出管理员信息 -->
+	<select id="exportOrgUser" parameterType="OrgVO"
+			resultType="OrgVO">
+		SELECT
+		ou.`id`,o.`org_name`,ou.`username`,ou.`realname`,ou.`handphone`,
+		ou.`email`,ou.`position`,ou.`title`,ou.`address`,
+		ou.`postcode`,ou.`proxy`,ou.`progress`
+		FROM
+		`org` o
+		LEFT JOIN
+		`org_user` ou
+		ON
+		o.`id`=ou.`org_id`
+		where
+		ou.is_deleted = 0 and ou.is_proxy_upload=1
+
+			<!-- 学校名称 -->
+			<if test="orgName !=null and  orgName != '' ">
+				and o.org_name like
+				concat(concat('%',#{orgName}),'%')
+			</if>
+			<!-- 机构代码 -->
+			<if test="username != null and username !='' ">
+				and ou.username like
+				concat(concat('%',#{username}),'%')
+			</if>
+			<!-- 管理员姓名 -->
+			<if test="realname != null and realname !='' ">
+				and (
+				ou.`realname` like
+				concat(concat('%',#{realname}),'%')
+				OR
+				ou.username LIKE
+				CONCAT(CONCAT('%',#{realname}),'%')
+				)
+			</if>
+			<!-- 审核状态 -->
+			<if test="progress != null">
+				and ou.progress = #{progress}
+			</if>
+
+		order by
+		ou.sort
+
+	</select>
+
 	<!--orgNmae模糊查询获取列表 -->
 	<select id="listOrg" parameterType="PageParameter" resultType="OrgVO">
 		select

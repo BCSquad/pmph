@@ -69,6 +69,11 @@ public class CmsAdvertisement implements Serializable {
 	 * 是否显示标题
 	 */
 	private Boolean isShowHeading;
+
+	/**
+	 * 应用类型
+	 */
+	private short apporpc;
 	/**
 	 * 创建时间
 	 */
@@ -241,5 +246,12 @@ public class CmsAdvertisement implements Serializable {
 				+ animationInterval + ", animationEffect=" + animationEffect + ", isShowHeading=" + isShowHeading
 				+ ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
 	}
-	
+
+	public short getApporpc() {
+		return apporpc;
+	}
+
+	public void setApporpc(short apporpc) {
+		this.apporpc = apporpc;
+	}
 }

@@ -255,6 +255,22 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 	}
 
 	@Override
+	public List<BookCorrectionAuditVO> exportBookCheck(String bookname){
+		Map<String, Object> map = new HashMap<String, Object>(4);
+		map.put("bookname", StringUtil.toAllCheck(bookname));
+		List<BookCorrectionAuditVO> rows = bookCorrectionDao.exportBookCheck(map);
+		for(BookCorrectionAuditVO bookCorrectionAuditVO:rows){
+			SimpleDateFormat lsdStrFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			try {
+				//bookCorrectionAuditVO.setAuthDateS(ObjectUtil.isNull(bookCorrectionAuditVO.getAuthDate())?"":lsdStrFormat.format(bookCorrectionAuditVO.getAuthDate()));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return rows;
+
+	}
+	@Override
 	public PageResult<BookFeedBack> bookFeedBaskList(HttpServletRequest request, Integer pageNumber, Integer pageSize, Boolean result) {
 		if (null == request.getSession(false)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,

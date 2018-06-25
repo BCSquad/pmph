@@ -693,6 +693,35 @@
 		</if>
 	</select>
 
+	<!--导出用户信息-->
+	<select id="exportWriterInfo" parameterType="map"
+			resultType="WriterUserManagerVO">
+		select
+		*
+		from writer_user w left join org o on o.id = w.org_id
+		left join Writer_User_Certification wuc on wuc.user_id=w.id
+		where
+		1=1
+		<if test="name !=null and name !='' ">
+			and (w.username like concat('%',#{name},'%' ) or
+			w.realname like
+			concat('%',#{name},'%' ) )
+		</if>
+		<if test="email !=null and email !='' ">
+			and w.email like concat('%',#{email},'%' )
+		</if>
+		<if test="handphone !=null and handphone !='' ">
+			and w.handphone like concat('%',#{handphone},'%' )
+		</if>
+		<if test="orgName !=null and orgName !=''">
+			and o.org_name like concat('%', #{orgName},'%')
+		</if>
+		<if test="rank !=null">
+			and w.rank = #{rank}
+		</if>
+
+	</select>
+
 	<!-- 小组成员添加界面作家用户记录总数 -->
 	<select id="getGroupMemberWriterUserTotal" parameterType="PageParameter"
 		resultType="java.lang.Integer">
