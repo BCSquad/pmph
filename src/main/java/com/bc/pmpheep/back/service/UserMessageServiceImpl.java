@@ -553,27 +553,21 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                 Long parentId = 1L;
                 PmphDepartment pmphDepartment =
                 pmphDepartmentService.getPmphDepartmentById(pmphUser.getDepartmentId());
-                // 如果是父级部门主任，则可以查看子级部门下的所有用户发送的消息
-                if (parentId.longValue() == pmphDepartment.getParentId().longValue()) {
+                // 如果是人卫社主任，则可以查看所有用户发送的消息
+                if (parentId.longValue() == pmphDepartment.getId().longValue()) {
+                    ids = null;
+                } else {
+                    // 如果是子级部门主任，则只可以查看子级部门下的用户发送的消息
                     PageParameter<PmphUserManagerVO> parameter = new PageParameter<>(1, 2000);
                     PmphUserManagerVO pmphUserManagerVO = new PmphUserManagerVO();
                     pmphUserManagerVO.setPath(pmphDepartment.getPath());
                     pmphUserManagerVO.setDepartmentId(pmphDepartment.getId());
                     parameter.setParameter(pmphUserManagerVO);
                     PageResult<PmphUserManagerVO> listPageResult =
-                    pmphUserService.getListPmphUser(parameter, null);
+                            pmphUserService.getListPmphUser(parameter, null);
                     List<PmphUserManagerVO> listPmphUserManagerVOs = listPageResult.getRows();
                     for (PmphUserManagerVO pmManagerVO : listPmphUserManagerVOs) {
                         ids.add(pmManagerVO.getId());
-                    }
-                } else {
-                    // 如果是子级部门主任，则只可以查看子级部门下的用户发送的消息
-                    List<PmphUser> pmphUsers =
-                    pmphUserService.listPmphUserByDepartmentId(pmphUser.getDepartmentId());
-                    if (CollectionUtil.isNotEmpty(pmphUsers)) {
-                        for (PmphUser user : pmphUsers) {
-                            ids.add(user.getId());
-                        }
                     }
                 }
             } else {

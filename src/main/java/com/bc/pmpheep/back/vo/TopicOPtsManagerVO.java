@@ -58,6 +58,19 @@ public class TopicOPtsManagerVO implements Serializable {
 	 * 提交日期(前台到后台的日期)
 	 */
 	private Timestamp submitTime;
+
+	/**
+	 * 提交日期(前台到后台的日期) 查询起
+	 */
+	private Timestamp submitTime1;
+
+	/**
+	 * 提交日期(前台到后台的日期) 查询止
+	 */
+	private Timestamp submitTime2;
+
+
+
 	/**
 	 * 是否被主任退回
 	 */
@@ -231,4 +244,19 @@ public class TopicOPtsManagerVO implements Serializable {
 		this.realname = realname;
 	}
 
+	public Timestamp getSubmitTime1() {
+		return submitTime1;
+	}
+
+	public void setSubmitTime1(Timestamp submitTime1) {
+		this.submitTime1 = submitTime1;
+	}
+
+	public Timestamp getSubmitTime2() {
+		return submitTime2;
+	}
+
+	public void setSubmitTime2(Timestamp submitTime2) {
+		this.submitTime2 = submitTime2;
+	}
 }

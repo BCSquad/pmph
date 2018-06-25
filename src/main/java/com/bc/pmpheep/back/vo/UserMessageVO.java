@@ -44,6 +44,11 @@ public class UserMessageVO implements Serializable {
     private Long       senderId;
 
     /**
+     * 发送者类型 0=系统/1=社内用户/2=作家用户/3=机构用户
+     */
+    private int senderType;
+
+    /**
      * 发送者姓名
      */
     private String     sendName;
@@ -187,5 +192,12 @@ public class UserMessageVO implements Serializable {
 				+ "]";
 	}
 
-    
+
+    public int getSenderType() {
+        return senderType;
+    }
+
+    public void setSenderType(int senderType) {
+        this.senderType = senderType;
+    }
 }

@@ -461,6 +461,7 @@ AND t.is_withdraw = 1;
 		m.title,
 		m.sender_id,
 		m.is_withdraw,
+		m.`sender_type`,
 		 (
 			    CASE
 			      WHEN m.`sender_type` = 0 ||m.`sender_type` = 1

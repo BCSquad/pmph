@@ -55,6 +55,14 @@ public class TopicDeclarationVO implements Serializable {
 	 */
 	private Timestamp submitTime;
 	/**
+	 * 提交日期(查询起)
+	 */
+	private Timestamp submitTime1;
+	/**
+	 * 提交日期(查询止)
+	 */
+	private Timestamp submitTime2;
+	/**
 	 * 审核编辑的真实姓名
 	 */
 	private String editorName;
@@ -257,5 +265,20 @@ public class TopicDeclarationVO implements Serializable {
 	public TopicDeclarationVO() {
 		super();
 	}
-	
+
+	public Timestamp getSubmitTime1() {
+		return submitTime1;
+	}
+
+	public void setSubmitTime1(Timestamp submitTime1) {
+		this.submitTime1 = submitTime1;
+	}
+
+	public Timestamp getSubmitTime2() {
+		return submitTime2;
+	}
+
+	public void setSubmitTime2(Timestamp submitTime2) {
+		this.submitTime2 = submitTime2;
+	}
 }
