@@ -469,13 +469,16 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 	public List<WriterUserManagerVO> exportWriterInfo(String name,
 													  Integer rank, String orgName, String handphone, String email){
 		Map map = new HashMap();
-		if (StringUtil.notEmpty(name)) {
+		//if (StringUtil.notEmpty(name)) {
 			map.put("name",name);
-		}
+		//}
 
-		if (StringUtil.notEmpty(orgName)) {
+		//if (StringUtil.notEmpty(orgName)) {
 			map.put("orgName",orgName);
-		}
+		//}
+		map.put("rank",rank);
+		map.put("handphone",handphone);
+		map.put("email",email);
 
 			List<WriterUserManagerVO> list = writerUserDao.exportWriterInfo(map);
 			for (int i = 0;i<list.size();i++) {
@@ -484,6 +487,14 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 				vo = com.alibaba.fastjson.JSON.parseObject(voS,WriterUserManagerVO.class);
 				list.remove(i);
 				list.add(i,vo);
+				switch(vo.getProgress()){// 0=未提交/1=已提交/2=被退回/3=通过
+					case 0:vo.setProgressName("未提交");break;
+					case 1:vo.setProgressName("已提交");break;
+					case 2:vo.setProgressName("被退回");break;
+					case 3:vo.setProgressName("通过");break;
+					default:vo.setProgressName("未提交");
+
+				}
 				switch (vo.getRank()) {
 					case 0:
 						vo.setRankName("普通用户");

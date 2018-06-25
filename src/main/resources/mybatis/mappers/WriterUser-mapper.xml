@@ -702,22 +702,22 @@
 		left join Writer_User_Certification wuc on wuc.user_id=w.id
 		where
 		1=1
-		<if test="parameter.name !=null and parameter.name !='' ">
-			and (w.username like concat('%',#{parameter.name},'%' ) or
+		<if test="name !=null and name !='' ">
+			and (w.username like concat('%',#{name},'%' ) or
 			w.realname like
-			concat('%',#{parameter.name},'%' ) )
+			concat('%',#{name},'%' ) )
 		</if>
-		<if test="parameter.email !=null and parameter.email !='' ">
-			and w.email like concat('%',#{parameter.email},'%' )
+		<if test="email !=null and email !='' ">
+			and w.email like concat('%',#{email},'%' )
 		</if>
-		<if test="parameter.handphone !=null and parameter.handphone !='' ">
-			and w.handphone like concat('%',#{parameter.handphone},'%' )
+		<if test="handphone !=null and handphone !='' ">
+			and w.handphone like concat('%',#{handphone},'%' )
 		</if>
-		<if test="parameter.orgName !=null and parameter.orgName !=''">
-			and o.org_name like concat('%', #{parameter.orgName},'%')
+		<if test="orgName !=null and orgName !=''">
+			and o.org_name like concat('%', #{orgName},'%')
 		</if>
-		<if test="parameter.rank !=null">
-			and w.rank = #{parameter.rank}
+		<if test="rank !=null">
+			and w.rank = #{rank}
 		</if>
 
 	</select>
