@@ -91,8 +91,10 @@ public class WriterUserManagerVO implements Serializable {
     @ExcelHeader(header = "级别")
     private Integer rank;
     // 认证进度 --- 0=未提交/1=已提交/2=被退回/3=通过
-    @ExcelHeader(header = "认证进度")
+
     private Short   progress;
+    @ExcelHeader(header = "认证进度")
+    private String progressName;
     // 教师资格证--- 资格证图片的资源地址
     @ExcelHeader(header = "教师资格证")
     private String  cert;
@@ -104,7 +106,7 @@ public class WriterUserManagerVO implements Serializable {
     /**
      * 显示顺序
      */
-    @ExcelHeader(header = " 显示顺序")
+   // @ExcelHeader(header = " 显示顺序")
     private Integer sort;
     /**
      * 小组id
@@ -367,5 +369,13 @@ public class WriterUserManagerVO implements Serializable {
 
     public void setGroupId(Long groupId) {
         this.groupId = groupId;
+    }
+
+    public String getProgressName() {
+        return progressName;
+    }
+
+    public void setProgressName(String progressName) {
+        this.progressName = progressName;
     }
 }

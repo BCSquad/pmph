@@ -878,7 +878,7 @@ public class DecPositionServiceImpl implements DecPositionService {
                 return pageResult;
             }
             for (DeclarationSituationBookResultVO book : middle) {
-                for (DeclarationSituationBookResultVO chosen : chosens) {
+                /*for (DeclarationSituationBookResultVO chosen : chosens) {
                     if (chosen.getId().equals(book.getId())) {
                         book.setChosenPositionEditor(chosen.getChosenPositionEditor());
                         book.setChosenPositionSubeditor(chosen.getChosenPositionSubeditor());
@@ -890,7 +890,8 @@ public class DecPositionServiceImpl implements DecPositionService {
                 // 计算当选人数
                 Integer chosenPersons =
                         book.getChosenPositionEditor() + book.getChosenPositionSubeditor()
-                                + book.getChosenPositionEditorial() + book.getIsDigitalEditor();
+                                + book.getChosenPositionEditorial() + book.getIsDigitalEditor();*/
+                Integer chosenPersons = decPositionDao.getChoseCount(book.getId(),book.getMaterialId(),pageParameter.getParameter().getBookName());
                 book.setChosenPersons(chosenPersons);
                 list.add(book);
             }

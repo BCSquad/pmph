@@ -67,6 +67,7 @@ public class BookFeedBack implements Serializable {
     /**
      * 读者反馈内容
      */
+	@ExcelHeader(header = "反馈内容")
     private String content;
     /**
      * 是否已审核
@@ -79,6 +80,7 @@ public class BookFeedBack implements Serializable {
     /**
      * 回复内容
      */
+	@ExcelHeader(header = " 回复内容")
     private String authorReply ;
     /**
      * 回复时间

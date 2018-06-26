@@ -81,7 +81,7 @@ public class OrgVO implements Serializable {
     /**
      * 委托书
      */
-    @ExcelHeader(header = "  委托书")
+   /* @ExcelHeader(header = "  委托书")*/
     private String    proxy;
     // 备注
     @ExcelHeader(header = "  备注")

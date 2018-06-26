@@ -6,6 +6,7 @@ package com.bc.pmpheep.back.vo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.ibatis.type.Alias;
 
@@ -260,4 +261,5 @@ public class TopicDirectorVO implements Serializable {
 	public void setSubmitTime2(Timestamp submitTime2) {
 		this.submitTime2 = submitTime2;
 	}
+
 }

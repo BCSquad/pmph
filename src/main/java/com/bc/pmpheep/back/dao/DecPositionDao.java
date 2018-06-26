@@ -585,4 +585,7 @@ public interface DecPositionDao {
      * @return
      */
     int dismissPositionByDeclarationId(Long declarationId);
+
+    //计算当选人数
+    Integer getChoseCount(@Param("bookId") Long id, @Param("materialId") Long materialId,@Param("bookName") String bookName);
 }

@@ -322,7 +322,8 @@ AND t.is_withdraw = 1;
 		-- 	left join org cd on cd.id = c.org_id
 		-- 给机构用户发送消息 查询其机构
 		left join (select a.*,3 usertype,o.org_name  from org_user a LEFT JOIN org o on a.org_id = o.id) d on d.id=a.receiver_id and d.usertype = a.receiver_type
-		-- left join org dd on dd.id = d.org_id,
+		-- left join org dd on dd.id = d.org_id
+		,
 		(SELECT
 		count(*) count
 		from
