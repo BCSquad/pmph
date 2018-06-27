@@ -72,7 +72,7 @@ public class OAuth2Interceptor implements HandlerInterceptor {
             Method method = handlerMethod.getMethod();
             OAuthRequired annotation = method.getAnnotation(OAuthRequired.class);
             if (annotation != null) {
-                // System.out.println("OAuthRequired：你的访问需要获取登录信息！");
+                 System.out.println("OAuthRequired：你的访问需要获取登录信息！");
                 Object objUid = session.getAttribute("UserId");
                 String appType = request.getParameter("appType");
                 if (objUid == null&& StringUtil.isEmpty(appType)) {
@@ -81,7 +81,7 @@ public class OAuth2Interceptor implements HandlerInterceptor {
                     if (param != null) {
                         resultUrl += "?" + param;
                     }
-                    // System.out.println("resultUrl=" + resultUrl);
+                     System.out.println("resultUrl=" + resultUrl);
                     try {
                         resultUrl = java.net.URLEncoder.encode(resultUrl, "utf-8");
                     } catch (UnsupportedEncodingException e) {
@@ -89,6 +89,7 @@ public class OAuth2Interceptor implements HandlerInterceptor {
                     }
                     // 请求的路径
                     String contextPath = request.getContextPath();
+                    System.out.println(contextPath + "/oauth2?resultUrl=" + resultUrl);
                     response.sendRedirect(contextPath + "/oauth2?resultUrl=" + resultUrl);
                     return false;
                 }
