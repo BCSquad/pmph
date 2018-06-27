@@ -170,9 +170,9 @@
 			<if test="result != null ">
 				result = #{result},
 			</if>
-			<if test="replyDate != null ">
-				reply_date = #{replyDate},
-			</if>
+
+				reply_date = now(),
+
 			<if test="isDeleted != null ">
 				is_deleted = #{isDeleted},
 			</if>
@@ -220,11 +220,13 @@
 		LEFT JOIN 
 			pmph_user p on p.id=c.editor_id	
 		where 
-			b.id is not null and  !a.is_deleted AND(
+			b.id is not null and  !a.is_deleted
+		/*AND(
 
 		( a.editor_reply = NULL or a.editor_reply = '')
-		or a.result = 0
-		)
+	-- 	or a.result = 0
+		) */
+		and a.reply_date is null
 		<if test="editorId != null">
 			and c.editor_id = #{editorId}
 		</if>
@@ -390,11 +392,13 @@
 		LEFT JOIN 
 			pmph_user p on p.id=c.editor_id
 		where 
-			b.id is not null and  !a.is_deleted AND(
+			b.id is not null and  !a.is_deleted
+		/*AND(
 
 		( a.editor_reply = NULL or a.editor_reply = '')
-		or a.result = 0
-		)
+		-- or a.result = 0
+		) */
+		and a.reply_date is null
 		<if test="editorId != null">
 			and c.editor_id = #{editorId}
 		</if>
@@ -463,11 +467,13 @@
 		LEFT JOIN
 		pmph_user p on p.id=c.editor_id
 		where
-		b.id is not null and  !a.is_deleted AND(
+		b.id is not null and  !a.is_deleted
+		/*AND(
 
 		( a.editor_reply = NULL or a.editor_reply = '')
-		or a.result = 0
-		)
+	-- 	or a.result = 0
+		)*/
+		and a.reply_date is null
 		<if test="bookname != null and bookname != '' ">
 			and b.bookname like CONCAT('%',#{bookname},'%')
 		</if>
