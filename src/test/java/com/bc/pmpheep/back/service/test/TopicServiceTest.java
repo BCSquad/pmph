@@ -68,7 +68,7 @@ public class TopicServiceTest extends BaseTest {
 		progress.add(0L);
 		progress.add(2L);
 		progress.add(3L);
-		PageResult<TopicDeclarationVO> declarationVOs = topicService.listCheckTopic(progress, pageParameter,"");
+		PageResult<TopicDeclarationVO> declarationVOs = topicService.listCheckTopic(progress, pageParameter,null);
 		Assert.assertTrue("查询失败", declarationVOs.getTotal() > 0);
 	}
 
