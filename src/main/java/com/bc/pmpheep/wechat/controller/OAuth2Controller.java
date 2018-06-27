@@ -71,7 +71,7 @@ public class OAuth2Controller {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            reqUrl = StringUtil.isEmpty("rootAdrr")?"medu.ipmph.com/pmpheepwx":reqUrl;//  20097r18u8.iask.in
+            reqUrl = StringUtil.isEmpty("rootAdrr")?"medu.ipmph.com/pmphwx":reqUrl;// pmphwx 20097r18u8.iask.in
             //String reqUrl = "120.76.221.250:11000";// 备案域名
             // System.out.println("request.getServletPath()=" + request.getServletPath());
             // System.out.println("request.getRequestURL()=" + request.getRequestURL());
