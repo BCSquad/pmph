@@ -347,11 +347,8 @@ AND t.is_withdraw = 1;
 				and sender_id = #{parameter.senderId}
 			</if>
 			<if test="parameter.name !=null and parameter.name != '' ">
-				and (bd.dp_name like concat('%',#{parameter.name},'%') or
-				cd.org_name
-				like concat('%',#{parameter.name},'%')
-				or dd.org_name like
-				concat('%',#{parameter.name},'%') or b.realname
+				and (d.org_name like concat('%',#{parameter.name},'%') or
+				 b.realname
 				like
 				concat('%',#{parameter.name},'%')
 				or c.realname like
@@ -376,10 +373,8 @@ AND t.is_withdraw = 1;
 				and sender_id = #{parameter.senderId}
 			</if>
 			<if test="parameter.name !=null and parameter.name != '' ">
-				and (bd.dp_name like concat('%',#{parameter.name},'%') or
-				cd.org_name like concat('%',#{parameter.name},'%')
-				or dd.org_name
-				like concat('%',#{parameter.name},'%') or b.realname
+				and ( d.org_name like concat('%',#{parameter.name},'%') or
+				 b.realname
 				like
 				concat('%',#{parameter.name},'%')
 				or c.realname like

@@ -1,10 +1,15 @@
 package com.bc.pmpheep.wechat.controller;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.wx.util.SendWXMessageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -55,7 +60,17 @@ public class OAuth2Controller {
         String redirectUrl = "";
         if (resultUrl != null) {
             // String reqUrl = request.getLocalAddr();
-            String reqUrl = "6062d127.ngrok.io";// 备案域名
+           // String reqUrl = "medu.ipmph.com/pmpheepwx";// 备案域名
+            Properties pp = new Properties();
+            String reqUrl = "";
+            InputStream fis  = OAuth2Controller.class.getClassLoader().getResourceAsStream("pmphapi-config.properties");
+            try {
+                pp.load(fis);
+                reqUrl =pp.getProperty("rootAdrr").toString();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            reqUrl = StringUtil.isEmpty("rootAdrr")?"medu.ipmph.com/pmpheepwx":reqUrl;//  20097r18u8.iask.in
             //String reqUrl = "120.76.221.250:11000";// 备案域名
             // System.out.println("request.getServletPath()=" + request.getServletPath());
             // System.out.println("request.getRequestURL()=" + request.getRequestURL());
@@ -63,7 +78,8 @@ public class OAuth2Controller {
             // System.out.println("request.getRemoteHost()=" + request.getRemoteHost());
             // System.out.println("request.getRemoteHost()=" + request.getRemoteHost());
             // System.out.println("request.getServerName()=" + request.getServerName());
-            String backUrl = "http://" + reqUrl + "/pmpheep" + "/oauth2url?oauth2url=" + resultUrl;
+            //String backUrl = "http://" + reqUrl + "/pmpheep" + "/oauth2url?oauth2url=" + resultUrl;
+            String backUrl = "http://" + reqUrl  + "/oauth2url?oauth2url=" + resultUrl;
             // System.out.println("backUrl=" + backUrl);
             redirectUrl = oAuth2Url(CropId, backUrl);
         }
