@@ -59,7 +59,7 @@ public class OAuth2Interceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
     Object handler) throws Exception {
-        // System.out.println("**执行顺序: 1、preHandle**");
+         System.out.println("**执行顺序: 1、preHandle**");
         // 判断是否从企业微信App登陆
         String userAgent = request.getHeader("user-agent").toLowerCase();
         Boolean isTrue =
