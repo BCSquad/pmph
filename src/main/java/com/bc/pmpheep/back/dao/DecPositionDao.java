@@ -412,6 +412,13 @@ public interface DecPositionDao {
     PageParameter<DeclarationSituationSchoolResultVO> pageParameter);
 
     /**
+     * 总数 : 根据教材id（和学校名称）查询学校申报职务情况（按连接申报职位表按当选结果排序）
+     * @param pageParameter
+     * @return
+     */
+    int getSchoolResultPresetChosenCount(PageParameter<DeclarationSituationSchoolResultVO> pageParameter);
+
+    /**
      * 
      * Description:获取书本总数
      * 
@@ -433,6 +440,11 @@ public interface DecPositionDao {
      */
     List<DeclarationSituationBookResultVO> getBookListOne(
     		PageParameter<DeclarationSituationBookResultVO> pageParameter);
+    /**
+     * getBookListOne 的总数
+     */
+
+    int getBookListOneCount(PageParameter<DeclarationSituationBookResultVO> pageParameter);
 
     /**
      * 
@@ -502,7 +514,20 @@ public interface DecPositionDao {
      */
     List<DeclarationResultSchoolVO> getSchoolListPresetChosen(
     PageParameter<DeclarationResultSchoolVO> pageParameter);
-    
+
+    /**
+     * getSchoolListPresetChosen 的总数
+     * @param pageParameter
+     * @return
+     */
+    int getSchoolListPresetChosenCount(PageParameter<DeclarationResultSchoolVO> pageParameter);
+
+    /**
+     * 获取书本列表数量
+     * @param pageParameter
+     * @return
+     */
+    int getBookListTwoCount(PageParameter<DeclarationResultBookVO> pageParameter);
     
     /**
      * 

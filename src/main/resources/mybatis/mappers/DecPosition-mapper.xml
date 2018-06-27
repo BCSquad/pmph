@@ -795,6 +795,30 @@
 		;
 	</select>
 
+	<select id="getSchoolResultPresetChosenCount" parameterType="pageParameter" resultType="int">
+		select count(t.id) from
+			(
+			SELECT
+			e.id
+			FROM declaration a
+			LEFT JOIN dec_position b ON a.id = b.declaration_id
+			LEFT JOIN textbook c ON b.textbook_id = c.id
+			LEFT JOIN material d ON c.material_id = d.id
+			LEFT JOIN (SELECT id,org_name FROM org UNION SELECT 0,'人民卫生出版社' FROM org)e
+			ON a.org_id = e.id
+			WHERE a.is_staging = 0 AND a.online_progress > 0 AND b.preset_position IS
+			NOT NULL
+			AND a.org_id IS NOT NULL
+			AND d.id = #{parameter.materialId}
+			<if test="parameter.schoolName !=null and parameter.schoolName !=''">
+				and e.org_name like concat
+				('%',#{parameter.schoolName},'%')
+			</if>
+			GROUP BY e.id )t
+	</select>
+
+
+
 	<!-- 申报情况按学校统计（按当选数排序,不分页） -->
 	<select id="getSchoolResultChosen" parameterType="pageParameter"
 		resultType="DeclarationSituationSchoolResultVO">
@@ -910,6 +934,23 @@
 			limit #{start},#{pageSize}
 		</if>
 		;
+	</select>
+
+	<select id="getBookListOneCount" parameterType="pageParameter" resultType="int">
+
+		select count(t.id) FROM
+			(
+			SELECT
+			a.id
+			FROM textbook a
+			LEFT JOIN material b ON a.material_id = b.id
+			WHERE b.id = #{parameter.materialId}
+			<if test="parameter.bookName !=null and parameter.bookName !=''">
+				and a.textbook_name like concat
+				('%',#{parameter.bookName},'%')
+			</if>
+			GROUP BY a.id )t
+
 	</select>
 
 	<!-- 申报情况按书籍统计（申报职务） -->
@@ -1040,6 +1081,46 @@
 		;
 	</select>
 
+	<!-- 总数 申报结果按学校统计（连接申报职位表按当选数排序） -->
+	<select id="getSchoolListPresetChosenCount" parameterType="pageParameter"
+			resultType="int">
+		select count(t.id)
+		from(
+		SELECT
+		c.id
+		FROM
+		declaration a
+		LEFT JOIN dec_position b ON a.id = b.declaration_id
+		LEFT JOIN textbook c ON b.textbook_id = c.id
+		LEFT JOIN material d ON c.material_id = d.id
+		LEFT JOIN (
+		SELECT
+		id,
+		org_name
+		FROM
+		org
+		UNION
+		SELECT
+		0,
+		'人民卫生出版社'
+		FROM
+		org
+		) e ON a.org_id = e.id
+		WHERE
+		a.is_staging = 0
+		AND a.online_progress > 0
+		AND b.preset_position IS NOT NULL
+		AND a.org_id IS NOT NULL
+		AND d.id = #{parameter.materialId}
+		<if test="parameter.schoolName !=null and parameter.schoolName !=''">
+			and e.org_name like concat ('%',#{parameter.schoolName},'%')
+		</if>
+		GROUP BY
+		a.org_id,
+		c.id
+		)t
+	</select>
+
 	<!-- 申报结果按学校统计（连接申报职位表按当选数排序） -->
 	<select id="getSchoolListPresetChosen" parameterType="pageParameter"
 		resultType="DeclarationResultSchoolVO">
@@ -1098,53 +1179,12 @@
 		</if>
 		GROUP BY
 		a.org_id,
-		c.textbook_name
+		c.id
 
-		ORDER BY
-		SUM(
-
-		IF (
-		(
-		b.chosen_position IN (4, 5, 6, 7, 12, 13, 14, 15)
-		),
-		1,
-		0
-		)
-		) DESC,
-		SUM(
-
-		IF (
-		(
-		b.chosen_position IN (2, 3, 6, 7, 10, 11, 14, 15)
-		),
-		1,
-		0
-		)
-		) DESC,
-		SUM(
-
-		IF (
-		(
-		b.chosen_position IN (1, 3, 5, 7, 9, 11, 13, 15)
-		),
-		1,
-		0
-		)
-		) DESC,
-		SUM(
-
-		IF (
-		(
-		b.chosen_position IN (8, 9, 10, 11, 12, 13, 14, 15)
-		),
-		1,
-		0
-		)
-		) DESC,
-		a.org_id ASC
+		order by e.org_name,c.textbook_name ASC
 		) t1 ,
 		(SELECT @rowno := 0) t2
-		) t3  order by t3.schoolname,t3.bookname ASC
+		) t3
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
@@ -1265,6 +1305,19 @@
 			limit #{start},#{pageSize}
 		</if>
 		;
+	</select>
+
+	<!-- 书籍列表 总数-->
+	<select id="getBookListTwoCount" parameterType="pageParameter" resultType="int">
+		SELECT
+		count(a.id)
+		FROM textbook a
+		LEFT JOIN material b ON a.material_id = b.id
+		WHERE b.id = #{parameter.materialId}
+		<if test="parameter.bookName !=null and parameter.bookName !=''">
+			and a.textbook_name like concat
+			('%',#{parameter.bookName},'%')
+		</if>
 	</select>
 
 	<!-- 申报结果按书籍统计 -->
