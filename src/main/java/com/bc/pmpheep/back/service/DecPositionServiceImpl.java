@@ -635,7 +635,8 @@ public class DecPositionServiceImpl implements DecPositionService {
                 new PageResult<DeclarationSituationSchoolResultVO>();
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
         // 得到申报单位的总数
-        int total = decPositionDao.getSchoolCount(pageParameter.getParameter().getMaterialId());
+        //int total = decPositionDao.getSchoolCount(pageParameter.getParameter().getMaterialId());
+        int total = decPositionDao.getSchoolResultPresetChosenCount(pageParameter);
         if (total > 0) {
             boolean flag = false;
             List<DeclarationSituationSchoolResultVO> chosens =
@@ -832,7 +833,8 @@ public class DecPositionServiceImpl implements DecPositionService {
         PageResult<DeclarationSituationBookResultVO> pageResult =
                 new PageResult<DeclarationSituationBookResultVO>();
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
-        int total = decPositionDao.getBooks(pageParameter.getParameter().getMaterialId());
+        //int total = decPositionDao.getBooks(pageParameter.getParameter().getMaterialId());
+        int total = decPositionDao.getBookListOneCount(pageParameter);
         if (total > 0) {
             List<DeclarationSituationBookResultVO> books =
                     decPositionDao.getBookListOne(pageParameter);
@@ -914,7 +916,8 @@ public class DecPositionServiceImpl implements DecPositionService {
         PageResult<DeclarationResultSchoolVO> pageResult =
                 new PageResult<DeclarationResultSchoolVO>();
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
-        int total = decPositionDao.getSchoolCount(pageParameter.getParameter().getMaterialId());
+        //int total = decPositionDao.getSchoolCount(pageParameter.getParameter().getMaterialId());
+        int total = decPositionDao.getSchoolListPresetChosenCount(pageParameter);
         if (total > 0) {
             boolean flag = false;
             List<DeclarationResultSchoolVO> chosens =
@@ -993,7 +996,8 @@ public class DecPositionServiceImpl implements DecPositionService {
         PageResult<DeclarationResultSchoolVO> pageResult =
                 new PageResult<DeclarationResultSchoolVO>();
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
-        int total = decPositionDao.getSchoolCount(pageParameter.getParameter().getMaterialId());
+        //int total = decPositionDao.getSchoolCount(pageParameter.getParameter().getMaterialId());
+        int total = decPositionDao.getSchoolListPresetChosenCount(pageParameter);
         if (total > 0) {
             List<DeclarationResultSchoolVO> presets =
                     decPositionDao.getSchoolListPreset(pageParameter);
@@ -1053,7 +1057,8 @@ public class DecPositionServiceImpl implements DecPositionService {
         }
         PageResult<DeclarationResultBookVO> pageResult = new PageResult<DeclarationResultBookVO>();
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
-        int total = decPositionDao.getBooks(pageParameter.getParameter().getMaterialId());
+        //int total = decPositionDao.getBooks(pageParameter.getParameter().getMaterialId());
+        int total = decPositionDao.getBookListTwoCount(pageParameter);
         if (total > 0) {
             List<DeclarationResultBookVO> books = decPositionDao.getBookListTwo(pageParameter);
             List<DeclarationResultBookVO> VOs = decPositionDao.getBookChosenList(pageParameter);
