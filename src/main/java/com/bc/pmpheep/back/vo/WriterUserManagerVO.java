@@ -23,17 +23,17 @@ public class WriterUserManagerVO implements Serializable {
     /**
      * 用户名
      */
-    @ExcelHeader(header = "用户名")
+    @ExcelHeader(header = "账号")
     private String  username;
     /**
      * 用户名以及真实姓名
      */
-    @ExcelHeader(header = "真实姓名")
+    //@ExcelHeader(header = "真实姓名")
     private String  name;
     /**
      * 是否禁用
      */
-    @ExcelHeader(header = "是否禁用")
+   // @ExcelHeader(header = "是否禁用")
     private Integer isDisabled;
     /**
      * 对应学校id
@@ -43,7 +43,7 @@ public class WriterUserManagerVO implements Serializable {
     /**
      * 机构名称
      */
-    @ExcelHeader(header = "机构名称")
+    @ExcelHeader(header = "所属机构")
     private String  orgName;
     /**
      * 昵称
@@ -68,7 +68,7 @@ public class WriterUserManagerVO implements Serializable {
     /**
      * 身份证
      */
-    @ExcelHeader(header = "身份证")
+    @ExcelHeader(header = "身份证号")
     private String  idcard;
     /**
      * 手机
@@ -83,25 +83,25 @@ public class WriterUserManagerVO implements Serializable {
     /**
      * 地址
      */
-    @ExcelHeader(header = "地址")
+    @ExcelHeader(header = "邮寄地址")
     private String  address;
     /**
      * 级别
      */
-    @ExcelHeader(header = "级别")
+    //@ExcelHeader(header = "级别")
     private Integer rank;
     // 认证进度 --- 0=未提交/1=已提交/2=被退回/3=通过
 
     private Short   progress;
-    @ExcelHeader(header = "认证进度")
+    //@ExcelHeader(header = "认证进度")
     private String progressName;
     // 教师资格证--- 资格证图片的资源地址
-    @ExcelHeader(header = "教师资格证")
+   // @ExcelHeader(header = "教师资格证")
     private String  cert;
     /**
      * 级别名称
      */
-    @ExcelHeader(header = "级别名称")
+    @ExcelHeader(header = "用户类型")
     private String  rankName;
     /**
      * 显示顺序

@@ -28,7 +28,7 @@ public class OrgAndOrgUserVO implements Serializable {
 	// 机构类型id
 	private Long orgTypeId;
 	// 机构类型名称
-	@ExcelHeader(header = "机构类型")
+	//@ExcelHeader(header = "机构类型")
 	private String orgTypeName;
 	// 上级机构id
 	private String parentId;
@@ -43,7 +43,7 @@ public class OrgAndOrgUserVO implements Serializable {
 	// 审核进度
 	private Integer progress;
 	// 手机
-	@ExcelHeader(header = "手机")
+	@ExcelHeader(header = "手机号")
 	private String handphone;
 	// 邮箱
 	@ExcelHeader(header = "邮箱")
@@ -55,14 +55,15 @@ public class OrgAndOrgUserVO implements Serializable {
 	@ExcelHeader(header = "职称")
 	private String title;
 	// 地址
-	@ExcelHeader(header = "地址")
+	@ExcelHeader(header = "邮寄地址")
 	private String address;
 	// 邮编
-	@ExcelHeader(header = "邮编")
+	@ExcelHeader(header = "邮寄")
 	private String postcode;
 	// 委托书
 	private String proxy;
 	// 备注
+	@ExcelHeader(header = "备注")
 	private String note;
 	// 显示顺序
 	private Integer sort;
