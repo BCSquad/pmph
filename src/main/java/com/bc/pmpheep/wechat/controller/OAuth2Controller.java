@@ -55,6 +55,7 @@ public class OAuth2Controller {
      */
     @RequestMapping(value = { "/oauth2" })
     public String Oauth2API(HttpServletRequest request, @RequestParam String resultUrl) {
+        logger.info("resultUrl:   "+resultUrl);
         // 此处可以添加获取持久化的数据，如企业号id等相关信息
         String CropId = Constants.CORPID;
         String redirectUrl = "";
@@ -83,6 +84,7 @@ public class OAuth2Controller {
             // System.out.println("backUrl=" + backUrl);
             redirectUrl = oAuth2Url(CropId, backUrl);
         }
+        logger.info("redirectUrl:   "+redirectUrl);
         return "redirect:" + redirectUrl;
     }
 
@@ -101,6 +103,7 @@ public class OAuth2Controller {
     @RequestMapping(value = { "/oauth2url" })
     public String Oauth2MeUrl(HttpServletRequest request, @RequestParam String code,
     @RequestParam String oauth2url) {
+        logger.info("oauth2url___:   "+oauth2url);
         AccessToken accessToken = QiYeUtil.getAccessToken(Constants.CORPID, Constants.SECRET);
         HttpSession session = request.getSession();
         if (accessToken != null && accessToken.getToken() != null) {
@@ -110,6 +113,7 @@ public class OAuth2Controller {
             }
         }
         // 这里简单处理,存储到session中
+        logger.info("oauth2url:   "+oauth2url);
         return "redirect:" + oauth2url;
     }
 
