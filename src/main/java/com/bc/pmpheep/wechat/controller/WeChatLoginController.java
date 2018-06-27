@@ -84,6 +84,8 @@ public class WeChatLoginController {
         PmphUser pmphUser = null;
         String username = null;
         String password =null;
+
+        logger.info("login "+isTrue);
         if (isTrue) {
             HttpSession session = request.getSession();
             String wechatUserId = (String) session.getAttribute("UserId"); // userId 在session 中可以取到 微信--企业微信号 这个是pmph_user_wechat 表中的wechat_id
