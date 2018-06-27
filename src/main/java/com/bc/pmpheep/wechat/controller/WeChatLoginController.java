@@ -103,7 +103,7 @@ public class WeChatLoginController {
 
                 if (ObjectUtil.isNull(pmphUserWechat)) {
                     model.addAttribute("isLogin", "0"); //查找不到对应的社内用户 跳转登录页面
-                    model.addAttribute("isIndexOrCommission",(!StringUtil.isEmpty((String)session.getAttribute("UserId"))?"commission":"") );//commission 从微信 -- 企业微信号 代办
+                    model.addAttribute("isIndexOrCommission",((!StringUtil.isEmpty((String)session.getAttribute("UserId"))&&!StringUtil.isEmpty(request.getParameter("commission")))?"commission":"") );//commission 从微信 -- 企业微信号 代办
                     return "wechat";
                 } else { //查找到对应的社内用户，跳转到首页
                     pmphUser = pmphUserService.getPmphUserByUsername(pmphUserWechat.getUsername(),pmphUserWechat.getUserid());
