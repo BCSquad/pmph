@@ -55,10 +55,10 @@ public class MaterialTypeServiceImpl extends BaseService implements MaterialType
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_TYPE, CheckedExceptionResult.NULL_PARAM,
 					"显示顺序为空");
 		}
-		if (StringUtil.isEmpty(materialType.getNote())) {
+		/*if (StringUtil.isEmpty(materialType.getNote())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_TYPE, CheckedExceptionResult.NULL_PARAM,
 					"备注为空");
-		}
+		}*/
 		materialTypeDao.addMaterialType(materialType);
 		return materialType;
 	}
