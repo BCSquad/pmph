@@ -986,6 +986,27 @@
 		GROUP BY c.id ORDER BY c.sort ASC)t1,(SELECT @rowno:=0)t2 )t3 ;
 	</select>
 
+	<select id="getChoseCount" parameterType="map" resultType="int">
+
+		select count(b.chosen_position>0) 	FROM
+					declaration a
+				LEFT JOIN dec_position_published b ON a.id = b.declaration_id
+				LEFT JOIN textbook c ON b.textbook_id = c.id
+				LEFT JOIN material d ON c.material_id = d.id 	WHERE
+					a.is_staging = 0
+				AND a.online_progress > 0
+
+				AND d.id = #{materialId} and c.id =#{bookId}
+		<if test="bookName !=null and bookName !=''">
+			and c.textbook_name like concat
+			('%',#{bookName},'%')
+		</if>
+				GROUP BY
+					c.id
+				ORDER BY
+					c.sort ASC
+	</select>
+
 	<!-- 申报情况按书籍统计（当选职务） -->
 	<select id="getBookResultChosen" parameterType="pageParameter"
 		resultType="DeclarationSituationBookResultVO">

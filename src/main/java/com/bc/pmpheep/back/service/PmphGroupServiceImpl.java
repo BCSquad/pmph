@@ -255,7 +255,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			pmphGroupMember.setGroupId(pmphGroup.getId());
 			pmphGroupMember.setIsFounder(true);
 			pmphGroupMember.setUserId(pmphUser.getId());
-			pmphGroupMember.setDisplayName(pmphUser.getRealname());
+			pmphGroupMember.setDisplayName(StringUtil.isEmpty(pmphUser.getRealname())?pmphUser.getUsername():pmphUser.getRealname());
 			pmphGroupMemberService.addPmphGroupMember(pmphGroupMember);
 		} else {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.OBJECT_NOT_FOUND,
@@ -352,7 +352,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			pmphGroupMember.setGroupId(pmphGroup.getId());
 			pmphGroupMember.setIsFounder(true);
 			pmphGroupMember.setUserId(pmphUser.getId());
-			pmphGroupMember.setDisplayName(pmphUser.getRealname());
+			pmphGroupMember.setDisplayName(StringUtil.isEmpty(pmphUser.getRealname())?pmphUser.getUsername():pmphUser.getRealname());
 			pmphGroupMemberService.addPmphGroupMember(pmphGroupMember);
 			//新增小组成员--策划编辑
 			if(!ObjectUtil.isNull(textbook.getPlanningEditor())){

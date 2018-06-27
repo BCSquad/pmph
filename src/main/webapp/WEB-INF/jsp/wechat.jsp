@@ -157,6 +157,8 @@
                 //和vue 同步 解决单点登录一闪的问题 、sessionStorage是Html5的特性,IE7以下浏览器不支持
                 //window.location.href='http://192.168.100.135/#/login?username='+'${username}'+'&password='+'${password}'+'&token='+'${token}'+'&wechatUserId='+'${UserId}';
                 window.location.href='http://'+pcLogin+'/#/index?sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
+            }else if(5 == '${isLogin}'){ //代办页面
+                window.location.href='http://'+appLogin+'/wx/#/wxMessageList?sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
             }
 
 		</script>

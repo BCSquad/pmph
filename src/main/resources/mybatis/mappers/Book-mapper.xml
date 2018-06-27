@@ -545,7 +545,8 @@
 		ORDER BY
 		t.ischeckteachbook DESC,
 		t.ischeckxgcommend DESC,
-		t.ischeckrwcommend DESC
+		t.ischeckrwcommend DESC,
+		t.gmt_create DESC
 		LIMIT #{start},#{pageSize}
 	</select>
 

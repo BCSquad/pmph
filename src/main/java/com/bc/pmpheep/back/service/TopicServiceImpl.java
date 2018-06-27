@@ -434,98 +434,106 @@ public class TopicServiceImpl implements TopicService {
 						"没有这个职务");
 			}
 		}
-		switch (topicTextVO.getRank()) {
-		case 0:
-			topicTextVO.setRankType(new String[]{"低"});
-			break;
-		case 1:
-			topicTextVO.setRankType(new String[]{"中"});
-			break;
-		case 2:
-			topicTextVO.setRankType(new String[]{"高"});
-			break;
+		if (ObjectUtil.notNull(topicTextVO.getRank())) {
+			switch (topicTextVO.getRank()) {
+				case 0:
+					topicTextVO.setRankType(new String[]{"低"});
+					break;
+				case 1:
+					topicTextVO.setRankType(new String[]{"中"});
+					break;
+				case 2:
+					topicTextVO.setRankType(new String[]{"高"});
+					break;
 
-		default:
-			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
-					"没有这个级别");
+				default:
+					throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
+							"没有这个级别");
+			}
 		}
-		switch (topicTextVO.getSource()) {
-		case 0:
-			topicTextVO.setSourceType(new String[]{"社策划"});
-			break;
-		case 1:
-			topicTextVO.setSourceType(new String[]{"编辑策划"});
-			break;
-		case 2:
-			topicTextVO.setSourceType(new String[]{"修订"});
-			break;
-		case 4:
-			topicTextVO.setSourceType(new String[]{"专家策划"});
-			break;
-		case 3:
-			topicTextVO.setSourceType(new String[]{"离退休编审策划"});
-			break;
-		case 5:
-			topicTextVO.setSourceType(new String[]{"上级交办"});
-			break;
-		case 6:
-			topicTextVO.setSourceType(new String[]{"作者投稿"});
-			break;
+		if (ObjectUtil.notNull(topicTextVO.getSource())) {
+			switch (topicTextVO.getSource()) {
+				case 0:
+					topicTextVO.setSourceType(new String[]{"社策划"});
+					break;
+				case 1:
+					topicTextVO.setSourceType(new String[]{"编辑策划"});
+					break;
+				case 2:
+					topicTextVO.setSourceType(new String[]{"修订"});
+					break;
+				case 4:
+					topicTextVO.setSourceType(new String[]{"专家策划"});
+					break;
+				case 3:
+					topicTextVO.setSourceType(new String[]{"离退休编审策划"});
+					break;
+				case 5:
+					topicTextVO.setSourceType(new String[]{"上级交办"});
+					break;
+				case 6:
+					topicTextVO.setSourceType(new String[]{"作者投稿"});
+					break;
 
-		default:
-			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
-					"没有这个选题来源");
+				default:
+					throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
+							"没有这个选题来源");
+			}
 		}
-		switch (topicTextVO.getReader()) {
-		case 0:
-			topicTextVO.setReadType("医务工作者");
-			break;
-		case 1:
-			topicTextVO.setReadType("医学院校师生");
-			break;
-		case 2:
-			topicTextVO.setReadType("大众");
-			break;
+		if (ObjectUtil.notNull(topicTextVO.getReader())) {
+			switch (topicTextVO.getReader()) {
+				case 0:
+					topicTextVO.setReadType("医务工作者");
+					break;
+				case 1:
+					topicTextVO.setReadType("医学院校师生");
+					break;
+				case 2:
+					topicTextVO.setReadType("大众");
+					break;
 
-		default:
-			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
-					"没有这个阅读人群");
+				default:
+					throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
+							"没有这个阅读人群");
+			}
 		}
-		switch (topicTextVO.getType()) {
-		case 0:
-			topicTextVO.setTypeName(new String[]{"专著"});
-			break;
-		case 1:
-			topicTextVO.setTypeName(new String[]{"基础理论"});
-			break;
-		case 3:
-			topicTextVO.setTypeName(new String[]{"论文集"});
-			break;
-		case 2:
-			topicTextVO.setTypeName(new String[]{"教材"});
-			break;
-		case 4:
-			topicTextVO.setTypeName(new String[]{"图谱"});
-			break;
-		case 5:
-			topicTextVO.setTypeName(new String[]{"科普"});
-			break;
-		case 7:
-			topicTextVO.setTypeName(new String[]{"教辅"});
-			break;
-		case 6:
-			topicTextVO.setTypeName(new String[]{"应用技术"});
-			break;
-		case 8:
-			topicTextVO.setTypeName(new String[]{"工具书"});
-			break;
-		case 9:
-			topicTextVO.setTypeName(new String[]{"其他"});
-			break;
+		if (ObjectUtil.notNull(topicTextVO.getType())) {
+			switch (topicTextVO.getType()) {
+				case 0:
+					topicTextVO.setTypeName(new String[]{"专著"});
+					break;
+				case 1:
+					topicTextVO.setTypeName(new String[]{"基础理论"});
+					break;
+				case 3:
+					topicTextVO.setTypeName(new String[]{"论文集"});
+					break;
+				case 2:
+					topicTextVO.setTypeName(new String[]{"教材"});
+					break;
+				case 4:
+					topicTextVO.setTypeName(new String[]{"图谱"});
+					break;
+				case 5:
+					topicTextVO.setTypeName(new String[]{"科普"});
+					break;
+				case 7:
+					topicTextVO.setTypeName(new String[]{"教辅"});
+					break;
+				case 6:
+					topicTextVO.setTypeName(new String[]{"应用技术"});
+					break;
+				case 8:
+					topicTextVO.setTypeName(new String[]{"工具书"});
+					break;
+				case 9:
+					topicTextVO.setTypeName(new String[]{"其他"});
+					break;
 
-		default:
-			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.ILLEGAL_PARAM,
-					"没有这个图书类别");
+				default:
+					throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.ILLEGAL_PARAM,
+							"没有这个图书类别");
+			}
 		}
 		return topicTextVO;
 	}

@@ -223,7 +223,7 @@
 	<!-- 根据id查询一个Textbook -->
 	<select id="getTextbookById" parameterType="java.lang.Long"
 		resultType="Textbook">
-		select t1.*,t2.realname from textbook t1 left join pmph_user t2 on t1.planning_editor = t2.id where t1.id=#{id} ;
+		select t1.*,if(ISNULL(t2.realname),t2.username,t2.realname)as realname from textbook t1 left join pmph_user t2 on t1.planning_editor = t2.id where t1.id=#{id} ;
 	</select>
 
 	<!-- 通过用户id与教材id查询书籍集合 -->
