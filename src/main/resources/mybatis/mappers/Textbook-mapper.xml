@@ -741,7 +741,7 @@
 		t.textbook_name,t.textbook_round,t.sort,dp.chosen_position,wu.realname,wu.username,org.org_name unitName,
 			dc.org_name,dc.position,dp.rank,dc.title,dc.address,dc.email,
 			dc.handphone,dc.idtype,dc.idcard,dc.online_progress,dc.offline_progress,
-			m.material_name
+			m.material_name,dc.postcode
 		FROM `dec_position` dp 
 		LEFT JOIN `declaration` dc ON dp.`declaration_id` = dc.`id`
 		LEFT JOIN `org` org ON dc.`org_id`= org.`id`
