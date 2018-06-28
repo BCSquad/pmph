@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.bc.pmpheep.back.util.*;
 import com.bc.pmpheep.general.bean.FileType;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -160,7 +161,11 @@ public class PmphUserServiceImpl implements PmphUserService {
         String userAvatar = RouteUtil.DEFAULT_USER_AVATAR;
         // 添加附件到MongoDB表中
         if (!StringUtil.isEmpty(file)) {
+            //File f = FileUpload.getFileByFilePath(request.getSession().getServletContext().getRealPath("/") + file);
             File f = FileUpload.getFileByFilePath(request.getSession().getServletContext().getRealPath("/") + file);
+            byte[] fileByte = (byte[])request.getSession().getAttribute(file);
+            FileUtils.writeByteArrayToFile(f,fileByte);
+
             if (f.isFile()) {
                 // 循环获取file数组中得文件
                 if (StringUtil.notEmpty(f.getName())) {
