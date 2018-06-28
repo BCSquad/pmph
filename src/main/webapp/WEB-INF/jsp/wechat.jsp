@@ -151,7 +151,7 @@
                 //alert(1);
                 //window.location.href='http://'+pcLogin+'/#/login?wechatUserId='+'${UserId}';
                 //window.location.href='http://120.76.221.250/#/login';
-                alert('http://'+appLogin+'/wx/#/login?wechatUserId='+'${UserId}'+'&isIndexOrCommission='+${isIndexOrCommission});
+                // alert('http://'+appLogin+'/wx/#/login?wechatUserId='+'${UserId}'+'&isIndexOrCommission='+${isIndexOrCommission});
                 window.location.href='http://'+appLogin+'/wx/#/login?wechatUserId='+'${UserId}'+'&isIndexOrCommission='+${isIndexOrCommission};  //app 登录
             }else if(1=='${isLogin}'){
                 //window.location.href='http://'+pcLogin+'/#/login?username='+'${username}'+'&password='+'${password}'+'&wechatUserId='+'${UserId}'+'&token='+'${token}';
