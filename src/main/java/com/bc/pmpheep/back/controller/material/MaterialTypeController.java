@@ -40,7 +40,7 @@ public class MaterialTypeController {
     @ResponseBody
     public ResponseBean addMarterialType(HttpServletRequest request
             ,@ModelAttribute MaterialType type){
-        type.setNote(StringUtil.isEmpty(type.getNote())?type.getTypeName():type.getNote());
+        //type.setNote(StringUtil.isEmpty(type.getNote())?type.getTypeName():type.getNote());
         type.setSort(type.getSort()!=null?type.getSort():999);
 
         String path = "0";
