@@ -57,6 +57,12 @@ public class OAuth2Controller {
     public String Oauth2API(HttpServletRequest request, @RequestParam String resultUrl) {
         logger.info("resultUrl:   "+resultUrl);
         // 此处可以添加获取持久化的数据，如企业号id等相关信息
+        String userAgent = request.getHeader("user-agent").toLowerCase();
+        Boolean isTrue =
+                userAgent == null || userAgent.indexOf("micromessenger") == -1 ? false : true;
+
+        System.out.println("user-agent"+ request.getHeader("user-agent").toLowerCase());
+
         String CropId = Constants.CORPID;
         String redirectUrl = "";
         if (resultUrl != null) {
