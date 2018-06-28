@@ -64,6 +64,9 @@ public class OAuth2Interceptor implements HandlerInterceptor {
         String userAgent = request.getHeader("user-agent").toLowerCase();
         Boolean isTrue =
         userAgent == null || userAgent.indexOf("micromessenger") == -1 ? false : true;
+
+        System.out.println("user-agent"+ request.getHeader("user-agent").toLowerCase());
+
         if (isTrue) {
             // String url = request.getRequestURL().toString();
             HttpSession session = request.getSession();
