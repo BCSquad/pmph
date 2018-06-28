@@ -5,7 +5,9 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.bc.pmpheep.back.util.StringUtil;
@@ -61,7 +63,7 @@ public class OAuth2Controller {
         Boolean isTrue =
                 userAgent == null || userAgent.indexOf("micromessenger") == -1 ? false : true;
 
-        System.out.println("user-agent"+ request.getHeader("user-agent").toLowerCase());
+        System.out.println("user-agent oauth2   "+ request.getHeader("user-agent").toLowerCase());
 
         String CropId = Constants.CORPID;
         String redirectUrl = "";
@@ -92,6 +94,8 @@ public class OAuth2Controller {
         }
         logger.info("redirectUrl:   "+redirectUrl);
         return "redirect:" + redirectUrl;
+
+
     }
 
     /**
@@ -107,9 +111,15 @@ public class OAuth2Controller {
      * </pre>
      */
     @RequestMapping(value = { "/oauth2url" })
-    public String Oauth2MeUrl(HttpServletRequest request, @RequestParam String code,
-    @RequestParam String oauth2url) {
+    public Boolean Oauth2MeUrl(HttpServletRequest request, HttpServletResponse response, @RequestParam String code,
+                               @RequestParam String oauth2url) {
         logger.info("oauth2url___:   "+oauth2url);
+        String userAgent = request.getHeader("user-agent").toLowerCase();
+        Boolean isTrue =
+                userAgent == null || userAgent.indexOf("micromessenger") == -1 ? false : true;
+
+        System.out.println("user-agent oauth2url     "+ request.getHeader("user-agent").toLowerCase());
+
         AccessToken accessToken = QiYeUtil.getAccessToken(Constants.CORPID, Constants.SECRET);
         HttpSession session = request.getSession();
         if (accessToken != null && accessToken.getToken() != null) {
@@ -121,7 +131,15 @@ public class OAuth2Controller {
         // 这里简单处理,存储到session中
         logger.info("UserId:   "+session.getAttribute("UserId"));
         logger.info("oauth2url:   "+oauth2url);
-        return "redirect:" + oauth2url;
+        try {
+            request.getRequestDispatcher(oauth2url).forward(request,response);
+        } catch (ServletException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+       // return "redirect:" + oauth2url;
+        return true;
     }
 
     /**
