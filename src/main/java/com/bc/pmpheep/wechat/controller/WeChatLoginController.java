@@ -1,5 +1,6 @@
  package com.bc.pmpheep.wechat.controller;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.alibaba.fastjson.JSON;
@@ -77,7 +79,7 @@ public class WeChatLoginController {
      */
     @RequestMapping(value = { "/login" })
     @OAuthRequired
-    public Object load(HttpServletRequest request, Model model) {
+    public Object load(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
         String userAgent = request.getHeader("user-agent").toLowerCase();// 判断是否从企业微信App登陆
         Boolean isTrue =
         userAgent == null || userAgent.indexOf("micromessenger") == -1 ? false : true;
@@ -109,7 +111,8 @@ public class WeChatLoginController {
 
                     //if ((!StringUtil.isEmpty((String) session.getAttribute("UserId")) && !StringUtil.isEmpty(request.getParameter("commission")))) {
                       logger.info("http://medu.ipmph.com/wx/#/login?wechatUserId=" + wechatUserId+"&isIndexOrCommission="+((!StringUtil.isEmpty((String)session.getAttribute("UserId"))&&!StringUtil.isEmpty(request.getParameter("commission")))?"commission":""));
-                        return "redirect:http://medu.ipmph.com/wx/#/login?wechatUserId=" + wechatUserId+"&isIndexOrCommission=commission";
+                    response.sendRedirect("http://medu.ipmph.com/wx/#/login?wechatUserId=" + wechatUserId+"&isIndexOrCommission=");
+                    return "";
                    // }
                    // return "wechat";
                 } else { //查找到对应的社内用户，跳转到首页
