@@ -115,7 +115,7 @@ public class OAuth2Controller {
         // 这里简单处理,存储到session中
         logger.info("UserId:   "+session.getAttribute("UserId"));
         logger.info("oauth2url:   "+oauth2url);
-        return "redirect:http://medu.ipmph.com/pmphwx/sso/login?commission=" + oauth2url;
+        return "redirect:" + oauth2url;
     }
 
     /**

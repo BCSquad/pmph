@@ -76,7 +76,7 @@ public class OAuth2Interceptor implements HandlerInterceptor {
                 Object objUid = session.getAttribute("UserId");
                 String appType = request.getParameter("appType");
                 if (objUid == null&& StringUtil.isEmpty(appType)) {
-                    String resultUrl = request.getRequestURL().toString();
+                    String resultUrl = request.getServletPath().toString();
                     String param = request.getQueryString();
                     if (param != null) {
                         resultUrl += "?" + param;
