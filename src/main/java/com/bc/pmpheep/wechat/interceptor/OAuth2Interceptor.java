@@ -93,7 +93,8 @@ public class OAuth2Interceptor implements HandlerInterceptor {
                     // 请求的路径
                     String contextPath = request.getContextPath();
                     System.out.println(contextPath + "/oauth2?resultUrl=" + resultUrl);
-                    response.sendRedirect(contextPath + "/oauth2?resultUrl=" + resultUrl);
+                    //response.sendRedirect(contextPath + "/oauth2?resultUrl=" + resultUrl);  不用页面重定向 是因为 必须保证每次转发请求的请求头一致。
+                    request.getRequestDispatcher("/oauth2?resultUrl=" + resultUrl).forward(request,response);
                     return false;
                 }
             }
