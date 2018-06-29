@@ -127,6 +127,8 @@ public class PmphLoginController {
         String userAgent = request.getHeader("user-agent").toLowerCase();
         Boolean isTrue =
                 userAgent == null || userAgent.indexOf("micromessenger") == -1 ? false : true;
+
+        logger.info("user-agent  " + userAgent);
         if (isTrue) {
             if (StringUtil.notEmpty(token)) {
                 String newToken = username + password + wechatUserId + "<pmpheep>";
@@ -145,8 +147,8 @@ public class PmphLoginController {
         }
 
         PmphUser pmphUser = null;
-        if (StringUtil.notEmpty(wechatUserId) && !"sso".equals(wechatUserId)) { //由微信--我的企业号 登录过来
-            if (StringUtil.notEmpty(username)) {//用户名 如果不为空，手动输入
+        if (isTrue&&StringUtil.notEmpty(wechatUserId) && !"sso".equals(wechatUserId)&& !"pmphuserlogin".equals(wechatUserId)) { //由微信--我的企业号 登录过来
+            //if (isTrue) {//用户名 如果不为空，手动输入
                 // 如果是微信登录过来 且wechatUserId 与 username 同时不为空，此时 维护 pmph_user_wechat 表
                 PmphUserWechat pmphUserWechat = new PmphUserWechat();
                 pmphUserWechat.setUsername(username);
@@ -158,18 +160,23 @@ public class PmphLoginController {
                 }
                 pmphUser = pmphUserService.login(username, new DesRun("", password).enpsw);
                 pmphUserWechat.setUserid(pmphUser.getId());
-                if(pmphUserService.login(wechatUserId)==null){ //判断是openid 还是 wechat_id
-                    pmphUserWechatService.add(pmphUserWechat); //微信 我的企业号 绑定userid
-                }
-
+                pmphUserWechatService.add(pmphUserWechat); //微信 我的企业号 绑定userid
                 //pmphUser = pmphUserService.login(username, null);
-            } else {//已经绑定
+           /* } else {//已经绑定
                 pmphUser = pmphUserService.login(wechatUserId);
                 username = "";
                 password = "";
             }
+*/
+        }else if(StringUtil.notEmpty(wechatUserId)&& "pmphuserlogin".equals(wechatUserId)){ // 社内用户单点登录
+            if (StringUtil.isEmpty(username) || StringUtil.isEmpty(password)) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                        CheckedExceptionResult.NULL_PARAM, "请输入用户名和密码!");
+            }
+            pmphUser = pmphUserService.login(username,  password);
 
-        } else {
+        }
+        else {
             if (StringUtil.isEmpty(username) || StringUtil.isEmpty(password)) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                         CheckedExceptionResult.NULL_PARAM, "请输入用户名和密码!");
@@ -208,9 +215,9 @@ public class PmphLoginController {
         List<Long> pmphUserPermissionIds =
                 pmphUserService.getPmphUserPermissionByUserId(pmphUser.getId());
         // 判断是否从企业微信App登陆
-        if (isTrue && StringUtil.notEmpty(username) && StringUtil.notEmpty(wechatUserId)) {
+       /* if (isTrue && StringUtil.notEmpty(username) && StringUtil.notEmpty(wechatUserId)) {
             pmphUserService.updateUserOpenid(wechatUserId, username);
-        }
+        }*/
         // String materialPermission =
         // pmphUserService.getMaterialPermissionByUserId(pmphUser.getId()); 根据用户返回书籍
         // 验证成功在Session中保存用户信息
