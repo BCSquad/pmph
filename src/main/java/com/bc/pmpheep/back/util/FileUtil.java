@@ -315,4 +315,26 @@ public class FileUtil {
         }
     }
 
+    /**
+     * 作为文件名或文件夹名，\/:*?#"<>| 都为非法字符，此处替换成相应中文字符，无相应的替换为空格
+     * @param fileName
+     * @return
+     */
+    public static String replaceIllegalCharForFileName(String fileName){
+        if (fileName != null){
+            String result = fileName.replaceAll("\\/","、")
+                    .replaceAll(":","：")
+                    .replaceAll("\\*","x")
+                    .replaceAll("\\?","？")
+                    .replaceAll("#"," ")
+                    .replaceAll("\"","”")
+                    .replaceAll("<","《")
+                    .replaceAll(">","》")
+                    .replaceAll("\\|"," ");
+            return  result;
+        }else{
+            return "";
+        }
+    }
+
 }

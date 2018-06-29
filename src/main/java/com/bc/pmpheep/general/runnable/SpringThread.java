@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bc.pmpheep.back.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -227,9 +228,9 @@ public class SpringThread implements Runnable {
 					sb.append(src);
 					sb.append(this.id);
 					sb.append(File.separator);
-					sb.append(material.getMaterialName());
+					sb.append(FileUtil.replaceIllegalCharForFileName(material.getMaterialName()));
 					sb.append(File.separator);
-					sb.append((i + 1) + "." + textbookName);
+					sb.append((i + 1) + "." + FileUtil.replaceIllegalCharForFileName(textbookName));
 					sb.append(File.separator);
 					this.wordHelper.export(material.getMaterialName(), sb.toString(), list, str.toString(),
 							this.materialExtensionService.getMaterialExtensionByMaterialId(this.materialId));
@@ -249,6 +250,8 @@ public class SpringThread implements Runnable {
 		zipDownload.setDetail("/zip/download?id=" + this.id);
 		Const.WORD_EXPORT_MAP.put(this.id, zipDownload);
 	}
+
+
 
 
 	public Boolean getSelect() {
