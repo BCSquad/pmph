@@ -110,10 +110,10 @@ public class WeChatLoginController {
                     model.addAttribute("isIndexOrCommission",((!StringUtil.isEmpty((String)session.getAttribute("UserId"))&&!StringUtil.isEmpty(request.getParameter("commission")))?"commission":"") );//commission 从微信 -- 企业微信号 代办
 
                     //if ((!StringUtil.isEmpty((String) session.getAttribute("UserId")) && !StringUtil.isEmpty(request.getParameter("commission")))) {
-                      logger.info("http://medu.ipmph.com/wx/#/login?wechatUserId=" + wechatUserId+"&isIndexOrCommission="+((!StringUtil.isEmpty((String)session.getAttribute("UserId"))&&!StringUtil.isEmpty(request.getParameter("commission")))?"commission":""));
+                    logger.info("http://medu.ipmph.com/wx/#/login?wechatUserId=" + wechatUserId+"&isIndexOrCommission="+((!StringUtil.isEmpty((String)session.getAttribute("UserId"))&&!StringUtil.isEmpty(request.getParameter("commission")))?"commission":""));
                     response.sendRedirect("http://medu.ipmph.com/wx/#/login?wechatUserId=" + wechatUserId+"&isIndexOrCommission=");
                    // }
-                    return "wechat";
+                    return true;
                 } else { //查找到对应的社内用户，跳转到首页
                     pmphUser = pmphUserService.getPmphUserByUsername(pmphUserWechat.getUsername(),pmphUserWechat.getUserid());
                     if (ObjectUtil.notNull(pmphUser)) {
