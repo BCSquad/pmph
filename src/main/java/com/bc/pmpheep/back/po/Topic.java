@@ -79,7 +79,7 @@ public class Topic implements Serializable {
 	/**
 	 * 作者购书
 	 */
-	private Integer purchase;
+	private String purchase;
 	/**
 	 * 可能的宣传方式
 	 */
@@ -95,7 +95,7 @@ public class Topic implements Serializable {
 	/**
 	 * 作者赞助
 	 */
-	private Integer sponsorship;
+	private String sponsorship;
 	/**
 	 * 印刷、用纸建议
 	 */
@@ -308,9 +308,9 @@ public class Topic implements Serializable {
 	public Topic(Long userId, String bookname, Integer reader,
 			Timestamp deadline, Integer source, Integer wordNumber,
 			Integer pictureNumber, String subject, Integer rank, Integer type,
-			Long bankAccountId, String readerQuantity, Integer purchase,
+			Long bankAccountId, String readerQuantity, String purchase,
 			String campaign, String salesChannel, String lifecycle,
-			Integer sponsorship, String printAdvise, String priceAdvise,
+			String sponsorship, String printAdvise, String priceAdvise,
 			String printNumber, String cost, String minPrintNumber,
 			String benefit, Boolean isRevision, String revisionBookname,
 			String revisionAuthor, Timestamp revisionPublishDate,
@@ -514,11 +514,11 @@ public class Topic implements Serializable {
 		this.readerQuantity = readerQuantity;
 	}
 
-	public Integer getPurchase() {
+	public String getPurchase() {
 		return purchase;
 	}
 
-	public void setPurchase(Integer purchase) {
+	public void setPurchase(String purchase) {
 		this.purchase = purchase;
 	}
 
@@ -546,11 +546,11 @@ public class Topic implements Serializable {
 		this.lifecycle = lifecycle;
 	}
 
-	public Integer getSponsorship() {
+	public String getSponsorship() {
 		return sponsorship;
 	}
 
-	public void setSponsorship(Integer sponsorship) {
+	public void setSponsorship(String sponsorship) {
 		this.sponsorship = sponsorship;
 	}
 

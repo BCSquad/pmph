@@ -352,7 +352,7 @@ public class MigrationPlus {
 	 
 	 protected void topic() {
 		Topic topic = new Topic(4017L, "内科学", 1, new Timestamp(445555L), 2, 123, 210, "医学", 1, 1, 17L,
-				"20", 21, null, null, null, 2000, null, null, null, null, null, null, false, null, null, null,
+				"20", 21, null, null, null, "2000", null, null, null, null, null, null, false, null, null, null,
 				null, null, false, null, null, null, null, null, null, null, null, null, null, null, null, null,
 				null, null, null, 0, "内容丰富", new Timestamp(755564L), true, 15L, false, null, true, 35L, false, 
 				null, true, 423L, true, false, false, "基础覆盖面广", null, null, null, null, new Timestamp(446666L));
@@ -365,7 +365,7 @@ public class MigrationPlus {
 				writerUser.getSex(), 47, writerUser.getPosition(), writerUser.getWorkPlace());
 		topicWriertService.add(topicWriter);		
 		Topic topic1 = new Topic(4018L, "外科学", 1, new Timestamp(455985L), 2, 115, 200, "医学", 1, 1, 18L, "60",
-				18, null, null, null, 1200, null, null, null, null, null, null, false, null, null, null, null,
+				18, null, null, null, "1200", null, null, null, null, null, null, false, null, null, null, null,
 				null, false, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
 				null, null, 2, "重复", new Timestamp(765464l), true, 15L, false, null, true, 35L, false, null,
 				true, 546L, true, false, false, "退回", null, null, null, null, new Timestamp(456000L));
@@ -378,7 +378,7 @@ public class MigrationPlus {
 				writerUser1.getSex(), 45, writerUser1.getPosition(), writerUser1.getWorkPlace());
 		topicWriertService.add(topicWriter1);		
 		Topic topic2 = new Topic(4020L, "脑科学", 1, new Timestamp(435648L), 2, 95, 175, "医学", 1, 4, 20L, null, 
-				17, null, null, null, 2600, null, null, null, null, null, null, false, null, null, null, null,
+				17, null, null, null, "2600", null, null, null, null, null, null, false, null, null, null, null,
 				null, false, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
 				null, null, 1, null, null, true, 15L, false, null, null, 35L, false, null, false, null,
 				false, false, false, null, null, null, null, null, new Timestamp(445648L));
@@ -391,7 +391,7 @@ public class MigrationPlus {
 				writerUser2.getSex(), 51, writerUser2.getPosition(), writerUser2.getWorkPlace());
 		topicWriertService.add(topicWriter2);		
 		Topic topic3 = new Topic(4025L, "医学遗传学", 2, new Timestamp(452135L), 4, 135, 785, "遗传学", 0, 3, 25L,
-				null, 26, null, null, null, 2100, null, null, null, null, null, null, null, null, null, null, 
+				null, 26, null, null, null, "2100", null, null, null, null, null, null, null, null, null, null,
 				null, null, true, "Medical Genetics", "林恩·乔德", "XXX出版社", "美国", "1", "林恩·乔德", 0, 50, null,
 				2, 0, "德克萨斯州", null, null, null, null, 1, null, null, true, 15L, false, null, true, 35L, true, "其他受理选题",
 				false, 419L, false, false, false, null, null, null, null, null, new Timestamp(453135L));
@@ -404,7 +404,7 @@ public class MigrationPlus {
 				writerUser3.getSex(), 53, writerUser3.getPosition(), writerUser3.getWorkPlace());
 		topicWriertService.add(topicWriter3);		
 		Topic topic4 = new Topic(4030L, "社会心理学", 1, new Timestamp(475625L), 2, 1210, 179, "心理学", 2, 5, 30L,
-				null, 27, null, null, null, 3100, null, null, null, null, null, null, false, null, null, null,
+				null, 27, null, null, null, "3100", null, null, null, null, null, null, false, null, null, null,
 				null, null, false, null, null, null, null, null, null, null, null, null, null, null, null, null, 
 				null, null, null, 1, null, null, true, 15L, true, "不属于本部门领域", false, 35L, false, null, false, 
 				null, false, false, false, null, null, null, null, null, new Timestamp(476522L));
@@ -417,7 +417,7 @@ public class MigrationPlus {
 				writerUser4.getSex(), 37, writerUser4.getPosition(), writerUser4.getWorkPlace());
 		topicWriertService.add(topicWriter4);				
 		Topic topic5 = new Topic(4035L, "人体解剖学", 0, new Timestamp(423654L), 1, 97, 1098, "医学", 0, 3, 35L,
-				null, 14, null, null, null, 3300, null, null, null, null, null, null, false, null, null, null,
+				null, 14, null, null, null, "3300", null, null, null, null, null, null, false, null, null, null,
 				null, null, false, null, null, null, null, null, null, null, null, null, null, null, null, null,
 				null, null, null, 1, null, null, true, 15L, false, null, false, null, false, null, false, null, false, 
 				false, false, null, null, null, null, null, new Timestamp(433654L));
@@ -430,7 +430,7 @@ public class MigrationPlus {
 				writerUser5.getSex(), 46, writerUser5.getPosition(), writerUser5.getWorkPlace());
 		topicWriertService.add(topicWriter5);		
 		Topic topic6 = new Topic(4050L, "医学统计学", 1, new Timestamp(413564L), 3, 1150, 108, "医学", 1, 1, 50L, 
-				null, 18, null, null, null, 1100, null, null, null, null, null, null, false, null, null, null,
+				null, 18, null, null, null, "1100", null, null, null, null, null, null, false, null, null, null,
 				null, null, false, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
 				null, null,  0, null, null, null, null, null, null, null, null, null, null, null,null, null, true, 
 				null, null, null, null, null, null, null);

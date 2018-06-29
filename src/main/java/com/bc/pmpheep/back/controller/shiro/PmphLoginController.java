@@ -145,7 +145,7 @@ public class PmphLoginController {
         }
 
         PmphUser pmphUser = null;
-        if (StringUtil.notEmpty(wechatUserId) && !"sso".equals(wechatUserId)) { //由微信--我的企业号 登录过来
+        if (StringUtil.notEmpty(wechatUserId) && !"sso".equals(wechatUserId)&& !"pmphuserlogin".equals(wechatUserId)) { //由微信--我的企业号 登录过来
             if (StringUtil.notEmpty(username)) {//用户名 如果不为空，手动输入
                 // 如果是微信登录过来 且wechatUserId 与 username 同时不为空，此时 维护 pmph_user_wechat 表
                 PmphUserWechat pmphUserWechat = new PmphUserWechat();
@@ -168,6 +168,13 @@ public class PmphLoginController {
                 username = "";
                 password = "";
             }
+
+        }else if(StringUtil.notEmpty(wechatUserId)&& "pmphuserlogin".equals(wechatUserId)){ // 社内用户单点登录
+            if (StringUtil.isEmpty(username) || StringUtil.isEmpty(password)) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                        CheckedExceptionResult.NULL_PARAM, "请输入用户名和密码!");
+            }
+            pmphUser = pmphUserService.login(username,  password);
 
         } else {
             if (StringUtil.isEmpty(username) || StringUtil.isEmpty(password)) {
