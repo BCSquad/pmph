@@ -121,12 +121,12 @@
 
         </script>
         <script type="text/javascript">
-        	//alert('${UserId}');
+        	alert('${UserId}');
             var userData={
                 userSessionId:'${userSessionId}' ,
                 sessionPmphUserToken:'${sessionPmphUserToken}',
-                sessionPmphUser:${sessionPmphUser} ,
-                pmphUserPermissionIds:${pmphUserPermissionIds}
+                sessionPmphUser:'${sessionPmphUser}',
+                pmphUserPermissionIds:'${pmphUserPermissionIds}'
             }
             mySessionStorage.set('currentUser',userData,'json');
             Cookie.set('sessionId','${userSessionId}',2)
@@ -152,13 +152,14 @@
                 //window.location.href='http://'+pcLogin+'/#/login?wechatUserId='+'${UserId}';
                 //window.location.href='http://120.76.221.250/#/login';
                 // alert('http://'+appLogin+'/wx/#/login?wechatUserId='+'${UserId}'+'&isIndexOrCommission='+${isIndexOrCommission});
-                location.href='http://'+appLogin+'/wx/#/login?timestamp='+((new Date()).getTime()+Math.random())+'&wechatUserId='+'${UserId}'+'&isIndexOrCommission='+${isIndexOrCommission};  //app 登录
-                <%--var a = document.body.createElement("a");--%>
-                <%--a.setAttribute("href", 'http://'+appLogin+'/wx/#/login?timestamp='+((new Date()).getTime()+Math.random())+'&wechatUserId='+'${UserId}'+'&isIndexOrCommission='+${isIndexOrCommission});--%>
-                <%--a.setAttribute("id","aId");--%>
-                <%--a.setAttribute("style","visibility: hidden;");--%>
-                <%--document.body.appendChild(a);--%>
-                <%--document.getElementById("aId").click(); //--%>
+                 //var a = document.body.createElement("a");
+                // a.setAttribute("href", 'http://'+appLogin+'/wx/#/login?timestamp='+((new Date()).getTime()+Math.random())+'&wechatUserId='+'${UserId}'+'&isIndexOrCommission='+${isIndexOrCommission});
+                //a.setAttribute("id","aId");
+                //a.setAttribute("style","visibility: hidden;");
+                //document.body.appendChild(a);
+                //document.getElementById("aId").click();
+                window.location.href='http://'+appLogin+'/wx/#/login?timestamp='+((new Date()).getTime()+Math.random())+'&wechatUserId='+'${UserId}'+'&isIndexOrCommission=${isIndexOrCommission}';  //app 登录
+
 
             }else if(1=='${isLogin}'){
                 //window.location.href='http://'+pcLogin+'/#/login?username='+'${username}'+'&password='+'${password}'+'&wechatUserId='+'${UserId}'+'&token='+'${token}';
