@@ -158,7 +158,7 @@
                 //a.setAttribute("style","visibility: hidden;");
                 //document.body.appendChild(a);
                 //document.getElementById("aId").click();
-                window.location.href='http://'+appLogin+'/wx/#/login?timestamp='+((new Date()).getTime()+Math.random())+'&wechatUserId='+'${UserId}'+'&isIndexOrCommission=${isIndexOrCommission}';  //app 登录
+               location.href='http://'+appLogin+'/wx/#/login?timestamp='+((new Date()).getTime()+Math.random())+'&wechatUserId='+'${UserId}'+'&isIndexOrCommission=${isIndexOrCommission}';  //app 登录
 
 
             }else if(1=='${isLogin}'){

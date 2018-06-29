@@ -108,7 +108,6 @@ public class WeChatLoginController {
                 if (ObjectUtil.isNull(pmphUserWechat)) {
                     model.addAttribute("isLogin", "0"); //查找不到对应的社内用户 跳转登录页面
                     model.addAttribute("isIndexOrCommission",((!StringUtil.isEmpty((String)session.getAttribute("UserId"))&&!StringUtil.isEmpty(request.getParameter("commission")))?"commission":"") );//commission 从微信 -- 企业微信号 代办
-
                     //if ((!StringUtil.isEmpty((String) session.getAttribute("UserId")) && !StringUtil.isEmpty(request.getParameter("commission")))) {
                     /*logger.info("http://medu.ipmph.com/wx/#/login?wechatUserId=" + wechatUserId+"&isIndexOrCommission="+((!StringUtil.isEmpty((String)session.getAttribute("UserId"))&&!StringUtil.isEmpty(request.getParameter("commission")))?"commission":""));
                     response.sendRedirect("http://medu.ipmph.com/wx/#/login?wechatUserId=" + wechatUserId+"&isIndexOrCommission=");*/
