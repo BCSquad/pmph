@@ -136,11 +136,11 @@ public class TopicTextVO implements Serializable {
 	/**
 	 * 作者购书
 	 */
-	private Integer purchase;
+	private String purchase;
 	/**
 	 * 作者赞助
 	 */
-	private Integer sponsorship;
+	private String sponsorship;
 	/**
 	 * 译稿原书名
 	 */
@@ -566,19 +566,19 @@ public class TopicTextVO implements Serializable {
 		this.bankAccountId = bankAccountId;
 	}
 
-	public Integer getPurchase() {
+	public String getPurchase() {
 		return purchase;
 	}
 
-	public void setPurchase(Integer purchase) {
+	public void setPurchase(String purchase) {
 		this.purchase = purchase;
 	}
 
-	public Integer getSponsorship() {
+	public String getSponsorship() {
 		return sponsorship;
 	}
 
-	public void setSponsorship(Integer sponsorship) {
+	public void setSponsorship(String sponsorship) {
 		this.sponsorship = sponsorship;
 	}
 

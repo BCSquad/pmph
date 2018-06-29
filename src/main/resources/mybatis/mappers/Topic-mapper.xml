@@ -54,7 +54,7 @@
 			<if test="lifecycle !=null and lifecycle !=''">
 			    lifecycle,
 			</if>
-			<if test="sponsorship != null">
+			<if test="sponsorship != null and  sponsorship != '' ">
 				sponsorship,
 			</if>
 			<if test="printAdvise != null and printAdvise !=''">
@@ -263,7 +263,7 @@
 			<if test="lifecycle !=null and lifecycle !=''">
 			    #{lifecycle},
 			</if>
-			<if test="sponsorship != null">
+			<if test="sponsorship != null and sponsorship != '' ">
 				#{sponsorship},
 			</if>
 			<if test="printAdvise !=null and printAdvise !=''">
@@ -623,7 +623,7 @@
 			<if test="lifecycle !=null and lifecycle !=''">
 			    lifecycle = #{lifecycle},
 			</if>
-			<if test="sponsorship != null">
+			<if test="sponsorship != null and sponsorship != '' ">
 				sponsorship = #{sponsorship},
 			</if>
 			<if test="printAdvise !=null and printAdvise !=''">
@@ -1171,7 +1171,7 @@
 			<if test="purchase != null">
 				purchase = #{purchase},
 			</if>
-			<if test="sponsorship != null">
+			<if test="sponsorship != null and sponsorship != '' ">
 				sponsorship = #{sponsorship},
 			</if>
 			<if test="isTranslation != null">
