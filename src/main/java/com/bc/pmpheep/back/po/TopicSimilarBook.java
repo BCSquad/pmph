@@ -10,7 +10,7 @@ public class TopicSimilarBook implements Serializable {
 	private Long id;
 	private Long topicId;
 	private String bookname;
-	private Integer edition;
+	private String edition;
 	private String author;
 	private String booksize;
 	private String publisher;
@@ -22,7 +22,7 @@ public class TopicSimilarBook implements Serializable {
 		super();
 	}
 
-	public TopicSimilarBook(Long topicId, String bookname, Integer edition, String author, String booksize,
+	public TopicSimilarBook(Long topicId, String bookname, String edition, String author, String booksize,
 			String publisher, String printNumber, String price, Date publishDate) {
 		super();
 		this.topicId = topicId;
@@ -60,11 +60,11 @@ public class TopicSimilarBook implements Serializable {
 		this.bookname = bookname;
 	}
 
-	public Integer getEdition() {
+	public String getEdition() {
 		return edition;
 	}
 
-	public void setEdition(Integer edition) {
+	public void setEdition(String edition) {
 		this.edition = edition;
 	}
 

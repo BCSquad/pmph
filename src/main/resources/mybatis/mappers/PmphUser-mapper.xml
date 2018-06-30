@@ -139,7 +139,7 @@
 			<if test=" departmentId!= null">
 				department_id = #{departmentId},
 			</if>
-			<if test=" handphone!= null and handphone !=''">
+			<if test=" handphone!= null ">
 				handphone = #{handphone},
 			</if>
 			<if test=" email!= null and email !=''">

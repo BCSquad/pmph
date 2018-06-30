@@ -703,7 +703,7 @@
 		m.founder_id,
 		m.project_permission,
 		m.plan_permission,
-		t1.gmt_create,
+		if((!m.is_all_textbook_published) and (!m.is_force_end) and (!m.is_published),'',t1.gmt_create) as gmt_create ,
 		pdu.dp_name
 		FROM
 		material m
