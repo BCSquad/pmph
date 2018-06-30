@@ -142,7 +142,7 @@
 			<if test=" handphone!= null ">
 				handphone = #{handphone},
 			</if>
-			<if test=" email!= null and email !=''">
+			<if test=" email!= null ">
 				email= #{email},
 			</if>
 			<if test="avatar!=null and avatar != ''">

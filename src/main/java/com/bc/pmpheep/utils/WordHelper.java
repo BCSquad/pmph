@@ -24,11 +24,7 @@ import com.bc.pmpheep.back.po.DecTextbook;
 import com.bc.pmpheep.back.po.DecTextbookPmph;
 import com.bc.pmpheep.back.po.DecWorkExp;
 import com.bc.pmpheep.back.po.MaterialExtension;
-import com.bc.pmpheep.back.util.BinaryUtil;
-import com.bc.pmpheep.back.util.CollectionUtil;
-import com.bc.pmpheep.back.util.DateUtil;
-import com.bc.pmpheep.back.util.ObjectUtil;
-import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.util.*;
 import com.bc.pmpheep.back.vo.DecExtensionVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -93,7 +89,7 @@ public class WordHelper {
 			}
 			File file;
 			for (Map.Entry<String, XWPFDocument> entry : map.entrySet()) {
-				file = new File(textbookPath.concat(entry.getKey()));
+				file = new File(textbookPath.concat(FileUtil.replaceIllegalCharForFileName(entry.getKey())));
 				try {
 					FileOutputStream out = new FileOutputStream(file);
 					entry.getValue().write(out);
@@ -147,6 +143,17 @@ public class WordHelper {
 			}
 			List<XWPFParagraph> xwpfParagraphs = document.getParagraphs();
 			List<XWPFTable> tables = document.getTables();
+
+			//尝试改变字体，但没有生效
+			/*for(XWPFParagraph xwpfParagraph:xwpfParagraphs){
+				XWPFRun xwpfRun = xwpfParagraph.createRun();
+				xwpfRun.setFontSize(12);
+				xwpfRun.setFontFamily("宋体");
+				xwpfRun.setBold(true);
+				xwpfParagraph = xwpfRun.getParagraph();
+			}*/
+
+
 			int i = 21;
 			XWPFTable old = tables.get(19);
 			for (MaterialExtension extension : extensions) {

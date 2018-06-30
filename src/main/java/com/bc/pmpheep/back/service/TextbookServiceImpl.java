@@ -349,7 +349,7 @@ public class TextbookServiceImpl implements TextbookService {
 						detail = new Gson().toJson(map);
 						writerUserTrendst.setDetail(detail);
 						writerUserTrendst.setCmsContentId(null);
-						writerUserTrendst.setBookId(d.getMaterialId());
+						writerUserTrendst.setBookId(materialId);
 						writerUserTrendst.setBookCommentId(null);
 						writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
 					}
