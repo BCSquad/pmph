@@ -118,7 +118,7 @@ public class SendWXMessageUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        rootAdrr = StringUtil.isEmpty("rootAdrr")?"medu.ipmph.com/pmpheepwx":rootAdrr;//  20097r18u8.iask.in
+        rootAdrr = StringUtil.isEmpty("rootAdrr")?"medu.ipmph.com/pmphwx":rootAdrr;//  20097r18u8.iask.in
         if(StringUtil.isEmpty(hrefType)){
             hrefType = "0";
         }

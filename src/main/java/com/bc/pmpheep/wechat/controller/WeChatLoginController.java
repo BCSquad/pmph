@@ -1,5 +1,6 @@
  package com.bc.pmpheep.wechat.controller;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.alibaba.fastjson.JSON;
@@ -77,13 +79,15 @@ public class WeChatLoginController {
      */
     @RequestMapping(value = { "/login" })
     @OAuthRequired
-    public Object load(HttpServletRequest request, Model model) {
+    public Object load(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
         String userAgent = request.getHeader("user-agent").toLowerCase();// 判断是否从企业微信App登陆
         Boolean isTrue =
         userAgent == null || userAgent.indexOf("micromessenger") == -1 ? false : true;
         PmphUser pmphUser = null;
         String username = null;
         String password =null;
+
+        logger.info("login "+isTrue);
         if (isTrue) {
             HttpSession session = request.getSession();
             String wechatUserId = (String) session.getAttribute("UserId"); // userId 在session 中可以取到 微信--企业微信号 这个是pmph_user_wechat 表中的wechat_id
@@ -104,6 +108,10 @@ public class WeChatLoginController {
                 if (ObjectUtil.isNull(pmphUserWechat)) {
                     model.addAttribute("isLogin", "0"); //查找不到对应的社内用户 跳转登录页面
                     model.addAttribute("isIndexOrCommission",((!StringUtil.isEmpty((String)session.getAttribute("UserId"))&&!StringUtil.isEmpty(request.getParameter("commission")))?"commission":"") );//commission 从微信 -- 企业微信号 代办
+                    //if ((!StringUtil.isEmpty((String) session.getAttribute("UserId")) && !StringUtil.isEmpty(request.getParameter("commission")))) {
+                    /*logger.info("http://medu.ipmph.com/wx/#/login?wechatUserId=" + wechatUserId+"&isIndexOrCommission="+((!StringUtil.isEmpty((String)session.getAttribute("UserId"))&&!StringUtil.isEmpty(request.getParameter("commission")))?"commission":""));
+                    response.sendRedirect("http://medu.ipmph.com/wx/#/login?wechatUserId=" + wechatUserId+"&isIndexOrCommission=");*/
+                   // }
                     return "wechat";
                 } else { //查找到对应的社内用户，跳转到首页
                     pmphUser = pmphUserService.getPmphUserByUsername(pmphUserWechat.getUsername(),pmphUserWechat.getUserid());

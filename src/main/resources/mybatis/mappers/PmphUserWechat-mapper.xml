@@ -11,6 +11,9 @@
 			<if test="wechatId !=null and wechatId !=''">
 				wechat_id,
 			</if>
+			<if test="userid !=null ">
+				userid,
+			</if>
 		</trim>
 	</sql>
 	<sql id="value">
@@ -21,6 +24,9 @@
 			</if>
 			<if test="wechatId !=null and wechatId !=''">
 				#{wechatId},
+			</if>
+			<if test="userid !=null ">
+				#{userid},
 			</if>
 		</trim>
 	</sql>
@@ -37,7 +43,7 @@
 		VALUES
 		(
 		<include refid="value" />
-		);
+		)  ON DUPLICATE KEY UPDATE userid=#{userid},wechat_id=#{wechatId};
 	</insert>
 	
 
@@ -50,6 +56,9 @@
 			</if>
 			<if test="wechatId !=null and wechatId !=''">
 				wechat_id=#{wechatId},
+			</if>
+			<if test="userid !=null ">
+				userid=#{userid},
 			</if>
 		</set>
 		WHERE

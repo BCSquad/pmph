@@ -5,7 +5,9 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.bc.pmpheep.back.util.StringUtil;
@@ -61,7 +63,14 @@ public class OAuth2Controller {
      */
     @RequestMapping(value = { "/oauth2" })
     public String Oauth2API(HttpServletRequest request, @RequestParam String resultUrl) {
+        logger.info("resultUrl:   "+resultUrl);
         // 此处可以添加获取持久化的数据，如企业号id等相关信息
+        String userAgent = request.getHeader("user-agent").toLowerCase();
+        Boolean isTrue =
+                userAgent == null || userAgent.indexOf("micromessenger") == -1 ? false : true;
+
+        System.out.println("user-agent oauth2   "+ request.getHeader("user-agent").toLowerCase());
+
         String CropId = Constants.CORPID;
         String redirectUrl = "";
         if (resultUrl != null) {
@@ -76,7 +85,7 @@ public class OAuth2Controller {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            reqUrl = StringUtil.isEmpty("rootAdrr")?"medu.ipmph.com/pmpheepwx":reqUrl;//  20097r18u8.iask.in
+            reqUrl = StringUtil.isEmpty("rootAdrr")?"medu.ipmph.com/pmphwx":reqUrl;// pmphwx 20097r18u8.iask.in
             //String reqUrl = "120.76.221.250:11000";// 备案域名
             // System.out.println("request.getServletPath()=" + request.getServletPath());
             // System.out.println("request.getRequestURL()=" + request.getRequestURL());
@@ -89,7 +98,10 @@ public class OAuth2Controller {
             // System.out.println("backUrl=" + backUrl);
             redirectUrl = oAuth2Url(CropId, backUrl);
         }
+        logger.info("redirectUrl:   "+redirectUrl);
         return "redirect:" + redirectUrl;
+
+
     }
 
     /**
@@ -105,8 +117,15 @@ public class OAuth2Controller {
      * </pre>
      */
     @RequestMapping(value = { "/oauth2url" })
-    public String Oauth2MeUrl(HttpServletRequest request, @RequestParam String code,
-    @RequestParam String oauth2url) {
+    public Boolean Oauth2MeUrl(HttpServletRequest request, HttpServletResponse response, @RequestParam String code,
+                               @RequestParam String oauth2url) {
+        logger.info("oauth2url___:   "+oauth2url);
+        String userAgent = request.getHeader("user-agent").toLowerCase();
+        Boolean isTrue =
+                userAgent == null || userAgent.indexOf("micromessenger") == -1 ? false : true;
+
+        System.out.println("user-agent oauth2url     "+ request.getHeader("user-agent").toLowerCase());
+
         AccessToken accessToken = QiYeUtil.getAccessToken(Constants.CORPID, Constants.SECRET);
         HttpSession session = request.getSession();
         if (accessToken != null && accessToken.getToken() != null) {
@@ -116,7 +135,17 @@ public class OAuth2Controller {
             }
         }
         // 这里简单处理,存储到session中
-        return "redirect:" + oauth2url;
+        logger.info("UserId:   "+session.getAttribute("UserId"));
+        logger.info("oauth2url:   "+oauth2url);
+        try {
+            request.getRequestDispatcher(oauth2url).forward(request,response);
+        } catch (ServletException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+       // return "redirect:" + oauth2url;
+        return true;
     }
 
     /**

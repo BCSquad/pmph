@@ -59,11 +59,14 @@ public class OAuth2Interceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
     Object handler) throws Exception {
-        // System.out.println("**执行顺序: 1、preHandle**");
+         System.out.println("**执行顺序: 1、preHandle**");
         // 判断是否从企业微信App登陆
         String userAgent = request.getHeader("user-agent").toLowerCase();
         Boolean isTrue =
         userAgent == null || userAgent.indexOf("micromessenger") == -1 ? false : true;
+
+        System.out.println("user-agent"+ request.getHeader("user-agent").toLowerCase());
+
         if (isTrue) {
             // String url = request.getRequestURL().toString();
             HttpSession session = request.getSession();
@@ -72,16 +75,16 @@ public class OAuth2Interceptor implements HandlerInterceptor {
             Method method = handlerMethod.getMethod();
             OAuthRequired annotation = method.getAnnotation(OAuthRequired.class);
             if (annotation != null) {
-                // System.out.println("OAuthRequired：你的访问需要获取登录信息！");
+                 System.out.println("OAuthRequired：你的访问需要获取登录信息！");
                 Object objUid = session.getAttribute("UserId");
                 String appType = request.getParameter("appType");
                 if (objUid == null&& StringUtil.isEmpty(appType)) {
-                    String resultUrl = request.getRequestURL().toString();
+                    String resultUrl = request.getServletPath().toString();
                     String param = request.getQueryString();
                     if (param != null) {
                         resultUrl += "?" + param;
                     }
-                    // System.out.println("resultUrl=" + resultUrl);
+                     System.out.println("resultUrl=" + resultUrl);
                     try {
                         resultUrl = java.net.URLEncoder.encode(resultUrl, "utf-8");
                     } catch (UnsupportedEncodingException e) {
@@ -89,7 +92,9 @@ public class OAuth2Interceptor implements HandlerInterceptor {
                     }
                     // 请求的路径
                     String contextPath = request.getContextPath();
-                    response.sendRedirect(contextPath + "/oauth2?resultUrl=" + resultUrl);
+                    System.out.println(contextPath + "/oauth2?resultUrl=" + resultUrl);
+                    //response.sendRedirect(contextPath + "/oauth2?resultUrl=" + resultUrl);  不用页面重定向 是因为 必须保证每次转发请求的请求头一致。
+                    request.getRequestDispatcher("/oauth2?resultUrl=" + resultUrl).forward(request,response);
                     return false;
                 }
             }
