@@ -848,6 +848,7 @@
 		b.`is_staging` = FALSE AND b.auth_status = 2 -- 必须是已通过的文章
 		and b.category_id = 1
 		AND b.id != #{parameter.currentCmsId}
+		and b.apporpc != #{parameter.apporpc}
 
 		)t
 		WHERE
@@ -892,7 +893,7 @@
 		b.`is_staging` = FALSE and b.category_id = 1
 		and b.auth_status = 2 -- 必须是已通过的文章
 		AND b.id != #{parameter.currentCmsId}
-
+		and b.apporpc != #{parameter.apporpc}
 		)t
 		WHERE
 		1 = 1

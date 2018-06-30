@@ -943,12 +943,14 @@ public class CmsContentServiceImpl implements CmsContentService {
         if(ObjectUtil.isNull(currentCmsId)){
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
+        CmsContent mainArticle = cmsContentDao.getCmsContentById(currentCmsId);
         PageParameter<Map<String,Object>> pageParameter = new PageParameter<>(recommendPageNumber, recommendPageSize);
         Map<String,Object> params = new HashMap<String,Object>();
         params.put("currentCmsId",currentCmsId);
         params.put("relationCms",relationCms);
         params.put("cmsTitle",cmsTitle);
         params.put("cmsAuthorName",cmsAuthorName);
+        params.put("apporpc",3-mainArticle.getApporpc());
         PageResult<Map<String, Object> > pageResult = new PageResult<>();
         pageParameter.setParameter(params);
         int total = cmsContentDao.recommendTotal(pageParameter);
