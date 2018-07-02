@@ -17,7 +17,8 @@
             var appLogin = "medu.ipmph.com/pmphvuewx";//app 业务测试微信访问
             //var appLogin = "medu.ipmph.com/wx";//app 正式
            // var appLogin = "127.0.0.1:8088"; // app开发
-            var pcLogin = "119.254.226.115";//测试
+            //var pcLogin = "119.254.226.115";//测试
+            var pcLogin = "120.76.221.250";//测试
 //            var pcLogin = "119.254.226.115";//业务测试
 
             //var pcLogin = "127.0.0.1:8089"; //开发
