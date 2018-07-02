@@ -176,13 +176,13 @@ public class PmphLoginController {
             pmphUser = pmphUserService.login(username,  password);
 
         }
-        else if(StringUtil.notEmpty(wechatUserId)&& "sso".equals(wechatUserId)){
+        else if(StringUtil.notEmpty(wechatUserId)&& "sso".equals(wechatUserId)){   //sso 登录
             if (StringUtil.isEmpty(username) ) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                         CheckedExceptionResult.NULL_PARAM, "单点登录失败");
             }
             pmphUser = pmphUserService.login(username,  null);
-        }else{
+        }else{  // 正常输入用户名和密码登陆
             if (StringUtil.isEmpty(username) || StringUtil.isEmpty(password)) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                         CheckedExceptionResult.NULL_PARAM, "请输入用户名和密码!");
