@@ -603,7 +603,7 @@
 			</if>
 		</if>
 		order by
-			wu.sort
+			wu.sort,wu.realname desc
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
