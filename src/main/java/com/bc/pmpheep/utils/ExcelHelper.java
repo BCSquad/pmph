@@ -720,7 +720,13 @@ public class ExcelHelper {
 							Object o = field.get(object);
 							Cell cell = row.createCell(columnProperties.getColCount());
 							if (null != o) {
-								String value = o.toString();
+								String value = "";
+								if(o instanceof List){
+									value = ((List<String>) o).get(0);
+								}else{
+									value=o.toString();
+								}
+
 								cell.setCellValue(value);
 								if (value.length() > columnProperties.getCurrentMaxElement()) {
 									columnProperties.setCurrentMaxElement(value.length());

@@ -192,7 +192,7 @@ public class WeChatLoginController {
             try {
                 Principal principal = service.singleSignOn(request);
                 String userName =principal.getName();
-
+             //   String userName = "liub";
                 assert userName != null;
                  pmphUser = pmphUserService.getPmphUserByUsername(userName,null);
                 // Map map = ssoHelper.getUserInfo(userName,"123456");
