@@ -305,7 +305,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             for (OrgUser orgUser : orgUserList) {
                 userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_1,
                                                     senderUserId, Const.SENDER_TYPE_1,
-                                                    orgUser.getId(), Const.RECEIVER_TYPE_3, 0L));
+                                                    orgUser.getId(), Const.RECEIVER_TYPE_3, 0L,sendType.shortValue()));
             }
             // 作家用户
             if (Const.SEND_OBJECT_2.intValue() == sendType.intValue()) {
@@ -315,7 +315,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                     userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_1,
                                                         senderUserId, Const.SENDER_TYPE_1,
                                                         writerUser.getId(), Const.RECEIVER_TYPE_2,
-                                                        0L));
+                                                        0L,sendType.shortValue()));
                 }
             }
         }
@@ -335,7 +335,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                                                             Const.MSG_TYPE_1, senderUserId,
                                                             Const.SENDER_TYPE_1,
                                                             Long.parseLong(userId),
-                                                            new Short(userType), 0L));
+                                                            new Short(userType), 0L,sendType.shortValue()));
                     }
                 }
             }
@@ -351,7 +351,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             for (Long userId : userIdList) {
                 userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_1,
                                                     senderUserId, Const.SENDER_TYPE_1, userId,
-                                                    Const.RECEIVER_TYPE_2, 0L));
+                                                    Const.RECEIVER_TYPE_2, 0L,sendType.shortValue()));
             }
             // 获取到书籍id然后根据书籍id在dec_position表中获取到申报表id根据申报表id在declaration表中获取作家id放入userMessage的接收人中
         }
@@ -384,6 +384,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                         flag = true;
                         break;
                     }
+
                 }
                 if (!flag) {
                     temp.add(userMessage);
