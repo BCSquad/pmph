@@ -328,12 +328,12 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 		Textbook textbook = textbookService.getTextbookById(textbookId);
 		list.get(0).setTextbookId(textbookId);
 		list.get(0).setMaterialId(textbook.getMaterialId());
-		if(ObjectUtil.isNull(textbook.getPlanningEditor())){
+		/*if(ObjectUtil.isNull(textbook.getPlanningEditor())){
 			PmphGroupMember pmphGroupMember = new PmphGroupMember();
 			pmphGroupMember.setUserId(textbook.getPlanningEditor());
 			pmphGroupMember.setIsWriter(false);
 			list.add(pmphGroupMember);
-		}
+		}*/
 		String groupImage = RouteUtil.DEFAULT_GROUP_IMAGE;// 未上传小组头像时，获取默认小组头像路径
 		PmphGroup pmphGroup = new PmphGroup();
 		// 查询小组名称是否已存在 不存在直接用书名

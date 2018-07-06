@@ -281,6 +281,47 @@ public class TextbookServiceImpl implements TextbookService {
 							&& old.getTextbookId().equals(now.getTextbookId())) {
 						if (!old.getChosenPosition().equals(now.getChosenPosition())) {
 							sends.add(now);
+							//发布表原遴选和现遴选不同，有撤销遴选可能性
+							//撤销需要发动态的，从此处打开
+
+							//被撤销的职务数字 = 原职务数字 按位与 （新职务数字 按位取反） [即原本有现在没有的]
+							int dismissPosition = old.getChosenPosition() & (~now.getChosenPosition());
+							//转换为文字
+							String dismissPositionStr = "";
+							if((dismissPosition & 4)>0){
+								dismissPositionStr += "主编";
+							}
+							if((dismissPosition & 2)>0){
+								dismissPositionStr += "副主编";
+							}
+							if((dismissPosition & 1)>0){
+								dismissPositionStr += "编委";
+							}
+							if((dismissPosition & 8)>0){
+								if(dismissPositionStr.length()>0){
+									dismissPositionStr +=",";
+								}
+								dismissPositionStr += "数字编委";
+							}
+							if(dismissPositionStr.length()>0){ //若存在被撤销的职务 发动态给相应作者
+								// 添加动态信息
+								WriterUserTrendst writerUserTrendst = new WriterUserTrendst();
+								writerUserTrendst.setUserId(old.getWriterUserId());
+								writerUserTrendst.setIsPublic(false);// 自己可见
+								writerUserTrendst.setType(8);
+								String detail = "";
+								Map<String, Object> map = new HashMap<String, Object>();
+								map.put("title", CheckedExceptionBusiness.MATERIAL);
+								map.put("content", "抱歉，您《" + old.getTextbookName() + "》的"+dismissPositionStr+"职务已被取消。");
+								map.put("img", 2);
+								detail = new Gson().toJson(map);
+								writerUserTrendst.setDetail(detail);
+								writerUserTrendst.setCmsContentId(null);
+								writerUserTrendst.setBookId(materialId);
+								writerUserTrendst.setBookCommentId(null);
+								writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
+							}
+
 						} else {
 							if (null == now.getRank() && null == now.getRank()) {
 							} else if (null != now.getRank() && null != now.getRank()) {

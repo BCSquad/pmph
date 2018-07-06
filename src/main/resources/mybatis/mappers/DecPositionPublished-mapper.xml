@@ -182,7 +182,14 @@
 	</select>
 	<!-- 按照书籍数组查询 -->
 	<select id="getDecPositionPublishedListByBookIds" resultType="DecPositionPublished">
-		select * from dec_position_published where textbook_id in
+		select
+		pp.*
+		,d.user_id as writerUserId
+		,t.textbook_name as textbookName
+		from dec_position_published pp
+		inner join declaration d on d.id = pp.declaration_id
+		inner join textbook t on t.id = pp.textbook_id
+		where pp.textbook_id in
 		<foreach collection="list" item="bookId" open="("
 			separator="," close=")" index="index">
 			#{bookId}

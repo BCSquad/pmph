@@ -603,7 +603,7 @@
 			</if>
 		</if>
 		order by
-			wu.sort
+			wu.sort,wuc.progress ASC ,wuc.gmt_update desc
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
