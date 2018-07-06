@@ -106,6 +106,7 @@ public class WeChatLoginController {
                         pmphUserWechatService.getPmphUserWechatByWechatId(wechatUserId);
 
                 if (ObjectUtil.isNull(pmphUserWechat)) {
+                    logger.info("wechatLoginController   "+ObjectUtil.isNull(pmphUserWechat));
                     model.addAttribute("isLogin", "0"); //查找不到对应的社内用户 跳转登录页面
                     model.addAttribute("sessionPmphUser", "1");
                     model.addAttribute("pmphUserPermissionIds", "");
