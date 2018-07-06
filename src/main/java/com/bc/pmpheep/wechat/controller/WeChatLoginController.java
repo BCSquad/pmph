@@ -92,7 +92,7 @@ public class WeChatLoginController {
             HttpSession session = request.getSession();
             String wechatUserId = (String) session.getAttribute("UserId"); // userId 在session 中可以取到 微信--企业微信号 这个是pmph_user_wechat 表中的wechat_id
             if(StringUtil.isEmpty(wechatUserId)){ //app 访问登录
-                wechatUserId = request.getParameter("UserId"); // userId 在request中可以取到 企业微信 此userId 代表 社内用户字段openid
+                wechatUserId = request.getParameter("UserId"); // userId 在request中可以取到 企业微信 此usserId 代表 社内用户字段openid
             }
             String appType = request.getParameter("appType"); //为空 微信 -- 企业微信号 不为空 企业微信
             // 微信--微信企业号直接访问app登录
@@ -101,12 +101,14 @@ public class WeChatLoginController {
                     throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                             CheckedExceptionResult.NULL_PARAM, "网络异常，请重新再试!");
                 }
-                model.addAttribute("Userid", wechatUserId);
+                model.addAttribute("UserId", wechatUserId);
                 PmphUserWechat pmphUserWechat =
                         pmphUserWechatService.getPmphUserWechatByWechatId(wechatUserId);
 
                 if (ObjectUtil.isNull(pmphUserWechat)) {
                     model.addAttribute("isLogin", "0"); //查找不到对应的社内用户 跳转登录页面
+                    model.addAttribute("sessionPmphUser", "1");
+                    model.addAttribute("pmphUserPermissionIds", "");
                     model.addAttribute("isIndexOrCommission",((!StringUtil.isEmpty((String)session.getAttribute("UserId"))&&!StringUtil.isEmpty(request.getParameter("commission")))?"commission":"") );//commission 从微信 -- 企业微信号 代办
                     //if ((!StringUtil.isEmpty((String) session.getAttribute("UserId")) && !StringUtil.isEmpty(request.getParameter("commission")))) {
                     /*logger.info("http://medu.ipmph.com/wx/#/login?wechatUserId=" + wechatUserId+"&isIndexOrCommission="+((!StringUtil.isEmpty((String)session.getAttribute("UserId"))&&!StringUtil.isEmpty(request.getParameter("commission")))?"commission":""));
@@ -136,7 +138,7 @@ public class WeChatLoginController {
                     throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                             CheckedExceptionResult.NULL_PARAM, "网络异常，请重新再试!");
                 }
-                model.addAttribute("Userid", wechatUserId);
+                model.addAttribute("UserId", wechatUserId);
                 PmphUserWechat pmphUserWechat =
                         pmphUserWechatService.getPmphUserWechatByWechatId(wechatUserId);
 
