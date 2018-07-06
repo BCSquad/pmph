@@ -78,13 +78,14 @@ public class OAuth2Interceptor implements HandlerInterceptor {
                  System.out.println("OAuthRequired：你的访问需要获取登录信息！");
                 Object objUid = session.getAttribute("UserId");
                 String appType = request.getParameter("appType");
+                System.out.println("OAuth2Interceptor UserId  "+objUid);
                 if (objUid == null&& StringUtil.isEmpty(appType)) {
                     String resultUrl = request.getServletPath().toString();
                     String param = request.getQueryString();
                     if (param != null) {
                         resultUrl += "?" + param;
                     }
-                     System.out.println("resultUrl=" + resultUrl);
+                     System.out.println("OAuth2Interceptor resultUrl=  " + resultUrl);
                     try {
                         resultUrl = java.net.URLEncoder.encode(resultUrl, "utf-8");
                     } catch (UnsupportedEncodingException e) {
