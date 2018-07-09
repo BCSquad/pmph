@@ -66,7 +66,7 @@ public class OAuth2Interceptor implements HandlerInterceptor {
         userAgent == null || userAgent.indexOf("micromessenger") == -1 ? false : true;
 
         System.out.println("user-agent"+ request.getHeader("user-agent").toLowerCase());
-
+/*
         if (isTrue) {
             // String url = request.getRequestURL().toString();
             HttpSession session = request.getSession();
@@ -80,7 +80,7 @@ public class OAuth2Interceptor implements HandlerInterceptor {
                 String appType = request.getParameter("appType");
                 System.out.println("OAuth2Interceptor UserId  "+objUid);
                 if (objUid == null&& StringUtil.isEmpty(appType)) {
-                    String resultUrl = request.getServletPath().toString();
+                    String resultUrl =  request.getRequestURL().toString();
                     String param = request.getQueryString();
                     if (param != null) {
                         resultUrl += "?" + param;
@@ -99,7 +99,7 @@ public class OAuth2Interceptor implements HandlerInterceptor {
                     return false;
                 }
             }
-        }
+        }*/
         return true;
     }
 

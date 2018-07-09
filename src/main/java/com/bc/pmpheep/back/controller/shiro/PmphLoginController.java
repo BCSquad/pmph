@@ -110,7 +110,7 @@ public class PmphLoginController {
      * //* @throws SingleSignOnException
      */
     @ResponseBody
-    @OAuthRequired
+   // @OAuthRequired
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ResponseBean login(@RequestParam(value = "username", required = false) String username,
                               @RequestParam(value = "password", required = false) String password,
