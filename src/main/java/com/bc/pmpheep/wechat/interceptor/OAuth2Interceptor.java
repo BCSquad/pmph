@@ -66,7 +66,6 @@ public class OAuth2Interceptor implements HandlerInterceptor {
         userAgent == null || userAgent.indexOf("micromessenger") == -1 ? false : true;
 
         System.out.println("user-agent"+ request.getHeader("user-agent").toLowerCase());
-/*
         if (isTrue) {
             // String url = request.getRequestURL().toString();
             HttpSession session = request.getSession();
@@ -78,14 +77,14 @@ public class OAuth2Interceptor implements HandlerInterceptor {
                  System.out.println("OAuthRequired：你的访问需要获取登录信息！");
                 Object objUid = session.getAttribute("UserId");
                 String appType = request.getParameter("appType");
-                System.out.println("OAuth2Interceptor UserId  "+objUid);
+                //System.out.println("OAuth2Interceptor UserId  "+objUid);
                 if (objUid == null&& StringUtil.isEmpty(appType)) {
                     String resultUrl =  request.getRequestURL().toString();
                     String param = request.getQueryString();
                     if (param != null) {
                         resultUrl += "?" + param;
                     }
-                     System.out.println("OAuth2Interceptor resultUrl=  " + resultUrl);
+                    // System.out.println("OAuth2Interceptor resultUrl=  " + resultUrl);
                     try {
                         resultUrl = java.net.URLEncoder.encode(resultUrl, "utf-8");
                     } catch (UnsupportedEncodingException e) {
@@ -93,13 +92,13 @@ public class OAuth2Interceptor implements HandlerInterceptor {
                     }
                     // 请求的路径
                     String contextPath = request.getContextPath();
-                    System.out.println(contextPath + "/oauth2?resultUrl=" + resultUrl);
+                    //System.out.println(contextPath + "/oauth2?resultUrl=" + resultUrl);
                     //response.sendRedirect(contextPath + "/oauth2?resultUrl=" + resultUrl);  不用页面重定向 是因为 必须保证每次转发请求的请求头一致。
                     request.getRequestDispatcher("/oauth2?resultUrl=" + resultUrl).forward(request,response);
                     return false;
                 }
             }
-        }*/
+        }
         return true;
     }
 
