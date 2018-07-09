@@ -174,7 +174,7 @@ public class OAuth2Controller {
         }
         String oauth2Url =
         "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + corpid + "&redirect_uri="
-        + redirect_uri + "&response_type=code&scope=snsapi_base&state=sunlight#wechat_redirect";
+        + redirect_uri + "&response_type=code&scope=snsapi_base&state=STATE&connect_redirect=1#wechat_redirect";
         // System.out.println("oauth2Url=" + oauth2Url);
         return oauth2Url;
     }
