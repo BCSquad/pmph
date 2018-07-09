@@ -120,18 +120,25 @@ public class OAuth2Controller {
     public Boolean Oauth2MeUrl(HttpServletRequest request, HttpServletResponse response, @RequestParam String code,
                                @RequestParam String oauth2url) {
         logger.info("oauth2url___:   "+oauth2url);
-        String userAgent = request.getHeader("user-agent").toLowerCase();
-        Boolean isTrue =
-                userAgent == null || userAgent.indexOf("micromessenger") == -1 ? false : true;
-
-        System.out.println("user-agent oauth2url     "+ request.getHeader("user-agent").toLowerCase());
 
         AccessToken accessToken = QiYeUtil.getAccessToken(Constants.CORPID, Constants.SECRET);
         HttpSession session = request.getSession();
         if (accessToken != null && accessToken.getToken() != null) {
             String Userid = getMemberGuidByCode(accessToken.getToken(), code, Constants.AGENTID);
-            if (Userid != null) {
+            if (Userid != null) { //微信默认将第一次请求废掉，二跳转次
                 session.setAttribute("UserId", Userid);
+            }else{
+              //如果获取到的是空的，将重复发送一次请求给服务器
+                if(oauth2url.indexOf("sec")>0){
+                    try {
+                        request.getRequestDispatcher("/oauth2?resultUrl="+oauth2url+"&index=sec").forward(request,response);
+                    } catch (ServletException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
             }
         }
         // 这里简单处理,存储到session中
@@ -185,9 +192,9 @@ public class OAuth2Controller {
      * </pre>
      */
     public String getMemberGuidByCode(String token, String code, int agentId) {
-        // System.out.println("code==" + code + "\ntoken=" + token + "\nagentid=" + agentId);
-        Result<String> result = QiYeUtil.oAuth2GetUserByCode(token, code, agentId);
-        // System.out.println("result=" + result);
+         System.out.println("code==" + code + "\ntoken=" + token + "\nagentid=" + agentId);
+         Result<String> result = QiYeUtil.oAuth2GetUserByCode(token, code, agentId);
+         System.out.println("result=" + result);
         if (result.getErrcode() == "0") {
             if (result.getObj() != null) {
                 // 此处可以通过微信授权用code还钱的Userid查询自己本地服务器中的数据
