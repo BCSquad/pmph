@@ -123,12 +123,12 @@
         <script type="text/javascript">
             <%--alert('${UserId}');--%>
             <%--alert( '${isLogin}'); --%>
-            var  _pmphUserPermissionIds =Empty(${pmphUserPermissionIds})?"":eval('${pmphUserPermissionIds}');
+            //var  _pmphUserPermissionIds =Empty(${pmphUserPermissionIds})?"":eval('${pmphUserPermissionIds}');
             var userData={
                 userSessionId:'${userSessionId}' ,
                 sessionPmphUserToken:'${sessionPmphUserToken}',
                 sessionPmphUser:${sessionPmphUser},
-                pmphUserPermissionIds:_pmphUserPermissionIds
+                pmphUserPermissionIds:${pmphUserPermissionIds}
             }
             <%--mySessionStorage.set('currentUser',userData,'json');--%>
             <%--Cookie.set('sessionId','${userSessionId}',2)--%>

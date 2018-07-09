@@ -110,7 +110,7 @@ public class WeChatLoginController {
                     logger.info("wechatLoginController   "+ObjectUtil.isNull(pmphUserWechat));
                     model.addObject("isLogin", "0"); //查找不到对应的社内用户 跳转登录页面
                     model.addObject("sessionPmphUser", "1");
-                    model.addObject("pmphUserPermissionIds", "");
+                    model.addObject("pmphUserPermissionIds", "1");
                     model.addObject("isIndexOrCommission",((!StringUtil.isEmpty((String)session.getAttribute("UserId"))&&!StringUtil.isEmpty(request.getParameter("commission")))?"commission":"") );//commission 从微信 -- 企业微信号 代办
                     //if ((!StringUtil.isEmpty((String) session.getAttribute("UserId")) && !StringUtil.isEmpty(request.getParameter("commission")))) {
                     /*logger.info("http://medu.ipmph.com/wx/#/login?wechatUserId=" + wechatUserId+"&isIndexOrCommission="+((!StringUtil.isEmpty((String)session.getAttribute("UserId"))&&!StringUtil.isEmpty(request.getParameter("commission")))?"commission":""));
