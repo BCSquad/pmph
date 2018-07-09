@@ -78,7 +78,7 @@ public class WeChatLoginController {
      * </pre>
      */
     @RequestMapping(value = { "/login" })
-    @OAuthRequired
+    //@OAuthRequired
     public Object load(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
         String userAgent = request.getHeader("user-agent").toLowerCase();// 判断是否从企业微信App登陆
         Boolean isTrue =
