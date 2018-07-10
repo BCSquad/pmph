@@ -64,12 +64,14 @@ public class UserMessageController {
     @RequestMapping(value = "/list/message", method = RequestMethod.GET)
     public ResponseBean message(@RequestParam("pageNumber") Integer pageNumber,
     @RequestParam("pageSize") Integer pageSize, @RequestParam("title") String title,
-    HttpServletRequest request) {
+                                @RequestParam("receiverFilterType") Short receiverFilterType,
+                                HttpServletRequest request) {
         PageParameter<UserMessageVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
         UserMessageVO userMessageVO = new UserMessageVO();
         if (StringUtil.notEmpty(title)) {
             userMessageVO.setTitle(title.replaceAll(" ", ""));// 去除空格
         }
+        userMessageVO.setReceiverFilterType(receiverFilterType);
         pageParameter.setParameter(userMessageVO);
         String sessionId = CookiesUtil.getSessionId(request);
         return new ResponseBean(userMessageService.listMessage(pageParameter, sessionId));
@@ -87,8 +89,13 @@ public class UserMessageController {
     @RequestMapping(value = "/message/state", method = RequestMethod.GET)
     public ResponseBean state(
     @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
-    @RequestParam(name = "pageSize") Integer pageSize, MessageStateVO messageStateVO,
+    @RequestParam(name = "pageSize") Integer pageSize, MessageStateVO messageStateVO,String personalOrOrg,
     HttpServletRequest request) {
+        if("personal".equals(personalOrOrg)){
+            messageStateVO.setReceiverType((short) 2);
+        }else if("org".equals(personalOrOrg)){
+            messageStateVO.setReceiverType((short) 3);
+        }
         PageParameter<MessageStateVO> pageParameter =
         new PageParameter<MessageStateVO>(pageNumber, pageSize, messageStateVO);
         String sessionId = CookiesUtil.getSessionId(request);
