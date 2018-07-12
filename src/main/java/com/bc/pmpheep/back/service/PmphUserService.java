@@ -13,6 +13,7 @@ import com.bc.pmpheep.back.vo.PmphEditorVO;
 import com.bc.pmpheep.back.vo.PmphIdentity;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * PmphUserService 接口
@@ -179,7 +180,14 @@ public interface PmphUserService {
 
     PmphUser login(String openid) throws CheckedServiceException;
 
-    int updateUserOpenid(String openid,String username);
+    int updateUserOpenid(String openid,String username,Long id);
+
+    /**
+     * \解除绑定
+     * @param openid
+     * @return
+     */
+    int deletePmphUserIdAndWechatId(@Param("openid") String openid)throws CheckedServiceException;
     /**
      * 查询所有的用户对象列表
      *
@@ -341,4 +349,18 @@ public interface PmphUserService {
      * @return
      */
     PmphUser getPmphUserByOpenid(String wechatUserId);
+
+    /**
+     * 查看是否绑定userId
+     * @param id
+     * @return
+     */
+    Boolean IsUserId(Long id);
+
+    /**
+     * 获取userId
+     * @param id
+     * @return
+     */
+    String getUserId(Long id);
 }
