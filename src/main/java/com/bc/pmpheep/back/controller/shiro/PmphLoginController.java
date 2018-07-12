@@ -161,6 +161,7 @@ public class PmphLoginController {
                 pmphUser = pmphUserService.login(username, new DesRun("", password).enpsw);
                 pmphUserWechat.setUserid(pmphUser.getId());
                 pmphUserWechatService.add(pmphUserWechat); //微信 我的企业号 绑定userid
+                pmphUserService.updateUserOpenid(wechatUserId, username);
                 //pmphUser = pmphUserService.login(username, null);
            /* } else {//已经绑定
                 pmphUser = pmphUserService.login(wechatUserId);

@@ -4,7 +4,13 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
+import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -107,8 +113,14 @@ public class SchoolAndTeacherCheckController {
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询系统消息列表")
     @RequestMapping(value = "/orgCheck", method = RequestMethod.PUT)
     public ResponseBean orgCheck(@RequestParam(name = "progress") Integer progress,
-    @RequestParam(name = "orgUserIds") List<Long> orgUserIds,@RequestParam(name = "backReason") String backReason) throws CheckedServiceException, IOException {
-        return new ResponseBean(orgUserService.updateOrgUserProgressById(progress, orgUserIds,backReason));
+    @RequestParam(name = "orgUserIds") List<Long> orgUserIds,@RequestParam(name = "backReason") String backReason,HttpSession session) throws CheckedServiceException, IOException {
+        if (ObjectUtil.isNull(session)||ObjectUtil.isNull((PmphUser) session.getAttribute(Const.SESSION_PMPH_USER))) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.SESSION,
+                    CheckedExceptionResult.USER_SESSION,
+                    "当前Session会话已过期，请重新登录!");
+        }
+        PmphUser pmphUser = (PmphUser) session.getAttribute(Const.SESSION_PMPH_USER);
+        return new ResponseBean(orgUserService.updateOrgUserProgressById(progress, orgUserIds,backReason,pmphUser.getId()));
     }
 
     /**

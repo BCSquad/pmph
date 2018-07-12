@@ -153,7 +153,7 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService, A
 	}
 
 	@Override
-	public Integer updateOrgUserProgressById(Integer progress, List<Long> orgUserIds,String backReason)
+	public Integer updateOrgUserProgressById(Integer progress, List<Long> orgUserIds,String backReason,Long sendId)
 			throws CheckedServiceException, IOException {
 		if (CollectionUtil.isEmpty(orgUserIds) || ObjectUtil.isNull(progress)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.SCHOOL_ADMIN_CHECK,
@@ -186,7 +186,7 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService, A
 			isPass = false;
 		}
 		if (null != isPass) {// 推送机构认证审核信息
-			systemMessageService.sendWhenManagerCertificationAudit(orgUserIds, isPass,backReason);
+			systemMessageService.sendWhenManagerCertificationAudit(orgUserIds, isPass,backReason,sendId);
 		}
 		return count;
 	}
