@@ -74,7 +74,7 @@ public class SystemMessageServiceTest extends BaseTest  {
 	@Test
 	@Rollback(Const.ISROLLBACK)
 	public void testSendWhenManagerCertificationAudit() throws CheckedServiceException, IOException {
-		systemMessageService.sendWhenManagerCertificationAudit(Arrays.asList(orgIds), true,"");
+		systemMessageService.sendWhenManagerCertificationAudit(Arrays.asList(orgIds), true,"",340L);
 
 	}
 

@@ -520,7 +520,7 @@ public final class SystemMessageService {
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
-	public void sendWhenManagerCertificationAudit(List<Long> orguserIds, boolean isPass,String backReason)
+	public void sendWhenManagerCertificationAudit(List<Long> orguserIds, boolean isPass,String backReason,Long sendId)
 			throws CheckedServiceException, IOException {
 		if (null == orguserIds || orguserIds.size() == 0) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.SCHOOL_ADMIN_CHECK,
@@ -540,7 +540,7 @@ public final class SystemMessageService {
 		List<String> userIds = new ArrayList<String>(orguserIds.size());
 		// 发送消息
 		for (Long id : orguserIds) {
-			UserMessage userMessage = new UserMessage(msg_id, messageTitle, new Short("0"), 0L, new Short("0"), id,
+			UserMessage userMessage = new UserMessage(msg_id, messageTitle, new Short("1"), sendId, new Short("0"), id,
 					new Short("3"), null);
 			userMessageList.add(userMessage);
 			userIds.add("3_" + id);
