@@ -58,7 +58,7 @@ public class OrgAndOrgUserVO implements Serializable {
 	@ExcelHeader(header = "邮寄地址")
 	private String address;
 	// 邮编
-	@ExcelHeader(header = "邮寄")
+	@ExcelHeader(header = "邮编")
 	private String postcode;
 	// 委托书
 	private String proxy;

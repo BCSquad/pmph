@@ -339,7 +339,7 @@
 	<select id="getListOrgUser" parameterType="PageParameter"
 		resultType="OrgAndOrgUserVO">
 		select
-		ou.id,o.org_name,ou.username,ou.realname,ou.handphone,ou.email,ou.address,o.area_id,
+		ou.id,o.org_name,ou.username,ou.realname,ou.handphone,ou.email,ou.address,o.area_id,ou.postcode,
 		ou.is_disabled isDisabled,ot.type_name
 		orgTypeName,ou.position,ou.title,ou.note,
 		ou.org_id,ot.id orgTypeId
