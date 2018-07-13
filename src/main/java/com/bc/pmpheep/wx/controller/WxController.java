@@ -64,13 +64,53 @@ public class WxController {
         Map resultMap = service.findUser(userId);
         if("0".equals(resultMap.get("errcode").toString())){
             PmphUser pmphUser = (PmphUser) session.getAttribute(Const.SESSION_PMPH_USER);
-            int count = pmphUserService.updateUserOpenid(userId,pmphUser.getUsername());
+            int count = pmphUserService.updateUserOpenid(userId,pmphUser.getUsername(),pmphUser.getId());
         }else if("60111".equals(resultMap.get("errcode").toString())){
             String errmsgChi = resultMap.get("errmsg").toString().replace("userid not found","未找到微信企业号用户名！");
             resultMap.put("errmsg",errmsgChi);
         }
 
         return new ResponseBean<Map>(resultMap);
+    }
+
+    /**
+     * 查看是否绑定
+     * @param request
+     * @return
+     */
+    @GetMapping("IsUserId")
+    public ResponseBean<Map> IsUserId(HttpServletRequest request,HttpSession session){
+        if (ObjectUtil.isNull(session)||ObjectUtil.isNull((PmphUser) session.getAttribute(Const.SESSION_PMPH_USER))) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.SESSION,
+                    CheckedExceptionResult.USER_SESSION,
+                    "当前Session会话已过期，请重新登录!");
+        }
+        PmphUser pmphUser = (PmphUser) session.getAttribute(Const.SESSION_PMPH_USER);
+        Boolean IsUserId = pmphUserService.IsUserId(pmphUser.getId());
+        Map map = new HashMap();
+        map.put("isUserId",IsUserId);
+        if(IsUserId){
+            String userId = pmphUserService.getUserId(pmphUser.getId());
+            map.put("userId",userId);
+        }
+        return new ResponseBean<Map>(map);
+    }
+    /**
+     * 解除绑定
+     * @param userId
+     * @param request
+     * @param session
+     * @return
+     */
+    @GetMapping("unblind")
+    public ResponseBean<Integer> unblind (@RequestParam(value = "userId",required = true) String userId,HttpServletRequest request ,HttpSession session) {
+        if (ObjectUtil.isNull(session) || ObjectUtil.isNull((PmphUser) session.getAttribute(Const.SESSION_PMPH_USER))) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.SESSION,
+                    CheckedExceptionResult.USER_SESSION,
+                    "当前Session会话已过期，请重新登录!");
+        }
+        int count = pmphUserService.deletePmphUserIdAndWechatId(userId);
+        return new ResponseBean<Integer>(count);
     }
 
     @GetMapping("userid")

@@ -463,7 +463,7 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
             }
             count = materialOrgService.addMaterialOrgs(materialOrgList);
             if (count > 0) {
-                systemMessageService.materialSend(materialId, listOrgIds);
+                systemMessageService.materialSend(materialId, listOrgIds,pmphUser);
 
                 /*以下向主任和项目编辑发送微信推送*/
                 //企业微信推送对象的微信id集合
@@ -528,7 +528,7 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
             }
             count = materialOrgService.addMaterialOrgs(materialOrgList);
             if (count > 0) {
-                systemMessageService.materialSend(materialId, newOrgIds);
+                systemMessageService.materialSend(materialId, newOrgIds,pmphUser);
             }
         }
         CmsContent cmsContent = cmsContentService.getCmsContentByMaterialId(materialId);

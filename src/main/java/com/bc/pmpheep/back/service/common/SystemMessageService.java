@@ -6,21 +6,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.bc.pmpheep.back.po.*;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bc.pmpheep.back.po.CmsContent;
-import com.bc.pmpheep.back.po.DecPosition;
-import com.bc.pmpheep.back.po.DecPositionPublished;
-import com.bc.pmpheep.back.po.Declaration;
-import com.bc.pmpheep.back.po.Material;
-import com.bc.pmpheep.back.po.Org;
-import com.bc.pmpheep.back.po.OrgUser;
-import com.bc.pmpheep.back.po.PmphGroup;
-import com.bc.pmpheep.back.po.Textbook;
-import com.bc.pmpheep.back.po.UserMessage;
-import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.service.CmsContentService;
 import com.bc.pmpheep.back.service.DecPositionService;
 import com.bc.pmpheep.back.service.DeclarationService;
@@ -48,6 +38,8 @@ import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.websocket.MyWebSocketHandler;
 import com.bc.pmpheep.websocket.WebScocketMessage;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * 发送系统消息公共服务类 以下方法推荐放在操作完成后
@@ -109,18 +101,18 @@ public final class SystemMessageService {
 	 * 
 	 * @author Mryang
 	 * @createDate 2017年11月17日 上午9:28:13
-	 * @param materialName
+	 *  materialName
 	 *            教材名称
-	 * @param ids
+	 *  ids
 	 *            发送的机构id集合（新增或者增加的机构）
-	 * @param msgId
+	 *  msgId
 	 *            消息id，没有发布过 则为null
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 * @return
 	 */
-	public void materialSend(Long materialId, List<Long> ids) throws CheckedServiceException, IOException {
-		this.materialSend(materialId, ids, false);
+	public void materialSend(Long materialId, List<Long> ids,PmphUser pmphUser) throws CheckedServiceException, IOException {
+		this.materialSend(materialId, ids, false,pmphUser);
 	}
 
 	/**
@@ -128,11 +120,9 @@ public final class SystemMessageService {
 	 * 
 	 * @author Mryang
 	 * @createDate 2017年11月17日 上午9:28:13
-	 * @param materialName
 	 *            教材名称
 	 * @param ids
 	 *            发送的机构id集合（新增或者增加的机构）
-	 * @param msgId
 	 *            消息id，没有发布过 则为null
 	 * @param isOnlyManager
 	 *            是否只发给管理员
@@ -140,8 +130,9 @@ public final class SystemMessageService {
 	 * @throws IOException
 	 * @return
 	 */
-	public void materialSend(Long materialId, List<Long> ids, boolean isOnlyManager)
+	public void materialSend(Long materialId, List<Long> ids, boolean isOnlyManager,PmphUser pmphUser)
 			throws CheckedServiceException, IOException {
+
 		String materialName = materialService.getMaterialNameById(materialId);
 		if (StringUtils.isEmpty(materialName)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM,
@@ -166,7 +157,7 @@ public final class SystemMessageService {
 				List<String> userIds = new ArrayList<String>(writerUserList.size());
 				for (WriterUser writerUser : writerUserList) {
 					// 信息是由系统发出
-					UserMessage userMessage = new UserMessage(msg_id, messageTitle, new Short("0"), 0L, new Short("0"),
+					UserMessage userMessage = new UserMessage(msg_id, messageTitle, new Short("0"), pmphUser.getId(), new Short("1"),
 							writerUser.getId(), new Short("2"), materialId);
 					userMessageList.add(userMessage);
 					userIds.add("2_" + writerUser.getId());
@@ -174,8 +165,8 @@ public final class SystemMessageService {
 				// 批量插入消息
 				userMessageService.addUserMessageBatch(userMessageList);
 				// websocket推送页面消息
-				WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统",
-						Const.SENDER_TYPE_0, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
+				WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, pmphUser.getId(), pmphUser.getRealname(),
+						Const.SENDER_TYPE_1, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
 						tercherMsg, DateUtil.getCurrentTime());
 				myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
 			}
@@ -191,7 +182,7 @@ public final class SystemMessageService {
 			List<UserMessage> userMessageList = new ArrayList<UserMessage>(orgUserList.size());
 			List<String> userIds = new ArrayList<String>(orgUserList.size());
 			for (OrgUser orgUser : orgUserList) {
-				UserMessage userMessage = new UserMessage(msg_id, messageTitle, new Short("0"), 0L, new Short("0"),
+				UserMessage userMessage = new UserMessage(msg_id, messageTitle, new Short("0"), pmphUser.getId(), new Short("1"),
 						orgUser.getId(), new Short("3"), materialId);
 				userMessageList.add(userMessage);
 				userIds.add("3_" + orgUser.getId());
@@ -199,8 +190,8 @@ public final class SystemMessageService {
 			// 批量插入消息
 			userMessageService.addUserMessageBatch(userMessageList);
 			// websocket推送页面消息
-			WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统",
-					Const.SENDER_TYPE_0, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle, managerMsg,
+			WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, pmphUser.getId(), pmphUser.getRealname(),
+					Const.SENDER_TYPE_1, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle, managerMsg,
 					DateUtil.getCurrentTime());
 			myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
 		}
@@ -217,12 +208,12 @@ public final class SystemMessageService {
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
-	public void sendWhenConfirmFirstEditor(Long bookId, List<DecPositionPublished> newMessage)
+	public void sendWhenConfirmFirstEditor(Long bookId, List<DecPositionPublished> newMessage,PmphUser pmphUser)
 			throws CheckedServiceException, IOException {
 		// 获取教材书籍
 		Textbook textbook = textbookService.getTextbookById(bookId);
 		if (textbook.getIsPublished()) {
-			sendWhenPubfinalResult(bookId, newMessage);
+			sendWhenPubfinalResult(bookId, newMessage,pmphUser);
 			return;
 		}
 		// 获取教材
@@ -276,12 +267,12 @@ public final class SystemMessageService {
 				Message message = new Message(msgContent);
 				message = messageService.add(message);
 				String msg_id = message.getId();
-				UserMessage userMessage = new UserMessage(msg_id, messageTitle, new Short("0"), 0L, new Short("0"),
+				UserMessage userMessage = new UserMessage(msg_id, messageTitle, new Short("0"), pmphUser.getId(), new Short("1"),
 						declaration.getUserId(), new Short("2"), null);
 				userMessageService.addUserMessage(userMessage);
 				// websocket推送页面消息
-				WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统",
-						Const.SENDER_TYPE_0, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
+				WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, pmphUser.getId(), pmphUser.getRealname(),
+						Const.SENDER_TYPE_1, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
 						msgContent, DateUtil.getCurrentTime());
 				List<String> userIds = new ArrayList<String>(1);
 				userIds.add("2_" + declaration.getUserId());
@@ -307,7 +298,7 @@ public final class SystemMessageService {
 	 * @throws IOException
 	 */
 	public void sendWhenInviteJoinGroup(String inviterName, Long groupId, List<Long> invitedPersonIds,
-			short invitedPersonType) throws CheckedServiceException, IOException {
+			short invitedPersonType,PmphUser pmphUser) throws CheckedServiceException, IOException {
 		if (StringUtils.isEmpty(inviterName)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"邀请人为空");
@@ -332,7 +323,7 @@ public final class SystemMessageService {
 		List<UserMessage> userMessageList = new ArrayList<UserMessage>(invitedPersonIds.size());
 		List<String> userIds = new ArrayList<String>(invitedPersonIds.size());
 		for (Long id : invitedPersonIds) {
-			UserMessage userMessage = new UserMessage(msg_id, messageTitle, new Short("0"), 0L, new Short("0"), id,
+			UserMessage userMessage = new UserMessage(msg_id, messageTitle, new Short("0"), pmphUser.getId(), new Short("1"), id,
 					invitedPersonType, null);
 			userMessageList.add(userMessage);
 			userIds.add(invitedPersonType + "_" + id);
@@ -340,8 +331,8 @@ public final class SystemMessageService {
 		// 发送消息
 		userMessageService.addUserMessageBatch(userMessageList);
 		// websocket推送页面消息
-		WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统",
-				Const.SENDER_TYPE_0, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle, msgContent,
+		WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, pmphUser.getId(), pmphUser.getRealname(),
+				Const.SENDER_TYPE_1, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle, msgContent,
 				DateUtil.getCurrentTime());
 		myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
 	}
@@ -470,8 +461,20 @@ public final class SystemMessageService {
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
-	public void sendWhenTeacherCertificationAudit(String auditorOrgName, List<Long> teacherIds, boolean isPass)
+	public void sendWhenTeacherCertificationAudit(String auditorOrgName, List<Long> teacherIds, boolean isPass,Object user)
 			throws CheckedServiceException, IOException {
+		Long sendId = 0L;
+		String sendName = "系统";
+		short senderType = new Short("0");
+		if(user instanceof PmphUser){
+			sendId = ((PmphUser) user).getId();
+			sendName =  ((PmphUser) user).getRealname();
+			senderType = new Short("1");
+		}else if(user instanceof OrgUser){
+			sendId = ((OrgUser) user).getId();
+			sendName =  ((OrgUser) user).getRealname();
+			senderType = new Short("3");
+		}
 		if (StringUtils.isEmpty(auditorOrgName)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEACHER_CHECK, CheckedExceptionResult.NULL_PARAM,
 					"审核机构为空");
@@ -494,7 +497,7 @@ public final class SystemMessageService {
 		List<String> userIds = new ArrayList<String>(teacherIds.size());
 		// 发送消息
 		for (Long id : teacherIds) {
-			UserMessage userMessage = new UserMessage(msg_id, messageTitle, new Short("0"), 0L, new Short("0"), id,
+			UserMessage userMessage = new UserMessage(msg_id, messageTitle, new Short("0"), sendId, senderType, id,
 					new Short("2"), null);
 			userMessageList.add(userMessage);
 			userIds.add("2_" + id);
@@ -502,8 +505,8 @@ public final class SystemMessageService {
 
 		userMessageService.addUserMessageBatch(userMessageList);
 		// websocket推送页面消息
-		WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统",
-				Const.SENDER_TYPE_0, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle, msgContent,
+		WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, sendId, sendName,
+				senderType, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle, msgContent,
 				DateUtil.getCurrentTime());
 		myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
 	}
@@ -520,7 +523,7 @@ public final class SystemMessageService {
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
-	public void sendWhenManagerCertificationAudit(List<Long> orguserIds, boolean isPass,String backReason)
+	public void sendWhenManagerCertificationAudit(List<Long> orguserIds, boolean isPass,String backReason,PmphUser pmphUser)
 			throws CheckedServiceException, IOException {
 		if (null == orguserIds || orguserIds.size() == 0) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.SCHOOL_ADMIN_CHECK,
@@ -540,7 +543,7 @@ public final class SystemMessageService {
 		List<String> userIds = new ArrayList<String>(orguserIds.size());
 		// 发送消息
 		for (Long id : orguserIds) {
-			UserMessage userMessage = new UserMessage(msg_id, messageTitle, new Short("0"), 0L, new Short("0"), id,
+			UserMessage userMessage = new UserMessage(msg_id, messageTitle, new Short("1"), pmphUser.getId(), new Short("1"), id,
 					new Short("3"), null);
 			userMessageList.add(userMessage);
 			userIds.add("3_" + id);
@@ -548,8 +551,8 @@ public final class SystemMessageService {
 
 		userMessageService.addUserMessageBatch(userMessageList);
 		// websocket推送页面消息
-		WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统",
-				Const.SENDER_TYPE_0, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle, msgContent,
+		WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, pmphUser.getId(), pmphUser.getRealname(),
+				Const.SENDER_TYPE_1, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle, msgContent,
 				DateUtil.getCurrentTime());
 		myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
 	}
@@ -660,7 +663,7 @@ public final class SystemMessageService {
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
-	public void sendWhenDeclarationFormAudit(Long declarationId, boolean isPass, String returnCause)
+	public void sendWhenDeclarationFormAudit(Long declarationId, boolean isPass, String returnCause,PmphUser pmphUser)
 			throws CheckedServiceException, IOException {
 		// 获取申报表
 		Declaration declaration = declarationService.getDeclarationById(declarationId);
@@ -697,11 +700,11 @@ public final class SystemMessageService {
 		message = messageService.add(message);
 		String msg_id = message.getId();
 		// 发送消息
-		userMessageService.addUserMessage(new UserMessage(msg_id, messageTitle, new Short("0"), 0L, new Short("0"),
+		userMessageService.addUserMessage(new UserMessage(msg_id, messageTitle, new Short("0"), pmphUser.getId(), new Short("1"),
 				declaration.getUserId(), new Short("2"), null));
 		// websocket推送页面消息
-		WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统",
-				Const.SENDER_TYPE_0, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle, msgContent,
+		WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, pmphUser.getId(), pmphUser.getRealname(),
+				Const.SENDER_TYPE_1, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle, msgContent,
 				DateUtil.getCurrentTime());
 		List<String> userIds = new ArrayList<String>(1);
 		userIds.add("2_" + declaration.getUserId());
@@ -721,7 +724,7 @@ public final class SystemMessageService {
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
-	public void sendWhenDeclarationFormAuditToOrgUser(Long declarationId, boolean isPass, String returnCause, Integer onlineProgress)
+	public void sendWhenDeclarationFormAuditToOrgUser(Long declarationId, boolean isPass, String returnCause, Integer onlineProgress,PmphUser pmphUser)
 			throws CheckedServiceException, IOException {
 		// 获取申报表
 		Declaration declaration = declarationService.getDeclarationById(declarationId);
@@ -771,8 +774,8 @@ public final class SystemMessageService {
 				userMessageList.add(new UserMessage(msg_id, // 消息内容id
 						messageTitle, // 消息标题
 						new Short("0"), // 消息类型
-						0L, // 发送者id 0- 系统
-						new Short("0"), // 发送者类型 0- 系统
+						pmphUser.getId(), // 发送者id 0- 系统
+						new Short("1"), // 发送者类型 0- 系统
 						orgUser.getId(), // 接收者id
 						new Short("3"), // 接收者类型 （3- 机构用户 ）
 						null // 教材id
@@ -786,9 +789,9 @@ public final class SystemMessageService {
 			// websocket推送页面消息
 			webScocketMessage = new WebScocketMessage(msg_id, // 消息id
 					Const.MSG_TYPE_0, // 消息类型 0=系统消息/1=站内群发/2=站内私信(作家和机构用户不能群发)/3 小组互动
-					0L, // 发送者id 0=系统/其他=用户id
-					"系统", // 发送者姓名
-					Const.SENDER_TYPE_0, // 发送者类型 0=系统/1=社内用户/2=作家用户/3=机构用户
+					pmphUser.getId(), // 发送者id 0=系统/其他=用户id
+					pmphUser.getRealname(), // 发送者姓名
+					Const.SENDER_TYPE_1, // 发送者类型 0=系统/1=社内用户/2=作家用户/3=机构用户
 					Const.SEND_MSG_TYPE_0, // 发送类型 0 新增 1 撤回 2 删除
 					"", // 头像
 					messageTitle, // 消息标题
@@ -801,11 +804,11 @@ public final class SystemMessageService {
 			message = messageService.add(message);
 			String msg_id = message.getId();
 			// 发送消息
-			userMessageService.addUserMessage(new UserMessage(msg_id, messageTitle, new Short("0"), 0L, new Short("0"),
+			userMessageService.addUserMessage(new UserMessage(msg_id, messageTitle, new Short("0"), pmphUser.getId(), new Short("1"),
 					declaration.getUserId(), new Short("2"), null));
 			// websocket推送页面消息
-			webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统",
-					Const.SENDER_TYPE_0, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle, msgContent,
+			webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, pmphUser.getId(), pmphUser.getRealname(),
+					Const.SENDER_TYPE_1, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle, msgContent,
 					DateUtil.getCurrentTime());
 			userIds = new ArrayList<String>(1);
 			userIds.add("2_" + declaration.getUserId());
@@ -824,7 +827,7 @@ public final class SystemMessageService {
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
-	public void sendWhenReceiptAudit(Long declarationId, boolean isPass) throws CheckedServiceException, IOException {
+	public void sendWhenReceiptAudit(Long declarationId, boolean isPass,PmphUser pmphUser) throws CheckedServiceException, IOException {
 		Declaration declaration = declarationService.getDeclarationById(declarationId);
 		if (null == declaration) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
@@ -860,7 +863,7 @@ public final class SystemMessageService {
 		List<UserMessage> userMessageList = new ArrayList<UserMessage>(OrgUserList.size());
 		List<String> userIds = new ArrayList<String>(1);
 		for (OrgUser orgUser : OrgUserList) {
-			userMessageList.add(new UserMessage(orgMsg_id, messageTitle, new Short("0"), 0L, new Short("0"),
+			userMessageList.add(new UserMessage(orgMsg_id, messageTitle, new Short("0"), pmphUser.getId(), new Short("1"),
 					orgUser.getId(), new Short("3"), null));
 			userIds.add("3_" + orgUser.getId());
 		}
@@ -869,8 +872,8 @@ public final class SystemMessageService {
 			// 发送消息给管理员
 			userMessageService.addUserMessageBatch(userMessageList);
 			// websocket推送页面消息
-			WebScocketMessage webScocketMessage = new WebScocketMessage(orgMsg_id, Const.MSG_TYPE_0, 0L, "系统",
-					Const.SENDER_TYPE_0, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
+			WebScocketMessage webScocketMessage = new WebScocketMessage(orgMsg_id, Const.MSG_TYPE_0,  pmphUser.getId(),  pmphUser.getRealname(),
+					Const.SENDER_TYPE_1, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
 					orgMsgContent, DateUtil.getCurrentTime());
 			myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
 		}
@@ -880,11 +883,11 @@ public final class SystemMessageService {
 		writerUserMessage = messageService.add(writerUserMessage);
 		String writerMsg_id = writerUserMessage.getId();
 		// 发送消息给申报者
-		userMessageService.addUserMessage(new UserMessage(writerMsg_id, messageTitle, new Short("0"), 0L,
-				new Short("0"), declaration.getUserId(), new Short("2"), null));
+		userMessageService.addUserMessage(new UserMessage(writerMsg_id, messageTitle, new Short("0"), pmphUser.getId(),
+				new Short("1"), declaration.getUserId(), new Short("2"), null));
 		// websocket推送页面消息
-		WebScocketMessage webScocketMessage = new WebScocketMessage(writerMsg_id, Const.MSG_TYPE_0, 0L, "系统",
-				Const.SENDER_TYPE_0, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
+		WebScocketMessage webScocketMessage = new WebScocketMessage(writerMsg_id, Const.MSG_TYPE_0, pmphUser.getId(),  pmphUser.getRealname(),
+				Const.SENDER_TYPE_1, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
 				writerMsgContent, DateUtil.getCurrentTime());
 		userIds = new ArrayList<String>(1);
 		userIds.add("2_" + declaration.getUserId());
@@ -938,7 +941,7 @@ public final class SystemMessageService {
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
-	public void sendWhenPubfinalResult(Long textBookId, List<DecPositionPublished> decPositionPublishedLst)
+	public void sendWhenPubfinalResult(Long textBookId, List<DecPositionPublished> decPositionPublishedLst,PmphUser pmphUser)
 			throws CheckedServiceException, IOException {
 		Textbook textbook = textbookService.getTextbookById(textBookId);
 		Material material = materialService.getMaterialById(textbook.getMaterialId());
@@ -1005,11 +1008,11 @@ public final class SystemMessageService {
 				message = messageService.add(message);
 				String msg_id = message.getId();
 				// 发送消息给申报者
-				userMessageService.addUserMessage(new UserMessage(msg_id, messageTitle, new Short("0"), 0L,
-						new Short("0"), declaration.getUserId(), new Short("2"), null));
+				userMessageService.addUserMessage(new UserMessage(msg_id, messageTitle, new Short("0"), pmphUser.getId(),
+						new Short("1"), declaration.getUserId(), new Short("2"), null));
 				// websocket推送页面消息
-				WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统",
-						Const.SENDER_TYPE_0, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle, msg,
+				WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0,  pmphUser.getId(),  pmphUser.getRealname(),
+						Const.SENDER_TYPE_1, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle, msg,
 						DateUtil.getCurrentTime());
 				List<String> userIds = new ArrayList<String>(1);
 				userIds.add("2_" + declaration.getUserId());
@@ -1090,11 +1093,11 @@ public final class SystemMessageService {
 					// 获取机构管理员
 					OrgUser orgUser = orgUserService.getOrgUserByOrgId(org.getId());
 					// 发送消息给申报者
-					userMessageService.addUserMessage(new UserMessage(msg_id, messageTitle, new Short("0"), 0L,
-							new Short("0"), orgUser.getId(), new Short("3"), null));
+					userMessageService.addUserMessage(new UserMessage(msg_id, messageTitle, new Short("0"), pmphUser.getId(),
+							new Short("1"), orgUser.getId(), new Short("3"), null));
 					// websocket推送页面消息
-					WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统",
-							Const.SENDER_TYPE_0, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
+					WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, pmphUser.getId(), pmphUser.getRealname(),
+							Const.SENDER_TYPE_1, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
 							msgContent, DateUtil.getCurrentTime());
 					List<String> userIds = new ArrayList<String>(1);
 					userIds.add("3_" + orgUser.getId());
@@ -1176,11 +1179,11 @@ public final class SystemMessageService {
 					// 获取机构管理员
 					OrgUser orgUser = orgUserService.getOrgUserByOrgId(org.getId());
 					// 发送消息给申报者
-					userMessageService.addUserMessage(new UserMessage(msg_id, messageTitle, new Short("0"), 0L,
-							new Short("0"), orgUser.getId(), new Short("3"), null));
+					userMessageService.addUserMessage(new UserMessage(msg_id, messageTitle, new Short("0"), pmphUser.getId(),
+							new Short("1"), orgUser.getId(), new Short("3"), null));
 					// websocket推送页面消息
-					WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统",
-							Const.SENDER_TYPE_0, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
+					WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, pmphUser.getId(), pmphUser.getRealname(),
+							Const.SENDER_TYPE_1, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
 							msgContent, DateUtil.getCurrentTime());
 					List<String> userIds = new ArrayList<String>(1);
 					userIds.add("3_" + orgUser.getId());
@@ -1293,11 +1296,11 @@ public final class SystemMessageService {
 	 * 给教材已结束并且未遴选上的作家推送消息
 	 * 
 	 * @param materialId
-	 * @param declaration
+	 *  declaration
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
-	public void sendWhenPositionChooserLoss(Long materialId,List<Declaration> declarations) 
+	public void sendWhenPositionChooserLoss(Long materialId,List<Declaration> declarations,PmphUser pmphUser)
 			throws CheckedServiceException, IOException{
 		Material material = materialService.getMaterialById(materialId);
 		if(ObjectUtil.isNull(material)){
@@ -1317,11 +1320,11 @@ public final class SystemMessageService {
 			String msg_id = message.getId();
 			for (Declaration declaration : declarations) {
 				// 发送消息给申报者
-				userMessageService.addUserMessage(new UserMessage(msg_id, messageTitle, new Short("0"), 0L, new Short("0"),
+				userMessageService.addUserMessage(new UserMessage(msg_id, messageTitle, new Short("0"), pmphUser.getId(), new Short("1"),
 						declaration.getUserId(), new Short("2"), null));
 				// websocket推送页面消息
-				WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统",
-						Const.SENDER_TYPE_0, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle, msg,
+				WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, pmphUser.getId(), pmphUser.getRealname(),
+						Const.SENDER_TYPE_1, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle, msg,
 						DateUtil.getCurrentTime());
 				List<String> userIds = new ArrayList<String>(1);
 				userIds.add("2_" + declaration.getUserId());

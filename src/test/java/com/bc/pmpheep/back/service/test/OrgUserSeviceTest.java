@@ -126,7 +126,7 @@ public class OrgUserSeviceTest extends BaseTest {
 		orgUserService.addOrgUser(orgUser);
 		List<Long> list = new ArrayList<Long>();
 		list.add(orgUser.getId());
-		Assert.assertTrue("更新审核状态失败", orgUserService.updateOrgUserProgressById(1, list,"") > 0);
+		Assert.assertTrue("更新审核状态失败", orgUserService.updateOrgUserProgressById(1, list,"",null) > 0);
 	}
 
 	@Test

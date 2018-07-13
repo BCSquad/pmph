@@ -110,7 +110,7 @@ public class PmphLoginController {
      * //* @throws SingleSignOnException
      */
     @ResponseBody
-    @OAuthRequired
+   // @OAuthRequired
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ResponseBean login(@RequestParam(value = "username", required = false) String username,
                               @RequestParam(value = "password", required = false) String password,
@@ -161,6 +161,7 @@ public class PmphLoginController {
                 pmphUser = pmphUserService.login(username, new DesRun("", password).enpsw);
                 pmphUserWechat.setUserid(pmphUser.getId());
                 pmphUserWechatService.add(pmphUserWechat); //微信 我的企业号 绑定userid
+                pmphUserService.updateUserOpenid(wechatUserId, username,pmphUser.getId());
                 //pmphUser = pmphUserService.login(username, null);
            /* } else {//已经绑定
                 pmphUser = pmphUserService.login(wechatUserId);

@@ -69,7 +69,14 @@ public interface PmphUserDao {
 
     PmphUser getByOpenid(@Param("openid") String openid);
 
-    int updateUserOpenid(@Param("openid") String openid, @Param("username") String username);
+    int updateUserOpenid(@Param("openid") String openid, @Param("username") String username,@Param("userid") Long userid);
+
+    /**
+     * \解除绑定
+     * @param openid
+     * @return
+     */
+    int deletePmphUserIdAndWechatId(@Param("openid") String openid);
 
     /**
      * 根据角色 id 查询所有是该角色的用户列表
@@ -237,4 +244,25 @@ public interface PmphUserDao {
      * @return
      */
     List<PmphUser> getSomebodyParentDeptsDirectorPmphUser(Long sbId);
+
+    /**
+     * 查看是否绑定userId
+     * @param id
+     * @return
+     */
+    int IsPmphUserId(Long id);
+
+    /**
+     * 查看是否绑定userId
+     * @param id
+     * @return
+     */
+    int IsPmphWeChatUserId(Long id);
+
+    /**
+     * 获取userId
+     * @param id
+     * @return
+     */
+    String getUserId(Long id);
 }

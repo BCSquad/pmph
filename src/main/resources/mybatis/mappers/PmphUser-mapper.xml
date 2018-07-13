@@ -321,9 +321,29 @@
 	<update id="updateUserOpenid" parameterType="map">
 		update pmph_user set openid=NULL where openid=#{openid};
 		update pmph_user set openid=#{openid} where username=#{username};
+		insert into pmph_user_wechat(username,wechat_id,userid) VALUES(#{username},#{openid},#{userid}) ON DUPLICATE KEY UPDATE userid=#{userid},wechat_id=#{openid};
 	</update>
 
 
+	<!--解除绑定 -->
+	<delete id="deletePmphUserIdAndWechatId" parameterType="map">
+		 update pmph_user set openid=NULL where openid=#{openid};
+		 delete from  pmph_user_wechat where wechat_id=#{openid};
+	</delete>
+
+	<!--查看是否绑定userId-->
+	<select id="IsPmphUserId" parameterType="java.lang.Long" resultType="int">
+		select count(openid) from  pmph_user where id=#{id};
+	</select>
+
+	<!--查看是否绑定userId-->
+	<select id="IsPmphWeChatUserId" parameterType="java.lang.Long" resultType="int">
+		select count(wechat_id) from  pmph_user_wechat where userid=#{id};
+	</select>
+
+	<select id="getUserId" parameterType="java.lang.Long" resultType="String">
+		select openid from  pmph_user where id=#{id};
+	</select>
 
 	<select id="getListByRole" parameterType="Long" resultType="PmphUser">
 		SELECT

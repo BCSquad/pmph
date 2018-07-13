@@ -661,6 +661,7 @@
 		a.position,
 		a.title,
 		a.handphone,
+		a.commit_date,
 		a.email,
 		GROUP_CONCAT(
 		CONCAT(d.textbook_name,'-',

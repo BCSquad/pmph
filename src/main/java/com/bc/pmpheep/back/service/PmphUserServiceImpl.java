@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.bc.pmpheep.back.util.*;
 import com.bc.pmpheep.general.bean.FileType;
 import org.apache.commons.io.FileUtils;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -525,9 +526,20 @@ public class PmphUserServiceImpl implements PmphUserService {
     }
 
     @Override
-    public int updateUserOpenid(String openid, String username) {
-        return pmphUserDao.updateUserOpenid(openid, username);
+    public int updateUserOpenid(String openid, String username,Long userid) {
+        return pmphUserDao.updateUserOpenid(openid, username,userid);
     }
+
+    /**
+     * \解除绑定
+     * @param openid
+     * @return
+     */
+    @Override
+   public int deletePmphUserIdAndWechatId(@Param("openid") String openid) throws CheckedServiceException{
+        return pmphUserDao.deletePmphUserIdAndWechatId(openid);
+    }
+    /**
 
     /**
      * 查询所有的用户对象列表
@@ -1043,5 +1055,32 @@ public class PmphUserServiceImpl implements PmphUserService {
         return pmphUser;
     }
 
-    ;
+    /**
+     * 查看是否绑定
+     * @param id
+     * @return
+     */
+    @Override
+    public Boolean IsUserId(Long id) {
+        int count1 = pmphUserDao.IsPmphUserId(id);
+        int count2 = pmphUserDao.IsPmphWeChatUserId(id);
+        Boolean flag = false;
+        if(count1>0&&count2>0){
+            flag = true;
+        }
+        return flag;
+    }
+
+
+    /**
+     * h获取userId
+     * @param id
+     * @return
+     */
+    @Override
+    public String getUserId(Long id) {
+        return pmphUserDao.getUserId(id);
+    }
+
+
 }
