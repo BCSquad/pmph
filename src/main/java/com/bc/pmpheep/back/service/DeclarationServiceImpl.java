@@ -341,12 +341,12 @@ public class DeclarationServiceImpl implements DeclarationService {
 		if(0 == offlineProgress){
 			isPass = false;
 		}
-		systemMessageService.sendWhenReceiptAudit(declarationCon.getId(), isPass); // 发送系统消息
+		systemMessageService.sendWhenReceiptAudit(declarationCon.getId(), isPass,pmphUser); // 发送系统消息
 		return declarationCon;
 	}
 
 	@Override
-	public Declaration onlineProgress(Long id, Integer onlineProgress, String returnCause)
+	public Declaration onlineProgress(Long id, Integer onlineProgress, String returnCause,PmphUser pmphUser)
 			throws CheckedServiceException, IOException {
 		if (ObjectUtil.isNull(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
@@ -383,7 +383,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			writerUserTrendst.setBookCommentId(null);
 			writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
 			// 发送系统消息
-			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), true, returnCause); 
+			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), true, returnCause,pmphUser);
 			// 获取审核进度是4并且通过或者不通过审核单位并且不是提交到出版社0则被退回给申报单位
 			// 提交审核单位，审核单位通过或者不通过，出版社都退回给申报单位操作
 		} else if (4 == onlineProgress.intValue() && 0 != declarationCon.getOrgId()) {
@@ -420,7 +420,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			writerUserTrendst.setBookCommentId(null);
 			writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);*/
 			// 发送系统消息
-			systemMessageService.sendWhenDeclarationFormAuditToOrgUser(declarationCon.getId(), false, returnCause, onlineProgress);
+			systemMessageService.sendWhenDeclarationFormAuditToOrgUser(declarationCon.getId(), false, returnCause, onlineProgress,pmphUser);
 			// 获取审核进度是5并且通过或者不通过审核单位并且不是提交到出版社0则被退回给个人
 			// 提交审核单位，审核单位通过或者不通过，出版社都可以退回给个人操作
 		} else if (5 == onlineProgress.intValue() && 0 != declarationCon.getOrgId()) {
@@ -457,7 +457,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			writerUserTrendst.setBookCommentId(null);
 			writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
 			// 发送系统消息
-			systemMessageService.sendWhenDeclarationFormAuditToOrgUser(declarationCon.getId(), false, returnCause, onlineProgress);
+			systemMessageService.sendWhenDeclarationFormAuditToOrgUser(declarationCon.getId(), false, returnCause, onlineProgress,pmphUser);
 			// 获取审核进度是5并且机构id为出版社0则被退回给个人
 			// 提交到出版社，出版社退回给个人操作
 		} else if (5 == onlineProgress.intValue() && 0 == declarationCon.getOrgId()) {
@@ -494,7 +494,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			writerUserTrendst.setBookCommentId(null);
 			writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
 			// 发送系统消息
-			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), false, returnCause); 
+			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), false, returnCause,null);
 		}
 
 		//撤销某(人)申报表的所有遴选，dec_positiond的choosePosition设为0，dec_pisition_published相应删除

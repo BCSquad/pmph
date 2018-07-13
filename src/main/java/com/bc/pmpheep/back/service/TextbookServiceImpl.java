@@ -379,14 +379,14 @@ public class TextbookServiceImpl implements TextbookService {
 		}
 		// 发送消息
 		for (Textbook textbook : textbooks) {
-			systemMessageService.sendWhenPubfinalResult(textbook.getId(), sends);
+			systemMessageService.sendWhenPubfinalResult(textbook.getId(), sends,pmphUser);
 		}
 		//当教材遴选结束时给为遴选上的用户推送消息
 		Material material2=materialService.getMaterialById(materialId);
 		if(ObjectUtil.notNull(material2)){
 			if(material2.getIsAllTextbookPublished()){
 				List<Declaration> declaration=declarationService.getPositionChooseLossByMaterialId(materialId);
-				systemMessageService.sendWhenPositionChooserLoss(materialId, declaration);
+				systemMessageService.sendWhenPositionChooserLoss(materialId, declaration,pmphUser);
 				if(null != declaration && declaration.size() > 0 ){
 					for(Declaration d: declaration){
 						// 添加动态信息

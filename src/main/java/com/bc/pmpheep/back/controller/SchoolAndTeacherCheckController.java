@@ -120,7 +120,7 @@ public class SchoolAndTeacherCheckController {
                     "当前Session会话已过期，请重新登录!");
         }
         PmphUser pmphUser = (PmphUser) session.getAttribute(Const.SESSION_PMPH_USER);
-        return new ResponseBean(orgUserService.updateOrgUserProgressById(progress, orgUserIds,backReason,pmphUser.getId()));
+        return new ResponseBean(orgUserService.updateOrgUserProgressById(progress, orgUserIds,backReason,pmphUser));
     }
 
     /**

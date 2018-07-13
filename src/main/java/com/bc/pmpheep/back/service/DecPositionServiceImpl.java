@@ -612,7 +612,7 @@ public class DecPositionServiceImpl implements DecPositionService {
                 count = textbookService.updateTextbook(new Textbook(textbookId, true));
                 if (count > 0) {
                     // 发送消息
-                    systemMessageService.sendWhenConfirmFirstEditor(textbookId, newMessage);
+                    systemMessageService.sendWhenConfirmFirstEditor(textbookId, newMessage,pmphUser);
                 }
             }
         }
@@ -1217,7 +1217,7 @@ public class DecPositionServiceImpl implements DecPositionService {
             count = textbookService.updateTextbook(new Textbook(textbookId, true));
             if (count > 0) {
                 // 发送消息
-                systemMessageService.sendWhenConfirmFirstEditor(textbookId, decPositionPublisheds);
+                systemMessageService.sendWhenConfirmFirstEditor(textbookId, decPositionPublisheds,pmphUser);
             }
         }
         return count;
