@@ -109,7 +109,7 @@ public class OAuth2Controller {
      * </pre>
      */
     @RequestMapping(value = { "/oauth2url" })
-    public Boolean Oauth2MeUrl(HttpServletRequest request, HttpServletResponse response, @RequestParam String code,
+    public void Oauth2MeUrl(HttpServletRequest request, HttpServletResponse response, @RequestParam String code,
                                @RequestParam String oauth2url) {
         logger.info("oauth2url___:   "+oauth2url);
         AccessToken accessToken = QiYeUtil.getAccessToken(Constants.CORPID, Constants.SECRET);
@@ -142,8 +142,7 @@ public class OAuth2Controller {
         } catch (IOException e) {
             e.printStackTrace();
         }
-       // return "redirect:" + oauth2url;
-        return true;
+
     }
 
     /**
