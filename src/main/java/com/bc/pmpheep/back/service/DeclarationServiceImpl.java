@@ -992,6 +992,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			if (null != declarationOrDisplayVO.getBirthday()) {
 				birthday = DateUtil.date2Str(declarationOrDisplayVO.getBirthday(), "yyyy-MM-dd");
 			}
+
 			if (null == declarationOrDisplayVO.getPosition() || "".equals(declarationOrDisplayVO.getPosition())) {
 				declarationOrDisplayVO.setPosition("无");
 			}
@@ -1143,7 +1144,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			String textbookName = declarationOrDisplayVO.getTextbookName() + "第"
 					+ declarationOrDisplayVO.getTextbookRound() + "版";
 			DeclarationEtcBO declarationEtcBO = new DeclarationEtcBO(declarationOrDisplayVO.getRealname(),
-					declarationOrDisplayVO.getUsername(), sex, birthday, declarationOrDisplayVO.getExperience(),
+					declarationOrDisplayVO.getUsername(), sex, birthday, declarationOrDisplayVO.getExperience(),DateUtil.formatTimeStamp("yyyy-MM-dd",declarationOrDisplayVO.getCommitDate()),
 					declarationOrDisplayVO.getOrgName(), declarationOrDisplayVO.getPosition(),
 					declarationOrDisplayVO.getTitle(), declarationOrDisplayVO.getAddress(),
 					declarationOrDisplayVO.getPostcode(), declarationOrDisplayVO.getTelephone(),
@@ -1507,7 +1508,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			String textbookName = declarationOrDisplayVO.getTextbookName() + "第"
 					+ declarationOrDisplayVO.getTextbookRound() + "版";
 			DeclarationEtcBO declarationEtcBO = new DeclarationEtcBO(declarationOrDisplayVO.getRealname(),
-					declarationOrDisplayVO.getUsername(), sex, birthday, declarationOrDisplayVO.getExperience(),
+					declarationOrDisplayVO.getUsername(), sex, birthday, declarationOrDisplayVO.getExperience(),DateUtil.formatTimeStamp("yyyy-MM-dd",declarationOrDisplayVO.getCommitDate()),
 					declarationOrDisplayVO.getOrgName(), declarationOrDisplayVO.getPosition(),
 					declarationOrDisplayVO.getTitle(), declarationOrDisplayVO.getAddress(),
 					declarationOrDisplayVO.getPostcode(), declarationOrDisplayVO.getTelephone(),

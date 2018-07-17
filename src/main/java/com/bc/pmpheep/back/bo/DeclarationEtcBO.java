@@ -25,6 +25,7 @@ import com.bc.pmpheep.back.po.DecTextbookPmph;
 import com.bc.pmpheep.back.po.DecWorkExp;
 import com.bc.pmpheep.back.vo.DecExtensionVO;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,6 +95,10 @@ public class DeclarationEtcBO {
 
 	@ExcelHeader(header = "专业特长")
 	private String expertise;
+
+	//提交日期
+	@ExcelHeader(header = "提交日期")
+	private String commitDate;
 
 	@ExcelHeader(header = "是否服从调剂")
 	private String isDispensed;
@@ -172,7 +177,7 @@ public class DeclarationEtcBO {
 	public DeclarationEtcBO() {
 	}
 
-	public DeclarationEtcBO(String realname, String username, String sex, String birthday, Integer experience,
+	public DeclarationEtcBO(String realname, String username, String sex, String birthday, Integer experience, String commitDate,
 			String orgName, String position, String title, String address, String postcode, String telephone,
 			String fax, String handphone, String degree, String email, String idtype, String idcard, String expertise,
 			String isDispensed, String isUtec, String onlineProgress, String offlineProgress, String chosenOrgName,
@@ -228,6 +233,7 @@ public class DeclarationEtcBO {
 		this.decAcadeRewards = decAcadeRewards;
 		this.decExtensionVOs = decExtensionVOs;
 		this.decIntention = decIntention;
+		this.commitDate = commitDate;
 	}
 
 	public Long getMaterialId() {
@@ -842,4 +848,11 @@ public class DeclarationEtcBO {
 		this.decIntention = decIntention;
 	}
 
+	public String getCommitDate() {
+		return commitDate;
+	}
+
+	public void setCommitDate(String commitDate) {
+		this.commitDate = commitDate;
+	}
 }

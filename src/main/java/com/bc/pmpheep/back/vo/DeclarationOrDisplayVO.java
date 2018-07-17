@@ -65,6 +65,8 @@ public class DeclarationOrDisplayVO implements java.io.Serializable {
 	private Long authUserId;
 	// 审核通过时间
 	private Timestamp authDate;
+	//提交日期
+	private Timestamp commitDate;
 	// 纸质表进度
 	private Integer offlineProgress;
 	// 纸质表收到时间
@@ -450,4 +452,11 @@ public class DeclarationOrDisplayVO implements java.io.Serializable {
 				+ ", textbookName=" + textbookName + ", presetPosition=" + presetPosition + "]";
 	}
 
+	public Timestamp getCommitDate() {
+		return commitDate;
+	}
+
+	public void setCommitDate(Timestamp commitDate) {
+		this.commitDate = commitDate;
+	}
 }
