@@ -79,7 +79,7 @@ public class OAuth2Controller {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            reqUrl = StringUtil.isEmpty("rootAdrr")?"medu.ipmph.com/pmphwx":reqUrl;// pmphwx 20097r18u8.iask.in
+            reqUrl = StringUtil.isEmpty("rootAdrr")?"szbsj.f3322.net:8802/pmpheep":reqUrl;// pmphwx 20097r18u8.iask.in
             //String reqUrl = "120.76.221.250:11000";// 备案域名
             // System.out.println("request.getServletPath()=" + request.getServletPath());
             // System.out.println("request.getRequestURL()=" + request.getRequestURL());
@@ -118,30 +118,22 @@ public class OAuth2Controller {
             String Userid = getMemberGuidByCode(accessToken.getToken(), code, Constants.AGENTID);
             if (Userid != null) { //由于ngnix代理的原因（正式的地址是132 域名对应的ip 132）当我们转发到131的代码执行时，微信认为你的域名和请求不一致，会回调两次。
                 session.setAttribute("UserId", Userid);
-            }else{
-              //如果获取到的是空的，将重复发送一次请求给服务器 这里没什么用code 只能消费一次
-              /*  if(oauth2url.indexOf("sec")>0){
-                    try {
-                        request.getRequestDispatcher("/oauth2?resultUrl="+oauth2url+"&index=sec").forward(request,response);
-                    } catch (ServletException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                // 这里简单处理,存储到session中
+                logger.info("UserId:   "+session.getAttribute("UserId"));
+                logger.info("oauth2url:   "+oauth2url);
+                try {
+                    request.getRequestDispatcher(oauth2url).forward(request,response);
+                } catch (ServletException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-*/
+            }else{
+                logger.info("UserId:   "+session.getAttribute("UserId"));
+                logger.info("oauth2url:   "+oauth2url);
             }
         }
-        // 这里简单处理,存储到session中
-        logger.info("UserId:   "+session.getAttribute("UserId"));
-        logger.info("oauth2url:   "+oauth2url);
-        try {
-            request.getRequestDispatcher(oauth2url).forward(request,response);
-        } catch (ServletException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
 
     }
 

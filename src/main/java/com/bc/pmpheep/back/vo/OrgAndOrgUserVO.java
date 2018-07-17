@@ -63,7 +63,7 @@ public class OrgAndOrgUserVO implements Serializable {
 	// 委托书
 	private String proxy;
 	// 备注
-	@ExcelHeader(header = "备注")
+	/*@ExcelHeader(header = "备注")*/
 	private String note;
 	// 显示顺序
 	private Integer sort;
