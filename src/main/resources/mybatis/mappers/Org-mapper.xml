@@ -290,6 +290,7 @@
 	<!-- 系统消息——发送新消息——发送对象（学校管理员、所有人） -->
 	<select id="listSendToSchoolAdminOrAllUser" parameterType="map"
 		resultType="OrgVO">
+		SET SESSION group_concat_max_len=102400; /*group_concat默认长度1024，部分学校名称被截断，故加长*/
 		SELECT
 		GROUP_CONCAT(o.`id`) id,
 		GROUP_CONCAT(o.`org_name`)org_name,
