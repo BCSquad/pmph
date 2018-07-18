@@ -79,8 +79,8 @@ public class WXFrontMsgPushController {
         String msg = dec.getRealname() + "已提交《" + material.getMaterialName() + "》的申报表，";//“请审核” 已被超链接补齐，此处不需显示
         //String url = "/materialrouter/materialnav/" + decId + "/presscheck";
         //&UserId&materialId=&declarationId=
-        //String paramUrlFormat = "&UserId=%s&materialId=%s&declarationId=%s";
-        String paramUrlFormat = "/#/material/%s/expert?declarationId=%s";
+        String paramUrlFormat = "&UserId=%s&materialId=%s&declarationId=%s";
+        //String paramUrlFormat = "/#/material/%s/expert?declarationId=%s";
         String hrefType = "2";
         String hrefContentType = "2";
         for (String t: touserOpenidSet) {
@@ -88,8 +88,9 @@ public class WXFrontMsgPushController {
             Map resultMap = wxqyUserService.sendTextMessage(hrefType, hrefContentType, t, "", "", "text", msg, (short) 0,paramUrl);
             //return ((int) resultMap.get("errcode")) == 0;
         }
-        String paramUrl=String.format(paramUrlFormat,"",dec.getMaterialId(),dec.getId());
-        wxSendMessageService.batchInsertWxMessage(msg,"0".equals(hrefType)?0:1,useridList,hrefType,hrefContentType,paramUrl);
+        String paramUrlFormat1 = "/#/material/%s/expert?declarationId=%s";
+        String paramUrl=String.format(paramUrlFormat1,dec.getMaterialId(),dec.getId());
+        wxSendMessageService.batchInsertWxMessage(msg,"0".equals(hrefType)?0:1,useridList,"6",hrefContentType,paramUrl);
 
 
         return false;
@@ -179,8 +180,8 @@ public class WXFrontMsgPushController {
             Map resultMap = wxqyUserService.sendTextMessage(hrefType, hrefContentType, t, "", "", "text", msg, (short) 0,paramUrl);
             //return ((int) resultMap.get("errcode")) == 0;
         }
-        String paramUrl = String.format(paramUrlFormat,"");
-        wxSendMessageService.batchInsertWxMessage(msg,"0".equals(hrefType)?0:1,useridList,hrefType,hrefContentType,paramUrl);
+        String paramUrl = "/#/topic/list";
+        wxSendMessageService.batchInsertWxMessage(msg,"0".equals(hrefType)?0:1,useridList,"6",hrefContentType,paramUrl);
 
 
 
@@ -217,8 +218,9 @@ public class WXFrontMsgPushController {
             String paramUrl=String.format(paramUrlFormat,t,book.getBookname(),"check",correctId);
             resultMap = wxqyUserService.sendTextMessage(hrefType, hrefContentType, t, "", "", "text", msg, (short) 0,paramUrl);
         }
-        String paramUrl = String.format(paramUrlFormat,"",book.getBookname(),"check",correctId);
-        wxSendMessageService.batchInsertWxMessage(msg,"0".equals(hrefType)?0:1,useridList,hrefType,hrefContentType,paramUrl);
+        String paramUrlFormat1="/#/checkbook?bookName=%s&type=%s&id=%s";
+        String paramUrl = String.format(paramUrlFormat1,"",book.getBookname(),"check",correctId);
+        wxSendMessageService.batchInsertWxMessage(msg,"0".equals(hrefType)?0:1,useridList,"6",hrefContentType,paramUrl);
 
 
         return resultMap;
