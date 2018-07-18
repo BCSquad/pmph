@@ -15,6 +15,7 @@
                 and userid = #{parameter.userid}
             </if>
         </where>
+        order by gmt_create desc
         limit #{start},#{pageSize}
     </select>
 
