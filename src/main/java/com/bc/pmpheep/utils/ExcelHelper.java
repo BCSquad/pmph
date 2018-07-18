@@ -1267,7 +1267,7 @@ public class ExcelHelper {
 	}
 
 	private Workbook clearColumns(Workbook workbook, Material material) {
-		int startColumn = 26;
+		int startColumn = 27;
 		if (!material.getIsEduExpUsed()) {
 			for (int i = 0; i < 4; i++) {
 				workbook.getSheetAt(0).setColumnHidden(startColumn++, true);
