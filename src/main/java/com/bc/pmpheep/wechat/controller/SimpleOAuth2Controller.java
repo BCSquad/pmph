@@ -58,7 +58,7 @@ public class SimpleOAuth2Controller {
         String oauth2Url =
         "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + Constants.CORPID
         + "&redirect_uri=" + redirect_uri
-        + "&response_type=code&scope=snsapi_base&state=1#wechat_redirect";
+        + "&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect";
         return "redirect:" + oauth2Url;
     }
 

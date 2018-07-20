@@ -93,11 +93,11 @@ public class WeChatLoginController {
             HttpSession session = request.getSession();
             String wechatUserId = (String) session.getAttribute("UserId"); // userId 在session 中可以取到 微信--企业微信号 这个是pmph_user_wechat 表中的wechat_id
             if(StringUtil.isEmpty(wechatUserId)){ //app 访问登录
-                wechatUserId = request.getParameter("UserId"); // userId 在request中可以取到 企业微信 此usserId 代表 社内用户字段openid
+                wechatUserId = request.getParameter("UserId");
             }
-            String appType = request.getParameter("appType"); //为空 微信 -- 企业微信号 不为空 企业微信
+            String appType = request.getParameter("appType");
             // 微信--微信企业号直接访问app登录
-            if(StringUtil.isEmpty(appType)){  /*微信 -- 企业微信号*/
+            if(StringUtil.isEmpty(appType)){  /*微信 -- 待办 登录 首页*/
                 if (StringUtil.isEmpty(wechatUserId)) {
                     throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                             CheckedExceptionResult.NULL_PARAM, "网络异常，请重新再试!");
@@ -136,7 +136,7 @@ public class WeChatLoginController {
 
                     }
                 }
-            }else{ /*企业微信 */
+            }else{ /*微信 -- 申报等页面*/
                 if (StringUtil.isEmpty(wechatUserId)) {
                     throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                             CheckedExceptionResult.NULL_PARAM, "网络异常，请重新再试!");

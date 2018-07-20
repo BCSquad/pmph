@@ -20,7 +20,7 @@
 			<if test="email != null and email != '' ">
 				email,
 			</if>
-			<if test="realname != null and realname !=''">
+			<if test="realname != null ">
 				realname,
 			</if>
 			<if test="sex != null and sex !=''">
@@ -95,7 +95,7 @@
 			<if test="email != null and email != ''">
 				#{email},
 			</if>
-			<if test="realname != null and realname !=''">
+			<if test="realname != null ">
 				#{realname},
 			</if>
 			<if test="sex != null and sex !=''">
@@ -339,7 +339,7 @@
 	<select id="getListOrgUser" parameterType="PageParameter"
 		resultType="OrgAndOrgUserVO">
 		select
-		ou.id,o.org_name,ou.username,ou.realname,ou.handphone,ou.email,ou.address,o.area_id,
+		ou.id,o.org_name,ou.username,ou.realname,ou.handphone,ou.email,ou.address,o.area_id,ou.postcode,
 		ou.is_disabled isDisabled,ot.type_name
 		orgTypeName,ou.position,ou.title,ou.note,
 		ou.org_id,ot.id orgTypeId

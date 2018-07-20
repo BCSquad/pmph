@@ -258,10 +258,10 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 					if (!writers.isEmpty()) {
 						// 向作家用户发送消息
 						systemMessageService.sendWhenInviteJoinGroup(pmphUser.getRealname(), groupId, writers,
-								(short) 2);
+								(short) 2,pmphUser);
 					}
 					if (!pmphs.isEmpty()) {// 向社内用户发送消息
-						systemMessageService.sendWhenInviteJoinGroup(pmphUser.getRealname(), groupId, pmphs, (short) 1);
+						systemMessageService.sendWhenInviteJoinGroup(pmphUser.getRealname(), groupId, pmphs, (short) 1,pmphUser);
 					}
 				} catch (IOException e) {
 					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,

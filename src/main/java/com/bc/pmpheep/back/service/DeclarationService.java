@@ -8,6 +8,7 @@ import com.bc.pmpheep.back.bo.DeclarationEtcBO;
 import java.io.IOException;
 import java.util.List;
 
+import com.bc.pmpheep.back.po.PmphUser;
 import org.apache.ibatis.annotations.Param;
 
 import com.bc.pmpheep.back.plugin.PageResult;
@@ -149,7 +150,7 @@ public interface DeclarationService {
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
-	Declaration onlineProgress(Long id, Integer onlineProgress, String returnCause)
+	Declaration onlineProgress(Long id, Integer onlineProgress, String returnCause,PmphUser pmphUser)
 			throws CheckedServiceException, IOException;
 
 	/**
