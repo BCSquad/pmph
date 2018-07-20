@@ -33,4 +33,11 @@ public interface WxMessageDao {
      * @return
      */
     int queryMessageListCount(PageParameter<WxMessageVO> pageParameter);
+
+    /**
+     * 设为已读
+     * @param id
+     * @return
+     */
+    int haveRead(Long id);
 }

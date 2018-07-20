@@ -132,7 +132,7 @@ public class SendWXMessageUtil {
             case "3":href="<a class=\"wxmsg_a\" href=\"http://"+rootAdrr+"/sso/login?appType=1%s\">%s</a>";break; //教材审核  &UserId&materialId=&declarationId=
             case "4":href="<a class=\"wxmsg_a\" href=\"http://"+rootAdrr+"/sso/login?appType=2%s\">%s</a>";break; //选题申报  &UserId
             case "5":href="<a class=\"wxmsg_a\" href=\"http://"+rootAdrr+"/sso/login?appType=3%s\">%s</a>";break; //图书纠错 &UserId&bookName=&type=&id=
-            case "6":href="<a class=\"wxmsg_a\" href=\"http://"+appAdrr+"/wx%s\">%s</a>";break;
+            case "6":href="<a class=\"wxmsg_a\" vueHerf=\"http://"+appAdrr+"/wx%s\">%s</a>";break;
             default: href="%s";break;
         }
         return href;
