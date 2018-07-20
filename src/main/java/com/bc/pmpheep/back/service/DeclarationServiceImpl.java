@@ -1144,7 +1144,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			String textbookName = declarationOrDisplayVO.getTextbookName() + "第"
 					+ declarationOrDisplayVO.getTextbookRound() + "版";
 			DeclarationEtcBO declarationEtcBO = new DeclarationEtcBO(declarationOrDisplayVO.getRealname(),
-					declarationOrDisplayVO.getUsername(), sex, birthday, declarationOrDisplayVO.getExperience(),DateUtil.formatTimeStamp("yyyy-MM-dd",declarationOrDisplayVO.getCommitDate()),
+					declarationOrDisplayVO.getUsername(), sex, birthday, declarationOrDisplayVO.getExperience(),DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",declarationOrDisplayVO.getCommitDate()),
 					declarationOrDisplayVO.getOrgName(), declarationOrDisplayVO.getPosition(),
 					declarationOrDisplayVO.getTitle(), declarationOrDisplayVO.getAddress(),
 					declarationOrDisplayVO.getPostcode(), declarationOrDisplayVO.getTelephone(),

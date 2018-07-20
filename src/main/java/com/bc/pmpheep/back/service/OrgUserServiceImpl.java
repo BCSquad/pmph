@@ -439,7 +439,7 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService, A
 		// }
 		orgDao.addOrg(org);
 		if (StringUtil.isEmpty(orgUser.getRealname())) {
-			orgUser.setRealname(orgUser.getUsername());
+			orgUser.setRealname("");
 		}
 		orgUser.setAvatar(RouteUtil.DEFAULT_USER_AVATAR);// 默认机构用户头像路径
 		orgUser.setOrgId(orgDao.getOrgid(org.getOrgName()));

@@ -20,7 +20,7 @@
 			<if test="email != null and email != '' ">
 				email,
 			</if>
-			<if test="realname != null and realname !=''">
+			<if test="realname != null ">
 				realname,
 			</if>
 			<if test="sex != null and sex !=''">
@@ -95,7 +95,7 @@
 			<if test="email != null and email != ''">
 				#{email},
 			</if>
-			<if test="realname != null and realname !=''">
+			<if test="realname != null ">
 				#{realname},
 			</if>
 			<if test="sex != null and sex !=''">
