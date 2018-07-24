@@ -362,7 +362,7 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService, A
 		OrgUser orgUser = new OrgUser();
 		orgUser.setId(orgAndOrgUserVO.getId());
 		if (StringUtil.isEmpty(orgAndOrgUserVO.getRealname())) {
-			orgUser.setRealname(orgAndOrgUserVO.getUsername());
+			orgUser.setRealname("");//orgUser.setRealname(orgAndOrgUserVO.getUsername());
 		} else {
 			orgUser.setRealname(orgAndOrgUserVO.getRealname());
 		}
