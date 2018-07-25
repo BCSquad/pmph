@@ -123,7 +123,7 @@ public interface DeclarationService {
 	 */
 	public PageResult<DeclarationListVO> pageDeclaration(Integer pageNumber, Integer pageSize, Long materialId,
 			String textBookids, String realname, String position, String title, String orgName, Long orgId,
-			String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress, Boolean haveFile,Boolean isSelected,String tag,
+			String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress, Boolean haveFile,Boolean isSelected,String startCommitDate,String endCommitDate,String tag,
 														 HttpServletRequest request)
 			throws CheckedServiceException;
 

@@ -31,7 +31,7 @@ public final class DisableSSLCertificateCheckUtil {
 		try {
 			// String ip = InetAddress.getByName("http://120.76.221.250/").getHostAddress();
 			// InetAddress.getLocalHost().getHostAddress()
-			new URL("http://119.254.226.115/").getContent();
+			new URL("http://192.168.0.211/").getContent();
 		} catch (IOException e) {
 			LOGGER.error("错误信息：", e);
 		}
