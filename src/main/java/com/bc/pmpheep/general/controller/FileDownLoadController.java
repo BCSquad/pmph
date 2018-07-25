@@ -124,6 +124,9 @@ public class FileDownLoadController {
 	@Autowired
 	private WriterUserService writerUserService;
 
+	@Autowired
+	private ProductService productService;
+
 	/**
 	 * 普通文件下载
 	 * 
@@ -195,6 +198,9 @@ public class FileDownLoadController {
 			}
 			if (Const.MATERIAL_NOTE_TYPE.equals(type)) {// 教材备注
 				materialNoteAttachmentService.updateMaterialNoteAttachmentDownLoadCountsByAttachment(id);
+			}
+			if(Const.CLINICAL_DECISION.equals(type)){ //临床决断
+				productService.updateProductAttachmenDownLoadCountsByAttachment(id);
 			}
 		} catch (IOException ex) {
 			logger.error("文件下载时出现IO异常：{}", ex.getMessage());

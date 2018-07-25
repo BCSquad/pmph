@@ -86,4 +86,6 @@ public class CheckedExceptionBusiness {
 	public final static String WRITER_POINT_MANAGEMENT = "积分管理";
 
 	public final static String WECHAT_ARTICLE = "微信公众号文章同步";
+
+	public final static String CLINICAL_DECISION = "临床决策";
 }

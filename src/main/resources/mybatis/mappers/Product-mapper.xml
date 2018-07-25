@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.ProductDao">
+
+
+    <!--根据分类查出临床决策产品-->
+    <select id="queryProductByProductType" resultMap="resultMapProductVO">
+        select
+        p.*
+
+        ,pu.auditor_id as u_id
+        ,u.realname  as u_realname
+
+        ,pa.id as a_id
+        ,concat(#{uri},pa.attachment) as a_attachment
+        ,pa.attachment_name as a_attachment_name
+        ,pa.download as a_download
+        ,pa.is_scan_img as a_is_scan_img
+
+        ,pimg.id as pimg_id
+        ,concat(#{uri},pimg.attachment) as pimg_attachment
+        ,pimg.attachment_name as pimg_attachment_name
+        ,pimg.download as pimg_download
+        ,pimg.is_scan_img as pimg_is_scan_img
+
+        ,pe.id as pe_id
+        ,pe.extension_name as pe_extension_name
+        ,pe.is_required as pe_is_required
+
+        from
+        product p
+        left join product_auditor pu on pu.product_id = p.id left join pmph_user u on pu.auditor_id = u.id
+        left join product_attachment pa on pa.product_id = p.id and pa.is_scan_img = 0 and pa.is_deleted = 0
+        left join product_attachment pimg on pimg.product_id = p.id and pimg.is_scan_img = 1 and pimg.is_deleted = 0
+        left join product_extension pe on pe.product_id = p.id and pe.is_deleted =0
+
+        where p.product_type = #{product_type}
+    </select>
+
+    <resultMap id="resultMapProductVO" type="com.bc.pmpheep.back.vo.ProductVO">
+        <id column="id" property="id" ></id>
+        <result column="product_type" property="product_type"></result>
+        <result column="product_name" property="product_name"></result>
+        <result column="product_type" property="product_type"></result>
+        <result column="is_published" property="is_published"></result>
+        <result column="is_unit_advise_used" property="is_unit_advise_used"></result>
+        <result column="is_unit_advise_required" property="is_unit_advise_required"></result>
+        <result column="is_edu_exp_used" property="is_edu_exp_used"></result>
+        <result column="is_edu_exp_required" property="is_edu_exp_required"></result>
+        <result column="is_work_exp_used" property="is_work_exp_used"></result>
+        <result column="is_work_exp_required" property="is_work_exp_required"></result>
+        <result column="is_acade_used" property="is_acade_used"></result>
+        <result column="is_acade_required" property="is_acade_required"></result>
+        <result column="is_pmph_textbook_used" property="is_pmph_textbook_used"></result>
+        <result column="is_pmph_textbook_required" property="is_pmph_textbook_required"></result>
+        <result column="is_monograph_used" property="is_monograph_used"></result>
+        <result column="is_monograph_required" property="is_monograph_required"></result>
+        <result column="is_edit_book_used" property="is_edit_book_used"></result>
+        <result column="is_edit_book_required" property="is_edit_book_required"></result>
+        <result column="is_deleted" property="is_deleted"></result>
+        <result column="gmt_create" property="gmt_create"></result>
+        <result column="gmt_update" property="gmt_update"></result>
+        <result column="founder_id" property="founder_id"></result>
+        <result column="publisher_id" property="publisher_id"></result>
+        <result column="gmt_publish" property="gmt_publish"></result>
+        <result column="note" property="note"></result>
+        <result column="description" property="description"></result>
+        <collection property="auditorList" javaType="java.util.List" ofType="com.bc.pmpheep.back.po.PmphUser">
+            <id column="u_id" property="id"></id>
+            <result column="u_realname" property="realname"></result>
+        </collection>
+        <collection property="ProductExtensionList" javaType="java.util.List" ofType="com.bc.pmpheep.back.po.ProductExtension">
+            <id column="pe_id" property="id"></id>
+            <result column="id" property="productId"></result>
+            <result column="pe_extension_name" property="extensionName"></result>
+            <result column="pe_is_required" property="isRequired"></result>
+        </collection>
+        <collection property="ProductAttachmentList" javaType="java.util.List" ofType="com.bc.pmpheep.back.po.ProductAttachment">
+            <id column="a_id" property="id"></id>
+            <result column="id" property="product_id"></result>
+            <result column="a_attachment" property="attachment"></result>
+            <result column="a_attachment_name" property="attachment_name"></result>
+            <result column="a_download" property="download"></result>
+            <result column="a_is_scan_img" property="is_scan_img"></result>
+        </collection>
+        <collection property="ProducntImgList" javaType="java.util.List" ofType="com.bc.pmpheep.back.po.ProductAttachment">
+            <id column="pimg_id" property="id"></id>
+            <result column="pimg_attachment" property="attachment"></result>
+            <result column="pimg_attachment_name" property="attachment_name"></result>
+            <result column="pimg_download" property="download"></result>
+            <result column="pimg_is_scan_img" property="is_scan_img"></result>
+        </collection>
+    </resultMap>
+
+
+    <update id="updateProductAttachmenDownLoadCountsByAttachment" parameterType="String">
+        update product_attachment set download = download +1 where id = #{id}
+    </update>
+
+
+</mapper>

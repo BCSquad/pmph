@@ -181,11 +181,15 @@ public class Const {
 	// material 教材类型
 	public static final String MATERIAL_NOTICE_TYPE = "notice";
 	public static final String MATERIAL_NOTE_TYPE = "note";
+	// product 临床决断产品类型
+	public static final String CLINICAL_DECISION = "clinic";
 	// CMS 附件下载Controller方法
 	public static final String CMS_FILE_DOWNLOAD = "/pmpheep/file/cms/download/";
 	// material教材通知附件下载Controller方法
 	public static final String MATERIAL_NOTICE_FILE_DOWNLOAD = "/pmpheep/file/notice/download/";
 	public static final String MATERIAL_NOTE_FILE_DOWNLOAD = "/pmpheep/file/note/download/";
+	// product 临床决断产品 附件下载Controller方法
+	public static final String CLINICAL_DECISION_FILE_DOWNLOAD = "/pmpheep/file/clinic/download/";
 	// 作者类型--系统
 	public static final Short CMS_AUTHOR_TYPE_0 = 0;
 	// 作者类型--编辑
