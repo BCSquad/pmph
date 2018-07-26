@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.service;
 
 import com.bc.pmpheep.back.po.Product;
 import com.bc.pmpheep.back.vo.ProductVO;
+import com.bc.pmpheep.controller.bean.ResponseBean;
 
 public interface ProductService {
 
@@ -21,4 +22,12 @@ public interface ProductService {
      * @return
      */
     int updateProductAttachmenDownLoadCountsByAttachment(String id);
+
+
+    /**
+     * 插入或者更新临床决策产品及其从属表
+     * @param productVO
+     * @return
+     */
+    ResponseBean saveProductVO(ProductVO productVO,String sessionId);
 }

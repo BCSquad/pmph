@@ -9,7 +9,8 @@
         select
         p.*
 
-        ,pu.auditor_id as u_id
+        ,pu.id as u_id
+        ,pu.auditor_id as u_uid
         ,u.realname  as u_realname
 
         ,pa.id as a_id
@@ -66,9 +67,11 @@
         <result column="gmt_publish" property="gmt_publish"></result>
         <result column="note" property="note"></result>
         <result column="description" property="description"></result>
-        <collection property="auditorList" javaType="java.util.List" ofType="com.bc.pmpheep.back.po.PmphUser">
+        <collection property="auditorList" javaType="java.util.List" ofType="com.bc.pmpheep.back.po.ProductAuditor">
             <id column="u_id" property="id"></id>
-            <result column="u_realname" property="realname"></result>
+            <result column="u_uid" property="auditor_id"></result>
+            <result column="id" property="product_id"></result>
+            <result column="u_realname" property="auditor_name"></result>
         </collection>
         <collection property="ProductExtensionList" javaType="java.util.List" ofType="com.bc.pmpheep.back.po.ProductExtension">
             <id column="pe_id" property="id"></id>
@@ -86,6 +89,7 @@
         </collection>
         <collection property="ProducntImgList" javaType="java.util.List" ofType="com.bc.pmpheep.back.po.ProductAttachment">
             <id column="pimg_id" property="id"></id>
+            <result column="id" property="product_id"></result>
             <result column="pimg_attachment" property="attachment"></result>
             <result column="pimg_attachment_name" property="attachment_name"></result>
             <result column="pimg_download" property="download"></result>
@@ -98,5 +102,165 @@
         update product_attachment set download = download +1 where id = #{id}
     </update>
 
+    <!--新增或修改主表
+     * insert on duplicate key update 主表product 其中 unique键除主键外 还有product_type
+     * keyProperty设为id 若插入 则将生成的id传回到productVO的id中 便于附表关联之-->
+    <insert id="saveProduct" useGeneratedKeys="true" keyProperty="id" parameterType="com.bc.pmpheep.back.vo.ProductVO">
+        insert into product
+        (
+            product_name	,
+            product_type	,
+            is_published	,
+            is_unit_advise_used	,
+            is_unit_advise_required	,
+            is_edu_exp_used	,
+            is_edu_exp_required	,
+            is_work_exp_used	,
+            is_work_exp_required	,
+            is_acade_used	,
+            is_acade_required	,
+            is_pmph_textbook_used	,
+            is_pmph_textbook_required	,
+            is_monograph_used	,
+            is_monograph_required	,
+            is_edit_book_used	,
+            is_edit_book_required	,
+            is_deleted	,
+            /*gmt_create	,*/
+            /*gmt_update	,*/
+            founder_id	,
+            publisher_id	,
+            gmt_publish	,
+            note
+        )
+        values(
+            #{product_name}	,
+            #{product_type}	,
+            #{is_published}	,
+            #{is_unit_advise_used}	,
+            #{is_unit_advise_required}	,
+            #{is_edu_exp_used}	,
+            #{is_edu_exp_required}	,
+            #{is_work_exp_used}	,
+            #{is_work_exp_required}	,
+            #{is_acade_used}	,
+            #{is_acade_required}	,
+            #{is_pmph_textbook_used}	,
+            #{is_pmph_textbook_required}	,
+            #{is_monograph_used}	,
+            #{is_monograph_required}	,
+            #{is_edit_book_used}	,
+            #{is_edit_book_required}	,
+            #{is_deleted}	,
+            /*#{gmt_create}	,*/
+            /*#{gmt_update}	,*/
+            #{founder_id}	,
+            #{publisher_id}	,
+            #{gmt_publish}	,
+            #{note}
+
+        )
+        on Duplicate key update
+            product_name	=	#{product_name}	,
+            product_type	=	#{product_type}	,
+            is_published	=	#{is_published}	,
+            is_unit_advise_used	=	#{is_unit_advise_used}	,
+            is_unit_advise_required	=	#{is_unit_advise_required}	,
+            is_edu_exp_used	=	#{is_edu_exp_used}	,
+            is_edu_exp_required	=	#{is_edu_exp_required}	,
+            is_work_exp_used	=	#{is_work_exp_used}	,
+            is_work_exp_required	=	#{is_work_exp_required}	,
+            is_acade_used	=	#{is_acade_used}	,
+            is_acade_required	=	#{is_acade_required}	,
+            is_pmph_textbook_used	=	#{is_pmph_textbook_used}	,
+            is_pmph_textbook_required	=	#{is_pmph_textbook_required}	,
+            is_monograph_used	=	#{is_monograph_used}	,
+            is_monograph_required	=	#{is_monograph_required}	,
+            is_edit_book_used	=	#{is_edit_book_used}	,
+            is_edit_book_required	=	#{is_edit_book_required}	,
+            is_deleted	=	#{is_deleted}	,
+            /*gmt_create	=	#{gmt_create}	,
+            gmt_update	=	#{gmt_update}	,*/
+            founder_id	=	#{founder_id}	,
+            publisher_id	=	#{publisher_id}	,
+            gmt_publish	=	#{gmt_publish}	,
+            note	=	#{note}
+    </insert>
+
+    <!--逻辑删除-->
+    <update id="deleteProductExtension" parameterType="Long" >
+        update product_extension set is_deleted = 1 where product_id = #{product_id};
+    </update>
+
+    <!--为了保留历史申报里的关联扩展项填写内容
+     * 扩展项要伪删除，先按产品分类全部伪删除，再将传入id的insert on duplicate key update-->
+    <update id="saveProductExtension" parameterType="java.util.List">
+        insert into product_extension
+        (
+            id,
+            product_id	,
+            extension_name	,
+            is_required	,
+            is_deleted
+        )
+        VALUES 
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{ item.id }, /*新增的扩展项，此处为null，主键会自增填充，修改的则会主键冲突，触发修改*/
+            #{	item.product_id	}	,
+            #{	item.extension_name	}	,
+            #{	item.is_required	}	,
+            0
+        </foreach>
+        on duplicate key UPDATE
+            product_id	=	values(	product_id	)	,
+            extension_name	=	values(	extension_name	)	,
+            is_required	=	values(	is_required	)	,
+            is_deleted	=	values(	is_deleted	);
+    </update>
+
+    <delete id="deleteProductAuditorsByProductId" parameterType="Long">
+        delete from product_auditor where product_id = #{product_id}
+    </delete>
+
+    <!--插入审核人 ，若主键冲突（已有的）什么也不做-->
+    <insert id="saveProductAuditors" parameterType="java.util.List">
+        insert into product_auditor (id,product_id,auditor_id)
+        VALUES
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item.id} , #{product_id} , #{auditor_id}
+        </foreach>
+        on duplicate key UPDATE product_id = product_id /*VALUES(product_id) ,auditor_id=VALUES (auditor_id)*/
+    </insert>
+
+    <!--删除附件-->
+    <delete id="deleteProductAttachmentByProductId" parameterType="java.lang.Long">
+        delete from product_attachment where product_id = #{product_id}
+    </delete>
+
+    <!--插入附件 ，若主键冲突（已有的）什么也不做-->
+    <insert id="saveProductAttachments" parameterType="java.util.List">
+        insert into product_attachment
+        (
+            id	,
+            product_id	,
+            attachment	,
+            attachment_name	,
+            download	,
+            is_deleted	,
+            is_scan_img
+        )
+        VALUES
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{	id	}	,
+            #{	product_id	}	,
+            #{	attachment	}	,
+            #{	attachment_name	}	,
+            #{	download	}	,
+            #{	is_deleted	}	,
+            #{	is_scan_img	}
+        </foreach>
+        on duplicate key UPDATE product_id = product_id
+
+    </insert>
 
 </mapper>

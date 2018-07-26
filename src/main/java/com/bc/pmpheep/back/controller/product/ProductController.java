@@ -13,11 +13,13 @@ import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.PathParam;
 
 @Controller
 @RequestMapping(value = "/product")
@@ -46,13 +48,23 @@ public class ProductController {
         return responseBean;
     }
 
-    @RequestMapping("/save")
-    @ResponseBody
-    public ResponseBean save(HttpServletRequest request,ProductVO productVO){
-        ResponseBean responseBean = new ResponseBean();
-        
 
+    /**
+     * 保存/发布
+     * @param request
+     * @param productVO
+     * @param publish 仅当此处为 “noPub” ，才是暂存，其他或不填都是发布
+     * @return
+     */
+    @RequestMapping("/save/{publish}")
+    @ResponseBody
+    public ResponseBean save(HttpServletRequest request, ProductVO productVO, @PathVariable("publish")String publish){
+        Boolean is_publish=!"noPub".equals(publish);
+        productVO.setIs_published(is_publish);
+        String sessionId = CookiesUtil.getSessionId(request);
+        ResponseBean responseBean = productService.saveProductVO(productVO,sessionId);
         return responseBean;
     }
+
 
 }
