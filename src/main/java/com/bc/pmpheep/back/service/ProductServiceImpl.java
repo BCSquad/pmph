@@ -133,13 +133,14 @@ public class ProductServiceImpl implements ProductService {
                 e.printStackTrace();
             }
             if (fieldValue == null &&
-                    !("publisher_id".equals(name)     //不需要非空校验的属性
-                            ||"id".equals(name)
-                            ||"gmt_update".equals(name)
-                            ||"gmt_publish".equals(name)
-                            ||"ProductExtensionList".equals(name)
-                            ||"ProductAttachmentList".equals(name)
-                            ||"ProducntImgList".equals(name)
+                    !(
+                        "publisher_id".equals(name)     //不需要非空校验的属性
+                        ||"id".equals(name)
+                        ||"gmt_update".equals(name)
+                        ||"gmt_publish".equals(name)
+                        ||"ProductExtensionList".equals(name)
+                        ||"ProductAttachmentList".equals(name)
+                        ||"ProducntImgList".equals(name)
                     )){
                 throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.NULL_PARAM,
                         name+"为空");
