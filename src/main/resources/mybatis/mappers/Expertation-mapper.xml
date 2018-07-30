@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bc.pmpheep.back.dao.ExpertationDao">
+
+    <resultMap id="expertationListMap" type="com.bc.pmpheep.back.vo.ExpertationVO">
+        <id property="id" column="e_id"></id>
+        <result property="product_name" column="product_name"></result>
+        <result property="realname" column="realname"></result>
+        <result property="username" column="username"></result>
+        <result property="org_name" column="org_name"></result>
+        <result property="position" column="position"></result>
+        <result property="title" column="title"></result>
+        <result property="email" column="email"></result>
+        <result property="handphone" column="handphone"></result>
+        <collection property="productSubjectTypeList" javaType="list" ofType="com.bc.pmpheep.back.vo.ProductType">
+            <id property="id" column="pst_id"></id>
+            <result property="type_name" column="type_name"></result>
+        </collection>
+        <collection property="productContentTypeList" javaType="list" ofType="com.bc.pmpheep.back.vo.ProductType">
+            <id property="id" column="product_type_id"></id>
+            <result property="type_name" column="name_path"></result>
+        </collection>
+
+    </resultMap>
+
+
+
+    <select id="queryExpertation" parameterType="com.bc.pmpheep.back.plugin.PageParameter" resultMap="expertationListMap">
+        select
+        p.product_name
+        ,e.id as e_id
+        ,e.realname
+        ,u.username
+        ,e.org_name
+        ,e.position
+        ,e.title
+        ,e.email
+        ,e.handphone
+        ,pst.id as pst_id
+        ,pst.type_name
+        ,pct.product_type_id
+        ,pct.name_path
+        from
+        product p
+        inner join expertation e on e.product_id = p.id
+        <if test="parameter.auditor_id != null and parameter.auditor_id != '' ">
+            inner join product_auditor pa on pa.product_id = p.id and pa.auditor_id = #{parameter.auditor_id}
+        </if>
+        left join pmph_user u on u.id = e.user_id
+        left join expertation_subject_type est on est.expertation_id = e.id left join product_subject_type pst on pst.id = est.product_subject_type_id
+        left join expertation_content_type ect on ect.expertation_id = e.id left join product_content_type_detail pct on pct.product_type_id = ect.product_content_type_id
+        where p.product_type = #{parameter.expert_type}
+        <if test="parameter.username != null and parameter.username != '' ">
+            and u.username like concat('%',#{parameter.username},'%')
+        </if>
+        <if test="parameter.realname != null and parameter.realname != '' ">
+            and e.realname like concat('%',#{parameter.realname},'%')
+        </if>
+        -- GROUP  by e.id
+        limit ${start} ,${pageSize}
+    </select>
+
+    <select id="queryExpertationCount" parameterType="com.bc.pmpheep.back.plugin.PageParameter" resultType="int">
+        select count(e.id)
+        from
+        product p
+        inner join expertation e on e.product_id = p.id
+        left join pmph_user u on u.id = e.user_id
+        <if test="parameter.auditor_id != null and parameter.auditor_id != '' ">
+            inner join product_auditor pa on pa.product_id = p.id and pa.auditor_id = #{parameter.auditor_id}
+        </if>
+        where p.product_type = #{parameter.expert_type}
+        <if test="parameter.username != null and parameter.username != '' ">
+            and u.username like concat('%',#{parameter.username},'%')
+        </if>
+        <if test="parameter.realname != null and parameter.realname != '' ">
+            and e.realname like concat('%',#{parameter.realname},'%')
+        </if>
+    </select>
+
+
+</mapper>
