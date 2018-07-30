@@ -4,6 +4,7 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.vo.ExpertationVO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ExpertationDao {
 
@@ -21,4 +22,31 @@ public interface ExpertationDao {
      */
     List<ExpertationVO> queryExpertation(PageParameter<ExpertationVO> pageParameter);
 
+    /**
+     * 按内容分类统计 列表
+     * @param pageParameter
+     * @return
+     */
+    List<Map<String,Object>> getCountListGroupByContentType(PageParameter<Map<String, Object>> pageParameter);
+
+    /**
+     * 按内容分类统计 列表总数
+     * @param pageParameter
+     * @return
+     */
+    int getCountListGroupByContentTypeCount(PageParameter<Map<String, Object>> pageParameter);
+
+    /**
+     * 按学科分类统计 列表总数
+     * @param pageParameter
+     * @return
+     */
+    int getCountListGroupBySubjectTypeCount(PageParameter<Map<String, Object>> pageParameter);
+
+    /**
+     * 按学科分类统计 列表
+     * @param pageParameter
+     * @return
+     */
+    List<Map<String,Object>> getCountListGroupBySubjectType(PageParameter<Map<String, Object>> pageParameter);
 }

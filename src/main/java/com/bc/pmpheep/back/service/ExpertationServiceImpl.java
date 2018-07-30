@@ -8,6 +8,7 @@ import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.vo.ExpertationVO;
+import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ExpertationServiceImpl implements ExpertationService{
@@ -74,6 +76,41 @@ public class ExpertationServiceImpl implements ExpertationService{
             list = expertationDao.queryExpertation(pageParameter);
         }
 
+        pageResult.setTotal(totalCount);
+        pageResult.setRows(list);
+
+        return pageResult;
+    }
+
+    /**
+     * 查询 临床决策申报-结果统计
+     * @param pageParameter
+     * @param sessionId
+     * @return
+     */
+    @Override
+    public PageResult getCountListGroupByType(PageParameter<Map<String, Object>> pageParameter, String sessionId) {
+
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+        if (ObjectUtil.isNull(pmphUser)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.NULL_PARAM,
+                    "用户为空");
+        }
+
+        int ttype = (int)pageParameter.getParameter().get("ttype");
+        List<Map<String,Object>> list = new ArrayList<>();
+        int totalCount = 0;
+        if(ttype == 2){ //2.内容分类
+            totalCount = expertationDao.getCountListGroupByContentTypeCount(pageParameter);
+            list = expertationDao.getCountListGroupByContentType(pageParameter);
+        }else{ //1.学科分类
+            totalCount = expertationDao.getCountListGroupBySubjectTypeCount(pageParameter);
+            list = expertationDao.getCountListGroupBySubjectType(pageParameter);
+        }
+
+
+
+        PageResult pageResult = new PageResult();
         pageResult.setTotal(totalCount);
         pageResult.setRows(list);
 

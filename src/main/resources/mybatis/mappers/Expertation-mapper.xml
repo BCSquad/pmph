@@ -20,7 +20,6 @@
             <id property="id" column="product_type_id"></id>
             <result property="type_name" column="name_path"></result>
         </collection>
-
     </resultMap>
 
 
@@ -76,6 +75,120 @@
         <if test="parameter.realname != null and parameter.realname != '' ">
             and e.realname like concat('%',#{parameter.realname},'%')
         </if>
+    </select>
+
+    <!--按内容分类统计 列表-->
+    <select id="getCountListGroupByContentType" parameterType="com.bc.pmpheep.back.plugin.PageParameter" resultType="java.util.Map">
+        select
+            count(t1.eid) as count_submit,
+            sum(t1.online_progress=3) as count_success,
+            t1.type_name
+        from
+        (
+            select
+                e.id as eid,
+                e.online_progress,
+                ifNull(t.id,0) as tid,
+                ifNull(t.name_path,'未选择分类') as type_name
+
+            from (select * from expertation e where e.product_id = #{parameter.ptype} and e.online_progress >0) e
+            left join expertation_content_type et on et.expertation_id = e.id
+            left join product_content_type_detail t on t.product_type_id = et.product_content_type_id
+
+            <where>
+                <if test="parameter.type_name != null and parameter.type_name != '' ">
+                    and t.name_path like concat('%',#{parameter.type_name},'%')
+                </if>
+            </where>
+
+        )t1
+
+        group by t1.tid
+
+        limit 0,10
+    </select>
+
+    <!--按内容分类统计 列表总数-->
+    <select id="getCountListGroupByContentTypeCount" parameterType="com.bc.pmpheep.back.plugin.PageParameter" resultType="int">
+        select count(t2.tid)
+        from(
+            select
+                t1.tid
+            from
+            (
+                select
+                    ifNull(t.id,0) as tid
+                from (select * from expertation e where e.product_id = #{parameter.ptype} and e.online_progress >0) e
+                left join expertation_content_type et on et.expertation_id = e.id
+                left join product_content_type_detail t on t.product_type_id = et.product_content_type_id
+
+                <where>
+                    <if test="parameter.type_name != null and parameter.type_name != '' ">
+                        and t.name_path like concat('%',#{parameter.type_name},'%')
+                    </if>
+                </where>
+
+        )t1
+
+            group by t1.tid
+        )t2
+    </select>
+
+    <!--按学科分类统计 列表-->
+    <select id="getCountListGroupBySubjectType" parameterType="com.bc.pmpheep.back.plugin.PageParameter" resultType="java.util.Map">
+        select
+            count(t1.eid) as count_submit,
+            sum(t1.online_progress=3) as count_success,
+            t1.type_name
+        from
+        (
+            select
+                e.id as eid,
+                e.online_progress,
+                ifNull(t.id,0) as tid,
+                ifNull(t.type_name,'未选择分类') as type_name
+
+            from (select * from expertation e where e.product_id = #{parameter.ptype} and e.online_progress >0) e
+            left join expertation_subject_type et on et.expertation_id = e.id
+            left join product_subject_type t on t.id = et.product_subject_type_id
+
+            <where>
+                <if test="parameter.type_name != null and parameter.type_name != '' ">
+                    and t.type_name like concat('%',#{parameter.type_name},'%')
+                </if>
+            </where>
+
+        )t1
+
+        group by t1.tid
+
+        limit 0,10
+    </select>
+
+    <!--按学科分类统计 列表总数-->
+    <select id="getCountListGroupBySubjectTypeCount"  parameterType="com.bc.pmpheep.back.plugin.PageParameter" resultType="int">
+        SELECT count(t2.tid)
+        FROM (
+          select
+                t1.tid
+            from
+            (
+                select
+                    ifNull(t.id,0) as tid
+                from (select * from expertation e where e.product_id = #{parameter.ptype} and e.online_progress >0) e
+                left join expertation_subject_type et on et.expertation_id = e.id
+                left join product_subject_type t on t.id = et.product_subject_type_id
+
+                <where>
+                    <if test="parameter.type_name != null and parameter.type_name != '' ">
+                        and t.type_name like concat('%',#{parameter.type_name},'%')
+                    </if>
+                </where>
+
+            )t1
+
+            group by t1.tid
+        )t2
     </select>
 
 
