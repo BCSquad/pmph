@@ -10,6 +10,8 @@ import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.vo.ProductVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
+import com.bc.pmpheep.general.po.Content;
+import com.bc.pmpheep.general.service.ContentService;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -34,6 +36,9 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     FileService fileService;
 
+    @Autowired
+    ContentService contentService;
+
     @Override
     public ProductVO getProductByType(Long product_type, String sessionId) {
 
@@ -48,6 +53,12 @@ public class ProductServiceImpl implements ProductService {
             productVO = new ProductVO(product_type);
             productVO.setProduct_type(product_type);
         }
+
+        Content noteContent = contentService.get(productVO.getNote());
+        Content descriptionContent = contentService.get(productVO.getDescription());
+
+        productVO.setNoteContent(noteContent);
+        productVO.setDescriptionContent(descriptionContent);
 
         return productVO;
     }
@@ -154,5 +165,13 @@ public class ProductServiceImpl implements ProductService {
             }
             productVO.setGmt_publish(new Timestamp(new Date().getTime())); //设定发布时间
         }
+
+        Content noteContent = contentService.add(productVO.getNoteContent());
+        Content descriptionContent = contentService.add(productVO.getDescriptionContent());
+        productVO.setNoteContent(noteContent);
+        productVO.setDescriptionContent(descriptionContent);
+        productVO.setNote(noteContent.getId());
+        productVO.setDescription(descriptionContent.getId());
+
     }
 }

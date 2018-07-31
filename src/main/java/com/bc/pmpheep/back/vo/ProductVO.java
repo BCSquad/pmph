@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.vo;
 import com.bc.pmpheep.back.po.ProductAuditor;
 import com.bc.pmpheep.back.po.ProductAttachment;
 import com.bc.pmpheep.back.po.ProductExtension;
+import com.bc.pmpheep.general.po.Content;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -42,6 +43,11 @@ public class ProductVO {
     private String note	;//备注
     private String description ;//产品简介
 
+
+    private Content noteContent ; // 备注mongo内容实体类
+    private Content descriptionContent ; // 产品简介mongo内容实体类
+    private String publisher; // 发布人姓名
+    private String founder; // 创建人姓名
     private List<ProductAuditor> auditorList; //审核人列表
     private List<ProductExtension> ProductExtensionList; //扩展项列表
     private List<ProductAttachment> ProductAttachmentList; //附件列表
@@ -307,5 +313,37 @@ public class ProductVO {
 
     public void setProducntImgList(List<ProductAttachment> producntImgList) {
         ProducntImgList = producntImgList;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
+
+    public String getFounder() {
+        return founder;
+    }
+
+    public void setFounder(String founder) {
+        this.founder = founder;
+    }
+
+    public Content getNoteContent() {
+        return noteContent;
+    }
+
+    public void setNoteContent(Content noteContent) {
+        this.noteContent = noteContent;
+    }
+
+    public Content getDescriptionContent() {
+        return descriptionContent;
+    }
+
+    public void setDescriptionContent(Content descriptionContent) {
+        this.descriptionContent = descriptionContent;
     }
 }

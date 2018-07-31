@@ -8,6 +8,8 @@
     <select id="queryProductByProductType" resultMap="resultMapProductVO">
         select
         p.*
+        ,pp.realname as publisher
+        ,fu.realname as founder
 
         ,pu.id as u_id
         ,pu.auditor_id as u_uid
@@ -31,6 +33,8 @@
 
         from
         product p
+        left join pmph_user pp on pp.id = p.publisher_id
+        left join pmph_user fu on fu.id = p.founder_id
         left join product_auditor pu on pu.product_id = p.id left join pmph_user u on pu.auditor_id = u.id
         left join product_attachment pa on pa.product_id = p.id and pa.is_scan_img = 0 and pa.is_deleted = 0
         left join product_attachment pimg on pimg.product_id = p.id and pimg.is_scan_img = 1 and pimg.is_deleted = 0
@@ -67,6 +71,8 @@
         <result column="gmt_publish" property="gmt_publish"></result>
         <result column="note" property="note"></result>
         <result column="description" property="description"></result>
+        <result column="publisher" property="publisher"></result>
+        <result column="founder" property="founder"></result>
         <collection property="auditorList" javaType="java.util.List" ofType="com.bc.pmpheep.back.po.ProductAuditor">
             <id column="u_id" property="id"></id>
             <result column="u_uid" property="auditor_id"></result>
