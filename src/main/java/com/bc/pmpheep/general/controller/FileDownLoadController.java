@@ -401,6 +401,12 @@ public class FileDownLoadController {
 		}
 	}
 
+	/**
+	 * 导出临床决策-申报列表
+	 * @param request
+	 * @param response
+	 * @param expertationVO 可接受两个模糊查询条件 username realname
+	 */
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出临床决策-申报列表")
 	@RequestMapping(value = "/expertation/exportExpertation", method = RequestMethod.GET)
 	public void exportExpertation(HttpServletRequest request, HttpServletResponse response,ExpertationVO expertationVO) {
@@ -438,11 +444,18 @@ public class FileDownLoadController {
 		}
 	}
 
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 * @param ptype  产品分类 必须 （1=临床/2=用药/3=中医）
+	 * @param type_name  （学科/内容）分类 名称模糊查询
+	 */
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出临床决策-申报结果统计列表")
 	@RequestMapping(value = "/expertation/exportExpertationCount", method = RequestMethod.GET)
 	public void exportExpertationCount(HttpServletRequest request, HttpServletResponse response,
 									   //int ttype,
-									   int ptype,
+									   @RequestParam(value = "ptype" ,required = true) int ptype,
 									   @RequestParam(value = "type_name",required = false)String type_name) {
 		Map<String,Object> paraMap = new HashMap<>();
 
