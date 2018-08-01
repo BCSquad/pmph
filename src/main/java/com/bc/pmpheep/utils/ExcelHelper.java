@@ -50,6 +50,7 @@ import java.util.*;
 
 import org.apache.poi.hssf.usermodel.HSSFFormulaEvaluator;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.hssf.util.HSSFColor.HSSFColorPredefined;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
@@ -557,7 +558,7 @@ public class ExcelHelper {
 
 			Sheet sheet = workbook.createSheet(key);
 			sheet = generateHeader(sheet, dataSource.get(0).getClass()); // 生成表头
-			headerStyleSetup(workbook, 1); // 设置表头样式
+			headerStyleSetup(workbook, sheet, 1);// 设置表头样式
 			Field[] fields = dataSource.get(0).getClass().getDeclaredFields();
 
 			/* 设置行计数器 */
@@ -620,6 +621,30 @@ public class ExcelHelper {
 		}
 
 		return workbook;
+	}
+
+	/**
+	 * 设置表头样式
+	 * @param workbook
+	 * @param sheet
+	 * @param headerRowsNumber
+	 */
+	private void headerStyleSetup(Workbook workbook, Sheet sheet, int headerRowsNumber) {
+		CellStyle style = generateStyle(workbook, true, true, false);
+		Font font = workbook.createFont();
+		font.setBold(true);
+		font.setFontName("微软雅黑");
+		style.setFont(font);
+		style.setFillBackgroundColor(HSSFColorPredefined.GREY_25_PERCENT.getIndex());
+		for (int i = 0; i < headerRowsNumber; i++) {
+            Iterator<Cell> it = sheet.getRow(i).cellIterator();
+            while (it.hasNext()) {
+                Cell cell = it.next();
+                cell.setCellStyle(style);
+            }
+        }
+		logger.info("最后一个单元格排序：{}", sheet.getRow(headerRowsNumber - 1).getLastCellNum());
+		sheet.createFreezePane(0, headerRowsNumber);
 	}
 
 	private void dataStyleSetUp(Sheet sheet, int rowCount, ColumnProperties columnProperties, CellStyle style) {

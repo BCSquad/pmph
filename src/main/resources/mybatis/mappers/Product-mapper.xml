@@ -108,89 +108,237 @@
         update product_attachment set download = download +1 where id = #{id}
     </update>
 
+    <sql id="key">
+        <!-- 去掉最后一个, -->
+        <trim suffixOverrides=",">
+            <if test="product_name!=null">
+                product_name,
+            </if>
+            <if test="product_type!=null">
+                product_type,
+            </if>
+            <if test="is_published!=null">
+                is_published,
+            </if>
+            <if test="is_unit_advise_used!=null">
+                is_unit_advise_used,
+            </if>
+            <if test="is_unit_advise_required!=null">
+                is_unit_advise_required,
+            </if>
+            <if test="is_edu_exp_used!=null">
+                is_edu_exp_used,
+            </if>
+            <if test="is_edu_exp_required!=null">
+                is_edu_exp_required,
+            </if>
+            <if test="is_work_exp_used!=null">
+                is_work_exp_used,
+            </if>
+            <if test="is_work_exp_required!=null">
+                is_work_exp_required,
+            </if>
+            <if test="is_acade_used!=null">
+                is_acade_used,
+            </if>
+            <if test="is_acade_required!=null">
+                is_acade_required,
+            </if>
+            <if test="is_pmph_textbook_used!=null">
+                is_pmph_textbook_used,
+            </if>
+            <if test="is_pmph_textbook_required!=null">
+                is_pmph_textbook_required,
+            </if>
+            <if test="is_monograph_used!=null">
+                is_monograph_used,
+            </if>
+            <if test="is_monograph_required!=null">
+                is_monograph_required,
+            </if>
+            <if test="is_edit_book_used!=null">
+                is_edit_book_used,
+            </if>
+            <if test="is_edit_book_required!=null">
+                is_edit_book_required,
+            </if>
+            <if test="is_deleted!=null">
+                is_deleted,
+            </if>
+            <if test="founder_id!=null">
+                founder_id,
+            </if>
+            <if test="publisher_id!=null">
+                publisher_id,
+            </if>
+            <if test="gmt_publish!=null">
+                gmt_publish,
+            </if>
+            <if test="note!=null">
+                note,
+            </if>
+        </trim>
+    </sql>
+
+    <!-- sql片段对应?,id属性值任意 -->
+    <sql id="value">
+    <!-- 去掉最后一个, -->
+        <trim suffixOverrides=",">
+            <if test="product_name!=null">
+                #{product_name},
+            </if>
+            <if test="product_type!=null">
+                #{product_type},
+            </if>
+            <if test="is_published!=null">
+                #{is_published},
+            </if>
+            <if test="is_unit_advise_used!=null">
+                #{is_unit_advise_used},
+            </if>
+            <if test="is_unit_advise_required!=null">
+                #{is_unit_advise_required},
+            </if>
+            <if test="is_edu_exp_used!=null">
+                #{is_edu_exp_used},
+            </if>
+            <if test="is_edu_exp_required!=null">
+                #{is_edu_exp_required},
+            </if>
+            <if test="is_work_exp_used!=null">
+                #{is_work_exp_used},
+            </if>
+            <if test="is_work_exp_required!=null">
+                #{is_work_exp_required},
+            </if>
+            <if test="is_acade_used!=null">
+                #{is_acade_used},
+            </if>
+            <if test="is_acade_required!=null">
+                #{is_acade_required},
+            </if>
+            <if test="is_pmph_textbook_used!=null">
+                #{is_pmph_textbook_used},
+            </if>
+            <if test="is_pmph_textbook_required!=null">
+                #{is_pmph_textbook_required},
+            </if>
+            <if test="is_monograph_used!=null">
+                #{is_monograph_used},
+            </if>
+            <if test="is_monograph_required!=null">
+                #{is_monograph_required},
+            </if>
+            <if test="is_edit_book_used!=null">
+                #{is_edit_book_used},
+            </if>
+            <if test="is_edit_book_required!=null">
+                #{is_edit_book_required},
+            </if>
+            <if test="is_deleted!=null">
+                #{is_deleted},
+            </if>
+            <if test="founder_id!=null">
+                #{founder_id},
+            </if>
+            <if test="publisher_id!=null">
+                #{publisher_id},
+            </if>
+            <if test="gmt_publish!=null">
+                #{gmt_publish},
+            </if>
+            <if test="note!=null">
+                #{note},
+            </if>
+        </trim>
+    </sql>
+
+    <sql id="update">
+        <trim suffixOverrides=",">
+            <if test="product_name != null ">
+                product_name	=	#{product_name}	,
+            </if>
+            <if test="product_type != null ">
+                product_type	=	#{product_type}	,
+            </if>
+            <if test="is_published != null ">
+                is_published	=	#{is_published}	,
+            </if>
+            <if test="is_unit_advise_used != null ">
+                is_unit_advise_used	=	#{is_unit_advise_used}	,
+            </if>
+            <if test="is_unit_advise_required != null ">
+                is_unit_advise_required	=	#{is_unit_advise_required}	,
+            </if>
+            <if test="is_edu_exp_used != null ">
+                is_edu_exp_used	=	#{is_edu_exp_used}	,
+            </if>
+            <if test="is_edu_exp_required != null ">
+                is_edu_exp_required	=	#{is_edu_exp_required}	,
+            </if>
+            <if test="is_work_exp_used != null ">
+                is_work_exp_used	=	#{is_work_exp_used}	,
+            </if>
+            <if test="is_work_exp_required != null ">
+                is_work_exp_required	=	#{is_work_exp_required}	,
+            </if>
+            <if test="is_acade_used != null ">
+                is_acade_used	=	#{is_acade_used}	,
+            </if>
+            <if test="is_acade_required != null ">
+                is_acade_required	=	#{is_acade_required}	,
+            </if>
+            <if test="is_pmph_textbook_used != null ">
+                is_pmph_textbook_used	=	#{is_pmph_textbook_used}	,
+            </if>
+            <if test="is_pmph_textbook_required != null ">
+                is_pmph_textbook_required	=	#{is_pmph_textbook_required}	,
+            </if>
+            <if test="is_monograph_used != null ">
+                is_monograph_used	=	#{is_monograph_used}	,
+            </if>
+            <if test="is_monograph_required != null ">
+                is_monograph_required	=	#{is_monograph_required}	,
+            </if>
+            <if test="is_edit_book_used != null ">
+                is_edit_book_used	=	#{is_edit_book_used}	,
+            </if>
+            <if test="is_edit_book_required != null ">
+                is_edit_book_required	=	#{is_edit_book_required}	,
+            </if>
+            <if test="is_deleted != null ">
+                is_deleted	=	#{is_deleted}	,
+            </if>
+            <if test="founder_id != null ">
+                founder_id	=	#{founder_id}	,
+            </if>
+            <if test="publisher_id != null ">
+                publisher_id	=	#{publisher_id}	,
+            </if>
+            <if test="gmt_publish != null ">
+                gmt_publish	=	#{gmt_publish}	,
+            </if>
+            <if test="note != null ">
+                note	=	#{note}	,
+            </if>
+        </trim>
+    </sql>
+
+
     <!--新增或修改主表
      * insert on duplicate key update 主表product 其中 unique键除主键外 还有product_type
      * keyProperty设为id 若插入 则将生成的id传回到productVO的id中 便于附表关联之-->
     <insert id="saveProduct" useGeneratedKeys="true" keyProperty="id" parameterType="com.bc.pmpheep.back.vo.ProductVO">
         insert into product
         (
-            product_name	,
-            product_type	,
-            is_published	,
-            is_unit_advise_used	,
-            is_unit_advise_required	,
-            is_edu_exp_used	,
-            is_edu_exp_required	,
-            is_work_exp_used	,
-            is_work_exp_required	,
-            is_acade_used	,
-            is_acade_required	,
-            is_pmph_textbook_used	,
-            is_pmph_textbook_required	,
-            is_monograph_used	,
-            is_monograph_required	,
-            is_edit_book_used	,
-            is_edit_book_required	,
-            is_deleted	,
-            /*gmt_create	,*/
-            /*gmt_update	,*/
-            founder_id	,
-            publisher_id	,
-            gmt_publish	,
-            note
+          <include refid="key" />
         )
         values(
-            #{product_name}	,
-            #{product_type}	,
-            #{is_published}	,
-            #{is_unit_advise_used}	,
-            #{is_unit_advise_required}	,
-            #{is_edu_exp_used}	,
-            #{is_edu_exp_required}	,
-            #{is_work_exp_used}	,
-            #{is_work_exp_required}	,
-            #{is_acade_used}	,
-            #{is_acade_required}	,
-            #{is_pmph_textbook_used}	,
-            #{is_pmph_textbook_required}	,
-            #{is_monograph_used}	,
-            #{is_monograph_required}	,
-            #{is_edit_book_used}	,
-            #{is_edit_book_required}	,
-            #{is_deleted}	,
-            /*#{gmt_create}	,*/
-            /*#{gmt_update}	,*/
-            #{founder_id}	,
-            #{publisher_id}	,
-            #{gmt_publish}	,
-            #{note}
+          <include refid="value" />
 
         )
         on Duplicate key update
-            product_name	=	#{product_name}	,
-            product_type	=	#{product_type}	,
-            is_published	=	#{is_published}	,
-            is_unit_advise_used	=	#{is_unit_advise_used}	,
-            is_unit_advise_required	=	#{is_unit_advise_required}	,
-            is_edu_exp_used	=	#{is_edu_exp_used}	,
-            is_edu_exp_required	=	#{is_edu_exp_required}	,
-            is_work_exp_used	=	#{is_work_exp_used}	,
-            is_work_exp_required	=	#{is_work_exp_required}	,
-            is_acade_used	=	#{is_acade_used}	,
-            is_acade_required	=	#{is_acade_required}	,
-            is_pmph_textbook_used	=	#{is_pmph_textbook_used}	,
-            is_pmph_textbook_required	=	#{is_pmph_textbook_required}	,
-            is_monograph_used	=	#{is_monograph_used}	,
-            is_monograph_required	=	#{is_monograph_required}	,
-            is_edit_book_used	=	#{is_edit_book_used}	,
-            is_edit_book_required	=	#{is_edit_book_required}	,
-            is_deleted	=	#{is_deleted}	,
-            /*gmt_create	=	#{gmt_create}	,
-            gmt_update	=	#{gmt_update}	,*/
-            founder_id	=	#{founder_id}	,
-            publisher_id	=	#{publisher_id}	,
-            gmt_publish	=	#{gmt_publish}	,
-            note	=	#{note}
+          <include refid="update"/>
     </insert>
 
     <!--逻辑删除-->
@@ -261,8 +409,8 @@
             #{	product_id	}	,
             #{	attachment	}	,
             #{	attachment_name	}	,
-            #{	download	}	,
-            #{	is_deleted	}	,
+            0	,
+            0	,
             #{	is_scan_img	}
         </foreach>
         on duplicate key UPDATE product_id = product_id

@@ -19,27 +19,27 @@ public class ProductVO {
     private Long id	;
     private String product_name	;
     private Long product_type	; //类型 1.人卫临床助手 2.人卫用药助手 3.人卫中医助手
-    private Boolean is_published	= false;//是否已发布
-    private Boolean is_unit_advise_used	= false;//所在单位意见是否启用
-    private Boolean is_unit_advise_required	= false;// 所在单位意见是否必填
-    private Boolean is_edu_exp_used	= false;// 主要学习经历是否启用
-    private Boolean  is_edu_exp_required	= false;// 主要学习经历是否必填
-    private Boolean is_work_exp_used	= false;// 	主要工作经历是否启用
-    private Boolean is_work_exp_required	= false;// 	主要工作经历是否必填
-    private Boolean is_acade_used	= false;// 主要学术兼职是否启用
-    private Boolean is_acade_required = false;// 主要学术兼职是否必填
-    private Boolean is_pmph_textbook_used	= false;// 	人卫社教材编写情况是否启用
-    private Boolean is_pmph_textbook_required	= false;// 人卫社教材编写情况是否必填
-    private Boolean is_monograph_used	= false;// 主编学术专著情况 是否启用
-    private Boolean is_monograph_required	= false;// 主编学术专著情况 是否必填
-    private Boolean is_edit_book_used	= false;// 	主编或参编图书情况 是否起用
-    private Boolean is_edit_book_required	= false;// 主编或参编图书情况 是否必填
-    private Boolean is_deleted	= false;// 是否被逻辑删除
-    private Timestamp gmt_create	=null ;//创建时间
-    private Timestamp gmt_update	=null;//更新时间
+    private Boolean is_published;//是否已发布
+    private Boolean is_unit_advise_used	;//所在单位意见是否启用
+    private Boolean is_unit_advise_required	;// 所在单位意见是否必填
+    private Boolean is_edu_exp_used	;// 主要学习经历是否启用
+    private Boolean  is_edu_exp_required	;// 主要学习经历是否必填
+    private Boolean is_work_exp_used	;// 	主要工作经历是否启用
+    private Boolean is_work_exp_required	;// 	主要工作经历是否必填
+    private Boolean is_acade_used	;// 主要学术兼职是否启用
+    private Boolean is_acade_required ;// 主要学术兼职是否必填
+    private Boolean is_pmph_textbook_used	;// 	人卫社教材编写情况是否启用
+    private Boolean is_pmph_textbook_required	;// 人卫社教材编写情况是否必填
+    private Boolean is_monograph_used	;// 主编学术专著情况 是否启用
+    private Boolean is_monograph_required	;// 主编学术专著情况 是否必填
+    private Boolean is_edit_book_used	;// 	主编或参编图书情况 是否起用
+    private Boolean is_edit_book_required	;// 主编或参编图书情况 是否必填
+    private Boolean is_deleted	;// 是否被逻辑删除
+    private Timestamp gmt_create	;//创建时间
+    private Timestamp gmt_update	;//更新时间
     private Long founder_id	;//创建人id
     private Long publisher_id;//最后一次发布操作的社内用户id
-    private Timestamp gmt_publish	=null;//最后一次发布时间
+    private Timestamp gmt_publish	;//最后一次发布时间
     private String note	;//备注
     private String description ;//产品简介
 
