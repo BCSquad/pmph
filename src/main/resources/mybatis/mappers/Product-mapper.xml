@@ -378,10 +378,13 @@
 
     <!--插入审核人 ，若主键冲突（已有的）什么也不做-->
     <insert id="saveProductAuditors" parameterType="java.util.List">
-        insert into product_auditor (id,product_id,auditor_id)
+        insert into product_auditor
+        (
+        id,product_id,auditor_id
+        )
         VALUES
         <foreach collection="list" item="item" open="(" close=")" separator=",">
-            #{item.id} , #{product_id} , #{auditor_id}
+            #{item.id} , #{item.product_id} , #{item.auditor_id}
         </foreach>
         on duplicate key UPDATE product_id = product_id /*VALUES(product_id) ,auditor_id=VALUES (auditor_id)*/
     </insert>
@@ -405,13 +408,14 @@
         )
         VALUES
         <foreach collection="list" item="item" open="(" separator="," close=")">
-            #{	id	}	,
-            #{	product_id	}	,
-            #{	attachment	}	,
-            #{	attachment_name	}	,
+
+            #{	item.id	}	,
+            #{	item.product_id	}	,
+            #{	item.attachment	}	,
+            #{	item.attachment_name	}	,
             0	,
             0	,
-            #{	is_scan_img	}
+            #{	item.is_scan_img	}
         </foreach>
         on duplicate key UPDATE product_id = product_id
 
