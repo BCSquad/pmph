@@ -34,6 +34,7 @@ import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.DecExtensionVO;
+import com.bc.pmpheep.back.vo.ExpertationCountnessVO;
 import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -45,13 +46,9 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import org.apache.poi.hssf.usermodel.HSSFFormulaEvaluator;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor.HSSFColorPredefined;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -479,6 +476,7 @@ public class ExcelHelper {
 		sheet = generateHeader(sheet, dataSource.get(0).getClass()); // 生成表头
 		headerStyleSetup(workbook, 1); // 设置表头样式
 		Field[] fields = dataSource.get(0).getClass().getDeclaredFields();
+
 		/* 设置行计数器 */
 		int rowCount = 1;
 		/* 记录列数和最大列宽 */
@@ -490,6 +488,7 @@ public class ExcelHelper {
 			Row row = sheet.createRow(rowCount);
 			/* 设置序号及宽度 */
 			row.createCell(0).setCellValue(String.valueOf(rowCount));
+			short maxLineHeight = 1;
 			columnProperties.setMaxElement(0, 2);
 			/* 设置列计数器 */
 			columnProperties.setColCount(1);
@@ -498,12 +497,25 @@ public class ExcelHelper {
 				if (field.isAnnotationPresent(ExcelHeader.class)) {
 					ExcelHeader excelHeader = (ExcelHeader) field.getAnnotation(ExcelHeader.class);
 					String headerName = excelHeader.header();
+					String cellType = excelHeader.cellType();
 					if (StringUtil.notEmpty(headerName)) {
 						Object o = field.get(object);
 						Cell cell = row.createCell(columnProperties.getColCount());
+
 						if (null != o) {
 							String value = o.toString();
-							cell.setCellValue(value);
+							if(StringUtil.notEmpty(cellType)&&"2".equals(cellType)){
+								cell.setCellType(Integer.parseInt(cellType));
+								cell.setCellFormula(value);
+								if(StringUtil.notEmpty(value)){
+									String seperator = "&CHAR(10)";
+									String nowrapStr = value.replace(seperator,"");
+									int lineHeight = (value.length()-nowrapStr.length())/seperator.length() +1;
+									maxLineHeight =  (short) lineHeight>maxLineHeight?(short) lineHeight:maxLineHeight;
+								}
+							}else{
+								cell.setCellValue(value);
+							}
 							if (value.length() > columnProperties.getCurrentMaxElement()) {
 								columnProperties.setCurrentMaxElement(value.length());
 							}
@@ -512,10 +524,122 @@ public class ExcelHelper {
 					}
 				}
 			}
+			row.setHeight((short)(maxLineHeight * row.getHeight()));
 			rowCount++;
 		}
+		sheet.setForceFormulaRecalculation(true);
 		/* 样式调整 */
 		return dataStyleSetup(workbook, 1, rowCount, columnProperties);
+	}
+
+
+	/**
+	 *
+	 * @param sheetMap
+	 * @return
+	 * @throws CheckedServiceException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
+	public Workbook fromSheetMap(Map<String,Object> sheetMap)
+			throws CheckedServiceException, IllegalArgumentException, IllegalAccessException {
+
+		Workbook workbook = new HSSFWorkbook();
+
+		for (Map.Entry e:sheetMap.entrySet()) {
+			String key = e.getKey().toString();
+			List<ExpertationCountnessVO> dataSource = (ArrayList<ExpertationCountnessVO>)e.getValue();
+
+			if (null == dataSource || dataSource.isEmpty()) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+						"用于导出Excel的数据源为空");
+			}
+
+			Sheet sheet = workbook.createSheet(key);
+			sheet = generateHeader(sheet, dataSource.get(0).getClass()); // 生成表头
+			headerStyleSetup(workbook, 1); // 设置表头样式
+			Field[] fields = dataSource.get(0).getClass().getDeclaredFields();
+
+			/* 设置行计数器 */
+			int rowCount = 1;
+			/* 记录列数和最大列宽 */
+			ColumnProperties columnProperties = new ColumnProperties(1, new int[sheet.getRow(0).getLastCellNum()]);
+			/* 遍历list中的对象 */
+			Iterator iterator = dataSource.iterator();
+			while (iterator.hasNext()) {
+				Object object = iterator.next();
+				Row row = sheet.createRow(rowCount);
+				/* 设置序号及宽度 */
+				row.createCell(0).setCellValue(String.valueOf(rowCount));
+				short maxLineHeight = 1;
+				columnProperties.setMaxElement(0, 2);
+				/* 设置列计数器 */
+				columnProperties.setColCount(1);
+				for (Field field : fields) {
+					field.setAccessible(true);// 可访问性设置
+					if (field.isAnnotationPresent(ExcelHeader.class)) {
+						ExcelHeader excelHeader = (ExcelHeader) field.getAnnotation(ExcelHeader.class);
+						String headerName = excelHeader.header();
+						String cellType = excelHeader.cellType();
+						if (StringUtil.notEmpty(headerName)) {
+							Object o = field.get(object);
+							Cell cell = row.createCell(columnProperties.getColCount());
+
+							if (null != o) {
+								String value = o.toString();
+								if(StringUtil.notEmpty(cellType)&&"2".equals(cellType)){
+									cell.setCellType(Integer.parseInt(cellType));
+									cell.setCellFormula(value);
+									if(StringUtil.notEmpty(value)){
+										String seperator = "&CHAR(10)";
+										String nowrapStr = value.replace(seperator,"");
+										int lineHeight = (value.length()-nowrapStr.length())/seperator.length() +1;
+										maxLineHeight =  (short) lineHeight>maxLineHeight?(short) lineHeight:maxLineHeight;
+									}
+								}else{
+									cell.setCellValue(value);
+								}
+								if (value.length() > columnProperties.getCurrentMaxElement()) {
+									columnProperties.setCurrentMaxElement(value.length());
+								}
+							}
+							columnProperties.setColCount(columnProperties.getColCount() + 1);
+						}
+					}
+				}
+				row.setHeight((short)(maxLineHeight * row.getHeight()));
+				rowCount++;
+			}
+			sheet.setForceFormulaRecalculation(true);
+			CellStyle style = generateStyle(workbook, true, true, false);
+			Font font = workbook.createFont();
+			font.setFontName("微软雅黑");
+			style.setFont(font);
+			/* 样式调整 */
+			dataStyleSetUp(sheet, rowCount, columnProperties, style);
+		}
+
+		return workbook;
+	}
+
+	private void dataStyleSetUp(Sheet sheet, int rowCount, ColumnProperties columnProperties, CellStyle style) {
+		for (int i = 1; i < rowCount; i++) {
+            Iterator<Cell> it = sheet.getRow(i).cellIterator();
+            while (it.hasNext()) {
+                Cell cell = it.next();
+                cell.setCellStyle(style);
+            }
+        }
+		int[] maxLength = columnProperties.getMaxLength();
+		for (int j = 0; j < columnProperties.getColCount(); j++) {
+            if (maxLength[j] > 0 && sheet.getColumnWidth(j) < (maxLength[j] + 1) * 512) {
+                if (maxLength[j] > 15) {
+                    sheet.setColumnWidth(j, 16 * 512);// 最长15个字符，超出部分换行
+                } else {
+                    sheet.setColumnWidth(j, (maxLength[j] + 1) * 512);// 设置列宽度
+                }
+            }
+        }
 	}
 
 	/**

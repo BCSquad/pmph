@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.dao;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.vo.ExpertationCountnessVO;
 import com.bc.pmpheep.back.vo.ExpertationVO;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public interface ExpertationDao {
      * @param pageParameter
      * @return
      */
-    List<Map<String,Object>> getCountListGroupByContentType(PageParameter<Map<String, Object>> pageParameter);
+    List<ExpertationCountnessVO> getCountListGroupByContentType(PageParameter<Map<String, Object>> pageParameter);
 
     /**
      * 按内容分类统计 列表总数
@@ -48,5 +49,5 @@ public interface ExpertationDao {
      * @param pageParameter
      * @return
      */
-    List<Map<String,Object>> getCountListGroupBySubjectType(PageParameter<Map<String, Object>> pageParameter);
+    List<ExpertationCountnessVO> getCountListGroupBySubjectType(PageParameter<Map<String, Object>> pageParameter);
 }

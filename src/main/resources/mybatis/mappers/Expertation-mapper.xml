@@ -45,7 +45,7 @@
         <if test="parameter.auditor_id != null and parameter.auditor_id != '' ">
             inner join product_auditor pa on pa.product_id = p.id and pa.auditor_id = #{parameter.auditor_id}
         </if>
-        left join pmph_user u on u.id = e.user_id
+        left join writer_user u on u.id = e.user_id
         left join expertation_subject_type est on est.expertation_id = e.id left join product_subject_type pst on pst.id = est.product_subject_type_id
         left join expertation_content_type ect on ect.expertation_id = e.id left join product_content_type_detail pct on pct.product_type_id = ect.product_content_type_id
         where p.product_type = #{parameter.expert_type}
@@ -56,7 +56,11 @@
             and e.realname like concat('%',#{parameter.realname},'%')
         </if>
         -- GROUP  by e.id
-        limit ${start} ,${pageSize}
+        <if test="start != null">
+            limit ${start} ,${pageSize}
+        </if>
+
+
     </select>
 
     <select id="queryExpertationCount" parameterType="com.bc.pmpheep.back.plugin.PageParameter" resultType="int">
@@ -64,7 +68,7 @@
         from
         product p
         inner join expertation e on e.product_id = p.id
-        left join pmph_user u on u.id = e.user_id
+        left join writer_user u on u.id = e.user_id
         <if test="parameter.auditor_id != null and parameter.auditor_id != '' ">
             inner join product_auditor pa on pa.product_id = p.id and pa.auditor_id = #{parameter.auditor_id}
         </if>
@@ -78,7 +82,7 @@
     </select>
 
     <!--按内容分类统计 列表-->
-    <select id="getCountListGroupByContentType" parameterType="com.bc.pmpheep.back.plugin.PageParameter" resultType="java.util.Map">
+    <select id="getCountListGroupByContentType" parameterType="com.bc.pmpheep.back.plugin.PageParameter" resultType="com.bc.pmpheep.back.vo.ExpertationCountnessVO">
         select
             count(t1.eid) as count_submit,
             sum(t1.online_progress=3) as count_success,
@@ -104,8 +108,10 @@
         )t1
 
         group by t1.tid
+        <if test="start != null">
+            limit #{start},#{pageSize}
+        </if>
 
-        limit 0,10
     </select>
 
     <!--按内容分类统计 列表总数-->
@@ -135,7 +141,7 @@
     </select>
 
     <!--按学科分类统计 列表-->
-    <select id="getCountListGroupBySubjectType" parameterType="com.bc.pmpheep.back.plugin.PageParameter" resultType="java.util.Map">
+    <select id="getCountListGroupBySubjectType" parameterType="com.bc.pmpheep.back.plugin.PageParameter" resultType="com.bc.pmpheep.back.vo.ExpertationCountnessVO">
         select
             count(t1.eid) as count_submit,
             sum(t1.online_progress=3) as count_success,
@@ -162,7 +168,9 @@
 
         group by t1.tid
 
-        limit 0,10
+        <if test="start != null">
+            limit #{start},#{pageSize}
+        </if>
     </select>
 
     <!--按学科分类统计 列表总数-->

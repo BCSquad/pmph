@@ -7,6 +7,7 @@ import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
+import com.bc.pmpheep.back.vo.ExpertationCountnessVO;
 import com.bc.pmpheep.back.vo.ExpertationVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -98,7 +99,7 @@ public class ExpertationServiceImpl implements ExpertationService{
         }
 
         int ttype = (int)pageParameter.getParameter().get("ttype");
-        List<Map<String,Object>> list = new ArrayList<>();
+        List<ExpertationCountnessVO> list = new ArrayList<>();
         int totalCount = 0;
         if(ttype == 2){ //2.内容分类
             totalCount = expertationDao.getCountListGroupByContentTypeCount(pageParameter);

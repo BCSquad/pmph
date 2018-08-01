@@ -13,15 +13,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.bc.pmpheep.back.dao.ExpertationDao;
 import com.bc.pmpheep.back.service.*;
 import com.bc.pmpheep.back.vo.*;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -115,6 +114,8 @@ public class FileDownLoadController {
 	private ThreadPoolTaskExecutor taskExecutor;
 	@Autowired
 	OrgService orgService;
+	@Autowired
+	ExpertationDao expertationDao;
 	// 当前业务类型
 	private static final String BUSSINESS_TYPE = "文件下载";
 
@@ -386,6 +387,106 @@ public class FileDownLoadController {
 			logger.warn("数据表格化的时候失败");
 		}
 		String fileName = returnFileName(request,"图书纠错审核信息.xls");
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		try (OutputStream out = response.getOutputStream()) {
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常： {}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
+
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出临床决策-申报列表")
+	@RequestMapping(value = "/expertation/exportExpertation", method = RequestMethod.GET)
+	public void exportExpertation(HttpServletRequest request, HttpServletResponse response,ExpertationVO expertationVO) {
+
+		PageParameter pageParameter = new PageParameter();
+		pageParameter.setStart(null);
+		pageParameter.setParameter(expertationVO);
+		List<ExpertationVO> list = expertationDao.queryExpertation(pageParameter);
+		Workbook workbook = null;
+		if (list.size() == 0) {
+			list.add(new ExpertationVO());
+		}
+		for (ExpertationVO e:list) {
+			e.setExcelTypeStr();
+		}
+
+		try {
+			workbook = excelHelper.fromBusinessObjectList(list, expertationVO.getProduct_name()!=null?expertationVO.getProduct_name():"临床决策申报");
+
+		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+			logger.warn("数据表格化的时候失败");
+		}
+		String fileName = returnFileName(request,"临床决策申报.xls");
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		try (OutputStream out = response.getOutputStream()) {
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常： {}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
+
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出临床决策-申报结果统计列表")
+	@RequestMapping(value = "/expertation/exportExpertationCount", method = RequestMethod.GET)
+	public void exportExpertationCount(HttpServletRequest request, HttpServletResponse response,
+									   //int ttype,
+									   int ptype,
+									   @RequestParam(value = "type_name",required = false)String type_name) {
+		Map<String,Object> paraMap = new HashMap<>();
+
+		paraMap.put("ptype",ptype);
+		paraMap.put("type_name",type_name);
+		PageParameter pageParameter = new PageParameter();
+		pageParameter.setStart(null);
+		pageParameter.setParameter(paraMap);
+
+		Map<String,Object> sheetMap = new HashMap<>();
+		List<ExpertationCountnessVO> list = new ArrayList<>();
+
+		//2.内容分类
+		paraMap.put("ttype",2);
+		List<ExpertationCountnessVO> list2 = expertationDao.getCountListGroupByContentType(pageParameter);
+
+		//1.学科分类
+		paraMap.put("ttype",1);
+		List<ExpertationCountnessVO> list1 = expertationDao.getCountListGroupBySubjectType(pageParameter);
+
+		if (list1.size() == 0) {
+			list1.add(new ExpertationCountnessVO());
+		}
+		if (list2.size() == 0) {
+			list2.add(new ExpertationCountnessVO());
+		}
+
+		sheetMap.put("学科分类",list1);
+		sheetMap.put("内容分类",list2);
+
+
+		Workbook workbook = null;
+		if (list.size() == 0) {
+			list.add(new ExpertationCountnessVO());
+		}
+
+		try {
+			workbook = excelHelper.fromSheetMap(sheetMap);
+			//workbook = excelHelper.fromBusinessObjectList(list, (ttype == 2?"内容分类":"学科分类")+"-临床决策申报");
+
+		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+			logger.warn("数据表格化的时候失败");
+		}
+		String fileName = returnFileName(request,"临床决策申报统计.xls");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);

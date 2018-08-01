@@ -1,6 +1,10 @@
 package com.bc.pmpheep.back.vo;
 
 
+import com.bc.pmpheep.annotation.ExcelHeader;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
@@ -14,16 +18,22 @@ public class ExpertationVO {
     private Long	product_id	;	//	20
     private Long	expert_type	;	//	20	申报类型（1=临床/2=用药/3=中医）
     private Long	user_id	;	//	20	作家姓名
+    @ExcelHeader(header = " 作家姓名")
     private String	realname	;	//	20
     private Boolean	sex	;	//	3
     private Date	birthday	;	//	0
     private Boolean	experience	;	//	3	教龄
+    @ExcelHeader(header = "工作单位")
     private String	org_name	;	//	60	工作单位
+    @ExcelHeader(header = "职务")
     private String	position	;	//	36	职务
+    @ExcelHeader(header = "职称")
     private String	title	;	//	30	职称
     private String	address	;	//	50	联系地址
     private String	postcode	;	//	20	邮编
+    @ExcelHeader(header = "手机")
     private String	handphone	;	//	25	手机
+    @ExcelHeader(header = "邮箱")
     private String	email	;	//	40	邮箱
     private Boolean	idtype	;	//	3	证件类型
     private String	idcard	;	//	40	证件号码
@@ -42,14 +52,21 @@ public class ExpertationVO {
     private String	sub_classification	;	//	100	学科分类
     private String	cont_classification	;	//	100	内容分类
     private String unit_advise; //单位意见（扫描件上传于mongodb的id）
-
     private String product_name; //
     private Long auditor_id; //审核人id 查询用 传入当前登录人id
+    @ExcelHeader(header = "账号")
     private String username; //账户
+
     private List<ProductType> productSubjectTypeList; //学科分类
+
     private List<ProductType> productContentTypeList; //内容分类
+    @ExcelHeader(header = "学科分类",cellType = "2")
+    private String productSubjectTypeStr; //学科分类 excel导出字符串
+    @ExcelHeader(header = "内容分类",cellType = "2")
+    private String productContentTypeStr; //内容分类 excel导出字符串
 
     public ExpertationVO() {
+        super();
     }
 
     public Long getId() {
@@ -347,4 +364,44 @@ public class ExpertationVO {
     public void setProduct_name(String product_name) {
         this.product_name = product_name;
     }
+
+    public String getProductSubjectTypeStr() {
+
+
+
+        return productSubjectTypeStr;
+    }
+
+    public void setProductSubjectTypeStr() {
+        if(this.productSubjectTypeList!=null && this.productSubjectTypeList.size()>0){
+            //this.productSubjectTypeStr = "=\"\""+"&\"1.aaa.\"&CHAR(10)"+"&\"2.bbb.\"&CHAR(10)&\"3.ccc. \"";
+            this.productSubjectTypeStr = "\"\"";
+            for (int i =0;i<productSubjectTypeList.size();i++) {
+                ProductType p = productSubjectTypeList.get(i);
+                this.productSubjectTypeStr += "&\""+(i+1)+"."+p.getType_name()+"\"&CHAR(10)";
+            }
+        }
+    }
+
+    public String getProductContentTypeStr() {
+
+        return productContentTypeStr;
+    }
+
+    public void setProductContentTypeStr() {
+        if(this.productContentTypeList!=null && this.productContentTypeList.size()>0){
+            //this.productSubjectTypeStr = "=\"\""+"&\"1.aaa.\"&CHAR(10)"+"&\"2.bbb.\"&CHAR(10)&\"3.ccc. \"";
+            this.productContentTypeStr = "\"\"";
+            for (int i =0;i<productContentTypeList.size();i++) {
+                ProductType p = productContentTypeList.get(i);
+                this.productContentTypeStr += "&\""+(i+1)+"."+p.getType_name()+"\"&CHAR(10)";
+            }
+        }
+    }
+
+    public void setExcelTypeStr(){
+        this.setProductSubjectTypeStr();
+        this.setProductContentTypeStr();
+    }
+
 }
