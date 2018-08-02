@@ -7,10 +7,11 @@ public class ProductAttachment {
     private Long id	;//主键	bigint
     private Long product_id	;//产品主键	bigint
     private String attachment	;//附件在mongdb上的id	varchar
-    private String attachment_name	;//附件名称	varchar
+    private String name	;//附件名称	varchar
     private Long download	;//下载次数	bigint
     private Boolean is_deleted	;//是否被删除	tinyint
     private Boolean is_scan_img	;//1- 扫描图片 0-附件	tinyint
+    private String url;
 
     public ProductAttachment() {
     }
@@ -39,13 +40,7 @@ public class ProductAttachment {
         this.attachment = attachment;
     }
 
-    public String getAttachment_name() {
-        return attachment_name;
-    }
 
-    public void setAttachment_name(String attachment_name) {
-        this.attachment_name = attachment_name;
-    }
 
     public Long getDownload() {
         return download;
@@ -69,5 +64,21 @@ public class ProductAttachment {
 
     public void setIs_scan_img(Boolean is_scan_img) {
         this.is_scan_img = is_scan_img;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

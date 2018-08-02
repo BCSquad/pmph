@@ -80,9 +80,9 @@ public class ProductServiceImpl implements ProductService {
                     "用户为空");
         }
 
-        if(productVO.getId()==null){ //新建 保存创建人
+        //if(productVO.getId()==null){ //新建 保存创建人
             productVO.setFounder_id(pmphUser.getId());
-        }
+        //}
         if(productVO.getIs_published()){ // 发布 保存发布人
             productVO.setPublisher_id(pmphUser.getId());
         }
@@ -152,6 +152,14 @@ public class ProductServiceImpl implements ProductService {
                         ||"ProductExtensionList".equals(name)
                         ||"ProductAttachmentList".equals(name)
                         ||"ProducntImgList".equals(name)
+                            ||"product_name".equals(name)
+                                ||"gmt_create".equals(name)
+                            ||"gmt_publish".equals(name)
+                                ||"note".equals(name)
+                                ||"description".equals(name)
+                                ||"publisher".equals(name)
+                                ||"founder".equals(name)
+
                     )){
                 throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.NULL_PARAM,
                         name+"为空");
