@@ -76,18 +76,18 @@
         <collection property="auditorList" javaType="java.util.List" ofType="com.bc.pmpheep.back.po.ProductAuditor">
             <id column="u_id" property="id"></id>
             <result column="u_uid" property="auditor_id"></result>
-            <result column="id" property="product_id"></result>
+            <!--<result column="id" property="product_id"></result>-->
             <result column="u_realname" property="auditor_name"></result>
         </collection>
         <collection property="ProductExtensionList" javaType="java.util.List" ofType="com.bc.pmpheep.back.po.ProductExtension">
             <id column="pe_id" property="id"></id>
-            <result column="id" property="productId"></result>
+            <!--<result column="id" property="productId"></result>-->
             <result column="pe_extension_name" property="extensionName"></result>
             <result column="pe_is_required" property="isRequired"></result>
         </collection>
         <collection property="ProductAttachmentList" javaType="java.util.List" ofType="com.bc.pmpheep.back.po.ProductAttachment">
             <id column="a_id" property="id"></id>
-            <result column="id" property="product_id"></result>
+            <!--<result column="id" property="product_id"></result>-->
             <result column="a_attachment" property="attachment"></result>
             <result column="a_attachment_name" property="name"></result>
             <result column="a_download" property="download"></result>
@@ -95,7 +95,7 @@
         </collection>
         <collection property="ProducntImgList" javaType="java.util.List" ofType="com.bc.pmpheep.back.po.ProductAttachment">
             <id column="pimg_id" property="id"></id>
-            <result column="id" property="product_id"></result>
+            <!--<result column="id" property="product_id"></result>-->
             <result column="pimg_attachment" property="attachment"></result>
             <result column="pimg_attachment_name" property="name"></result>
             <result column="pimg_download" property="download"></result>
@@ -177,6 +177,9 @@
             <if test="note!=null">
                 note,
             </if>
+            <if test="description!=null">
+                description,
+            </if>
         </trim>
     </sql>
 
@@ -250,6 +253,9 @@
             <if test="note!=null">
                 #{note},
             </if>
+            <if test="description!=null">
+                #{description},
+            </if>
         </trim>
     </sql>
 
@@ -321,6 +327,9 @@
             <if test="note != null ">
                 note	=	#{note}	,
             </if>
+            <if test="description!=null">
+                description= #{description},
+            </if>
         </trim>
     </sql>
 
@@ -358,12 +367,12 @@
             is_deleted
         )
         VALUES 
-        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
-            #{ item.id }, /*新增的扩展项，此处为null，主键会自增填充，修改的则会主键冲突，触发修改*/
+        <foreach collection="list" index="index" item="item" separator="," >
+            (#{ item.id }, /*新增的扩展项，此处为null，主键会自增填充，修改的则会主键冲突，触发修改*/
             #{	item.product_id	}	,
             #{	item.extension_name	}	,
             #{	item.is_required	}	,
-            0
+            0)
         </foreach>
         on duplicate key UPDATE
             product_id	=	values(	product_id	)	,
@@ -383,8 +392,8 @@
         id,product_id,auditor_id
         )
         VALUES
-        <foreach collection="list" item="item" open="(" close=")" separator=",">
-            #{item.id} , #{item.product_id} , #{item.auditor_id}
+        <foreach collection="list" item="item"  separator=",">
+            (#{item.id} , #{item.product_id} , #{item.auditor_id})
         </foreach>
         on duplicate key UPDATE product_id = product_id /*VALUES(product_id) ,auditor_id=VALUES (auditor_id)*/
     </insert>
@@ -407,15 +416,15 @@
             is_scan_img
         )
         VALUES
-        <foreach collection="list" item="item" open="(" separator="," close=")">
-
+        <foreach collection="list" item="item"  separator="," >
+            (
             #{	item.id	}	,
             #{	item.product_id	}	,
             #{	item.attachment	}	,
             #{	item.name	}	,
             0	,
             0	,
-            #{	item.is_scan_img	}
+            #{	item.is_scan_img	})
         </foreach>
         on duplicate key UPDATE product_id = product_id
 
