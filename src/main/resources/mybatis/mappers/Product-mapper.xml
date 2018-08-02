@@ -89,7 +89,7 @@
             <id column="a_id" property="id"></id>
             <result column="id" property="product_id"></result>
             <result column="a_attachment" property="attachment"></result>
-            <result column="a_attachment_name" property="attachment_name"></result>
+            <result column="a_attachment_name" property="name"></result>
             <result column="a_download" property="download"></result>
             <result column="a_is_scan_img" property="is_scan_img"></result>
         </collection>
@@ -97,7 +97,7 @@
             <id column="pimg_id" property="id"></id>
             <result column="id" property="product_id"></result>
             <result column="pimg_attachment" property="attachment"></result>
-            <result column="pimg_attachment_name" property="attachment_name"></result>
+            <result column="pimg_attachment_name" property="name"></result>
             <result column="pimg_download" property="download"></result>
             <result column="pimg_is_scan_img" property="is_scan_img"></result>
         </collection>
@@ -412,7 +412,7 @@
             #{	item.id	}	,
             #{	item.product_id	}	,
             #{	item.attachment	}	,
-            #{	item.attachment_name	}	,
+            #{	item.name	}	,
             0	,
             0	,
             #{	item.is_scan_img	}
