@@ -2,9 +2,13 @@ package com.bc.pmpheep.back.vo;
 
 
 import com.bc.pmpheep.annotation.ExcelHeader;
+import com.bc.pmpheep.back.po.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
+import org.springframework.data.annotation.Transient;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
@@ -12,7 +16,9 @@ import java.util.List;
 /**
  * 临床决策-申报表
  */
-public class ExpertationVO {
+@JsonIgnoreProperties({ "handler","hibernateLazyInitializer" })
+public class ExpertationVO implements Serializable {
+
 
     private Long	id	;	//	20
     private Long	product_id	;	//	20
@@ -41,7 +47,7 @@ public class ExpertationVO {
     private String	fax	;	//	50	传真
     private Boolean	is_dispensed	;	//	1	服从调剂
     private String	expertise	;	//	50	专业特长
-    private Boolean	online_progress	;	//	3	审核进度
+    private Integer	online_progress	;	//	3	审核进度
     private Timestamp auth_date	;	//	0	审核通过时间
     private String	return_cause	;	//	100	退回原因
     private Boolean	is_deleted	;	//	1	是否被逻辑删除t
@@ -56,6 +62,7 @@ public class ExpertationVO {
     private Long auditor_id; //审核人id 查询用 传入当前登录人id
     @ExcelHeader(header = "账号")
     private String username; //账户
+    private Boolean is_staging;
 
     private List<ProductType> productSubjectTypeList; //学科分类
 
@@ -64,6 +71,13 @@ public class ExpertationVO {
     private String productSubjectTypeStr; //学科分类 excel导出字符串
     @ExcelHeader(header = "内容分类",cellType = "2")
     private String productContentTypeStr; //内容分类 excel导出字符串
+
+    private List<DecEduExp> DecEduExpList; // 主要学习经历
+    private List<DecWorkExp> DecWorkExpList; //主要工作经历
+    private List<DecAcade> DecAcadeList; //主要学术兼职
+    private List<DecTextbook> DecTextbookList; // 人卫社教材编写情况
+    private List<DecMonograph> DecMonographList; //主编学术专著情况
+    private List<DecNationalPlan> DecNationalPlanList; //主编或参编图书情况
 
     public ExpertationVO() {
         super();
@@ -237,11 +251,11 @@ public class ExpertationVO {
         this.expertise = expertise;
     }
 
-    public Boolean getOnline_progress() {
+    public Integer getOnline_progress() {
         return online_progress;
     }
 
-    public void setOnline_progress(Boolean online_progress) {
+    public void setOnline_progress(Integer online_progress) {
         this.online_progress = online_progress;
     }
 
@@ -404,4 +418,67 @@ public class ExpertationVO {
         this.setProductContentTypeStr();
     }
 
+    public void setProductSubjectTypeStr(String productSubjectTypeStr) {
+        this.productSubjectTypeStr = productSubjectTypeStr;
+    }
+
+    public void setProductContentTypeStr(String productContentTypeStr) {
+        this.productContentTypeStr = productContentTypeStr;
+    }
+
+    public List<DecEduExp> getDecEduExpList() {
+        return DecEduExpList;
+    }
+
+    public void setDecEduExpList(List<DecEduExp> decEduExpList) {
+        DecEduExpList = decEduExpList;
+    }
+
+    public List<DecWorkExp> getDecWorkExpList() {
+        return DecWorkExpList;
+    }
+
+    public void setDecWorkExpList(List<DecWorkExp> decWorkExpList) {
+        DecWorkExpList = decWorkExpList;
+    }
+
+    public List<DecAcade> getDecAcadeList() {
+        return DecAcadeList;
+    }
+
+    public void setDecAcadeList(List<DecAcade> decAcadeList) {
+        DecAcadeList = decAcadeList;
+    }
+
+    public List<DecTextbook> getDecTextbookList() {
+        return DecTextbookList;
+    }
+
+    public void setDecTextbookList(List<DecTextbook> decTextbookList) {
+        DecTextbookList = decTextbookList;
+    }
+
+    public List<DecMonograph> getDecMonographList() {
+        return DecMonographList;
+    }
+
+    public void setDecMonographList(List<DecMonograph> decMonographList) {
+        DecMonographList = decMonographList;
+    }
+
+    public List<DecNationalPlan> getDecNationalPlanList() {
+        return DecNationalPlanList;
+    }
+
+    public void setDecNationalPlanList(List<DecNationalPlan> decNationalPlanList) {
+        DecNationalPlanList = decNationalPlanList;
+    }
+
+    public Boolean getIs_staging() {
+        return is_staging;
+    }
+
+    public void setIs_staging(Boolean is_staging) {
+        this.is_staging = is_staging;
+    }
 }

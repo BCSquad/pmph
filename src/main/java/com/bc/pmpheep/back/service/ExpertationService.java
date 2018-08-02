@@ -26,4 +26,12 @@ public interface ExpertationService {
      * @return
      */
     PageResult getCountListGroupByType(PageParameter<Map<String, Object>> pageParameter, String sessionId);
+
+    /**
+     * 查询临床决策申报详情
+     * @param id 申报表主键
+     * @param sessionId
+     * @return
+     */
+    ExpertationVO getExpertationById(Long id, String sessionId);
 }

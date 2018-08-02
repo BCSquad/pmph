@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.dao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.vo.ExpertationCountnessVO;
 import com.bc.pmpheep.back.vo.ExpertationVO;
+import com.bc.pmpheep.back.vo.ProductType;
 
 import java.util.List;
 import java.util.Map;
@@ -50,4 +51,11 @@ public interface ExpertationDao {
      * @return
      */
     List<ExpertationCountnessVO> getCountListGroupBySubjectType(PageParameter<Map<String, Object>> pageParameter);
+
+    /**
+     * 查询申报详情
+     * @param id
+     * @return
+     */
+    ExpertationVO getExpertationById(Long id);
 }

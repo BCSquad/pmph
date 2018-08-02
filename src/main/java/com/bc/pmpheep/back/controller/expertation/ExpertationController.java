@@ -84,4 +84,33 @@ public class ExpertationController {
         return responseBean;
     }
 
+    /**
+     * 获取某一条申报的详情
+     * @param request
+     * @param id
+     * @return
+     */
+    @RequestMapping("/get")
+    @ResponseBody
+    public ResponseBean<ExpertationVO> getById(HttpServletRequest request,@RequestParam(value = "id",required = true) Long id){
+
+        String sessionId = CookiesUtil.getSessionId(request);
+
+        ExpertationVO expertationVO = expertationService.getExpertationById(id,sessionId);
+
+        /*
+        * 副表有以下
+        * dec_edu_exp 作家学习经历表
+        * dec_work_exp
+        * dec_acade
+        * dec_textbook_pmph
+        * dec_monograph
+        * dec_national_plan
+        * */
+
+        ResponseBean<ExpertationVO> responseBean = new ResponseBean<ExpertationVO>(expertationVO);
+
+        return responseBean;
+    }
+
 }
