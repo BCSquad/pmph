@@ -9,6 +9,7 @@ import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.vo.ExpertationCountnessVO;
 import com.bc.pmpheep.back.vo.ExpertationVO;
+import com.bc.pmpheep.back.vo.ProductType;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -116,5 +117,25 @@ public class ExpertationServiceImpl implements ExpertationService{
         pageResult.setRows(list);
 
         return pageResult;
+    }
+
+    /**
+     * 查询临床决策申报详情
+     * @param id 申报表主键
+     * @param sessionId
+     * @return
+     */
+    @Override
+    public ExpertationVO getExpertationById(Long id, String sessionId) {
+
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+        if (ObjectUtil.isNull(pmphUser)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.NULL_PARAM,
+                    "用户为空");
+        }
+
+        ExpertationVO expertationVO = expertationDao.getExpertationById(id);
+
+        return expertationVO;
     }
 }

@@ -2,10 +2,12 @@ package com.bc.pmpheep.back.vo;
 
 import com.bc.pmpheep.annotation.ExcelHeader;
 
+import java.io.Serializable;
+
 /**
  * 临床决策-内容分类
  */
-public class ProductType {
+public class ProductType implements Serializable{
     private Long id	;
     private Long parent_id ;//备用字段，当前要求学科分类无层级关系
     private String type_name; //50长度 名称

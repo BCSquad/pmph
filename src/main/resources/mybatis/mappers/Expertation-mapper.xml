@@ -200,4 +200,260 @@
     </select>
 
 
+
+
+    <!--根据id查找申报主表-->
+    <select id="getExpertationById" parameterType="java.lang.Long" resultMap="expertationFullMap">
+        select
+        dec_edu_exp.id as dec_edu_exp_id,
+        dec_edu_exp.declaration_id as dec_edu_exp_declaration_id,
+        dec_edu_exp.school_name as dec_edu_exp_school_name,
+        dec_edu_exp.major as dec_edu_exp_major,
+        dec_edu_exp.degree as dec_edu_exp_degree,
+        dec_edu_exp.note as dec_edu_exp_note,
+        dec_edu_exp.date_begin as dec_edu_exp_date_begin,
+        dec_edu_exp.date_end as dec_edu_exp_date_end,
+        dec_edu_exp.sort as dec_edu_exp_sort,
+        dec_edu_exp.per_id as dec_edu_exp_per_id,
+        dec_edu_exp.expertation_id as dec_edu_exp_expertation_id,
+
+        dec_work_exp.id as dec_work_exp_id,
+        dec_work_exp.declaration_id as dec_work_exp_declaration_id,
+        dec_work_exp.org_name as dec_work_exp_org_name,
+        dec_work_exp.position as dec_work_exp_position,
+        dec_work_exp.note as dec_work_exp_note,
+        dec_work_exp.date_begin as dec_work_exp_date_begin,
+        dec_work_exp.date_end as dec_work_exp_date_end,
+        dec_work_exp.sort as dec_work_exp_sort,
+        dec_work_exp.per_id as dec_work_exp_per_id,
+        dec_work_exp.expertation_id as dec_work_exp_expertation_id,
+
+        dec_acade.id as dec_acade_id,
+        dec_acade.declaration_id as dec_acade_declaration_id,
+        dec_acade.org_name as dec_acade_org_name,
+        dec_acade.rank as dec_acade_rank,
+        dec_acade.position as dec_acade_position,
+        dec_acade.note as dec_acade_note,
+        dec_acade.sort as dec_acade_sort,
+        dec_acade.per_id as dec_acade_per_id,
+        dec_acade.expertation_id as dec_acade_expertation_id,
+
+        dec_textbook_pmph.id as dec_textbook_pmph_id,
+        dec_textbook_pmph.declaration_id as dec_textbook_pmph_declaration_id,
+        dec_textbook_pmph.material_name as dec_textbook_pmph_material_name,
+        dec_textbook_pmph.rank as dec_textbook_pmph_rank,
+        dec_textbook_pmph.position as dec_textbook_pmph_position,
+        dec_textbook_pmph.is_digital_editor as dec_textbook_pmph_is_digital_editor,
+        dec_textbook_pmph.publish_date as dec_textbook_pmph_publish_date,
+        dec_textbook_pmph.isbn as dec_textbook_pmph_isbn,
+        dec_textbook_pmph.note as dec_textbook_pmph_note,
+        dec_textbook_pmph.sort as dec_textbook_pmph_sort,
+        dec_textbook_pmph.per_id as dec_textbook_pmph_per_id,
+        dec_textbook_pmph.expertation_id as dec_textbook_pmph_expertation_id,
+
+        dec_monograph.id as dec_monograph_id,
+        dec_monograph.declaration_id as dec_monograph_declaration_id,
+        dec_monograph.monograph_name as dec_monograph_monograph_name,
+        dec_monograph.is_self_paid as dec_monograph_is_self_paid,
+        dec_monograph.publisher as dec_monograph_publisher,
+        dec_monograph.note as dec_monograph_note,
+        dec_monograph.publish_date as dec_monograph_publish_date,
+        dec_monograph.sort as dec_monograph_sort,
+        dec_monograph.monograph_date as dec_monograph_monograph_date,
+        dec_monograph.per_id as dec_monograph_per_id,
+        dec_monograph.expertation_id as dec_monograph_expertation_id,
+
+        dec_national_plan.id as dec_national_plan_id,
+        dec_national_plan.declaration_id as dec_national_plan_declaration_id,
+        dec_national_plan.material_name as dec_national_plan_material_name,
+        dec_national_plan.isbn as dec_national_plan_isbn,
+        dec_national_plan.rank as dec_national_plan_rank,
+        dec_national_plan.note as dec_national_plan_note,
+        dec_national_plan.sort as dec_national_plan_sort,
+        dec_national_plan.rank_text as dec_national_plan_rank_text,
+        dec_national_plan.per_id as dec_national_plan_per_id,
+        dec_national_plan.expertation_id as dec_national_plan_expertation_id,
+
+        pst.id as pst_id,
+        pst.parent_id as pst_parent_id,
+        pst.type_name as pst_type_name,
+
+        pct.product_type_id as pct_id,
+        pct.name_path as pct_type_name,
+
+
+        e.*
+        from
+        (select
+                *
+                 from
+                expertation
+                where id = #{id}) e
+
+        left join expertation_subject_type est on est.expertation_id = e.id
+            left join product_subject_type pst on est.product_subject_type_id = pst.id
+        left join expertation_content_type ect on ect.expertation_id = e.id
+            left join product_content_type_detail pct on ect.product_content_type_id = pct.product_type_id
+
+        left join dec_edu_exp dec_edu_exp on dec_edu_exp.expertation_id = e.id
+
+        left join dec_work_exp  on dec_work_exp.expertation_id = e.id
+
+        left join dec_acade  on dec_acade.expertation_id = e.id
+
+        left join dec_textbook_pmph  on dec_textbook_pmph.expertation_id = e.id
+
+        left join dec_monograph  on dec_monograph.expertation_id = e.id
+
+        left join dec_national_plan  on dec_national_plan.expertation_id = e.id
+    </select>
+
+
+    <resultMap id="expertationFullMap" type="com.bc.pmpheep.back.vo.ExpertationVO" autoMapping="true">
+
+        <id property="id" column="id"></id>
+        <result property="product_id" column="product_id"></result>
+        <result property="expert_type" column="expert_type"></result>
+        <result property="user_id" column="user_id"></result>
+        <result property="realname" column="realname"></result>
+        <result property="sex" column="sex"></result>
+        <result property="birthday" column="birthday"></result>
+        <result property="experience" column="experience"></result>
+        <result property="org_name" column="org_name"></result>
+        <result property="position" column="position"></result>
+        <result property="title" column="title"></result>
+        <result property="address" column="address"></result>
+        <result property="postcode" column="postcode"></result>
+        <result property="handphone" column="handphone"></result>
+        <result property="email" column="email"></result>
+        <result property="idtype" column="idtype"></result>
+        <result property="idcard" column="idcard"></result>
+        <result property="telephone" column="telephone"></result>
+        <result property="fax" column="fax"></result>
+        <result property="is_dispensed" column="is_dispensed"></result>
+        <result property="expertise" column="expertise"></result>
+        <result property="online_progress" column="online_progress"></result>
+        <result property="auth_date" column="auth_date"></result>
+        <result property="return_cause" column="return_cause"></result>
+        <result property="is_deleted" column="is_deleted"></result>
+        <result property="gmt_create" column="gmt_create"></result>
+        <result property="gmt_update" column="gmt_update"></result>
+        <result property="commit_date" column="commit_date"></result>
+        <result property="remark" column="remark"></result>
+        <result property="sub_classification" column="sub_classification"></result>
+        <result property="cont_classification" column="cont_classification"></result>
+        <result property="is_staging" column="is_staging"></result>
+        <result property="unit_advise" column="unit_advise"></result>
+        <result property="degree" column="degree"></result>
+
+        <collection property="DecEduExpList" javaType="list" ofType="DecEduExp" >
+            <id property="id" column="dec_edu_exp_id"></id>
+            <result property="declarationId" column="dec_edu_exp_declaration_id"></result>
+            <result property="schoolName" column="dec_edu_exp_school_name"></result>
+            <result property="major" column="dec_edu_exp_major"></result>
+            <result property="degree" column="dec_edu_exp_degree"></result>
+            <result property="note" column="dec_edu_exp_note"></result>
+            <result property="dateBegin" column="dec_edu_exp_date_begin"></result>
+            <result property="dateEnd" column="dec_edu_exp_date_end"></result>
+            <result property="sort" column="dec_edu_exp_sort"></result>
+            <result property="perId" column="dec_edu_exp_per_id"></result>
+            <result property="expertationId" column="dec_edu_exp_expertation_id"></result>
+        </collection>
+        <collection property="DecWorkExpList" javaType="list" ofType="DecWorkExp">
+            <id property="id" column="dec_work_exp_id"></id>
+            <result property="declarationId" column="dec_work_exp_declaration_id"></result>
+            <result property="orgName" column="dec_work_exp_org_name"></result>
+            <result property="position" column="dec_work_exp_position"></result>
+            <result property="note" column="dec_work_exp_note"></result>
+            <result property="dateBegin" column="dec_work_exp_date_begin"></result>
+            <result property="dateEnd" column="dec_work_exp_date_end"></result>
+            <result property="sort" column="dec_work_exp_sort"></result>
+            <result property="perId" column="dec_work_exp_per_id"></result>
+            <result property="expertationId" column="dec_work_exp_expertation_id"></result>
+        </collection>
+        <collection property="DecAcadeList" javaType="list" ofType="DecAcade">
+            <id property="id" column="dec_acade_id"></id>
+            <result property="declarationId" column="dec_acade_declaration_id"></result>
+            <result property="orgName" column="dec_acade_org_name"></result>
+            <result property="rank" column="dec_acade_rank"></result>
+            <result property="position" column="dec_acade_position"></result>
+            <result property="note" column="dec_acade_note"></result>
+            <result property="sort" column="dec_acade_sort"></result>
+            <result property="perId" column="dec_acade_per_id"></result>
+            <result property="expertationId" column="dec_acade_expertation_id"></result>
+        </collection>
+        <collection property="DecTextbookList" javaType="list" ofType="DecTextbook">
+            <id property="id" column="dec_textbook_pmph_id"></id>
+            <result property="declarationId" column="dec_textbook_pmph_declaration_id"></result>
+            <result property="materialName" column="dec_textbook_pmph_material_name"></result>
+            <result property="rank" column="dec_textbook_pmph_rank"></result>
+            <result property="position" column="dec_textbook_pmph_position"></result>
+            <result property="isDigitalEditor" column="dec_textbook_pmph_is_digital_editor"></result>
+            <result property="publishDate" column="dec_textbook_pmph_publish_date"></result>
+            <result property="isbn" column="dec_textbook_pmph_isbn"></result>
+            <result property="note" column="dec_textbook_pmph_note"></result>
+            <result property="sort" column="dec_textbook_pmph_sort"></result>
+            <result property="perId" column="dec_textbook_pmph_per_id"></result>
+            <result property="expertationId" column="dec_textbook_pmph_expertation_id"></result>
+        </collection>
+        <collection property="DecMonographList" javaType="list" ofType="DecMonograph">
+            <id property="id" column="dec_monograph_id"></id>
+            <result property="declarationId" column="dec_monograph_declaration_id"></result>
+            <result property="monographName" column="dec_monograph_monograph_name"></result>
+            <result property="isSelfPaid" column="dec_monograph_is_self_paid"></result>
+            <result property="publisher" column="dec_monograph_publisher"></result>
+            <result property="note" column="dec_monograph_note"></result>
+            <result property="publishDate" column="dec_monograph_publish_date"></result>
+            <result property="sort" column="dec_monograph_sort"></result>
+            <result property="monographDate" column="dec_monograph_monograph_date"></result>
+            <result property="perId" column="dec_monograph_per_id"></result>
+            <result property="expertationId" column="dec_monograph_expertation_id"></result>
+        </collection>
+
+        <collection property="DecNationalPlanList" javaType="list" ofType="DecNationalPlan">
+            <id property="id" column="dec_national_plan_id"></id>
+            <result property="declarationId" column="dec_national_plan_declaration_id"></result>
+            <result property="materialName" column="dec_national_plan_material_name"></result>
+            <result property="isbn" column="dec_national_plan_isbn"></result>
+            <result property="rank" column="dec_national_plan_rank"></result>
+            <result property="note" column="dec_national_plan_note"></result>
+            <result property="sort" column="dec_national_plan_sort"></result>
+            <result property="rankText" column="dec_national_plan_rank_text"></result>
+            <result property="perId" column="dec_national_plan_per_id"></result>
+            <result property="expertationId" column="dec_national_plan_expertation_id"></result>
+        </collection>
+
+        <collection property="productSubjectTypeList" javaType="list" ofType="ProductType">
+            <id property="id" column="pst_id"></id>
+            <result property="parent_id" column="pst_parent_id"></result>
+            <result property="type_name" column="pst_type_name"></result>
+        </collection>
+
+        <collection property="productContentTypeList" javaType="list" ofType="ProductType">
+            <id property="id" column="pct_id"></id>
+            <result property="type_name" column="pct_type_name"></result>
+        </collection>
+
+    </resultMap>
+
+
+
+
+
+    <!--<select id="getProductSubjectTypeListByExpertationId" parameterType="java.lang.Long" resultType="com.bc.pmpheep.back.vo.ProductType">
+        select
+        t.id,
+        t.parent_id as parentId,
+        t.type_name as typeName
+        from
+        product_subject_type t inner join
+
+        (SELECT product_subject_type_id from expertation_subject_type where expertation_id = #{id}) t1
+
+        on t1.product_subject_type_id = t.id
+    </select>-->
+
+
+
+
 </mapper>
