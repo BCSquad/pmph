@@ -119,8 +119,8 @@ public final class SystemMessageService {
 	 * @throws IOException
 	 * @return
 	 */
-	public void materialSend(Long materialId, List<Long> ids) throws CheckedServiceException, IOException {
-		this.materialSend(materialId, ids, false);
+	public void materialSend(Long materialId, List<Long> ids,Long senderId) throws CheckedServiceException, IOException {
+		this.materialSend(materialId, ids, false,senderId);
 	}
 
 	/**
@@ -140,7 +140,7 @@ public final class SystemMessageService {
 	 * @throws IOException
 	 * @return
 	 */
-	public void materialSend(Long materialId, List<Long> ids, boolean isOnlyManager)
+	public void materialSend(Long materialId, List<Long> ids, boolean isOnlyManager,Long senderId)
 			throws CheckedServiceException, IOException {
 		String materialName = materialService.getMaterialNameById(materialId);
 		if (StringUtils.isEmpty(materialName)) {
@@ -166,7 +166,7 @@ public final class SystemMessageService {
 				List<String> userIds = new ArrayList<String>(writerUserList.size());
 				for (WriterUser writerUser : writerUserList) {
 					// 信息是由系统发出
-					UserMessage userMessage = new UserMessage(msg_id, messageTitle, new Short("0"), 0L, new Short("0"),
+					UserMessage userMessage = new UserMessage(msg_id, messageTitle, new Short("0"), senderId, new Short("0"),
 							writerUser.getId(), new Short("2"), materialId);
 					userMessageList.add(userMessage);
 					userIds.add("2_" + writerUser.getId());
@@ -174,7 +174,7 @@ public final class SystemMessageService {
 				// 批量插入消息
 				userMessageService.addUserMessageBatch(userMessageList);
 				// websocket推送页面消息
-				WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统",
+				WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, senderId, "系统",
 						Const.SENDER_TYPE_0, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
 						tercherMsg, DateUtil.getCurrentTime());
 				myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
@@ -191,7 +191,7 @@ public final class SystemMessageService {
 			List<UserMessage> userMessageList = new ArrayList<UserMessage>(orgUserList.size());
 			List<String> userIds = new ArrayList<String>(orgUserList.size());
 			for (OrgUser orgUser : orgUserList) {
-				UserMessage userMessage = new UserMessage(msg_id, messageTitle, new Short("0"), 0L, new Short("0"),
+				UserMessage userMessage = new UserMessage(msg_id, messageTitle, new Short("0"), senderId, new Short("0"),
 						orgUser.getId(), new Short("3"), materialId);
 				userMessageList.add(userMessage);
 				userIds.add("3_" + orgUser.getId());
@@ -199,7 +199,7 @@ public final class SystemMessageService {
 			// 批量插入消息
 			userMessageService.addUserMessageBatch(userMessageList);
 			// websocket推送页面消息
-			WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统",
+			WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, senderId, "系统",
 					Const.SENDER_TYPE_0, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle, managerMsg,
 					DateUtil.getCurrentTime());
 			myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
