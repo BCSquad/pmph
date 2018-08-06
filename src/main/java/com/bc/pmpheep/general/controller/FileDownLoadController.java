@@ -424,7 +424,7 @@ public class FileDownLoadController {
 		}
 
 		try {
-			workbook = excelHelper.fromBusinessObjectList(list, expertationVO.getProduct_name()!=null?expertationVO.getProduct_name():"临床决策申报");
+			workbook = excelHelper.fromBusinessObjectList(list, expertationVO.getProduct_name()!=null?getExportName(expertationVO.getExpert_type()+""):"临床决策申报");
 
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");
@@ -442,6 +442,27 @@ public class FileDownLoadController {
 			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
 					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
 		}
+	}
+
+	private String  getExportName(String expert_type){
+		String returnName = "";
+		switch (expert_type) {
+
+			case "1":
+				returnName= "人卫临床助手申报";
+				break;
+			case "2":
+				returnName= "人卫用药助手";
+				break;
+			case "3":
+				returnName= "人卫中医助手";
+				break;
+
+			default:
+				returnName= "临床决策申报";;
+		}
+		return returnName;
+
 	}
 
 	/**
