@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bc.pmpheep.back.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -186,16 +187,26 @@ public class Front implements Runnable {
 					}
 				}
 				if (!CollectionUtil.isEmpty(list)) {
+
 					StringBuilder sb = new StringBuilder();
 					sb.append(src);
+					sb.append(this.id);
+					sb.append(File.separator);
+					sb.append(FileUtil.replaceIllegalCharForFileName(material.getMaterialName()));
+					sb.append(File.separator);
+					sb.append((i + 1) + "." + FileUtil.replaceIllegalCharForFileName(name));
+					sb.append(File.separator);
+
+					/*sb.append(src);
 					sb.append(this.id);
 					sb.append(File.separator);
 					sb.append(material.getMaterialName());
 					sb.append(File.separator);
 					sb.append(name);
-					sb.append(File.separator);
+					sb.append(File.separator);*/
+
 					this.wordHelper.export(material.getMaterialName(), sb.toString(), list, str.toString(),
-							this.materialExtensionService.getMaterialExtensionByMaterialId(material.getId()));
+							this.materialExtensionService.getMaterialExtensionByMaterialId(material.getId()),(i + 1));
 					list.removeAll(list);
 				}
 			}

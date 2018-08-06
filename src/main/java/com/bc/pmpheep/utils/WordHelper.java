@@ -81,8 +81,9 @@ public class WordHelper {
 	 *             已检查的异常
 	 */
 	public void export(String materialName, String textbookPath, List<DeclarationEtcBO> list, String filter,
-			List<MaterialExtension> extensions) throws CheckedServiceException {
-		HashMap<String, XWPFDocument> map = fromDeclarationEtcBOList(materialName, list, filter, extensions);
+			List<MaterialExtension> extensions,int... arrDecSequence) throws CheckedServiceException {
+		String decSequence = arrDecSequence.length>0?(arrDecSequence[0]+"."):"";
+		HashMap<String, XWPFDocument> map = fromDeclarationEtcBOList(materialName, list, filter, extensions,decSequence);
 		if (createPath(textbookPath)) {
 			if (!textbookPath.endsWith(File.separator)) {
 				textbookPath = textbookPath.concat(File.separator);
@@ -123,7 +124,7 @@ public class WordHelper {
 	 *             已检查的异常
 	 */
 	public HashMap<String, XWPFDocument> fromDeclarationEtcBOList(String materialName, List<DeclarationEtcBO> list,
-			String filter, List<MaterialExtension> extensions) throws CheckedServiceException {
+			String filter, List<MaterialExtension> extensions,String decSequence) throws CheckedServiceException {
 		InputStream is;
 		XWPFDocument document;
 		String path = this.getClass().getClassLoader().getResource("ResumeTemplate.docx").getPath();
@@ -201,7 +202,7 @@ public class WordHelper {
 			if (StringUtil.notEmpty(chosenOrgName)) {
 				xwpfParagraphs.get(i).createRun().setText(chosenOrgName);
 			}
-			String filename = generateFileName(bo);
+			String filename = generateFileName(bo,decSequence);
 			fillDeclarationPosition(tables.get(0), bo);
 			fillDeclarationData(tables.get(1), bo);
 			fillDecEduExpData(tables.get(2), bo.getDecEduExps());
@@ -228,7 +229,7 @@ public class WordHelper {
 		return map;
 	}
 
-	private String generateFileName(DeclarationEtcBO bo) throws CheckedServiceException {
+	private String generateFileName(DeclarationEtcBO bo ,String decSequese) throws CheckedServiceException {
 		String realname = bo.getRealname();
 		String textbookName = bo.getTextbookName().get(0);
 		String presetPosition = bo.getPresetPosition().get(0);
@@ -238,6 +239,7 @@ public class WordHelper {
 				realname = "未署名";
 			}
 			StringBuilder sb = new StringBuilder();
+			sb.append(decSequese);
 			sb.append(textbookName);
 			sb.append("_");
 			sb.append(realname);
