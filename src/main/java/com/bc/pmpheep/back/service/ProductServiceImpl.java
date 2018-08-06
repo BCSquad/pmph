@@ -1,9 +1,7 @@
 package com.bc.pmpheep.back.service;
 
 import com.bc.pmpheep.back.dao.ProductDao;
-import com.bc.pmpheep.back.po.PmphUser;
-import com.bc.pmpheep.back.po.Product;
-import com.bc.pmpheep.back.po.ProductAttachment;
+import com.bc.pmpheep.back.po.*;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ObjectUtil;
@@ -80,9 +78,9 @@ public class ProductServiceImpl implements ProductService {
                     "用户为空");
         }
 
-        if(productVO.getId()==null){ //新建 保存创建人
+        //if(productVO.getId()==null){ //新建 保存创建人
             productVO.setFounder_id(pmphUser.getId());
-        }
+        //}
         if(productVO.getIs_published()){ // 发布 保存发布人
             productVO.setPublisher_id(pmphUser.getId());
         }
@@ -92,24 +90,56 @@ public class ProductServiceImpl implements ProductService {
 
         //insert on duplicate key update 主表product 其中 unique键除主键外 还有product_type
         //keyProperty设为id 若插入 则将生成的id传回到productVO的id中 便于附表关联之
+        switch (String.valueOf(productVO.getProduct_type())){
+            case "1":
+                productVO.setProduct_name( "人卫临床助手");
+                break;
+            case "2":
+                productVO.setProduct_name( "人卫用药助手");
+                break;
+            case "3":
+                productVO.setProduct_name(  "人卫中医助手");
+                break;
+            default:
+                productVO.setProduct_name(  "未命名");
+        }
         int mainCount = productDao.saveProduct(productVO);
 
         //为了保留历史申报里的关联扩展项填写内容，扩展项要伪删除
         productDao.deleteProductExtension(productVO.getId());
         //先按产品分类全部伪删除，再将传入id的insert on duplicate key update
         if(CollectionUtil.isNotEmpty(productVO.getProductExtensionList())){
+            for(ProductExtension productExtension:productVO.getProductExtensionList()){
+                if(ObjectUtil.isNull(productExtension.getProductId()))productExtension.setProductId(productVO.getId());
+            }
             int extensionCount = productDao.saveProductExtension(productVO.getProductExtensionList());
         }
         Long productId = productVO.getId();
 
         productDao.deleteProductAuditorsByProductId(productId);
         if(CollectionUtil.isNotEmpty(productVO.getAuditorList())){
+            for(ProductAuditor productAuditor:productVO.getAuditorList()){
+                if(ObjectUtil.isNull(productAuditor.getProduct_id()))productAuditor.setProduct_id(productVO.getId());
+            }
             productDao.saveProductAuditors(productVO.getAuditorList());
         }
 
         productDao.deleteProductAttachmentByProductId(productId);
         if(CollectionUtil.isNotEmpty(productVO.getProductAttachmentList())){
+            for(ProductAttachment productAttachment:productVO.getProductAttachmentList()){
+                if(ObjectUtil.isNull(productAttachment.getProduct_id()))productAttachment.setProduct_id(productVO.getId());
+                productAttachment.setIs_scan_img(false);
+            }
             productDao.saveProductAttachments(productVO.getProductAttachmentList());
+        }
+
+        if(CollectionUtil.isNotEmpty(productVO.getProducntImgList())){
+            for(ProductAttachment productAttachment:productVO.getProducntImgList()){
+                if(ObjectUtil.isNull(productAttachment.getProduct_id()))productAttachment.setProduct_id(productVO.getId());
+                productAttachment.setIs_scan_img(true);
+            }
+
+            productDao.saveProductAttachments(productVO.getProducntImgList());
         }
 
         responseBean.setCode(ResponseBean.SUCCESS);
@@ -152,6 +182,16 @@ public class ProductServiceImpl implements ProductService {
                         ||"ProductExtensionList".equals(name)
                         ||"ProductAttachmentList".equals(name)
                         ||"ProducntImgList".equals(name)
+                            ||"product_name".equals(name)
+                                ||"gmt_create".equals(name)
+                            ||"gmt_publish".equals(name)
+                                ||"note".equals(name)
+                                ||"description".equals(name)
+                                ||"publisher".equals(name)
+                                ||"founder".equals(name)
+                                || "is_unit_advise_required".equals(name)
+                                || "is_deleted".equals(name)
+
                     )){
                 throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.NULL_PARAM,
                         name+"为空");

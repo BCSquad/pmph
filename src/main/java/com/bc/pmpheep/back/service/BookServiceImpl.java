@@ -412,7 +412,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 		model.setBuyUrl(item.getString("webGdsDetailUrl"));
 		model.setVn(item.getString("versionNumber"));
 		model.setIsbn(isbn);
-		return model;
+ 		return model;
 	}
 
 	@Override

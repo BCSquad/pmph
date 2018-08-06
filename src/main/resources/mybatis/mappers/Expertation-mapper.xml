@@ -55,6 +55,12 @@
         <if test="parameter.realname != null and parameter.realname != '' ">
             and e.realname like concat('%',#{parameter.realname},'%')
         </if>
+        <if test="parameter.position != null and parameter.position != '' ">
+            and e.position like concat('%',#{parameter.position},'%')
+        </if>
+        <if test="parameter.title != null and parameter.title != '' ">
+            and e.title like concat('%',#{parameter.title},'%')
+        </if>
         -- GROUP  by e.id
         <if test="start != null">
             limit ${start} ,${pageSize}
@@ -78,6 +84,12 @@
         </if>
         <if test="parameter.realname != null and parameter.realname != '' ">
             and e.realname like concat('%',#{parameter.realname},'%')
+        </if>
+        <if test="parameter.position != null and parameter.position != '' ">
+            and e.position like concat('%',#{parameter.position},'%')
+        </if>
+        <if test="parameter.title != null and parameter.title != '' ">
+            and e.title like concat('%',#{parameter.title},'%')
         </if>
     </select>
 

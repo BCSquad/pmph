@@ -13,13 +13,11 @@ import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.PathParam;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/product")
@@ -56,9 +54,9 @@ public class ProductController {
      * @param publish 仅当此处为 “noPub” ，才是暂存，其他或不填都是发布
      * @return
      */
-    @RequestMapping("/save/{publish}")
+    @RequestMapping(value="/save/{publish}",method = RequestMethod.POST)
     @ResponseBody
-    public ResponseBean save(HttpServletRequest request, ProductVO productVO, @PathVariable("publish")String publish){
+    public ResponseBean save(HttpServletRequest request, @RequestBody ProductVO productVO, @PathVariable("publish")String publish){
         Boolean is_publish=!"noPub".equals(publish);
         productVO.setIs_published(is_publish);
         String sessionId = CookiesUtil.getSessionId(request);
