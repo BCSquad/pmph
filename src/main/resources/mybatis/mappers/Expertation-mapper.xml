@@ -465,6 +465,20 @@
         on t1.product_subject_type_id = t.id
     </select>-->
 
+    <update id="updateOnlineProgress" parameterType="map">
+        update expertation
+        <set>
+        <if test="onlineProgress != null">
+            online_progress=#{onlineProgress},
+        </if>
+        <if test=" returnCause != null and returnCause !='' ">
+            return_cause=#{returnCause},
+        </if>
+    </set>
+        where
+        id=#{id} ;
+    </update>
+
 
 
 

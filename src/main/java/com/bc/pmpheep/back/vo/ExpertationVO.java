@@ -63,6 +63,7 @@ public class ExpertationVO implements Serializable {
     @ExcelHeader(header = "账号")
     private String username; //账户
     private Boolean is_staging;
+    private short degree;
 
     private List<ProductType> productSubjectTypeList; //学科分类
 
@@ -480,5 +481,13 @@ public class ExpertationVO implements Serializable {
 
     public void setIs_staging(Boolean is_staging) {
         this.is_staging = is_staging;
+    }
+
+    public short getDegree() {
+        return degree;
+    }
+
+    public void setDegree(short degree) {
+        this.degree = degree;
     }
 }

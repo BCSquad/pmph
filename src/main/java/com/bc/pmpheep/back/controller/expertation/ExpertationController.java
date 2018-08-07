@@ -1,19 +1,25 @@
 package com.bc.pmpheep.back.controller.expertation;
 
+import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
+import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.service.ExpertationService;
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.CookiesUtil;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.vo.ExpertationVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
+import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
+import com.bc.pmpheep.service.exception.CheckedExceptionResult;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -112,5 +118,34 @@ public class ExpertationController {
 
         return responseBean;
     }
+
+    private final String       BUSSINESS_TYPE = "申报表审核";
+    /**
+     * 审核进度
+     *
+     * @author tyc
+     * @createDate 2017年11月24日 下午16:37:36
+     * @param id
+     * @param onlineProgress
+     * @throws CheckedServiceException
+     * @throws IOException
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "审核进度")
+    @RequestMapping(value = "/onlineProgress", method = RequestMethod.GET)
+    public ResponseBean onlineProgress(@RequestParam("id") Long id,
+                                       @RequestParam("onlineProgress") Integer onlineProgress,
+                                       @RequestParam("returnCause") String returnCause,HttpSession session) throws CheckedServiceException, IOException {
+        if (ObjectUtil.isNull(session)||ObjectUtil.isNull((PmphUser) session.getAttribute(Const.SESSION_PMPH_USER))) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.SESSION,
+                    CheckedExceptionResult.USER_SESSION,
+                    "当前Session会话已过期，请重新登录!");
+        }
+        PmphUser pmphUser = (PmphUser) session.getAttribute(Const.SESSION_PMPH_USER);
+        return new ResponseBean(expertationService.onlineProgress(id, onlineProgress, returnCause,pmphUser));
+    }
+
+
+
 
 }
