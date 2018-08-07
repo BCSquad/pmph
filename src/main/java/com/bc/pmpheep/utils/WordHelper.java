@@ -242,9 +242,9 @@ public class WordHelper {
 			sb.append(decSequence);
 			sb.append(textbookName);
 			sb.append("_");
-			sb.append(realname);
-			sb.append("_");
 			sb.append(presetPosition);
+			sb.append("_");
+			sb.append(realname);
 			sb.append(".docx");
 			filename = sb.toString();
 		} else {
