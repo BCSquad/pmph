@@ -87,7 +87,7 @@ public class ProductTypeController {
             return responseBean;
         }
 
-        responseBean = productTypeService.deleteTypeById(productType);
+        responseBean = productTypeService.deleteTypeById(productType,sessionId);
 
         return responseBean;
     }

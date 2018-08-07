@@ -14,6 +14,7 @@
         select *,1 as typeType from
         product_subject_type
         <where>
+            is_deleted = 0
             <if test="parameter.type_name != null and parameter.type_name != '' ">
                 and type_name like concat('%',#{parameter.type_name},'%')
             </if>
@@ -25,6 +26,7 @@
         select count(id) from
         product_subject_type
         <where>
+            is_deleted = 0
             <if test="parameter.type_name != null and parameter.type_name != '' ">
                 and type_name like concat('%',#{parameter.type_name},'%')
             </if>
@@ -39,7 +41,7 @@
         ,2 as typeType
         from
         product_content_type_detail d
-        inner join product_content_type t on d.product_type_id = t.id
+        inner join product_content_type t on d.product_type_id = t.id and d.is_deleted = 0 and t.is_deleted = 0
         <where>
             d.is_leaf = 1
             <if test="parameter.type_name != null and parameter.type_name != '' ">
@@ -55,7 +57,8 @@
         from
         product_content_type_detail d
         <where>
-            d.is_leaf = 1
+            d.is_deleted = 0
+            and d.is_leaf = 1
             <if test="parameter.type_name != null and parameter.type_name != '' ">
                 and d.name_path like concat('%',#{parameter.type_name},'%')
             </if>
@@ -74,5 +77,31 @@
         set dp.is_leaf = isNull(t.id);
 
     </update>
+
+    <update id="refreshLeafOfContentType" >
+        /*更新叶子节点*/
+        update product_content_type_detail dp left join product_content_type t on t.parent_id = dp.product_type_id and t.is_deleted = 0
+        set dp.is_leaf = isNull(t.id);
+    </update>
+
+    <select id="getSubjectTypeExpertationCount" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        select count(e.id)
+        from
+        (
+        select expertation_id from
+        expertation_subject_type where product_subject_type_id = #{id}
+        )t
+        inner join expertation e on e.id = t.expertation_id
+    </select>
+
+    <select id="getContentTypeExpertationCount" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        select count(e.id)
+        from
+        (
+        select expertation_id from
+        expertation_content_type where product_content_type_id = #{id}
+        )t
+        inner join expertation e on e.id = t.expertation_id
+    </select>
 
 </mapper>

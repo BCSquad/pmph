@@ -20,4 +20,8 @@ public interface ProductTypeDao {
     int deleteLeafContentTypeById(Long id);
 
     void refreshLeafOfContentType();
+
+    int getSubjectTypeExpertationCount(Long id);
+
+    int getContentTypeExpertationCount(Long id);
 }

@@ -24,5 +24,5 @@ public interface ProductTypeService {
      * @param productType
      * @return
      */
-    ResponseBean deleteTypeById(ProductType productType);
+    ResponseBean deleteTypeById(ProductType productType,String sessionId);
 }
