@@ -35,7 +35,7 @@ public class SystemMessageServiceTest extends BaseTest  {
 	@Test
 	@Rollback(Const.ISROLLBACK)
 	public void testMaterialSend() throws CheckedServiceException, IOException {
-		systemMessageService.materialSend(materialId, Arrays.asList(orgIds));
+		systemMessageService.materialSend(materialId, Arrays.asList(orgIds),null);
 	}
 
 	// @Test
