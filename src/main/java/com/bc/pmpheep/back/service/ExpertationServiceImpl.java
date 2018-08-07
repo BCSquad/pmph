@@ -7,6 +7,7 @@ import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.ExpertationCountnessVO;
 import com.bc.pmpheep.back.vo.ExpertationVO;
 import com.bc.pmpheep.back.vo.ProductType;
@@ -137,5 +138,38 @@ public class ExpertationServiceImpl implements ExpertationService{
         ExpertationVO expertationVO = expertationDao.getExpertationById(id);
 
         return expertationVO;
+    }
+
+    @Override
+    public Boolean onlineProgress(Long id, Integer onlineProgress, String returnCause, PmphUser pmphUser) {
+        Boolean flag = false;
+        if (ObjectUtil.isNull(id)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
+                    "主键不能为空!");
+        }
+        if (ObjectUtil.isNull(onlineProgress)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
+                    "审核进度不能为空!");
+        }
+        try{
+            //获取申报信息
+            ExpertationVO expertationVO  = expertationDao.getExpertationById(id);
+            if(2==onlineProgress.intValue()){ // 退回
+                if (StringUtil.strLength(returnCause) > 40) {
+                    throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+                            "最多只能输入40个字符，请重新输入!");
+                }
+
+                // 产生一条动态消息
+            }else if(3==onlineProgress.intValue()){ // 通过
+                // 产生一条动态消息
+            }
+            expertationDao.updateOnlineProgress(id,onlineProgress,returnCause);
+            flag = true;
+        }catch (Exception e){
+         e.printStackTrace();
+        }
+
+        return flag;
     }
 }

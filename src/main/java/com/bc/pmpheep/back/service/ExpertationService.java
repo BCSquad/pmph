@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.service;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
+import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.vo.ExpertationVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
@@ -34,4 +35,6 @@ public interface ExpertationService {
      * @return
      */
     ExpertationVO getExpertationById(Long id, String sessionId);
+
+    Boolean onlineProgress(Long id, Integer onlineProgress, String returnCause, PmphUser pmphUser);
 }
