@@ -14,4 +14,10 @@ public interface ProductTypeDao {
     List<ProductType> getLeafContentTypeList(PageParameter<ProductType> pageParameter);
 
     int getLeafContentTypeCount(PageParameter<ProductType> pageParameter);
+
+    int deleteSubjectTypeById(Long id);
+
+    int deleteLeafContentTypeById(Long id);
+
+    void refreshLeafOfContentType();
 }

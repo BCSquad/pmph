@@ -62,4 +62,17 @@
         </where>
     </select>
 
+    <update id="deleteSubjectTypeById" parameterType="java.lang.Long" >
+        update product_subject_type set is_deleted = 1 where id = #{id}
+    </update>
+
+    <update id="deleteLeafContentTypeById" parameterType="java.lang.Long">
+        update product_content_type        set is_deleted = 1 where id = #{id};
+        update product_content_type_detail set is_deleted = 1 where product_type_id = #{id};
+        /*更新叶子节点*/
+        update product_content_type_detail dp left join product_content_type t on t.parent_id = dp.product_type_id and t.is_deleted = 0
+        set dp.is_leaf = isNull(t.id);
+
+    </update>
+
 </mapper>
