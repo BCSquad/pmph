@@ -8,6 +8,8 @@
         <result property="parent_id" column="parent_id"></result>
         <result property="type_name" column="type_name"></result>
         <result property="typeType" column="typeType"></result>
+        <result property="gmt_create" column="gmt_create"></result>
+        <result property="gmt_update" column="gmt_update"></result>
     </resultMap>
 
     <select id="getSubjectTypeList" parameterType="PageParameter" resultMap="ProductTypeMap">
@@ -37,8 +39,9 @@
         select
         t.id as id
         ,d.name_path as type_name
-        ,t.parent_id as parent_id
-        ,2 as typeType
+        ,t.parent_id as parent_id,
+        t.gmt_create as gmt_create,
+        2 as typeType
         from
         product_content_type_detail d
         inner join product_content_type t on d.product_type_id = t.id and d.is_deleted = 0 and t.is_deleted = 0
