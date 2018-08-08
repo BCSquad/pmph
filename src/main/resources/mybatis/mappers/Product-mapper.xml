@@ -16,13 +16,13 @@
         ,u.realname  as u_realname
 
         ,pa.id as a_id
-        ,concat(#{uri},pa.attachment) as a_attachment
+        ,pa.attachment as a_attachment
         ,pa.attachment_name as a_attachment_name
         ,pa.download as a_download
         ,pa.is_scan_img as a_is_scan_img
 
         ,pimg.id as pimg_id
-        ,concat(#{uri},pimg.attachment) as pimg_attachment
+        ,pimg.attachment as pimg_attachment
         ,pimg.attachment_name as pimg_attachment_name
         ,pimg.download as pimg_download
         ,pimg.is_scan_img as pimg_is_scan_img

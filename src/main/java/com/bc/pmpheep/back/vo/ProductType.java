@@ -12,12 +12,19 @@ public class ProductType implements Serializable{
     private Long id	;
     private Long parent_id ;//备用字段，当前要求学科分类无层级关系
     private String type_name; //50长度 名称
-    private int typeType; // 1.学科分类 2.内容分类
+    private Long product_id; //产品id
 
+    private int typeType; // 1.学科分类 2.内容分类
+    private Long productType ; // 产品分类
     private List<ProductType> childType; //子分类列表
     private String fullNamePath; //从顶级分类名称到自身分类名称的全名称路径 分隔符为 '/'
 
     public ProductType() {
+    }
+
+    public ProductType(Long productType){
+        super();
+        this.productType = productType;
     }
 
     public Long getId() {
@@ -66,5 +73,21 @@ public class ProductType implements Serializable{
 
     public void setFullNamePath(String fullNamePath) {
         this.fullNamePath = fullNamePath;
+    }
+
+    public Long getProduct_id() {
+        return product_id;
+    }
+
+    public void setProduct_id(Long product_id) {
+        this.product_id = product_id;
+    }
+
+    public Long getProductType() {
+        return productType;
+    }
+
+    public void setProductType(Long productType) {
+        this.productType = productType;
     }
 }

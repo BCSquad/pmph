@@ -49,17 +49,18 @@ public class ProductTypeController {
      * @param pageNumber
      * @return
      */
-    @RequestMapping("/{type}/list")
+    @RequestMapping("/{ptype}/{ttype}/list")
     @ResponseBody
     public ResponseBean getSubjectList(HttpServletRequest request
-                                    , @PathVariable("type")String pathType
+                                    , @PathVariable("ptype")Long ptype
+                                    , @PathVariable("ttype")String pathType
                                     , String type_name
                                     , Integer pageSize
                                     , Integer pageNumber){
         ResponseBean responseBean = new ResponseBean();
         String sessionId = CookiesUtil.getSessionId(request);
         PageParameter<ProductType> pageParameter = new PageParameter<>(pageNumber, pageSize);
-        ProductType productType = new ProductType();
+        ProductType productType = new ProductType(ptype);
         pageParameter.setParameter(productType);
         productType.setType_name(type_name!=null?type_name.trim():null);
 
