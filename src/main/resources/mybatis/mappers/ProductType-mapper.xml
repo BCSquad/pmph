@@ -104,4 +104,36 @@
         inner join expertation e on e.id = t.expertation_id
     </select>
 
+    <insert id="insertSubjectTypeBatch" parameterType="com.bc.pmpheep.back.vo.ProductType" >
+        insert into product_subject_type(
+        type_name
+        )
+        VALUES
+          <foreach collection="list" item="item" open="(" close=")" separator="," >
+              #{item.type_name}
+          </foreach>
+        on duplicate key update is_deleted = 0
+    </insert>
+
+    <insert id="insertContentType" parameterType="ProductType" keyColumn="id" useGeneratedKeys="true">
+        insert INTO product_content_type
+        (
+          id,
+          type_name,
+          parent_id
+        )
+        VALUES (
+          (select product_type_id as id from product_content_type_detail where name_path = #{fullNamePath}),
+          #{type_name},
+          #{parent_id}
+        )
+        on duplicate key UPDATE is_deleted = 0
+    </insert>
+
+    <select id="callUpdateProductTypeDetail" parameterType="java.lang.Long">
+        call update_product_type_detail(#{id});
+    </select>
+
+
+
 </mapper>

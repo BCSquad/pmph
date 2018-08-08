@@ -6,16 +6,34 @@ import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
+import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.OrgAndOrgUserVO;
+import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.back.vo.ProductType;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.OfficeXmlFileException;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class ProductTypeServiceImpl implements ProductTypeService {
@@ -90,5 +108,140 @@ public class ProductTypeServiceImpl implements ProductTypeService {
         }
 
         return responseBean;
+    }
+
+    @Override
+    public List<ProductType> importExcel(MultipartFile file, int typeType) {
+        String fileType = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+        Workbook workbook = null;
+        InputStream in = null;
+        try {
+            in = file.getInputStream();
+        } catch (FileNotFoundException e) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+                    CheckedExceptionResult.NULL_PARAM, "获取上传的文件失败");
+        } catch (IOException e){
+            throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+                    CheckedExceptionResult.ILLEGAL_PARAM, "读取文件失败");
+        }
+        try {
+            if (".xls".equals(fileType)){
+                workbook = new HSSFWorkbook(in);
+            } else if (".xlsx".equals(fileType)){
+                workbook = new XSSFWorkbook(in);
+            } else {
+                throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+                        CheckedExceptionResult.ILLEGAL_PARAM, "读取的不是Excel文件");
+            }
+        } catch (IOException e){
+            throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+                    CheckedExceptionResult.ILLEGAL_PARAM, "文件读取失败");
+        } catch (OfficeXmlFileException e){
+            throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+                    CheckedExceptionResult.ILLEGAL_PARAM, "此文档不是对应的.xls或.xlsx的Excel文档，请修改为正确的后缀名再进行上传");
+        }
+
+        //以fullNamePath为key
+        Map<String,ProductType> productTypeMap = new HashMap<String,ProductType>();
+
+        for (int numSheet =0 ; numSheet < workbook.getNumberOfSheets(); numSheet++ ){
+            Sheet sheet = workbook.getSheetAt(numSheet);
+            if (null == sheet){
+                continue;
+            }
+            for (int rowNum = 1; rowNum <= sheet.getLastRowNum(); rowNum++){
+                Row row = sheet.getRow(rowNum);
+                if (null == row){
+                    break;
+                }
+
+                for(int cellNum = 0;cellNum < row.getLastCellNum();cellNum++){
+                    //给每个单元格创建或关联实体类
+                    ProductType cellProductType = new ProductType();
+                    cellProductType.setTypeType(typeType);
+                    Cell cell = row.getCell(cellNum);
+                    String cell_type_name = StringUtil.getCellValue(cell);
+                    if (StringUtil.isEmpty(cell_type_name)){
+                        throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+                                CheckedExceptionResult.NULL_PARAM, "Excel文件里序号为" + rowNum + "的分类名称为空");
+                    }else{
+                        cellProductType.setType_name(cell_type_name);
+                    }
+
+                    String parent_name_path = "";
+                    for(int ic = 0;ic<rowNum;ic++){
+                        parent_name_path += "/"+ StringUtil.getCellValue(row.getCell(ic)).trim();
+                    }
+                    parent_name_path = parent_name_path.replaceAll("^/","");
+                    String full_name_path = parent_name_path+"/"+cell_type_name;
+                    full_name_path = full_name_path.replaceAll("^/","");
+                    //若full_name_path不重复，则说明此实体类未添加过
+                    if(productTypeMap.get(full_name_path)==null){
+                        cellProductType.setFullNamePath(full_name_path);
+                        productTypeMap.put(full_name_path,cellProductType);
+                        //每行都从第0个cell开始遍历cell，故到当前cell时，其父cell一定已经在map中
+                        //加入其父cell的子集合
+                        productTypeMap.get(parent_name_path).getChildType().add(cellProductType);
+                    }
+                }
+            }
+        }
+
+        Pattern pattern = Pattern.compile("/");
+
+        List<ProductType> list = new ArrayList<ProductType>();
+
+        productTypeMap.keySet();
+        for (String key:productTypeMap.keySet()) {
+            Matcher matcher = pattern.matcher(key);
+            if(!matcher.matches()){ //全名路径里找不到/ 说明是顶级分类
+                list.add(productTypeMap.get(key));
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public void insertProductTypeTree(List<ProductType> list, int typeType) {
+
+        if (typeType==1){ //学科分类
+            int count = productTypeDao.insertSubjectTypeBatch(list);
+        }else if(typeType==2){ //内容分类
+            List<ProductType> tempChildList = new ArrayList<ProductType>();
+            for (ProductType productType: list) {
+                productType.setParent_id(0L);
+                productTypeDao.insertContentType(productType);
+                productTypeDao.callUpdateProductTypeDetail(productType.getId());
+                Long parent_id = productType.getId();
+                List<ProductType> childType = productType.getChildType();
+                for (ProductType cp: childType) {
+                    cp.setParent_id(parent_id);
+                    tempChildList.add(cp);
+                }
+            }
+
+            List<ProductType> nowLevelList = tempChildList;
+            tempChildList = new ArrayList<>();
+            while(nowLevelList!=null && nowLevelList.size()>0){
+                for (ProductType productType: nowLevelList) {
+                    productTypeDao.insertContentType(productType);
+                    productTypeDao.callUpdateProductTypeDetail(productType.getId());
+                    Long parent_id = productType.getId();
+                    List<ProductType> childType = productType.getChildType();
+                    for (ProductType cp: childType) {
+                        cp.setParent_id(parent_id);
+                        tempChildList.add(cp);
+                    }
+                }
+                nowLevelList = tempChildList;
+            }
+
+
+        }else{
+            //TODO 如果后续有新增其他分类...
+        }
+
+
+
     }
 }
