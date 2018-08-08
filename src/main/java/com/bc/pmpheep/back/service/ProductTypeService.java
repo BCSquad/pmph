@@ -40,5 +40,5 @@ public interface ProductTypeService {
      * @param list 顶层分类列表，子类列表在其childType列表中
      * @param typeType 1.学科分类 2.内容分类
      */
-    void insertProductTypeTree(List<ProductType> list, int typeType);
+    ResponseBean insertProductTypeTree(List<ProductType> list, int typeType);
 }

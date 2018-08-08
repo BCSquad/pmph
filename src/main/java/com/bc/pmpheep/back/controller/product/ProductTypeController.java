@@ -112,6 +112,7 @@ public class ProductTypeController {
     public ResponseBean importExcel(@RequestParam(name = "file")MultipartFile file
             , @PathVariable("ptype")Long ptype
             , @PathVariable("type")String pathType, HttpServletRequest request){
+        ResponseBean responseBean = null;
         Map<String, Object> map = new HashedMap();
         String sessionId = CookiesUtil.getSessionId(request);
         if (StringUtil.isEmpty(sessionId)){
@@ -133,13 +134,14 @@ public class ProductTypeController {
             map.put("list", list);
             session.setAttribute(uuid, list);
 
-            //现直接插入此list
-            productTypeService.insertProductTypeTree(list,typeType);
 
+            //现直接插入此list
+            responseBean = productTypeService.insertProductTypeTree(list,typeType);
+            responseBean.setData(map);
         } catch (CheckedServiceException e) {
             return new ResponseBean(e);
         }
-        return new ResponseBean(map);
+        return responseBean;
     }
 
 

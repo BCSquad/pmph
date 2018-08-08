@@ -33,9 +33,11 @@ public interface ProductTypeDao {
      * 刷新此类的详情表
      * @param productType
      */
-    void insertContentType(ProductType productType);
+    int insertContentType(ProductType productType);
 
     void callUpdateProductTypeDetail(Long id);
 
     Long getProductIdByProductType(Long product_type);
+
+    Long queryContentTypeIdByFullNamePath(ProductType productType);
 }

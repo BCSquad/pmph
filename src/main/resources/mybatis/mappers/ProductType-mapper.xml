@@ -114,15 +114,16 @@
     <insert id="insertSubjectTypeBatch" parameterType="com.bc.pmpheep.back.vo.ProductType" >
         insert into product_subject_type(
         type_name
+        ,product_id
         )
         VALUES
-          <foreach collection="list" item="item" open="(" close=")" separator="," >
-              #{item.type_name}
+          <foreach collection="list" item="item" separator="," >
+              (#{item.type_name},#{item.product_id})
           </foreach>
         on duplicate key update is_deleted = 0
     </insert>
 
-    <insert id="insertContentType" parameterType="ProductType" keyColumn="id" useGeneratedKeys="true">
+    <insert id="insertContentType" parameterType="ProductType" keyProperty="id" keyColumn="id" useGeneratedKeys="true">
         insert INTO product_content_type
         (
           id,
@@ -139,12 +140,16 @@
         on duplicate key UPDATE is_deleted = 0
     </insert>
 
-    <select id="callUpdateProductTypeDetail" parameterType="java.lang.Long">
+    <update id="callUpdateProductTypeDetail" parameterType="java.lang.Long">
         call update_product_type_detail(#{id});
-    </select>
+    </update>
 
     <select id="getProductIdByProductType" parameterType="java.lang.Long" resultType="java.lang.Long">
         select id from product where product_type =  #{productType}
+    </select>
+
+    <select id="queryContentTypeIdByFullNamePath" parameterType="com.bc.pmpheep.back.vo.ProductType" resultType="java.lang.Long">
+        select product_type_id from product_content_type_detail where name_path = #{fullNamePath} and product_id = #{product_id}
     </select>
 
 </mapper>

@@ -154,7 +154,6 @@ public class ProductTypeServiceImpl implements ProductTypeService {
                 if (null == row){
                     break;
                 }
-
                 for(int cellNum = 0;cellNum < row.getLastCellNum();cellNum++){
                     //给每个单元格创建或关联实体类
                     ProductType cellProductType = new ProductType(ptype);
@@ -164,14 +163,15 @@ public class ProductTypeServiceImpl implements ProductTypeService {
                     Cell cell = row.getCell(cellNum);
                     String cell_type_name = StringUtil.getCellValue(cell);
                     if (StringUtil.isEmpty(cell_type_name)){
-                        throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
-                                CheckedExceptionResult.NULL_PARAM, "Excel文件里序号为" + rowNum + "的分类名称为空");
+                        /*throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+                                CheckedExceptionResult.NULL_PARAM, "Excel文件里序号为" + rowNum + "的分类名称为空");*/
+                        break;
                     }else{
                         cellProductType.setType_name(cell_type_name);
                     }
 
                     String parent_name_path = "";
-                    for(int ic = 0;ic<rowNum;ic++){
+                    for(int ic = 0;ic<cellNum;ic++){
                         parent_name_path += "/"+ StringUtil.getCellValue(row.getCell(ic)).trim();
                     }
                     parent_name_path = parent_name_path.replaceAll("^/","");
@@ -181,9 +181,12 @@ public class ProductTypeServiceImpl implements ProductTypeService {
                     if(productTypeMap.get(full_name_path)==null){
                         cellProductType.setFullNamePath(full_name_path);
                         productTypeMap.put(full_name_path,cellProductType);
-                        //每行都从第0个cell开始遍历cell，故到当前cell时，其父cell一定已经在map中
+                        //每行都从第0个cell开始遍历cell，故到当前cell时，其父cell一定已经在map中,除了顶层
                         //加入其父cell的子集合
-                        productTypeMap.get(parent_name_path).getChildType().add(cellProductType);
+                        ProductType parent_productType = productTypeMap.get(parent_name_path);
+                        if(parent_productType!=null){
+                            parent_productType.getChildType().add(cellProductType);
+                        }
                     }
                 }
             }
@@ -196,7 +199,7 @@ public class ProductTypeServiceImpl implements ProductTypeService {
         productTypeMap.keySet();
         for (String key:productTypeMap.keySet()) {
             Matcher matcher = pattern.matcher(key);
-            if(!matcher.matches()){ //全名路径里找不到/ 说明是顶级分类
+            if(!matcher.find()){ //全名路径里找不到/ 说明是顶级分类
                 list.add(productTypeMap.get(key));
             }
         }
@@ -204,29 +207,20 @@ public class ProductTypeServiceImpl implements ProductTypeService {
     }
 
     @Override
-    public void insertProductTypeTree(List<ProductType> list, int typeType) {
-
-        if (typeType==1){ //学科分类
-            int count = productTypeDao.insertSubjectTypeBatch(list);
-        }else if(typeType==2){ //内容分类
-            List<ProductType> tempChildList = new ArrayList<ProductType>();
-            for (ProductType productType: list) {
-                productType.setParent_id(0L);
-                productTypeDao.insertContentType(productType);
-                productTypeDao.callUpdateProductTypeDetail(productType.getId());
-                Long parent_id = productType.getId();
-                List<ProductType> childType = productType.getChildType();
-                for (ProductType cp: childType) {
-                    cp.setParent_id(parent_id);
-                    tempChildList.add(cp);
-                }
-            }
-
-            List<ProductType> nowLevelList = tempChildList;
-            tempChildList = new ArrayList<>();
-            while(nowLevelList!=null && nowLevelList.size()>0){
-                for (ProductType productType: nowLevelList) {
-                    productTypeDao.insertContentType(productType);
+    public ResponseBean insertProductTypeTree(List<ProductType> list, int typeType) {
+        ResponseBean responseBean = new ResponseBean();
+        try{
+            if (typeType==1){ //学科分类
+                int count = productTypeDao.insertSubjectTypeBatch(list);
+            }else if(typeType==2){ //内容分类
+                List<ProductType> tempChildList = new ArrayList<ProductType>();
+                for (ProductType productType: list) {
+                    productType.setParent_id(0L);
+                    int count = productTypeDao.insertContentType(productType);
+                    if(productType.getId()==null){ //不插入的情况下 将无id返回到productType，说明数据库里已有，要查询
+                        Long id = productTypeDao.queryContentTypeIdByFullNamePath(productType);
+                        productType.setId(id);
+                    }
                     productTypeDao.callUpdateProductTypeDetail(productType.getId());
                     Long parent_id = productType.getId();
                     List<ProductType> childType = productType.getChildType();
@@ -235,15 +229,39 @@ public class ProductTypeServiceImpl implements ProductTypeService {
                         tempChildList.add(cp);
                     }
                 }
-                nowLevelList = tempChildList;
+
+                List<ProductType> nowLevelList = tempChildList;
+                while(nowLevelList!=null && nowLevelList.size()>0){
+                    tempChildList = new ArrayList<>();
+                    for (ProductType productType: nowLevelList) {
+                        int count = productTypeDao.insertContentType(productType);
+                        if(productType.getId()==null){ //不插入的情况下 将无id返回到productType，说明数据库里已有，要查询
+                            Long id = productTypeDao.queryContentTypeIdByFullNamePath(productType);
+                            productType.setId(id);
+                        }
+                        productTypeDao.callUpdateProductTypeDetail(productType.getId());
+                        Long parent_id = productType.getId();
+                        List<ProductType> childType = productType.getChildType();
+                        for (ProductType cp: childType) {
+                            cp.setParent_id(parent_id);
+                            tempChildList.add(cp);
+                        }
+                    }
+                    nowLevelList = tempChildList;
+                }
+
+
+            }else{
+                //TODO 如果后续有新增其他分类...
             }
 
-
-        }else{
-            //TODO 如果后续有新增其他分类...
+        }catch (Exception e){
+            responseBean.setCode(ResponseBean.UNCHECKED_ERROR);
+            responseBean.setMsg("导入数据库失败！");
         }
+        responseBean.setCode(ResponseBean.SUCCESS);
+        responseBean.setMsg("导入成功");
 
-
-
+        return responseBean;
     }
 }

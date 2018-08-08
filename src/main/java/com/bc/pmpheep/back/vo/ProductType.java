@@ -4,6 +4,7 @@ import com.bc.pmpheep.annotation.ExcelHeader;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -64,6 +65,9 @@ public class ProductType implements Serializable{
     }
 
     public List<ProductType> getChildType() {
+        if(childType==null){
+            childType = new ArrayList<ProductType>();
+        }
         return childType;
     }
 
