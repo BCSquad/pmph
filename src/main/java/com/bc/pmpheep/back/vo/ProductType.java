@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.vo;
 import com.bc.pmpheep.annotation.ExcelHeader;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -13,6 +14,8 @@ public class ProductType implements Serializable{
     private Long parent_id ;//备用字段，当前要求学科分类无层级关系
     private String type_name; //50长度 名称
     private int typeType; // 1.学科分类 2.内容分类
+    private Timestamp gmt_create;
+    private Timestamp gmt_update;
 
     private List<ProductType> childType; //子分类列表
     private String fullNamePath; //从顶级分类名称到自身分类名称的全名称路径 分隔符为 '/'
@@ -66,5 +69,21 @@ public class ProductType implements Serializable{
 
     public void setFullNamePath(String fullNamePath) {
         this.fullNamePath = fullNamePath;
+    }
+
+    public Timestamp getGmt_create() {
+        return gmt_create;
+    }
+
+    public void setGmt_create(Timestamp gmt_create) {
+        this.gmt_create = gmt_create;
+    }
+
+    public Timestamp getGmt_update() {
+        return gmt_update;
+    }
+
+    public void setGmt_update(Timestamp gmt_update) {
+        this.gmt_update = gmt_update;
     }
 }
