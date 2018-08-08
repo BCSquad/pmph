@@ -111,7 +111,7 @@ public class ProductTypeServiceImpl implements ProductTypeService {
     }
 
     @Override
-    public List<ProductType> importExcel(MultipartFile file, int typeType) {
+    public List<ProductType> importExcel(MultipartFile file, int typeType,Long ptype) {
         String fileType = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
         Workbook workbook = null;
         InputStream in = null;
@@ -157,7 +157,9 @@ public class ProductTypeServiceImpl implements ProductTypeService {
 
                 for(int cellNum = 0;cellNum < row.getLastCellNum();cellNum++){
                     //给每个单元格创建或关联实体类
-                    ProductType cellProductType = new ProductType();
+                    ProductType cellProductType = new ProductType(ptype);
+                    Long product_id = productTypeDao.getProductIdByProductType(ptype);
+                    cellProductType.setProduct_id(product_id);
                     cellProductType.setTypeType(typeType);
                     Cell cell = row.getCell(cellNum);
                     String cell_type_name = StringUtil.getCellValue(cell);

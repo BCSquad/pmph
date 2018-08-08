@@ -108,8 +108,10 @@ public class ProductTypeController {
 
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "临床决策产品分类导入Excel文件")
-    @RequestMapping(value = "/{type}/importExcel", method = RequestMethod.POST)
-    public ResponseBean importExcel(@RequestParam(name = "file")MultipartFile file, @PathVariable("type")String pathType, HttpServletRequest request){
+    @RequestMapping(value = "/{ptype}/{type}/importExcel", method = RequestMethod.POST)
+    public ResponseBean importExcel(@RequestParam(name = "file")MultipartFile file
+            , @PathVariable("ptype")Long ptype
+            , @PathVariable("type")String pathType, HttpServletRequest request){
         Map<String, Object> map = new HashedMap();
         String sessionId = CookiesUtil.getSessionId(request);
         if (StringUtil.isEmpty(sessionId)){
@@ -125,7 +127,7 @@ public class ProductTypeController {
             typeType = 2 ;
         }
         try {
-            List<ProductType> list = productTypeService.importExcel(file,typeType);
+            List<ProductType> list = productTypeService.importExcel(file,typeType,ptype);
             map.put("uuid", uuid);
             //如果需要加确认后再存入数据库，这个list可以传到前台显示
             map.put("list", list);

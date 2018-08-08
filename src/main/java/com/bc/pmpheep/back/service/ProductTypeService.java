@@ -33,7 +33,7 @@ public interface ProductTypeService {
      * @param typeType
      * @return
      */
-    List<ProductType> importExcel(MultipartFile file, int typeType);
+    List<ProductType> importExcel(MultipartFile file, int typeType,Long ptype);
 
     /**
      * 插入分类树

@@ -36,4 +36,6 @@ public interface ProductTypeDao {
     void insertContentType(ProductType productType);
 
     void callUpdateProductTypeDetail(Long id);
+
+    Long getProductIdByProductType(Long product_type);
 }

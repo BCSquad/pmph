@@ -13,24 +13,26 @@
     </resultMap>
 
     <select id="getSubjectTypeList" parameterType="PageParameter" resultMap="ProductTypeMap">
-        select *,1 as typeType from
-        product_subject_type
+        select t.*,1 as typeType from
+        product_subject_type t
+        inner join (select id from product where product_type = #{parameter.productType} and is_deleted = 0) p on p.id = t.product_id
         <where>
-            is_deleted = 0
+            t.is_deleted = 0
             <if test="parameter.type_name != null and parameter.type_name != '' ">
-                and type_name like concat('%',#{parameter.type_name},'%')
+                and t.type_name like concat('%',#{parameter.type_name},'%')
             </if>
         </where>
         limit #{start},#{pageSize}
     </select>
 
     <select id="getSubjectTypeCount" parameterType="PageParameter" resultType="int">
-        select count(id) from
-        product_subject_type
+        select count(t.id) from
+        product_subject_type t
+        inner join (select id from product where product_type = #{parameter.productType} and is_deleted = 0) p on p.id = t.product_id
         <where>
-            is_deleted = 0
+            t.is_deleted = 0
             <if test="parameter.type_name != null and parameter.type_name != '' ">
-                and type_name like concat('%',#{parameter.type_name},'%')
+                and t.type_name like concat('%',#{parameter.type_name},'%')
             </if>
         </where>
     </select>
@@ -45,6 +47,7 @@
         from
         product_content_type_detail d
         inner join product_content_type t on d.product_type_id = t.id and d.is_deleted = 0 and t.is_deleted = 0
+        inner join (select id from product where product_type = #{parameter.productType} and is_deleted = 0) p on p.id = t.product_id
         <where>
             d.is_leaf = 1
             <if test="parameter.type_name != null and parameter.type_name != '' ">
@@ -59,6 +62,7 @@
         COUNT(d.id)
         from
         product_content_type_detail d
+        inner join (select id from product where product_type = #{parameter.productType} and is_deleted = 0) p on p.id = d.product_id
         <where>
             d.is_deleted = 0
             and d.is_leaf = 1
@@ -83,7 +87,7 @@
 
     <update id="refreshLeafOfContentType" >
         /*更新叶子节点*/
-        update product_content_type_detail dp left join product_content_type t on t.parent_id = dp.product_type_id and t.is_deleted = 0
+        update product_content_type_detail dp left join product_content_type t on t.parent_id = dp.product_type_id and t.is_deleted = 0 and dp.product_id = t.product_id
         set dp.is_leaf = isNull(t.id);
     </update>
 
@@ -123,12 +127,14 @@
         (
           id,
           type_name,
-          parent_id
+          parent_id,
+          product_id
         )
         VALUES (
           (select product_type_id as id from product_content_type_detail where name_path = #{fullNamePath}),
           #{type_name},
-          #{parent_id}
+          #{parent_id},
+          #{product_id}
         )
         on duplicate key UPDATE is_deleted = 0
     </insert>
@@ -137,6 +143,8 @@
         call update_product_type_detail(#{id});
     </select>
 
-
+    <select id="getProductIdByProductType" parameterType="java.lang.Long" resultType="java.lang.Long">
+        select id from product where product_type =  #{productType}
+    </select>
 
 </mapper>
