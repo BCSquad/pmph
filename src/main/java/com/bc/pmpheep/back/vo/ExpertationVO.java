@@ -79,6 +79,7 @@ public class ExpertationVO implements Serializable {
     private List<DecTextbook> DecTextbookList; // 人卫社教材编写情况
     private List<DecMonograph> DecMonographList; //主编学术专著情况
     private List<DecNationalPlan> DecNationalPlanList; //主编或参编图书情况
+    private List<DecExtension> DecExtensionList; //扩展项
 
     public ExpertationVO() {
         super();
@@ -489,5 +490,13 @@ public class ExpertationVO implements Serializable {
 
     public void setDegree(short degree) {
         this.degree = degree;
+    }
+
+    public List<DecExtension> getDecExtensionList() {
+        return DecExtensionList;
+    }
+
+    public void setDecExtensionList(List<DecExtension> decExtensionList) {
+        DecExtensionList = decExtensionList;
     }
 }

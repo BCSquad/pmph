@@ -134,7 +134,6 @@ public class ProductTypeController {
             map.put("list", list);
             session.setAttribute(uuid, list);
 
-
             //现直接插入此list
             responseBean = productTypeService.insertProductTypeTree(list,typeType);
             responseBean.setData(map);
