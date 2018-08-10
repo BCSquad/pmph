@@ -132,7 +132,7 @@
           product_id
         )
         VALUES (
-          (select product_type_id as id from product_content_type_detail where name_path = #{fullNamePath}),
+          (select product_type_id as id from product_content_type_detail where name_path = #{fullNamePath} and product_id = #{product_id}),
           #{type_name},
           #{parent_id},
           #{product_id}

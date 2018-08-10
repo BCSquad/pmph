@@ -107,7 +107,7 @@
                 ifNull(t.id,0) as tid,
                 ifNull(t.name_path,'未选择分类') as type_name
 
-            from (select * from expertation e where e.product_id = #{parameter.ptype} and e.online_progress >0) e
+            from (select * from expertation e where e.product_id = #{parameter.product_id} and e.online_progress >0) e
             left join expertation_content_type et on et.expertation_id = e.id
             left join product_content_type_detail t on t.product_type_id = et.product_content_type_id
 
@@ -116,6 +116,7 @@
                     and t.name_path like concat('%',#{parameter.type_name},'%')
                 </if>
             </where>
+            group by tid,eid
 
         )t1
 
@@ -136,7 +137,7 @@
             (
                 select
                     ifNull(t.id,0) as tid
-                from (select * from expertation e where e.product_id = #{parameter.ptype} and e.online_progress >0) e
+                from (select * from expertation e where e.product_id = #{parameter.product_id} and e.online_progress >0) e
                 left join expertation_content_type et on et.expertation_id = e.id
                 left join product_content_type_detail t on t.product_type_id = et.product_content_type_id
 
@@ -166,7 +167,7 @@
                 ifNull(t.id,0) as tid,
                 ifNull(t.type_name,'未选择分类') as type_name
 
-            from (select * from expertation e where e.product_id = #{parameter.ptype} and e.online_progress >0) e
+            from (select * from expertation e where e.product_id = #{parameter.product_id} and e.online_progress >0) e
             left join expertation_subject_type et on et.expertation_id = e.id
             left join product_subject_type t on t.id = et.product_subject_type_id
 
@@ -175,6 +176,7 @@
                     and t.type_name like concat('%',#{parameter.type_name},'%')
                 </if>
             </where>
+            group by tid,eid
 
         )t1
 
@@ -195,7 +197,7 @@
             (
                 select
                     ifNull(t.id,0) as tid
-                from (select * from expertation e where e.product_id = #{parameter.ptype} and e.online_progress >0) e
+                from (select * from expertation e where e.product_id = #{parameter.product_id} and e.online_progress >0) e
                 left join expertation_subject_type et on et.expertation_id = e.id
                 left join product_subject_type t on t.id = et.product_subject_type_id
 
@@ -286,6 +288,12 @@
         dec_national_plan.per_id as dec_national_plan_per_id,
         dec_national_plan.expertation_id as dec_national_plan_expertation_id,
 
+        dec_extension.id as dec_extension_id,
+        dec_extension.extension_id as dec_extension_extension_id,
+        dec_extension.declaration_id as dec_extension_declaration_id,
+        dec_extension.content as dec_extension_content,
+        dec_extension.expertation_id as dec_extension_expertation_id,
+
         pst.id as pst_id,
         pst.parent_id as pst_parent_id,
         pst.type_name as pst_type_name,
@@ -318,6 +326,10 @@
         left join dec_monograph  on dec_monograph.expertation_id = e.id
 
         left join dec_national_plan  on dec_national_plan.expertation_id = e.id
+
+
+        left join product_extension on product_extension.product_id = e.product_id
+        left join  dec_extension on dec_extension.extension_id = product_extension.id and dec_extension.expertation_id = e.id
     </select>
 
 
@@ -433,6 +445,14 @@
             <result property="rankText" column="dec_national_plan_rank_text"></result>
             <result property="perId" column="dec_national_plan_per_id"></result>
             <result property="expertationId" column="dec_national_plan_expertation_id"></result>
+        </collection>
+
+        <collection property="DecExtensionList" javaType="list" ofType="DecExtension">
+            <id property="id" column="dec_extension_id"></id>
+            <result property="extensionId" column="dec_extension_extension_id"></result>
+            <result property="declarationId" column="dec_extension_declaration_id"></result>
+            <result property="content" column="dec_extension_content"></result>
+            <result property="expertationId" column="dec_extension_expertation_id"></result>
         </collection>
 
         <collection property="productSubjectTypeList" javaType="list" ofType="ProductType">

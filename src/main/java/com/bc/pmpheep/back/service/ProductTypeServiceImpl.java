@@ -214,7 +214,7 @@ public class ProductTypeServiceImpl implements ProductTypeService {
                 int count = productTypeDao.insertSubjectTypeBatch(list);
             }else if(typeType==2){ //内容分类
                 List<ProductType> tempChildList = new ArrayList<ProductType>();
-                for (ProductType productType: list) {
+                /*for (ProductType productType: list) {
                     productType.setParent_id(0L);
                     int count = productTypeDao.insertContentType(productType);
                     if(productType.getId()==null){ //不插入的情况下 将无id返回到productType，说明数据库里已有，要查询
@@ -230,7 +230,11 @@ public class ProductTypeServiceImpl implements ProductTypeService {
                     }
                 }
 
-                List<ProductType> nowLevelList = tempChildList;
+                List<ProductType> nowLevelList = tempChildList;*/
+                for (ProductType productType: list) {
+                    productType.setParent_id(0L);
+                }
+                List<ProductType> nowLevelList = list;
                 while(nowLevelList!=null && nowLevelList.size()>0){
                     tempChildList = new ArrayList<>();
                     for (ProductType productType: nowLevelList) {
