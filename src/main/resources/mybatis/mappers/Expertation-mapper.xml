@@ -107,7 +107,7 @@
                 ifNull(t.id,0) as tid,
                 ifNull(t.name_path,'未选择分类') as type_name
 
-            from (select * from expertation e where e.product_id = #{parameter.ptype} and e.online_progress >0) e
+            from (select * from expertation e where e.product_id = #{parameter.product_id} and e.online_progress >0) e
             left join expertation_content_type et on et.expertation_id = e.id
             left join product_content_type_detail t on t.product_type_id = et.product_content_type_id
 
@@ -116,6 +116,7 @@
                     and t.name_path like concat('%',#{parameter.type_name},'%')
                 </if>
             </where>
+            group by tid,eid
 
         )t1
 
@@ -136,7 +137,7 @@
             (
                 select
                     ifNull(t.id,0) as tid
-                from (select * from expertation e where e.product_id = #{parameter.ptype} and e.online_progress >0) e
+                from (select * from expertation e where e.product_id = #{parameter.product_id} and e.online_progress >0) e
                 left join expertation_content_type et on et.expertation_id = e.id
                 left join product_content_type_detail t on t.product_type_id = et.product_content_type_id
 
@@ -166,7 +167,7 @@
                 ifNull(t.id,0) as tid,
                 ifNull(t.type_name,'未选择分类') as type_name
 
-            from (select * from expertation e where e.product_id = #{parameter.ptype} and e.online_progress >0) e
+            from (select * from expertation e where e.product_id = #{parameter.product_id} and e.online_progress >0) e
             left join expertation_subject_type et on et.expertation_id = e.id
             left join product_subject_type t on t.id = et.product_subject_type_id
 
@@ -175,6 +176,7 @@
                     and t.type_name like concat('%',#{parameter.type_name},'%')
                 </if>
             </where>
+            group by tid,eid
 
         )t1
 
@@ -195,7 +197,7 @@
             (
                 select
                     ifNull(t.id,0) as tid
-                from (select * from expertation e where e.product_id = #{parameter.ptype} and e.online_progress >0) e
+                from (select * from expertation e where e.product_id = #{parameter.product_id} and e.online_progress >0) e
                 left join expertation_subject_type et on et.expertation_id = e.id
                 left join product_subject_type t on t.id = et.product_subject_type_id
 

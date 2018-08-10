@@ -6,9 +6,9 @@ public class ExpertationCountnessVO {
     @ExcelHeader(header = "学科分类")
     private String typeName;
     @ExcelHeader(header = "申报人数")
-    private String countSubmit;
+    private Long countSubmit;
     @ExcelHeader(header = "通过人数")
-    private String countSuccess;
+    private Long countSuccess;
 
     public ExpertationCountnessVO() {
     }
@@ -22,19 +22,20 @@ public class ExpertationCountnessVO {
         this.typeName = typeName;
     }
 
-    public String getCountSubmit() {
+
+    public Long getCountSubmit() {
         return countSubmit;
     }
 
-    public void setCountSubmit(String countSubmit) {
+    public void setCountSubmit(Long countSubmit) {
         this.countSubmit = countSubmit;
     }
 
-    public String getCountSuccess() {
+    public Long getCountSuccess() {
         return countSuccess;
     }
 
-    public void setCountSuccess(String countSuccess) {
+    public void setCountSuccess(Long countSuccess) {
         this.countSuccess = countSuccess;
     }
 }

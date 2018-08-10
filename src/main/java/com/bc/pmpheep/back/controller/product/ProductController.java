@@ -1,11 +1,13 @@
 package com.bc.pmpheep.back.controller.product;
 
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Product;
 import com.bc.pmpheep.back.service.ProductService;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
+import com.bc.pmpheep.back.vo.ExpertationVO;
 import com.bc.pmpheep.back.vo.ProductVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -61,6 +63,23 @@ public class ProductController {
         productVO.setIs_published(is_publish);
         String sessionId = CookiesUtil.getSessionId(request);
         ResponseBean responseBean = productService.saveProductVO(productVO,sessionId);
+        return responseBean;
+    }
+
+    @RequestMapping(value = "/list",method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseBean list(HttpServletRequest request
+                             ,String product_name
+                             ,Boolean is_published
+            ,@RequestParam(value = "pageSize",defaultValue = "10") Integer pageSize
+            ,@RequestParam(value = "pageNumber",defaultValue = "1") Integer pageNumber){
+
+        ProductVO productVO = new ProductVO();
+        productVO.setProduct_name(product_name);
+        productVO.setIs_published(is_published);
+        PageParameter<ProductVO> pageParameter = new PageParameter<ProductVO>(pageNumber, pageSize);
+        pageParameter.setParameter(productVO);
+        ResponseBean responseBean = productService.list(pageParameter);
         return responseBean;
     }
 

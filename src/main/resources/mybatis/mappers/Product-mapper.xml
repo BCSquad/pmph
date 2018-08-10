@@ -430,4 +430,32 @@
 
     </insert>
 
+    <select id="queryList" resultMap="resultMapProductVO" parameterType="com.bc.pmpheep.back.plugin.PageParameter">
+        SELECT p.*,u.realname as founder FROM
+        product p
+        left join pmph_user u on p.founder_id = u.id
+        <where>
+            <if test="parameter.product_name != null and parameter.product_name !='' ">
+                and p.product_name like concat('%',#{parameter.product_name},'%')
+            </if>
+            <if test="(parameter.is_published != null)">
+                and p.is_published = #{parameter.is_published}
+            </if>
+        </where>
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="queryListCount" parameterType="com.bc.pmpheep.back.plugin.PageParameter" resultType="int">
+        SELECT count(id) FROM
+        product
+        <where>
+            <if test="parameter.product_name != null and parameter.product_name !='' ">
+                and product_name like concat('%',#{parameter.product_name},'%')
+            </if>
+            <if test="(parameter.is_published != null)">
+                and is_published = #{parameter.is_published}
+            </if>
+        </where>
+    </select>
+
 </mapper>

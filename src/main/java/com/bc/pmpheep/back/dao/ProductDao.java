@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.dao;
 
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.*;
 import com.bc.pmpheep.back.vo.ProductVO;
 import org.apache.ibatis.annotations.Param;
@@ -76,4 +77,8 @@ public interface ProductDao {
      * @return
      */
     int saveProductAttachments(List<ProductAttachment> productAttachmentList);
+
+    int queryListCount(PageParameter<ProductVO> pageParameter);
+
+    List<ProductVO> queryList(PageParameter<ProductVO> pageParameter);
 }

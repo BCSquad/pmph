@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.service;
 
 import com.bc.pmpheep.back.dao.ExpertationDao;
+import com.bc.pmpheep.back.dao.ProductDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphRole;
@@ -11,6 +12,7 @@ import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.ExpertationCountnessVO;
 import com.bc.pmpheep.back.vo.ExpertationVO;
 import com.bc.pmpheep.back.vo.ProductType;
+import com.bc.pmpheep.back.vo.ProductVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -30,6 +32,9 @@ public class ExpertationServiceImpl implements ExpertationService{
 
     @Autowired
     PmphUserService pmphUserService;
+
+    @Autowired
+    ProductDao productDao;
 
     /**
      * 查找临床决策申报列表
@@ -101,6 +106,14 @@ public class ExpertationServiceImpl implements ExpertationService{
         }
 
         int ttype = (int)pageParameter.getParameter().get("ttype");
+        int ptype = (int)pageParameter.getParameter().get("ptype");
+
+        ProductVO product = productDao.queryProductByProductType(Long.valueOf(String.valueOf(ptype)), "");
+        if(product!=null && product.getId() != null){
+            pageParameter.getParameter().put("product_id",product.getId());
+        }else{
+            pageParameter.getParameter().put("product_id",0);
+        }
         List<ExpertationCountnessVO> list = new ArrayList<>();
         int totalCount = 0;
         if(ttype == 2){ //2.内容分类

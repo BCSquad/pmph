@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.service;
 
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Product;
 import com.bc.pmpheep.back.vo.ProductVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
@@ -30,4 +31,7 @@ public interface ProductService {
      * @return
      */
     ResponseBean saveProductVO(ProductVO productVO,String sessionId);
+
+
+    ResponseBean list(PageParameter<ProductVO> pageParameter);
 }

@@ -1,11 +1,10 @@
 package com.bc.pmpheep.back.service;
 
 import com.bc.pmpheep.back.dao.ProductDao;
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.*;
-import com.bc.pmpheep.back.util.CollectionUtil;
-import com.bc.pmpheep.back.util.Const;
-import com.bc.pmpheep.back.util.ObjectUtil;
-import com.bc.pmpheep.back.util.SessionUtil;
+import com.bc.pmpheep.back.util.*;
 import com.bc.pmpheep.back.vo.ProductVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.general.po.Content;
@@ -103,6 +102,10 @@ public class ProductServiceImpl implements ProductService {
             default:
                 productVO.setProduct_name(  "未命名");
         }
+
+        //将传回的附件和图片mongodb地址过滤，去掉最后一个/及之前的字符串
+        attachmentRegexGetMongoId(productVO);
+
         int mainCount = productDao.saveProduct(productVO);
 
         //为了保留历史申报里的关联扩展项填写内容，扩展项要伪删除
@@ -146,6 +149,39 @@ public class ProductServiceImpl implements ProductService {
         responseBean.setData(productVO);
         responseBean.setMsg(productVO.getIs_published()?"发布成功":"暂存成功");
 
+        return responseBean;
+    }
+
+    private void attachmentRegexGetMongoId(ProductVO productVO) {
+        List<ProductAttachment> alist = productVO.getProductAttachmentList();
+        List<ProductAttachment> mlist = productVO.getProducntImgList();
+        for (ProductAttachment a: alist) {
+            String aid = a.getAttachment();
+            if(StringUtil.notEmpty(aid)){
+                aid = aid.replaceAll("^.*/","");
+                a.setAttachment(aid);
+            }
+        }
+        for (ProductAttachment a: mlist) {
+            String aid = a.getAttachment();
+            if(StringUtil.notEmpty(aid)){
+                aid = aid.replaceAll("^.*/","");
+                a.setAttachment(aid);
+            }
+        }
+    }
+
+    @Override
+    public ResponseBean list(PageParameter<ProductVO> pageParameter) {
+        ResponseBean responseBean = new ResponseBean();
+        PageResult<ProductVO> pageResult = new PageResult<>();
+        pageResult.setPageSize(pageParameter.getPageSize());
+        pageResult.setPageNumber(pageParameter.getPageNumber());
+        int count = productDao.queryListCount(pageParameter);
+        List<ProductVO> list = productDao.queryList(pageParameter);
+        pageResult.setTotal(count);
+        pageResult.setRows(list);
+        responseBean.setData(pageResult);
         return responseBean;
     }
 
