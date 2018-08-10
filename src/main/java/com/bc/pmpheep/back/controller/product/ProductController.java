@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.controller.product;
 
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Product;
+import com.bc.pmpheep.back.po.ProductExtension;
 import com.bc.pmpheep.back.service.ProductService;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.PathParam;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -60,6 +62,11 @@ public class ProductController {
         Boolean is_publish=!"noPub".equals(publish);
         productVO.setIs_published(is_publish);
         String sessionId = CookiesUtil.getSessionId(request);
+      /*  String auditorListS = request.getParameter("auditorList");
+        String ProductExtensionListS = request.getParameter("ProductExtensionList");*/
+       /* Map<String,String[]> map = request.getParameterMap();
+        String[] ProductExtensionListS = map.get("ProductExtensionList");*/
+        //List<ProductExtension> ProductExtensionList = (List<ProductExtension>) JSON.parseObject (ProductExtensionListS);
         ResponseBean responseBean = productService.saveProductVO(productVO,sessionId);
         return responseBean;
     }
