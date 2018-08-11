@@ -61,4 +61,10 @@ public interface ExpertationDao {
     ExpertationVO getExpertationById(Long id);
 
     void updateOnlineProgress(@Param("id") Long id,@Param("onlineProgress") Integer onlineProgress,@Param("returnCause") String returnCause);
+
+    List<ProductType> queryProductSubjectTypeListByExpertationId(Long id);
+
+    List<ProductType> queryProductContentTypeListByExpertationId(Long id);
+
+
 }
