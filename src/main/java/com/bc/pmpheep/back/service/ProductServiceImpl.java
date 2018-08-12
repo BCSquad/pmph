@@ -241,12 +241,16 @@ public class ProductServiceImpl implements ProductService {
             }
             productVO.setGmt_publish(new Timestamp(new Date().getTime())); //设定发布时间
         }
+        if(productVO.getNoteContent()!=null){
+            Content noteContent = contentService.add(productVO.getNoteContent());
+            productVO.setNoteContent(noteContent);
+            productVO.setNote(noteContent.getId());
+        }
 
-        Content noteContent = contentService.add(productVO.getNoteContent());
         Content descriptionContent = contentService.add(productVO.getDescriptionContent());
-        productVO.setNoteContent(noteContent);
+
         productVO.setDescriptionContent(descriptionContent);
-        productVO.setNote(noteContent.getId());
+
         productVO.setDescription(descriptionContent.getId());
 
     }

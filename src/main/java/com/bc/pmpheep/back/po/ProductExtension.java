@@ -37,19 +37,19 @@ public class ProductExtension {
         this.extensionName = extensionName;
     }
 
-    public Boolean getRequired() {
+    public Boolean getIsRequired() {
         return isRequired;
     }
 
-    public void setRequired(Boolean required) {
-        isRequired = required;
+    public void setIsRequired(Boolean isRequired) {
+        this.isRequired = isRequired;
     }
 
-    public Boolean getDeleted() {
+    public Boolean getIsDeleted() {
         return isDeleted;
     }
 
-    public void setDeleted(Boolean deleted) {
-        isDeleted = deleted;
+    public void setDeleted(Boolean isDeleted) {
+        isDeleted = isDeleted;
     }
 }
