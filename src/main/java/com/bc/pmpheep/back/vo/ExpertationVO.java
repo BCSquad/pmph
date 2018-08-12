@@ -4,6 +4,7 @@ package com.bc.pmpheep.back.vo;
 import com.bc.pmpheep.annotation.ExcelHeader;
 import com.bc.pmpheep.back.po.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.apache.ibatis.type.Alias;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.springframework.data.annotation.Transient;
@@ -16,7 +17,9 @@ import java.util.List;
 /**
  * 临床决策-申报表
  */
+
 @JsonIgnoreProperties({ "handler","hibernateLazyInitializer" })
+@Alias("ExpertationVO")
 public class ExpertationVO implements Serializable {
 
 
@@ -388,7 +391,7 @@ public class ExpertationVO implements Serializable {
         return productSubjectTypeStr;
     }
 
-    public void setProductSubjectTypeStr() {
+    public Object setProductSubjectTypeStr() {
         if(this.productSubjectTypeList!=null && this.productSubjectTypeList.size()>0){
             //this.productSubjectTypeStr = "=\"\""+"&\"1.aaa.\"&CHAR(10)"+"&\"2.bbb.\"&CHAR(10)&\"3.ccc. \"";
             this.productSubjectTypeStr = "\"\"";
@@ -397,6 +400,7 @@ public class ExpertationVO implements Serializable {
                 this.productSubjectTypeStr += "&\""+(i+1)+"."+p.getType_name()+"\"&CHAR(10)";
             }
         }
+        return null;
     }
 
     public String getProductContentTypeStr() {
@@ -404,7 +408,7 @@ public class ExpertationVO implements Serializable {
         return productContentTypeStr;
     }
 
-    public void setProductContentTypeStr() {
+    public Object setProductContentTypeStr() {
         if(this.productContentTypeList!=null && this.productContentTypeList.size()>0){
             //this.productSubjectTypeStr = "=\"\""+"&\"1.aaa.\"&CHAR(10)"+"&\"2.bbb.\"&CHAR(10)&\"3.ccc. \"";
             this.productContentTypeStr = "\"\"";
@@ -413,6 +417,7 @@ public class ExpertationVO implements Serializable {
                 this.productContentTypeStr += "&\""+(i+1)+"."+p.getType_name()+"\"&CHAR(10)";
             }
         }
+        return null;
     }
 
     public void setExcelTypeStr(){

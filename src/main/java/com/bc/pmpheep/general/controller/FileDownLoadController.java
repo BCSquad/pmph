@@ -415,15 +415,19 @@ public class FileDownLoadController {
 		pageParameter.setStart(null);
 		pageParameter.setParameter(expertationVO);
 		List<ExpertationVO> list = expertationDao.queryExpertation(pageParameter);
-		Workbook workbook = null;
-		if (list.size() == 0) {
-			list.add(new ExpertationVO());
-		}
-		for (ExpertationVO e:list) {
+		for (ExpertationVO e: list) {
+			List<ProductType> clist = expertationDao.queryProductContentTypeListByExpertationId(e.getId());
+			List<ProductType> slist = expertationDao.queryProductSubjectTypeListByExpertationId(e.getId());
+			e.setProductSubjectTypeList(slist);
+			e.setProductContentTypeList(clist);
 			e.setExcelTypeStr();
 		}
-
+		Workbook workbook = null;
 		try {
+			//Thread.currentThread().sleep(3000);//毫秒
+			if (list.size() == 0) {
+				list.add(new ExpertationVO());
+			}
 			workbook = excelHelper.fromBusinessObjectList(list, expertationVO.getProduct_name()!=null?getExportName(expertationVO.getExpert_type()+""):"临床决策申报");
 
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
@@ -673,7 +677,7 @@ public class FileDownLoadController {
 	 *            1待审核 3已经审核
 	 * @param offlineProgress
 	 *            0 未 2 收到
-	 * @param response
+
 	 * 
 	 */
 	@ResponseBody
@@ -694,9 +698,9 @@ public class FileDownLoadController {
 	 * 功能描述：申报表批量导出word
 	 * 
 	 * 
-	 * @param ids
+
 	 *            申报表ids
-	 * @param response
+
 	 * 
 	 */
 	@ResponseBody

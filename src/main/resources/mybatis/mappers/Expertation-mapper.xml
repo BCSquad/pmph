@@ -12,16 +12,46 @@
         <result property="title" column="title"></result>
         <result property="email" column="email"></result>
         <result property="handphone" column="handphone"></result>
-        <collection property="productSubjectTypeList" javaType="list" ofType="com.bc.pmpheep.back.vo.ProductType">
+
+        <!--这种写法能支持分页，但会创建一个类似原返回list范型的类来保存结果，即在vo后加后缀如_$$_jvst... 导致反射取不到真正的范型class -->
+        <!--<collection property="productSubjectTypeList" column="e_id" ofType="com.bc.pmpheep.back.vo.ProductType" javaType="list" select="queryProductSubjectTypeListByExpertationId" />
+        <collection property="productContentTypeList" column="e_id" ofType="com.bc.pmpheep.back.vo.ProductType" javaType="list" select="queryProductContentTypeListByExpertationId" />
+        -->
+
+        <!--这种写法一次查询，但不支持数据库分页-->
+        <!--<collection property="productSubjectTypeList" javaType="list" ofType="com.bc.pmpheep.back.vo.ProductType">
             <id property="id" column="pst_id"></id>
             <result property="type_name" column="type_name"></result>
         </collection>
         <collection property="productContentTypeList" javaType="list" ofType="com.bc.pmpheep.back.vo.ProductType">
             <id property="id" column="product_type_id"></id>
             <result property="type_name" column="name_path"></result>
-        </collection>
+        </collection>-->
     </resultMap>
 
+    <resultMap id="SubjectTypeMap" type="com.bc.pmpheep.back.vo.ProductType">
+        <id property="id" column="id"></id>
+        <result property="type_name" column="type_name"></result>
+    </resultMap>
+
+    <select id="queryProductSubjectTypeListByExpertationId" parameterType="java.lang.Long" resultMap="SubjectTypeMap">
+        select
+        pst.id
+        ,pst.type_name
+        from expertation_subject_type est inner join product_subject_type pst on pst.id = est.product_subject_type_id and est.expertation_id = #{id}
+    </select>
+
+    <resultMap id="ContentTypeMap" type="com.bc.pmpheep.back.vo.ProductType">
+        <id property="id" column="id"></id>
+        <result property="type_name" column="type_name"></result>
+    </resultMap>
+
+    <select id="queryProductContentTypeListByExpertationId" parameterType="java.lang.Long" resultMap="ContentTypeMap">
+        select
+        pst.product_type_id as id
+        ,pst.name_path as type_name
+        from expertation_content_type est inner join product_content_type_detail pst on pst.product_type_id = est.product_content_type_id and est.expertation_id = #{id}
+    </select>
 
 
     <select id="queryExpertation" parameterType="com.bc.pmpheep.back.plugin.PageParameter" resultMap="expertationListMap">
@@ -35,10 +65,10 @@
         ,e.title
         ,e.email
         ,e.handphone
-        ,pst.id as pst_id
+        /*,pst.id as pst_id
         ,pst.type_name
         ,pct.product_type_id
-        ,pct.name_path
+        ,pct.name_path*/
         from
         product p
         inner join expertation e on e.product_id = p.id
@@ -46,8 +76,8 @@
             inner join product_auditor pa on pa.product_id = p.id and pa.auditor_id = #{parameter.auditor_id}
         </if>
         left join writer_user u on u.id = e.user_id
-        left join expertation_subject_type est on est.expertation_id = e.id left join product_subject_type pst on pst.id = est.product_subject_type_id
-        left join expertation_content_type ect on ect.expertation_id = e.id left join product_content_type_detail pct on pct.product_type_id = ect.product_content_type_id
+        /*left join expertation_subject_type est on est.expertation_id = e.id left join product_subject_type pst on pst.id = est.product_subject_type_id
+        left join expertation_content_type ect on ect.expertation_id = e.id left join product_content_type_detail pct on pct.product_type_id = ect.product_content_type_id*/
         where p.product_type = #{parameter.expert_type}
         <if test="parameter.username != null and parameter.username != '' ">
             and u.username like concat('%',#{parameter.username},'%')
@@ -61,7 +91,7 @@
         <if test="parameter.title != null and parameter.title != '' ">
             and e.title like concat('%',#{parameter.title},'%')
         </if>
-        -- GROUP  by e.id
+        GROUP by e.id /*,pst_id,product_type_id*/
         <if test="start != null">
             limit ${start} ,${pageSize}
         </if>
