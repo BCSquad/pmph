@@ -81,8 +81,9 @@ public class ExpertationVO implements Serializable {
     private List<DecAcade> DecAcadeList; //主要学术兼职
     private List<DecTextbook> DecTextbookList; // 人卫社教材编写情况
     private List<DecMonograph> DecMonographList; //主编学术专著情况
-    private List<DecNationalPlan> DecNationalPlanList; //主编或参编图书情况
+    private List<DecNationalPlan> DecNationalPlanList;
     private List<DecExtension> DecExtensionList; //扩展项
+    private List<DecEditorBook> DecEditorBookList;//主编或参编图书情况
 
     public ExpertationVO() {
         super();
@@ -503,5 +504,13 @@ public class ExpertationVO implements Serializable {
 
     public void setDecExtensionList(List<DecExtension> decExtensionList) {
         DecExtensionList = decExtensionList;
+    }
+
+    public List<DecEditorBook> getDecEditorBookList() {
+        return DecEditorBookList;
+    }
+
+    public void setDecEditorBookList(List<DecEditorBook> decEditorBookList) {
+        DecEditorBookList = decEditorBookList;
     }
 }

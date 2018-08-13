@@ -307,7 +307,16 @@
         dec_monograph.per_id as dec_monograph_per_id,
         dec_monograph.expertation_id as dec_monograph_expertation_id,
 
-        dec_national_plan.id as dec_national_plan_id,
+        dec_editor_book.id as dec_editor_book_id,
+        dec_editor_book.expertation_id as dec_editor_book_expertation_id,
+        dec_editor_book.material_name as dec_editor_book_material_name,
+        dec_editor_book.publisher as dec_editor_book_publisher,
+        dec_editor_book.publish_date as dec_editor_book_publish_date,
+        dec_editor_book.note as dec_editor_book_note,
+        dec_editor_book.sort as dec_editor_book_sort,
+        dec_editor_book.per_id as dec_editor_book_per_id,
+
+        <!--dec_national_plan.id as dec_national_plan_id,
         dec_national_plan.declaration_id as dec_national_plan_declaration_id,
         dec_national_plan.material_name as dec_national_plan_material_name,
         dec_national_plan.isbn as dec_national_plan_isbn,
@@ -316,7 +325,7 @@
         dec_national_plan.sort as dec_national_plan_sort,
         dec_national_plan.rank_text as dec_national_plan_rank_text,
         dec_national_plan.per_id as dec_national_plan_per_id,
-        dec_national_plan.expertation_id as dec_national_plan_expertation_id,
+        dec_national_plan.expertation_id as dec_national_plan_expertation_id,-->
 
         dec_extension.id as dec_extension_id,
         dec_extension.extension_id as dec_extension_extension_id,
@@ -355,7 +364,8 @@
 
         left join dec_monograph  on dec_monograph.expertation_id = e.id
 
-        left join dec_national_plan  on dec_national_plan.expertation_id = e.id
+        <!--left join dec_national_plan  on dec_national_plan.expertation_id = e.id-->
+        left join dec_editor_book on dec_editor_book.expertation_id = e.id
 
 
         left join product_extension on product_extension.product_id = e.product_id
@@ -464,7 +474,7 @@
             <result property="expertationId" column="dec_monograph_expertation_id"></result>
         </collection>
 
-        <collection property="DecNationalPlanList" javaType="list" ofType="DecNationalPlan">
+        <!--<collection property="DecNationalPlanList" javaType="list" ofType="DecNationalPlan">
             <id property="id" column="dec_national_plan_id"></id>
             <result property="declarationId" column="dec_national_plan_declaration_id"></result>
             <result property="materialName" column="dec_national_plan_material_name"></result>
@@ -475,6 +485,17 @@
             <result property="rankText" column="dec_national_plan_rank_text"></result>
             <result property="perId" column="dec_national_plan_per_id"></result>
             <result property="expertationId" column="dec_national_plan_expertation_id"></result>
+        </collection>-->
+
+        <collection property="DecEditorBookList" javaType="list" ofType="DecEditorBook">
+            <id property="id" column="dec_editor_book_id"></id>
+            <result property="expertationId" column="dec_editor_book_expertation_id"></result>
+            <result property="materialName" column="dec_editor_book_material_name"></result>
+            <result property="publisher" column="dec_editor_book_publisher"></result>
+            <result property="publishDate" column="dec_editor_book_publish_date"></result>
+            <result property="note" column="dec_editor_book_note"></result>
+            <result property="sort" column="dec_editor_book_sort"></result>
+            <result property="perId" column="dec_editor_book_per_id"></result>
         </collection>
 
         <collection property="DecExtensionList" javaType="list" ofType="DecExtension">
