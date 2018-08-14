@@ -263,7 +263,8 @@
 		SELECT
 		b.bookname,
 		b.isbn,
-		wu.realname as feedBackName,
+		/*wu.realname as feedBackName,*/
+		wu.username as feedBackName,
 		bc.id,
 		bc.book_id,
 		bc.content,
