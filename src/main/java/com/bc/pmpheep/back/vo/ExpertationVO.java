@@ -31,7 +31,7 @@ public class ExpertationVO implements Serializable {
     private String	realname	;	//	20
     private Boolean	sex	;	//	3
     private Date	birthday	;	//	0
-    private Boolean	experience	;	//	3	教龄
+    private Long	experience	;	//	3	教龄
     @ExcelHeader(header = "工作单位")
     private String	org_name	;	//	60	工作单位
     @ExcelHeader(header = "职务")
@@ -147,14 +147,6 @@ public class ExpertationVO implements Serializable {
 
     public void setBirthday(Date birthday) {
         this.birthday = birthday;
-    }
-
-    public Boolean getExperience() {
-        return experience;
-    }
-
-    public void setExperience(Boolean experience) {
-        this.experience = experience;
     }
 
     public String getOrg_name() {
@@ -540,5 +532,13 @@ public class ExpertationVO implements Serializable {
 
     public void setBankaddress(String bankaddress) {
         this.bankaddress = bankaddress;
+    }
+
+    public Long getExperience() {
+        return experience;
+    }
+
+    public void setExperience(Long experience) {
+        this.experience = experience;
     }
 }

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.PathParam;
+import java.io.IOException;
 import java.util.Map;
 
 @Controller
@@ -58,11 +59,11 @@ public class ProductController {
      */
     @RequestMapping(value="/save/{publish}",method = RequestMethod.POST)
     @ResponseBody
-    public ResponseBean save(HttpServletRequest request, @RequestBody ProductVO productVO, @PathVariable("publish")String publish){
+    public ResponseBean save(HttpServletRequest request, @RequestBody ProductVO productVO, @PathVariable("publish")String publish) throws IOException {
         Boolean is_publish=!"noPub".equals(publish);
         productVO.setIs_published(is_publish);
         String sessionId = CookiesUtil.getSessionId(request);
-        ResponseBean responseBean = productService.saveProductVO(productVO,sessionId);
+        ResponseBean responseBean = productService.saveProductVO(productVO,sessionId,request);
         return responseBean;
     }
 

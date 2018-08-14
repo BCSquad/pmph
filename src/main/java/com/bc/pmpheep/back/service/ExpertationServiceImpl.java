@@ -82,6 +82,13 @@ public class ExpertationServiceImpl implements ExpertationService{
         List<ExpertationVO> list = new ArrayList<>();
         if(totalCount>0){
             list = expertationDao.queryExpertation(pageParameter);
+            for (ExpertationVO e: list) {
+                List<ProductType> clist = expertationDao.queryProductContentTypeListByExpertationId(e.getId());
+                List<ProductType> slist = expertationDao.queryProductSubjectTypeListByExpertationId(e.getId());
+                e.setProductSubjectTypeList(slist);
+                e.setProductContentTypeList(clist);
+                e.setExcelTypeStr();
+            }
         }
 
         pageResult.setTotal(totalCount);

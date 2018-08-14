@@ -31,6 +31,12 @@ public enum FileType {
      * 教材备注附件
      */
     MATERIAL_NOTE_ATTACHMENT("教材备注附件"),
+
+    /**
+     * 临床决策附件
+     */
+    CLINIC_DECISION_ATTACHMENT("临床决策附件"),
+
     /**
      * 教学大纲
      */

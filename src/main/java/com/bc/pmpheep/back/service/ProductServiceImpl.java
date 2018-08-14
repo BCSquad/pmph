@@ -7,6 +7,7 @@ import com.bc.pmpheep.back.po.*;
 import com.bc.pmpheep.back.util.*;
 import com.bc.pmpheep.back.vo.ProductVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
+import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.po.Content;
 import com.bc.pmpheep.general.service.ContentService;
 import com.bc.pmpheep.general.service.FileService;
@@ -16,6 +17,10 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -67,7 +72,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseBean saveProductVO(ProductVO productVO,String sessionId) {
+    public ResponseBean saveProductVO(ProductVO productVO,String sessionId, HttpServletRequest request) throws IOException {
 
         ResponseBean responseBean = new ResponseBean();
 
@@ -128,28 +133,52 @@ public class ProductServiceImpl implements ProductService {
         }
 
         productDao.deleteProductAttachmentByProductId(productId);
-        if(CollectionUtil.isNotEmpty(productVO.getProductAttachmentList())){
-            for(ProductAttachment productAttachment:productVO.getProductAttachmentList()){
-                if(ObjectUtil.isNull(productAttachment.getProduct_id()))productAttachment.setProduct_id(productVO.getId());
-                productAttachment.setIs_scan_img(false);
-            }
-            productDao.saveProductAttachments(productVO.getProductAttachmentList());
-        }
 
-        if(CollectionUtil.isNotEmpty(productVO.getProducntImgList())){
+        List<ProductAttachment> attachmentList = productVO.getProductAttachmentList();
+        List<ProductAttachment> imgList = productVO.getProducntImgList();
+
+        attachmentSaveToMDB(productVO, request, attachmentList, false);
+        attachmentSaveToMDB(productVO, request, imgList, true);
+
+        /*if(CollectionUtil.isNotEmpty(productVO.getProducntImgList())){
             for(ProductAttachment productAttachment:productVO.getProducntImgList()){
                 if(ObjectUtil.isNull(productAttachment.getProduct_id()))productAttachment.setProduct_id(productVO.getId());
                 productAttachment.setIs_scan_img(true);
             }
 
             productDao.saveProductAttachments(productVO.getProducntImgList());
-        }
+        }*/
 
         responseBean.setCode(ResponseBean.SUCCESS);
         responseBean.setData(productVO);
         responseBean.setMsg(productVO.getIs_published()?"发布成功":"暂存成功");
 
         return responseBean;
+    }
+
+    private void attachmentSaveToMDB(ProductVO productVO, HttpServletRequest request, List<ProductAttachment> attachmentList, Boolean is_scan_img) throws IOException {
+        if(CollectionUtil.isNotEmpty(attachmentList)){
+            for(ProductAttachment productAttachment:attachmentList){
+                if(ObjectUtil.isNull(productAttachment.getProduct_id()))productAttachment.setProduct_id(productVO.getId());
+                if(productAttachment.getId() == null){
+                    String tempFileId = productAttachment.getAttachment();
+                    byte[] file = (byte[]) request.getSession(false).getAttribute(tempFileId);
+                    String fileName = (String) request.getSession(false).getAttribute("fileName_" + tempFileId);
+                    InputStream sbs = new ByteArrayInputStream(file);
+                    //初次生成，产生主键id
+                    productDao.createAttachment(productAttachment);
+                    String mdbId ;
+                    mdbId = fileService.save(sbs, fileName, FileType.CLINIC_DECISION_ATTACHMENT,
+                    						productAttachment.getId());
+                    productAttachment.setAttachment(mdbId);
+                    //附件保存到mdb后，产生mdb的id，再次保存（主键冲突会执行更新）
+                }
+
+
+                productAttachment.setIs_scan_img(is_scan_img);
+            }
+            productDao.saveProductAttachments(attachmentList);
+        }
     }
 
     private void attachmentRegexGetMongoId(ProductVO productVO) {

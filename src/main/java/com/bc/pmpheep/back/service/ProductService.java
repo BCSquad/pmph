@@ -5,6 +5,9 @@ import com.bc.pmpheep.back.po.Product;
 import com.bc.pmpheep.back.vo.ProductVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+
 public interface ProductService {
 
     /**
@@ -30,7 +33,7 @@ public interface ProductService {
      * @param productVO
      * @return
      */
-    ResponseBean saveProductVO(ProductVO productVO,String sessionId);
+    ResponseBean saveProductVO(ProductVO productVO, String sessionId, HttpServletRequest request) throws IOException;
 
 
     ResponseBean list(PageParameter<ProductVO> pageParameter);
