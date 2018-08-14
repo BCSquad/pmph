@@ -226,7 +226,7 @@
 		( a.editor_reply = NULL or a.editor_reply = '')
 	-- 	or a.result = 0
 		) */
-		and a.reply_date is null
+		/*and a.reply_date is null*/
 		<if test="editorId != null">
 			and c.editor_id = #{editorId}
 		</if>
@@ -402,7 +402,7 @@
 		( a.editor_reply = NULL or a.editor_reply = '')
 		-- or a.result = 0
 		) */
-		and a.reply_date is null
+		/*and a.reply_date is null*/
 		<if test="editorId != null">
 			and c.editor_id = #{editorId}
 		</if>
@@ -414,7 +414,7 @@
 		</if>
 		<if test="isOver !=null and isOver !='' " >
 			<if test="isOver == 1 "><!-- APP的已完成 -->
-				and is_editor_replied
+				and is_editor_replied = 1
 				<if test="result   != null  ">
 					and a.result = #{result}
 				</if>
