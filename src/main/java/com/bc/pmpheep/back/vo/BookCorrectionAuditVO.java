@@ -24,6 +24,8 @@ public class BookCorrectionAuditVO implements Serializable {
      */
 	@ExcelHeader(header = " 图书名称")
     private String    bookname;
+	@ExcelHeader(header = "ISBN")
+	private String isbn;
     /**
      * 图书图片
      */
@@ -314,9 +316,13 @@ public class BookCorrectionAuditVO implements Serializable {
 		this.publishDate = publishDate;
 		return this;
 	}
-    
-	
-   
-    
 
+
+	public String getIsbn() {
+		return isbn;
+	}
+
+	public void setIsbn(String isbn) {
+		this.isbn = isbn;
+	}
 }

@@ -231,7 +231,10 @@
 			and c.editor_id = #{editorId}
 		</if>
 		<if test="bookname != null and bookname != '' ">
-			and b.bookname like CONCAT('%',#{bookname},'%')
+			and (
+			b.bookname like CONCAT('%',#{bookname},'%')
+			or b.isbn like CONCAT('%',#{bookname},'%')
+			)
 		</if>
 			<if test="isOver !=null and isOver !='' " >
 				<if test="isOver == 1 "><!-- APP的已完成 -->
@@ -364,6 +367,7 @@
 			DISTINCT
 			a.id,
 			b.bookname,
+			b.isbn,
 			b.author,
 			b.publish_date,
 			b.image_url ,
@@ -403,7 +407,10 @@
 			and c.editor_id = #{editorId}
 		</if>
 		<if test="bookname != null and bookname != '' ">
-			and b.bookname like CONCAT('%',#{bookname},'%')
+			and (
+			b.bookname like CONCAT('%',#{bookname},'%')
+			or b.isbn like CONCAT('%',#{bookname},'%')
+			)
 		</if>
 		<if test="isOver !=null and isOver !='' " >
 			<if test="isOver == 1 "><!-- APP的已完成 -->
@@ -506,7 +513,10 @@
 		where
 		!a.is_deleted and b.id is not null
 		<if test="bookname != null and bookname != '' ">
-			and b.bookname like CONCAT('%',#{bookname},'%')
+			and (
+			b.bookname like CONCAT('%',#{bookname},'%')
+			or b.isbn like CONCAT('%',#{bookname},'%')
+			)
 		</if>
 		<if test="isEditorReplied != null ">
 			and a.is_editor_replied = #{isEditorReplied}
@@ -521,6 +531,7 @@
 		SELECT
 			a.id ,
 			b.bookname,
+			b.isbn,
 			e.dp_name ,
 			f.type_name ,
 			d.realname ,
@@ -559,7 +570,10 @@
 			!a.is_deleted and b.id is not
 			null
 		<if test="bookname != null and bookname != '' ">
-			and b.bookname like CONCAT('%',#{bookname},'%')
+			and (
+			b.bookname like CONCAT('%',#{bookname},'%')
+			or b.isbn like CONCAT('%',#{bookname},'%')
+			)
 		</if>
 		<if test="isEditorReplied != null ">
 			and a.is_editor_replied = #{isEditorReplied}
