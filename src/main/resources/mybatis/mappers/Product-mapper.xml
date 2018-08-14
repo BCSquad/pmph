@@ -369,9 +369,9 @@
         VALUES 
         <foreach collection="list" index="index" item="item" separator="," >
             (#{ item.id }, /*新增的扩展项，此处为null，主键会自增填充，修改的则会主键冲突，触发修改*/
-            #{	item.product_id	}	,
-            #{	item.extension_name	}	,
-            #{	item.is_required	}	,
+            #{	item.productId	}	,
+            #{	item.extensionName	}	,
+            #{	item.isRequired	}	,
             0)
         </foreach>
         on duplicate key UPDATE

@@ -37,19 +37,35 @@ public class ProductExtension {
         this.extensionName = extensionName;
     }
 
-    public Boolean getRequired() {
+    /*public Boolean getRequired() {
+        return isRequired;
+    }*/
+
+    public Boolean getIsRequired() {
         return isRequired;
     }
 
-    public void setRequired(Boolean required) {
+    /*public void setRequired(Boolean required) {
+        isRequired = required;
+    }*/
+
+    public void setIsRequired(Boolean required) {
         isRequired = required;
     }
 
-    public Boolean getDeleted() {
+    /*public Boolean getDeleted() {
+        return isDeleted;
+    }*/
+
+    public Boolean getIsDeleted() {
         return isDeleted;
     }
 
-    public void setDeleted(Boolean deleted) {
+    /*public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }*/
+
+    public void setIsDeleted(Boolean deleted) {
         isDeleted = deleted;
     }
 }
