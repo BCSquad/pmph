@@ -410,6 +410,10 @@
         <result property="unit_advise" column="unit_advise"></result>
         <result property="degree" column="degree"></result>
 
+        <result property="education" column="education"></result>
+        <result property="banknumber" column="banknumber"></result>
+        <result property="bankaddress" column="bankaddress"></result>
+
         <collection property="DecEduExpList" javaType="list" ofType="DecEduExp" >
             <id property="id" column="dec_edu_exp_id"></id>
             <result property="declarationId" column="dec_edu_exp_declaration_id"></result>

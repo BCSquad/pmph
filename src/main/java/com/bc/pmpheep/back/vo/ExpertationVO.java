@@ -67,6 +67,10 @@ public class ExpertationVO implements Serializable {
     private String username; //账户
     private Boolean is_staging;
     private short degree;
+    private short education; //学历 （数字代号）
+    private String banknumber; //银行卡号
+    private String bankaddress;//银行地址（开户行）
+
 
     private List<ProductType> productSubjectTypeList; //学科分类
 
@@ -512,5 +516,29 @@ public class ExpertationVO implements Serializable {
 
     public void setDecEditorBookList(List<DecEditorBook> decEditorBookList) {
         DecEditorBookList = decEditorBookList;
+    }
+
+    public short getEducation() {
+        return education;
+    }
+
+    public void setEducation(short education) {
+        this.education = education;
+    }
+
+    public String getBanknumber() {
+        return banknumber;
+    }
+
+    public void setBanknumber(String banknumber) {
+        this.banknumber = banknumber;
+    }
+
+    public String getBankaddress() {
+        return bankaddress;
+    }
+
+    public void setBankaddress(String bankaddress) {
+        this.bankaddress = bankaddress;
     }
 }
