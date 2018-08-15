@@ -91,6 +91,8 @@ public class ExpertationServiceImpl implements ExpertationService{
             }
         }
 
+        pageResult.setPageNumber(pageParameter.getPageNumber());
+
         pageResult.setTotal(totalCount);
         pageResult.setRows(list);
 
