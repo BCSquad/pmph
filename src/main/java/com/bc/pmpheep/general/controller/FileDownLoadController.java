@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.bc.pmpheep.back.dao.ExpertationDao;
+import com.bc.pmpheep.back.dao.ProductDao;
 import com.bc.pmpheep.back.service.*;
 import com.bc.pmpheep.back.vo.*;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -127,6 +128,9 @@ public class FileDownLoadController {
 
 	@Autowired
 	private ProductService productService;
+
+	@Autowired
+	private ProductDao productDao;
 
 	/**
 	 * 普通文件下载
@@ -484,11 +488,19 @@ public class FileDownLoadController {
 									   @RequestParam(value = "type_name",required = false)String type_name) {
 		Map<String,Object> paraMap = new HashMap<>();
 
+
 		paraMap.put("ptype",ptype);
 		paraMap.put("type_name",type_name);
 		PageParameter pageParameter = new PageParameter();
 		pageParameter.setStart(null);
 		pageParameter.setParameter(paraMap);
+
+		ProductVO product = productDao.queryProductByProductType(Long.valueOf(String.valueOf(ptype)), "");
+		if(product!=null && product.getId() != null){
+			paraMap.put("product_id",product.getId());
+		}else{
+			paraMap.put("product_id",0);
+		}
 
 		Map<String,Object> sheetMap = new HashMap<>();
 		List<ExpertationCountnessVO> list = new ArrayList<>();
