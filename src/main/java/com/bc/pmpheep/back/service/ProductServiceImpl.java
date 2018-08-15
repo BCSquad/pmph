@@ -138,16 +138,15 @@ public class ProductServiceImpl implements ProductService {
         List<ProductAttachment> imgList = productVO.getProducntImgList();
 
         attachmentSaveToMDB(productVO, request, attachmentList, false);
-        attachmentSaveToMDB(productVO, request, imgList, true);
+        //attachmentSaveToMDB(productVO, request, imgList, true);
 
-        /*if(CollectionUtil.isNotEmpty(productVO.getProducntImgList())){
+        if(CollectionUtil.isNotEmpty(productVO.getProducntImgList())){
             for(ProductAttachment productAttachment:productVO.getProducntImgList()){
                 if(ObjectUtil.isNull(productAttachment.getProduct_id()))productAttachment.setProduct_id(productVO.getId());
                 productAttachment.setIs_scan_img(true);
             }
-
             productDao.saveProductAttachments(productVO.getProducntImgList());
-        }*/
+        }
 
         responseBean.setCode(ResponseBean.SUCCESS);
         responseBean.setData(productVO);
