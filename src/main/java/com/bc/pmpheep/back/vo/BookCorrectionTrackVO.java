@@ -26,6 +26,8 @@ public class BookCorrectionTrackVO implements Serializable {
      */
     @ExcelHeader(header = "图书名称")
     private String    bookname;
+    @ExcelHeader(header = "ISBN")
+    private String isbn;
     /**
      * 编辑部门 
      */
@@ -362,7 +364,13 @@ public class BookCorrectionTrackVO implements Serializable {
 				+ ", authorReply=" + authorReply + ", isEditorReplied=" + isEditorReplied + ", isEditorRepliedString="
 				+ isEditorRepliedString + ", author=" + author + ", correctionName=" + correctionName + "]";
 	}
-	
-    
 
+
+	public String getIsbn() {
+		return isbn;
+	}
+
+	public void setIsbn(String isbn) {
+		this.isbn = isbn;
+	}
 }

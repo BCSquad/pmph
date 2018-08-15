@@ -81,4 +81,11 @@ public interface ProductDao {
     int queryListCount(PageParameter<ProductVO> pageParameter);
 
     List<ProductVO> queryList(PageParameter<ProductVO> pageParameter);
+
+    /**
+     * 单独创建一个附件 用于附件上传到mdb时给出id
+     * @param productAttachment
+     * @return
+     */
+    int createAttachment(ProductAttachment productAttachment);
 }

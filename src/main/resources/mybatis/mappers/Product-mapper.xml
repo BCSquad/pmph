@@ -398,6 +398,30 @@
         on duplicate key UPDATE product_id = product_id /*VALUES(product_id) ,auditor_id=VALUES (auditor_id)*/
     </insert>
 
+    <insert id="createAttachment" parameterType="com.bc.pmpheep.back.po.ProductAttachment" keyProperty="id" useGeneratedKeys="true">
+        insert into product_attachment
+        (
+            id	,
+            product_id	,
+            attachment	,
+            attachment_name	,
+            download	,
+            is_deleted	,
+            is_scan_img
+        )
+        VALUES
+        (
+            #{	id	}	,
+            #{	product_id	}	,
+            #{	attachment	}	,
+            #{	name	}	,
+            0	,
+            0	,
+            #{	is_scan_img	}
+        )
+        on duplicate key UPDATE attachment = VALUES(attachment)
+    </insert>
+
     <!--删除附件-->
     <delete id="deleteProductAttachmentByProductId" parameterType="java.lang.Long">
         delete from product_attachment where product_id = #{product_id}
@@ -426,7 +450,7 @@
             0	,
             #{	item.is_scan_img	})
         </foreach>
-        on duplicate key UPDATE product_id = product_id
+        on duplicate key UPDATE attachment=VALUES(attachment)
 
     </insert>
 

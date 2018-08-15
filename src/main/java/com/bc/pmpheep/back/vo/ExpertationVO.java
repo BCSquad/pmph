@@ -31,7 +31,7 @@ public class ExpertationVO implements Serializable {
     private String	realname	;	//	20
     private Boolean	sex	;	//	3
     private Date	birthday	;	//	0
-    private Boolean	experience	;	//	3	教龄
+    private Long	experience	;	//	3	教龄
     @ExcelHeader(header = "工作单位")
     private String	org_name	;	//	60	工作单位
     @ExcelHeader(header = "职务")
@@ -67,6 +67,10 @@ public class ExpertationVO implements Serializable {
     private String username; //账户
     private Boolean is_staging;
     private short degree;
+    private short education; //学历 （数字代号）
+    private String banknumber; //银行卡号
+    private String bankaddress;//银行地址（开户行）
+
 
     private List<ProductType> productSubjectTypeList; //学科分类
 
@@ -81,8 +85,9 @@ public class ExpertationVO implements Serializable {
     private List<DecAcade> DecAcadeList; //主要学术兼职
     private List<DecTextbook> DecTextbookList; // 人卫社教材编写情况
     private List<DecMonograph> DecMonographList; //主编学术专著情况
-    private List<DecNationalPlan> DecNationalPlanList; //主编或参编图书情况
+    private List<DecNationalPlan> DecNationalPlanList;
     private List<DecExtension> DecExtensionList; //扩展项
+    private List<DecEditorBook> DecEditorBookList;//主编或参编图书情况
 
     public ExpertationVO() {
         super();
@@ -142,14 +147,6 @@ public class ExpertationVO implements Serializable {
 
     public void setBirthday(Date birthday) {
         this.birthday = birthday;
-    }
-
-    public Boolean getExperience() {
-        return experience;
-    }
-
-    public void setExperience(Boolean experience) {
-        this.experience = experience;
     }
 
     public String getOrg_name() {
@@ -503,5 +500,45 @@ public class ExpertationVO implements Serializable {
 
     public void setDecExtensionList(List<DecExtension> decExtensionList) {
         DecExtensionList = decExtensionList;
+    }
+
+    public List<DecEditorBook> getDecEditorBookList() {
+        return DecEditorBookList;
+    }
+
+    public void setDecEditorBookList(List<DecEditorBook> decEditorBookList) {
+        DecEditorBookList = decEditorBookList;
+    }
+
+    public short getEducation() {
+        return education;
+    }
+
+    public void setEducation(short education) {
+        this.education = education;
+    }
+
+    public String getBanknumber() {
+        return banknumber;
+    }
+
+    public void setBanknumber(String banknumber) {
+        this.banknumber = banknumber;
+    }
+
+    public String getBankaddress() {
+        return bankaddress;
+    }
+
+    public void setBankaddress(String bankaddress) {
+        this.bankaddress = bankaddress;
+    }
+
+    public Long getExperience() {
+        return experience;
+    }
+
+    public void setExperience(Long experience) {
+        this.experience = experience;
     }
 }

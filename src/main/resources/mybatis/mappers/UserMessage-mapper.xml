@@ -289,7 +289,7 @@ AND t.is_withdraw = 1;
 		then
 		c.workplace when a.receiver_type =3
 		then
-		d.org_name end workplace, -- 工作单位
+		'' end workplace, -- 工作单位
 
 		case when
 		a.receiver_type =1
