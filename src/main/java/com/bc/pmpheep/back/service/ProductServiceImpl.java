@@ -270,7 +270,7 @@ public class ProductServiceImpl implements ProductService {
             }
             productVO.setGmt_publish(new Timestamp(new Date().getTime())); //设定发布时间
         }
-        if(productVO.getNoteContent()!=null){
+        if(!StringUtil.isEmpty(productVO.getNoteContent().getContent())){
             Content noteContent = contentService.add(productVO.getNoteContent());
             productVO.setNoteContent(noteContent);
             productVO.setNote(noteContent.getId());
