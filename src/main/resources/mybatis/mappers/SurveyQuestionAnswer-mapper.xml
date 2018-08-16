@@ -122,7 +122,7 @@
 		t.`count`
 		FROM
 		`survey_question_answer` sqa
-		JOIN `survey` s ON sqa.`survey_id` = s.`id`
+		JOIN `survey` s ON sqa.`survey_id` = s.`id` and s.is_deleted = 0
 		JOIN `writer_user` wu ON sqa.`user_id` = wu.`id`
 		JOIN `org` org ON wu.`org_id` = org.`id`,
 		(
@@ -174,7 +174,7 @@
 		   	GROUP_CONCAT(sqo.`option_content`) oneOrManyOptionContent,
 		   	sqa.`option_content` noteOptionContent 
 		FROM
-		 	`survey_question_answer` sqa 
+		 	`survey_question_answer` sqa
 		JOIN 
 			`survey_question` sq 
 		ON 
@@ -219,7 +219,7 @@
 		 JOIN 
 		 	`survey` s 
 		 ON 
-		 	 sqa.`survey_id` = s.`id` 
+		 	 sqa.`survey_id` = s.`id` and s.is_deleted = 0
 		 JOIN 
 		 	`survey_type` st 
 		 ON 

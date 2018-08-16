@@ -208,7 +208,7 @@
 							s.`gmt_create` &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d %H:%i:%s')
 					</if>
 		</if>
-		group by s.title desc 
+		group by s.id desc
 		ORDER BY s.`gmt_create` DESC 
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
