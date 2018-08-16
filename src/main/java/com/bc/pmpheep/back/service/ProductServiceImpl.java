@@ -56,8 +56,14 @@ public class ProductServiceImpl implements ProductService {
             productVO.setProduct_type(product_type);
         }
 
-        Content noteContent = contentService.get(productVO.getNote());
-        Content descriptionContent = contentService.get(productVO.getDescription());
+        Content noteContent = null;
+        if(!StringUtil.isEmpty(productVO.getNote())){
+            noteContent =  contentService.get(productVO.getNote());
+        }
+        Content descriptionContent = null;
+        if(!StringUtil.isEmpty(productVO.getDescription())){
+            descriptionContent = contentService.get(productVO.getDescription());
+        }
 
         productVO.setNoteContent(noteContent);
         productVO.setDescriptionContent(descriptionContent);
@@ -273,6 +279,8 @@ public class ProductServiceImpl implements ProductService {
             Content noteContent = contentService.add(productVO.getNoteContent());
             productVO.setNoteContent(noteContent);
             productVO.setNote(noteContent.getId());
+        }else{
+            productVO.setNote("");
         }
 
         Content descriptionContent = contentService.add(productVO.getDescriptionContent());
