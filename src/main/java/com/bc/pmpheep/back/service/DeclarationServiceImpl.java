@@ -500,7 +500,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			writerUserTrendst.setBookCommentId(null);
 			writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
 			// 发送系统消息
-			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), false, returnCause,null);
+			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), false, returnCause,pmphUser);
 		}
 
 		//撤销某(人)申报表的所有遴选，dec_positiond的choosePosition设为0，dec_pisition_published相应删除

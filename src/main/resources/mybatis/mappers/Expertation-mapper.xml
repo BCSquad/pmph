@@ -71,7 +71,7 @@
         ,pct.name_path*/
         from
         product p
-        inner join expertation e on e.product_id = p.id
+        inner join expertation e on e.product_id = p.id and  e.online_progress >0
         <if test="parameter.auditor_id != null and parameter.auditor_id != '' ">
             inner join product_auditor pa on pa.product_id = p.id and pa.auditor_id = #{parameter.auditor_id}
         </if>

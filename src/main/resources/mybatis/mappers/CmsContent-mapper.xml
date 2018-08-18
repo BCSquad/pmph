@@ -597,7 +597,7 @@
 	<!--CmsContentVO模糊查询获取评论列表 -->
 	<select id="listCmsComment" parameterType="PageParameter" resultType="CmsContentVO">
 		SELECT 
-			cc.`id`,cc.`title`,wu.username,cc.`auth_status`,cc.`auth_date`,cc.`gmt_create`,cc.`clicks`,
+			cc.`id`,cc.`title`,wu.realname username,cc.`auth_status`,cc.`auth_date`,cc.`gmt_create`,cc.`clicks`,pu.realname authUserName,
 			cc.`comments`,cc.`likes`,cc.`bookmarks`,cc.category_id,ccg.`category_name`,
 			cc.`is_published`,cc.`is_stick`,cc.`is_hot`,cc.`is_promote`,cc.`is_staging`,t.count
 		FROM 
@@ -606,6 +606,7 @@
 			`writer_user` wu 
 		ON
 			cc.author_id = wu.id
+		LEFT JOIN pmph_user pu on pu.id = cc.auth_user_id
 		LEFT JOIN 
 			`cms_category` ccg
 		ON 
@@ -619,6 +620,7 @@
 					`writer_user` wu 
 				ON
 					cc.author_id = wu.id
+				LEFT JOIN pmph_user pu on pu.id = cc.auth_user_id
 				LEFT JOIN 
 					`cms_category` ccg 
 				ON 

@@ -20,8 +20,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.bc.pmpheep.back.dao.CmsContentDao;
 import com.bc.pmpheep.back.dao.ExpertationDao;
 import com.bc.pmpheep.back.dao.ProductDao;
+import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.service.*;
 import com.bc.pmpheep.back.vo.*;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -131,6 +133,9 @@ public class FileDownLoadController {
 
 	@Autowired
 	private ProductDao productDao;
+
+	@Autowired
+	CmsContentDao cmsContentDao;
 
 	/**
 	 * 普通文件下载
@@ -405,6 +410,72 @@ public class FileDownLoadController {
 		}
 	}
 
+	/**
+	 *
+	 * Description:导出图书纠错审核信息
+	 *
+
+	 */
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "图书评论")
+	@RequestMapping(value = "/bookCorrection/exportComments", method = RequestMethod.GET)
+	public void exportComments(HttpServletRequest request, HttpServletResponse response, CmsContentVO cmsContentVO) {
+		cmsContentVO.setCategoryId(Const.CMS_CATEGORY_ID_0);
+		String title = cmsContentVO.getTitle();
+		String userName = cmsContentVO.getUsername();
+		if (StringUtil.notEmpty(title)) {
+			cmsContentVO.setTitle(StringUtil.toAllCheck(title));
+		}
+		if (StringUtil.notEmpty(userName)) {
+			cmsContentVO.setUsername(StringUtil.toAllCheck(userName));
+		}
+		PageParameter<CmsContentVO> pageParameter =
+				new PageParameter<CmsContentVO>(null, null, cmsContentVO);
+		String sessionId = CookiesUtil.getSessionId(request);
+
+		// 获取当前登陆用户
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (ObjectUtil.isNull(pmphUser) || ObjectUtil.isNull(pmphUser.getId())) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+					CheckedExceptionResult.NULL_PARAM, "用户为空");
+		}
+		if (Const.CMS_CATEGORY_ID_0.longValue() == pageParameter.getParameter().getCategoryId()) {
+			pageParameter.getParameter().setIsAdmin(true);
+		} else {
+			pageParameter.getParameter().setIsAdmin(pmphUser.getIsAdmin());
+		}
+		pageParameter.setPageSize(100000000);
+		List<CmsContentVO> list = cmsContentDao.listCmsComment(pageParameter);
+		String[] authStatusName = new String[]{"待审核","未通过","已通过"};
+		for(CmsContentVO cmsContentVO1:list){
+			cmsContentVO1.setAuthDateS(DateUtil.formatTimeStamp("yyyy-MM-dd",cmsContentVO1.getAuthDate()));
+			cmsContentVO1.setGmtCreateS(DateUtil.formatTimeStamp("yyyy-MM-dd",cmsContentVO1.getGmtCreate()));
+			cmsContentVO1.setAuthStatusName(authStatusName[cmsContentVO1.getAuthStatus()]);
+		}
+
+		Workbook workbook = null;
+		if (list.size() == 0) {
+			list.add(new CmsContentVO());
+		}
+		try {
+			workbook = excelHelper.fromBusinessObjectList(list, "图书评论");
+
+		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+			logger.warn("数据表格化的时候失败");
+		}
+		String fileName = returnFileName(request,"图书评论.xls");
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		try (OutputStream out = response.getOutputStream()) {
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常： {}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
 	/**
 	 * 导出临床决策-申报列表
 	 * @param request
