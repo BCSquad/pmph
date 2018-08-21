@@ -95,6 +95,9 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
     @Autowired
     private PmphDepartmentService    pmphDepartmentService;
 
+    @Autowired
+    ProductService productService;
+
     @Override
     public UserMessage addUserMessage(UserMessage userMessage) throws CheckedServiceException {
         if (null == userMessage) {
@@ -250,6 +253,30 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         return resultMap;
     }
 
+    @Override
+    public Map<String, Object> listSendClinicalmessageOject(Integer sendType, Integer pageNumber,
+                                             Integer pageSize, String orgName, Long productId, String userNameOrUserCode,
+                                             String productName) throws CheckedServiceException {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        if (ObjectUtil.isNull(sendType)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                    CheckedExceptionResult.NULL_PARAM, "发送对象未选择，请选择发送对象!");
+        }
+        // 1 发送给学校管理员 //2 所有人
+        if (Const.SEND_OBJECT_1.intValue() == sendType.intValue()
+                || Const.SEND_OBJECT_2.intValue() == sendType.intValue()) {
+            resultMap.put("orgVo", orgService.listSendClinicalToSchoolAdminOrAllUser(orgName, productId));
+        }
+        // 指定用户
+        if (Const.SEND_OBJECT_3.intValue() == sendType.intValue()) {
+            // 调用用户管理的接口
+        }
+        // 教材所有报名者
+        if (Const.SEND_OBJECT_4.intValue() == sendType.intValue()) {
+            resultMap.put("product", productService.getListProduct(productName));
+        }
+        return resultMap;
+    }
     @Override
     public Integer addOrUpdateUserMessage(HttpServletRequest request, Message message,
     String title, Integer sendType, String orgIds, Long senderId, String userIds, String bookIds,

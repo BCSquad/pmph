@@ -107,6 +107,7 @@ public class FileDownLoadController {
 	ZipHelper zipHelper;
 	@Resource
 	MaterialOrgService materialOrgService;
+
 	@Autowired
 	BookCorrectionService bookCorrectionService;
 	@Autowired
@@ -926,6 +927,56 @@ public class FileDownLoadController {
 		}
 	}
 
+
+	/**
+	 *
+	 * <pre>
+	 * 功能描述：导出已发布教材下的学校
+	 * 使用示范：
+	 *
+	 * &#64;param materialId 教材ID
+	 * &#64;param request
+	 * &#64;param response
+	 * </pre>
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出已发布临床下的学校")
+	@RequestMapping(value = "/clinical/excel/published/org", method = RequestMethod.GET)
+	public void clinicalOrg(@RequestParam("productId") Long productId, HttpServletRequest request,
+					HttpServletResponse response) {
+		Workbook workbook = null;
+		List<OrgExclVO> orgList = null;
+		try {
+			orgList = productService.getOutPutExclOrgByProduct(productId);
+			if (orgList.isEmpty()) {
+				orgList.add(new OrgExclVO());
+			}
+			workbook = excelHelper.fromBusinessObjectList(orgList, "学校信息");
+		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+			logger.warn("数据表格化的时候失败");
+		}
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		String materialName = null;
+		if (CollectionUtil.isNotEmpty(orgList)) {
+			materialName = orgList.get(0).getMaterialName();// 教材名称
+		}
+		if (StringUtil.isEmpty(materialName)) {
+			materialName = "已发布学校";
+		}
+		String fileName = returnFileName(request, materialName + ".xls");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		try (OutputStream out = response.getOutputStream()) {
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常：{}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
+
 	/**
 	 * 机构用户export
 	 */
@@ -1422,7 +1473,7 @@ public class FileDownLoadController {
 		}
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
-		String fileName = returnFileName(request, StringUtil.isEmpty(chooseOrg)?"所有学校"+ ".xls":"所选学校" + ".xls");
+		String fileName = returnFileName(request, StringUtil.isEmpty(chooseOrg)?("所有学校"+ ".xls"):("所选学校" + ".xls"));
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
 		try (OutputStream out = response.getOutputStream()) {
 			workbook.write(out);

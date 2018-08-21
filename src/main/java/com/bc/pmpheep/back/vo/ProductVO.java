@@ -54,6 +54,11 @@ public class ProductVO {
     private List<ProductAttachment> ProducntImgList; //上传图片列表
 
     public ProductVO() {
+
+    }
+    public ProductVO(Long productId, boolean b) {
+        this.id = productId;
+        this.is_published = b;
     }
 
     public ProductVO(Long product_type) {

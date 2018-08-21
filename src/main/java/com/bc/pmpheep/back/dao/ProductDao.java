@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.dao;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.*;
+import com.bc.pmpheep.back.vo.OrgExclVO;
 import com.bc.pmpheep.back.vo.ProductVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -88,4 +89,46 @@ public interface ProductDao {
      * @return
      */
     int createAttachment(ProductAttachment productAttachment);
+
+    /**
+     * 根据productId导出已发布的学校
+     * @param productId
+     * @return
+     */
+    List<OrgExclVO> getOutPutExclOrgByProduct(Long productId);
+
+    /**
+     * 发布临床-机构
+     * @param productOrgList
+     * @return
+     */
+    Integer addProductOrgs(List<ProductOrg> productOrgList);
+
+    /**
+     * 跟新发布状态
+     * @param productVO
+     * @return
+     */
+    Integer updateProduct(ProductVO productVO);
+
+    /**
+     * 根据临床id 获取临床-机构信息
+     * @param productId
+     * @return
+     */
+    List<Long> getListProductOrgByProductId(Long productId);
+
+    /**
+     * 获取历史
+     * @param pageParameter
+     * @return
+     */
+    List<ProductHistorylVO> listProductHistory(PageParameter<ProductHistorylVO> pageParameter);
+
+    /**
+     * 获取临床集合
+     * @param productName
+     * @return
+     */
+    List<Product> getListProduct(String productName);
 }

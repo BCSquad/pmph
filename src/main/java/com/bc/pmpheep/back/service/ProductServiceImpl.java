@@ -5,6 +5,9 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.*;
 import com.bc.pmpheep.back.util.*;
+import com.bc.pmpheep.back.vo.MateriaHistorylVO;
+import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
+import com.bc.pmpheep.back.vo.OrgExclVO;
 import com.bc.pmpheep.back.vo.ProductVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.general.bean.FileType;
@@ -26,8 +29,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -218,6 +220,127 @@ public class ProductServiceImpl implements ProductService {
         responseBean.setData(pageResult);
         return responseBean;
     }
+
+    @Override
+    public List<OrgExclVO> getOutPutExclOrgByProduct(Long productId) {
+        if (null == productId) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_PUB,
+                    CheckedExceptionResult.NULL_PARAM, "临床id为空");
+        }
+        return productDao.getOutPutExclOrgByProduct(productId);
+    }
+
+    /**
+     * 临床发布通知
+     * @param productId
+     * @param orgIds
+     * @param sessionId
+     * @return
+     */
+    @Override
+    public Integer noticePublished(Long productId, List<Long> orgIds, String sessionId) {
+        if (CollectionUtil.isEmpty(orgIds)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
+                    CheckedExceptionResult.NULL_PARAM, "机构为空");
+        }
+        Set<Long> newOrgIdSet = new HashSet<>();// 防止网络延迟重复提交
+        newOrgIdSet.addAll(orgIds);
+        List<Long> listOrgIds = new ArrayList<Long>(newOrgIdSet.size());
+        listOrgIds.addAll(newOrgIdSet);
+        // 获取当前用户
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+        if (ObjectUtil.isNull(pmphUser)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
+                    CheckedExceptionResult.NULL_PARAM, "请求用户不存在");
+        }
+        Integer count = 0;
+        List<ProductOrg> productOrgList = new ArrayList<ProductOrg>(listOrgIds.size());
+        // 根据教材ID查询临床-机构关联表
+        List<Long> OrgIds = this.getListProductOrgByProductId(productId);
+        if (CollectionUtil.isEmpty(OrgIds)) {// 为空，初次发布
+            for (Long orgId : listOrgIds) {
+                productOrgList.add(new ProductOrg(productId, orgId));
+            }
+            count = this.addProductOrgs(productOrgList);
+
+        } else {// 不为空
+            List<Long> newOrgIds = new ArrayList<Long>();// 新选中的机构
+            for (Long orgId : listOrgIds) {
+                if (!OrgIds.contains(orgId)) {
+                    newOrgIds.add(orgId);
+                    productOrgList.add(new ProductOrg(productId, orgId));
+                }
+            }
+            if (CollectionUtil.isEmpty(productOrgList)) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
+                        CheckedExceptionResult.ILLEGAL_PARAM,
+                        "当前选中的学校已发送，无需要再次发送");
+            }
+            count = this.addProductOrgs(productOrgList);
+
+        }
+
+        count = this.updateProduct(new ProductVO(productId, true), sessionId);
+        return count;
+    }
+
+    @Override
+    public Integer addProductOrgs(List<ProductOrg> productOrgList) {
+        if (null == productOrgList || productOrgList.size() == 0) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_PUB,
+                    CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        return productDao.addProductOrgs(productOrgList);
+    }
+
+    @Override
+    public List<Long> getListProductOrgByProductId(Long productId) {
+        if (ObjectUtil.isNull(productId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_PUB,
+                    CheckedExceptionResult.NULL_PARAM, "ID为空");
+        }
+        return productDao.getListProductOrgByProductId(productId);
+    }
+
+    @Override
+    public Integer updateProduct(ProductVO productVO, String sessionId) {
+        if (null == productVO.getId()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+                    "主键为空");
+        }
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+        if (ObjectUtil.isNull(pmphUser)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+                    "用户为空");
+        }
+
+        return productDao.updateProduct(productVO);
+    }
+
+    @Override
+    public PageResult<ProductHistorylVO> listProductHistory(PageParameter<ProductHistorylVO> pageParameter, String sessionId) {
+        PageResult<ProductHistorylVO> pageResult = new PageResult<ProductHistorylVO>();
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+        List<ProductHistorylVO> ProductHistorylVOs =
+                productDao.listProductHistory(pageParameter);
+        if (CollectionUtil.isNotEmpty(ProductHistorylVOs)) {
+            Integer count = ProductHistorylVOs.get(0).getCount();
+            pageResult.setTotal(count);
+            pageResult.setRows(ProductHistorylVOs);
+        }
+        return pageResult;
+    }
+
+    /**
+     * 获取临床集合
+     * @param productName
+     * @return
+     */
+    @Override
+    public List<Product> getListProduct(String productName) {
+        return productDao.getListProduct(productName);
+    }
+
 
     /**
      * 提交校验

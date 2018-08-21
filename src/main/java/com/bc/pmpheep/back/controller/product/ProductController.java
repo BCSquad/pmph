@@ -1,14 +1,17 @@
 package com.bc.pmpheep.back.controller.product;
 
+import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Product;
 import com.bc.pmpheep.back.po.ProductExtension;
+import com.bc.pmpheep.back.po.ProductHistorylVO;
 import com.bc.pmpheep.back.service.ProductService;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.vo.ExpertationVO;
+import com.bc.pmpheep.back.vo.MateriaHistorylVO;
 import com.bc.pmpheep.back.vo.ProductVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -92,7 +95,57 @@ public class ProductController {
         return responseBean;
     }
 
+    private static final String BUSINESS_TYPE = "临床通知备注";
 
+    /**
+     * 功能描述：发布临床通知
+     * 使用示范：
+     * @param request
+     * @param productId
+     * @param orgIds
+     * @return
+     */
+    @RequestMapping(value = "/published",method = RequestMethod.POST)
+    @LogDetail(businessType = BUSINESS_TYPE, logRemark = "教材通知发布")
+    @ResponseBody
+    public ResponseBean published(HttpServletRequest request,
+                                  @RequestParam("productId") Long productId, @RequestParam("orgIds") List<Long> orgIds){
+
+        String sessionId = CookiesUtil.getSessionId(request);
+        try {
+            return new ResponseBean(productService.noticePublished(productId,
+                    orgIds,
+                    sessionId));
+        } catch (Exception e) {
+            return new ResponseBean(e);
+        }
+    }
+
+    /**
+     *
+     * <pre>
+     * 功能描述：查询历史临床通知列表
+     * 使用示范：
+     *
+     * @param pageNumber 当前页数
+     * @param pageSize 当前页条数
+     * @param request
+     * @return
+     * </pre>
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSINESS_TYPE, logRemark = "查询历史教材通知列表")
+    @RequestMapping(value = "/history", method = RequestMethod.GET)
+    public ResponseBean history(
+            @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
+            @RequestParam(name = "pageSize", defaultValue = "5") Integer pageSize,
+            HttpServletRequest request) {
+        PageParameter<ProductHistorylVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
+        ProductHistorylVO productHistorylVO = new ProductHistorylVO();
+        pageParameter.setParameter(productHistorylVO);
+        String sessionId = CookiesUtil.getSessionId(request);
+        return new ResponseBean(productService.listProductHistory(pageParameter, sessionId));
+    }
 
     
 

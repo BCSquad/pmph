@@ -344,10 +344,10 @@
         e.*
         from
         (select
-                *
+                e1.*, if(e1.org_id=0,'人民卫生出版社',o.org_name) declare_name
                  from
-                expertation
-                where id = #{id}) e
+                expertation e1 left join org o on e1.org_id = o.id
+                where e1.id = #{id}) e
 
         left join expertation_subject_type est on est.expertation_id = e.id
             left join product_subject_type pst on est.product_subject_type_id = pst.id
@@ -370,6 +370,8 @@
 
         left join product_extension on product_extension.product_id = e.product_id
         left join  dec_extension on dec_extension.extension_id = product_extension.id and dec_extension.expertation_id = e.id
+
+
     </select>
 
 
@@ -409,6 +411,8 @@
         <result property="is_staging" column="is_staging"></result>
         <result property="unit_advise" column="unit_advise"></result>
         <result property="degree" column="degree"></result>
+        <result property="declare_name" column="declare_name"></result>
+        <result property="syllabus_name" column="syllabus_name"></result>
 
         <result property="education" column="education"></result>
         <result property="banknumber" column="banknumber"></result>

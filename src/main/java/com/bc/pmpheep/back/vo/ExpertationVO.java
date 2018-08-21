@@ -70,6 +70,8 @@ public class ExpertationVO implements Serializable {
     private short education; //学历 （数字代号）
     private String banknumber; //银行卡号
     private String bankaddress;//银行地址（开户行）
+    private String declare_name; //申报单位名称
+    private String syllabus_name; // 附件名称
 
 
     private List<ProductType> productSubjectTypeList; //学科分类
@@ -540,5 +542,21 @@ public class ExpertationVO implements Serializable {
 
     public void setExperience(Long experience) {
         this.experience = experience;
+    }
+
+    public String getDeclare_name() {
+        return declare_name;
+    }
+
+    public void setDeclare_name(String declare_name) {
+        this.declare_name = declare_name;
+    }
+
+    public String getSyllabus_name() {
+        return syllabus_name;
+    }
+
+    public void setSyllabus_name(String syllabus_name) {
+        this.syllabus_name = syllabus_name;
     }
 }

@@ -137,6 +137,39 @@ public class UserMessageController {
     }
 
     /**
+     *
+     * <pre>
+     * 功能描述：初始化数据(选择向各个对象发送消息)
+     * 使用示范：
+     *
+     * &#64;param sendType //1 发送给学校管理员 //2 所有人 //3指定用户 //4发送给教材所有报名者
+     * &#64;param pageNumber
+     * &#64;param pageSize
+     * &#64;param orgName 机构名称
+     * &#64;param materialId 教材ID
+     * &#64;param userNameOrUserCode 用户姓名/用户账号
+     * &#64;param materialName 教材名称
+     * &#64;return
+     * </pre>
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "加载选择对象业务数据")
+    @RequestMapping(value = "/clinicalmessage/sendObject", method = RequestMethod.GET)
+    public ResponseBean sendClinicalmessageObject(@RequestParam("sendType") Integer sendType,
+                                   @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
+                                   @RequestParam(name = "pageSize") Integer pageSize, String orgName,
+                                   @RequestParam("productId") Long productId,
+                                    String userNameOrUserCode,
+                                    String productName) {
+        return new ResponseBean(userMessageService.listSendClinicalmessageOject(sendType,
+                pageNumber,
+                pageSize,
+                orgName,
+                productId,
+                userNameOrUserCode,
+                productName));
+    }
+    /**
      * 
      * <pre>
 	 * 功能描述：根据教材ID查询书籍列表
@@ -200,7 +233,6 @@ public class UserMessageController {
      * @param sendType //1 发送给学校管理员 //2 所有人 //3指定用户 //4发送给教材所有报名者
      * @param orgIds
      * @param userIds
-     * @param bookids
      * @return
      */
     @ResponseBody
@@ -431,9 +463,6 @@ public class UserMessageController {
      * 
      * @author tyc
      * @createDate 2017年11月24日 上午11:04:00
-     * @param message
-     * @param userId 接收者id
-     * @param sessionId
      * @return
      */
     @ResponseBody

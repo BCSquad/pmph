@@ -266,4 +266,26 @@ public interface UserMessageService {
      */
     Integer addOneUserMessage(Message message, Long receiverId, String sessionId)
     throws CheckedServiceException, IOException;
+
+    /**
+	 *
+	 * <pre>
+	 * 功能描述：系统消息——发送新消息——发送对象（学校管理员、所有人、指定用户、教材所有报名者）页面数据加载
+	 * 使用示范：
+	 *
+	 * @param sendType //1 发送给学校管理员 //2 所有人 //3指定用户 //4发送给教材所有报名者
+	 * @param pageNumber
+	 * @param pageSize
+	 * @param orgName 机构名称
+	 * @param materialId 教材ID
+	 * @param userNameOrUserCode 用户姓名/用户账号
+	 * @param materialName 教材名称
+	 * @return
+	 * @throws CheckedServiceException
+	 * </pre>
+	 */
+	Map<String, Object> listSendClinicalmessageOject(Integer sendType, Integer pageNumber, Integer pageSize,
+									  String orgName, Long productId, String userNameOrUserCode, String productName)
+			throws CheckedServiceException;
+
 }
