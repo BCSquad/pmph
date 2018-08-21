@@ -176,7 +176,7 @@ public class ExpertationServiceImpl implements ExpertationService{
         try{
             //获取申报信息
             ExpertationVO expertationVO  = expertationDao.getExpertationById(id);
-            if(2==onlineProgress.intValue()){ // 退回
+            if(4==onlineProgress.intValue()||5==onlineProgress.intValue()){ // 退回
                 if (StringUtil.strLength(returnCause) > 40) {
                     throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
                             "最多只能输入40个字符，请重新输入!");

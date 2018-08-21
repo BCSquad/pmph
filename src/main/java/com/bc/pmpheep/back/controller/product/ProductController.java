@@ -66,7 +66,7 @@ public class ProductController {
     @ResponseBody
     public ResponseBean save(HttpServletRequest request, @RequestBody ProductVO productVO, @PathVariable("publish")String publish) throws IOException {
         Boolean is_publish=!"noPub".equals(publish);
-        productVO.setIs_published(is_publish);
+        //productVO.setIs_published(is_publish);
         String sessionId = CookiesUtil.getSessionId(request);
       /*  String auditorListS = request.getParameter("auditorList");
         String ProductExtensionListS = request.getParameter("ProductExtensionList");*/

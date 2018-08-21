@@ -93,9 +93,9 @@ public class ProductServiceImpl implements ProductService {
         //if(productVO.getId()==null){ //新建 保存创建人
             productVO.setFounder_id(pmphUser.getId());
         //}
-        if(productVO.getIs_published()){ // 发布 保存发布人
+       /* if(productVO.getIs_published()){ // 发布 保存发布人
             productVO.setPublisher_id(pmphUser.getId());
-        }
+        }*/
 
         //校验
         validateProductVO(productVO);
@@ -313,7 +313,7 @@ public class ProductServiceImpl implements ProductService {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
                     "用户为空");
         }
-
+        productVO.setPublisher_id(pmphUser.getId());
         return productDao.updateProduct(productVO);
     }
 

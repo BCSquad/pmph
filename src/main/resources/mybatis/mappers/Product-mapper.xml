@@ -520,7 +520,7 @@
 
     <!--跟新发布状态-->
     <update id="updateProduct" parameterType="com.bc.pmpheep.back.vo.ProductVO">
-        update product set is_published = #{is_published} where id = #{id}
+        update product set is_published = #{is_published}, publisher_id = #{publisher_id} where id = #{id}
     </update>
 
     <!--根据临床id 获取临床-机构信息-->

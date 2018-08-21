@@ -327,6 +327,7 @@
         dec_national_plan.per_id as dec_national_plan_per_id,
         dec_national_plan.expertation_id as dec_national_plan_expertation_id,-->
 
+        product_extension.extension_name as extension_name,
         dec_extension.id as dec_extension_id,
         dec_extension.extension_id as dec_extension_extension_id,
         dec_extension.declaration_id as dec_extension_declaration_id,
@@ -344,9 +345,10 @@
         e.*
         from
         (select
-                e1.*, if(e1.org_id=0,'人民卫生出版社',o.org_name) declare_name
+                e1.*, if(e1.org_id=0,'人民卫生出版社',o.org_name) declare_name,wu.username as username
                  from
                 expertation e1 left join org o on e1.org_id = o.id
+                left join writer_user wu on wu.id = e1.user_id
                 where e1.id = #{id}) e
 
         left join expertation_subject_type est on est.expertation_id = e.id
@@ -368,7 +370,7 @@
         left join dec_editor_book on dec_editor_book.expertation_id = e.id
 
 
-        left join product_extension on product_extension.product_id = e.product_id
+        left join product_extension on product_extension.product_id = e.product_id AND product_extension.is_deleted = 0
         left join  dec_extension on dec_extension.extension_id = product_extension.id and dec_extension.expertation_id = e.id
 
 
@@ -386,6 +388,7 @@
         <result property="birthday" column="birthday"></result>
         <result property="experience" column="experience"></result>
         <result property="org_name" column="org_name"></result>
+        <result property="org_id" column="org_id"></result>
         <result property="position" column="position"></result>
         <result property="title" column="title"></result>
         <result property="address" column="address"></result>
@@ -413,6 +416,7 @@
         <result property="degree" column="degree"></result>
         <result property="declare_name" column="declare_name"></result>
         <result property="syllabus_name" column="syllabus_name"></result>
+        <result property="username" column="username"></result>
 
         <result property="education" column="education"></result>
         <result property="banknumber" column="banknumber"></result>
@@ -507,11 +511,13 @@
         </collection>
 
         <collection property="DecExtensionList" javaType="list" ofType="DecExtension">
-            <id property="id" column="dec_extension_id"></id>
+            <id property="extension_name" column="extension_name"></id>
+            <result property="id" column="dec_extension_id"></result>
             <result property="extensionId" column="dec_extension_extension_id"></result>
             <result property="declarationId" column="dec_extension_declaration_id"></result>
             <result property="content" column="dec_extension_content"></result>
             <result property="expertationId" column="dec_extension_expertation_id"></result>
+
         </collection>
 
         <collection property="productSubjectTypeList" javaType="list" ofType="ProductType">

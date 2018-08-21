@@ -34,6 +34,8 @@ public class ExpertationVO implements Serializable {
     private Long	experience	;	//	3	教龄
     @ExcelHeader(header = "工作单位")
     private String	org_name	;	//	60	工作单位
+
+    private long org_id; // 申报单位 为0 代表出版社
     @ExcelHeader(header = "职务")
     private String	position	;	//	36	职务
     @ExcelHeader(header = "职称")
@@ -558,5 +560,13 @@ public class ExpertationVO implements Serializable {
 
     public void setSyllabus_name(String syllabus_name) {
         this.syllabus_name = syllabus_name;
+    }
+
+    public long getOrg_id() {
+        return org_id;
+    }
+
+    public void setOrg_id(long org_id) {
+        this.org_id = org_id;
     }
 }
