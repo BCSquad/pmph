@@ -53,6 +53,8 @@ public class ExpertationVO implements Serializable {
     private Boolean	is_dispensed	;	//	1	服从调剂
     private String	expertise	;	//	50	专业特长
     private Integer	online_progress	;	//	3	审核进度
+    @ExcelHeader(header = "审核进度")
+    private String onlineProgressName ;
     private Timestamp auth_date	;	//	0	审核通过时间
     private String	return_cause	;	//	100	退回原因
     private Boolean	is_deleted	;	//	1	是否被逻辑删除t
@@ -87,7 +89,8 @@ public class ExpertationVO implements Serializable {
     private List<DecEduExp> DecEduExpList; // 主要学习经历
     private List<DecWorkExp> DecWorkExpList; //主要工作经历
     private List<DecAcade> DecAcadeList; //主要学术兼职
-    private List<DecTextbook> DecTextbookList; // 人卫社教材编写情况
+    //private List<DecTextbook> DecTextbookList;
+    private List<DecTextbookPmph> DecTextbookPmphList;  // 人卫社教材编写情况
     private List<DecMonograph> DecMonographList; //主编学术专著情况
     private List<DecNationalPlan> DecNationalPlanList;
     private List<DecExtension> DecExtensionList; //扩展项
@@ -458,13 +461,13 @@ public class ExpertationVO implements Serializable {
         DecAcadeList = decAcadeList;
     }
 
-    public List<DecTextbook> getDecTextbookList() {
+    /*public List<DecTextbook> getDecTextbookList() {
         return DecTextbookList;
     }
 
     public void setDecTextbookList(List<DecTextbook> decTextbookList) {
         DecTextbookList = decTextbookList;
-    }
+    }*/
 
     public List<DecMonograph> getDecMonographList() {
         return DecMonographList;
@@ -568,5 +571,21 @@ public class ExpertationVO implements Serializable {
 
     public void setOrg_id(long org_id) {
         this.org_id = org_id;
+    }
+
+    public String getOnlineProgressName() {
+        return onlineProgressName;
+    }
+
+    public void setOnlineProgressName(String onlineProgressName) {
+        this.onlineProgressName = onlineProgressName;
+    }
+
+    public List<DecTextbookPmph> getDecTextbookPmphList() {
+        return DecTextbookPmphList;
+    }
+
+    public void setDecTextbookPmphList(List<DecTextbookPmph> decTextbookPmphList) {
+        DecTextbookPmphList = decTextbookPmphList;
     }
 }

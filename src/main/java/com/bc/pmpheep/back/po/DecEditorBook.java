@@ -1,8 +1,12 @@
 package com.bc.pmpheep.back.po;
 
+import org.apache.ibatis.type.Alias;
+
 /**
  * 主编或参编图书情况
  */
+@SuppressWarnings("serial")
+@Alias("DecEditorBook")
 public class DecEditorBook {
 
     private  Long id	;//主键

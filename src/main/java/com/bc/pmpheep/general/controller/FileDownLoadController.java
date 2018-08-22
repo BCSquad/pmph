@@ -491,12 +491,14 @@ public class FileDownLoadController {
 		pageParameter.setStart(null);
 		pageParameter.setParameter(expertationVO);
 		List<ExpertationVO> list = expertationDao.queryExpertation(pageParameter);
+		String[] stateList = new String[]{"未提交","待学校审核","被学校退回","学校已审核","待学校审核","被出版社退回"};
 		for (ExpertationVO e: list) {
 			List<ProductType> clist = expertationDao.queryProductContentTypeListByExpertationId(e.getId());
 			List<ProductType> slist = expertationDao.queryProductSubjectTypeListByExpertationId(e.getId());
 			e.setProductSubjectTypeList(slist);
 			e.setProductContentTypeList(clist);
 			e.setExcelTypeStr();
+			e.setOnlineProgressName((e.getOrg_id()==0&&e.getOnline_progress()==1)?"待出版社审核":(e.getOrg_id()==0&&e.getOnline_progress()==3?"出版社已审核":stateList[e.getOnline_progress()]));
 		}
 		Workbook workbook = null;
 		try {
