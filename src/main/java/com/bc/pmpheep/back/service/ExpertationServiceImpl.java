@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -205,5 +206,31 @@ public class ExpertationServiceImpl implements ExpertationService{
         }
 
         return flag;
+    }
+
+    @Override
+    public Map showTabs(Long productType) {
+        List showTabList = new ArrayList();
+        List notShowTabList = new ArrayList();
+        Map map =  expertationDao.showTabs(productType);
+        if((Boolean)map.get("is_subject_type_used")){
+            showTabList.add("subject");
+        }else{
+            notShowTabList.add("subject");
+        }
+        if((Boolean)map.get("is_content_type_used")){
+            showTabList.add("content");
+        }else{
+            notShowTabList.add("content");
+        }
+        if((Boolean)map.get("is_profession_type_used")){
+            showTabList.add("profession");
+        }else{
+            notShowTabList.add("profession");
+        }
+        Map resultMap = new HashMap();
+        resultMap.put("showTabList",showTabList);
+        resultMap.put("notShowTabList",notShowTabList);
+        return resultMap;
     }
 }

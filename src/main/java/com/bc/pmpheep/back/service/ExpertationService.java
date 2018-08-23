@@ -37,4 +37,6 @@ public interface ExpertationService {
     ExpertationVO getExpertationById(Long id, String sessionId);
 
     Boolean onlineProgress(Long id, Integer onlineProgress, String returnCause, PmphUser pmphUser);
+
+    Map showTabs(Long productType);
 }

@@ -146,8 +146,21 @@ public class ExpertationController {
     }
 
 
+    /**
+     * 根据productType勾选--控制tabs的显示
+     * @param request
+     * @param productType
+     * @return
+     */
+
+    @RequestMapping("/showTabs")
+    @ResponseBody
+    public ResponseBean<Map> showTabs(HttpServletRequest request,@RequestParam(value = "productType",required = true) Long productType) {
+
+        return new ResponseBean(expertationService.showTabs(productType));
+    }
 
 
 
 
-}
+    }

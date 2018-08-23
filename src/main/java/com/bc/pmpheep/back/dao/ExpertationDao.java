@@ -115,5 +115,5 @@ public interface ExpertationDao {
     List<DecEditorBook> queryDecEditorBook(Long id);
 
 
-
+    Map showTabs(Long productType);
 }

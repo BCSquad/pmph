@@ -716,6 +716,9 @@
         id=#{id} ;
     </update>
 
+    <select id="showTabs" parameterType="long" resultType="map">
+        select is_subject_type_used,is_content_type_used,is_profession_type_used from product where product_type = #{productType}
+    </select>
 
 
 
