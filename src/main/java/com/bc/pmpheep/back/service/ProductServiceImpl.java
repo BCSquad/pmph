@@ -384,6 +384,7 @@ public class ProductServiceImpl implements ProductService {
                                 ||"founder".equals(name)
                                 || "is_unit_advise_required".equals(name)
                                 || "is_deleted".equals(name)
+                            ||"is_unit_advise_used".equals(name)
 
                     )){
                 throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.NULL_PARAM,

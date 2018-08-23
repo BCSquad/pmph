@@ -46,7 +46,7 @@ public class ExpertationVO implements Serializable {
     private String	handphone	;	//	25	手机
     @ExcelHeader(header = "邮箱")
     private String	email	;	//	40	邮箱
-    private Boolean	idtype	;	//	3	证件类型
+    private short	idtype	;	//	3	证件类型
     private String	idcard	;	//	40	证件号码
     private String	telephone	;	//	30	联系电话
     private String	fax	;	//	50	传真
@@ -212,11 +212,11 @@ public class ExpertationVO implements Serializable {
         this.email = email;
     }
 
-    public Boolean getIdtype() {
+    public short getIdtype() {
         return idtype;
     }
 
-    public void setIdtype(Boolean idtype) {
+    public void setIdtype(short idtype) {
         this.idtype = idtype;
     }
 
