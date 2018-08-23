@@ -128,6 +128,9 @@ public class ExpertationServiceImpl implements ExpertationService{
         if(ttype == 2){ //2.内容分类
             totalCount = expertationDao.getCountListGroupByContentTypeCount(pageParameter);
             list = expertationDao.getCountListGroupByContentType(pageParameter);
+        }else if(ttype == 3){ //3.专业分类
+            totalCount = expertationDao.getCountListGroupByProfessionTypeCount(pageParameter);
+            list = expertationDao.getCountListGroupByProfessionType(pageParameter);
         }else{ //1.学科分类
             totalCount = expertationDao.getCountListGroupBySubjectTypeCount(pageParameter);
             list = expertationDao.getCountListGroupBySubjectType(pageParameter);

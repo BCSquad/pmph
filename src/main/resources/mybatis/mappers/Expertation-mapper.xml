@@ -248,6 +248,65 @@
     </select>
 
 
+    <!--按专业分类统计 列表-->
+    <select id="getCountListGroupByProfessionType" parameterType="com.bc.pmpheep.back.plugin.PageParameter" resultType="com.bc.pmpheep.back.vo.ExpertationCountnessVO">
+        select
+        count(t1.eid) as count_submit,
+        sum(t1.online_progress=3) as count_success,
+        t1.type_name
+        from
+        (
+        select
+        e.id as eid,
+        e.online_progress,
+        ifNull(t.id,0) as tid,
+        ifNull(t.type_name,'未选择分类') as type_name
+
+        from (select * from expertation e where e.product_id = #{parameter.product_id} and e.online_progress >0) e
+        left join expertation_profession_type et on et.expertation_id = e.id
+        left join product_profession_type t on t.id = et.product_profession_type_id
+
+        <where>
+            <if test="parameter.type_name != null and parameter.type_name != '' ">
+                and t.type_name like concat('%',#{parameter.type_name},'%')
+            </if>
+        </where>
+        group by tid,eid
+
+        )t1
+
+        group by t1.tid
+
+        <if test="start != null">
+            limit #{start},#{pageSize}
+        </if>
+    </select>
+
+    <!--按专业分类统计 列表总数-->
+    <select id="getCountListGroupByProfessionTypeCount"  parameterType="com.bc.pmpheep.back.plugin.PageParameter" resultType="int">
+        SELECT count(t2.tid)
+        FROM (
+        select
+        t1.tid
+        from
+        (
+        select
+        ifNull(t.id,0) as tid
+        from (select * from expertation e where e.product_id = #{parameter.product_id} and e.online_progress >0) e
+        left join expertation_profession_type et on et.expertation_id = e.id
+        left join product_profession_type t on t.id = et.product_profession_type_id
+
+        <where>
+            <if test="parameter.type_name != null and parameter.type_name != '' ">
+                and t.type_name like concat('%',#{parameter.type_name},'%')
+            </if>
+        </where>
+
+        )t1
+
+        group by t1.tid
+        )t2
+    </select>
 
 
     <!--根据id查找申报主表-->
