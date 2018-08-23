@@ -63,6 +63,18 @@
         <result column="is_monograph_required" property="is_monograph_required"></result>
         <result column="is_edit_book_used" property="is_edit_book_used"></result>
         <result column="is_edit_book_required" property="is_edit_book_required"></result>
+
+        <result column="is_article_published_used" property="is_article_published_used"></result>
+        <result column="is_article_published_required" property="is_article_published_required"></result>
+        <result column="is_subject_type_used" property="is_subject_type_used"></result>
+        <result column="is_subject_type_required" property="is_subject_type_required"></result>
+        <result column="is_content_type_used" property="is_content_type_used"></result>
+        <result column="is_content_type_required" property="is_content_type_required"></result>
+        <result column="is_profession_type_used" property="is_profession_type_used"></result>
+        <result column="is_profession_type_required" property="is_profession_type_required"></result>
+        <result column="is_profession_award_used" property="is_profession_award_used"></result>
+        <result column="is_profession_award_required" property="is_profession_award_required"></result>
+
         <result column="is_deleted" property="is_deleted"></result>
         <result column="gmt_create" property="gmt_create"></result>
         <result column="gmt_update" property="gmt_update"></result>

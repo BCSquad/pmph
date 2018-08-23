@@ -34,6 +34,18 @@ public class ProductVO {
     private Boolean is_monograph_required	;// 主编学术专著情况 是否必填
     private Boolean is_edit_book_used	;// 	主编或参编图书情况 是否起用
     private Boolean is_edit_book_required	;// 主编或参编图书情况 是否必填
+
+    private Boolean	is_article_published_used	; //	文章发表情况 是否启用
+    private Boolean	is_article_published_required	; //	文章发表情况 是否必填
+    private Boolean	is_subject_type_used	; //	学科分类 是否启用
+    private Boolean	is_subject_type_required	; //	学科分类 是否必填
+    private Boolean	is_content_type_used	; //	内容分类 是否启用
+    private Boolean	is_content_type_required	; //	内容分类 是否必填
+    private Boolean	is_profession_type_used	; //	专业分类 是否启用
+    private Boolean	is_profession_type_required	; //	专业分类 是否必填
+    private Boolean	is_profession_award_used	; //	本专业获奖情况 是否启用
+    private Boolean	is_profession_award_required	; //	本专业获奖情况 是否必填
+
     private Boolean is_deleted	;// 是否被逻辑删除
     private Timestamp gmt_create	;//创建时间
     private Timestamp gmt_update	;//更新时间
@@ -345,5 +357,85 @@ public class ProductVO {
 
     public void setDescriptionContent(Content descriptionContent) {
         this.descriptionContent = descriptionContent;
+    }
+
+    public Boolean getIs_article_published_used() {
+        return is_article_published_used;
+    }
+
+    public void setIs_article_published_used(Boolean is_article_published_used) {
+        this.is_article_published_used = is_article_published_used;
+    }
+
+    public Boolean getIs_article_published_required() {
+        return is_article_published_required;
+    }
+
+    public void setIs_article_published_required(Boolean is_article_published_required) {
+        this.is_article_published_required = is_article_published_required;
+    }
+
+    public Boolean getIs_subject_type_used() {
+        return is_subject_type_used;
+    }
+
+    public void setIs_subject_type_used(Boolean is_subject_type_used) {
+        this.is_subject_type_used = is_subject_type_used;
+    }
+
+    public Boolean getIs_subject_type_required() {
+        return is_subject_type_required;
+    }
+
+    public void setIs_subject_type_required(Boolean is_subject_type_required) {
+        this.is_subject_type_required = is_subject_type_required;
+    }
+
+    public Boolean getIs_content_type_used() {
+        return is_content_type_used;
+    }
+
+    public void setIs_content_type_used(Boolean is_content_type_used) {
+        this.is_content_type_used = is_content_type_used;
+    }
+
+    public Boolean getIs_content_type_required() {
+        return is_content_type_required;
+    }
+
+    public void setIs_content_type_required(Boolean is_content_type_required) {
+        this.is_content_type_required = is_content_type_required;
+    }
+
+    public Boolean getIs_profession_type_used() {
+        return is_profession_type_used;
+    }
+
+    public void setIs_profession_type_used(Boolean is_profession_type_used) {
+        this.is_profession_type_used = is_profession_type_used;
+    }
+
+    public Boolean getIs_profession_type_required() {
+        return is_profession_type_required;
+    }
+
+    public void setIs_profession_type_required(Boolean is_profession_type_required) {
+        this.is_profession_type_required = is_profession_type_required;
+    }
+
+    public Boolean getIs_profession_award_used() {
+        return is_profession_award_used;
+    }
+
+    public void setIs_profession_award_used(Boolean is_profession_award_used) {
+        this.is_profession_award_used = is_profession_award_used;
+    }
+
+    public Boolean getIs_profession_award_required() {
+        return is_profession_award_required;
+    }
+
+    public void setIs_profession_award_required(Boolean is_profession_award_required) {
+        this.is_profession_award_required = is_profession_award_required;
     }
 }
