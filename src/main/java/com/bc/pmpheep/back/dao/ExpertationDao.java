@@ -55,6 +55,20 @@ public interface ExpertationDao {
     List<ExpertationCountnessVO> getCountListGroupBySubjectType(PageParameter<Map<String, Object>> pageParameter);
 
     /**
+     * 按专业分类统计  列表
+     * @param pageParameter
+     * @return
+     */
+    List<ExpertationCountnessVO> getCountListGroupByProfessionType(PageParameter<Map<String, Object>> pageParameter);
+
+    /**
+     * 按专业分类统计总数
+     * @param pageParameter
+     * @return
+     */
+    int getCountListGroupByProfessionTypeCount(PageParameter<Map<String, Object>> pageParameter);
+
+    /**
      * 查询申报详情
      * @param id
      * @return
@@ -99,7 +113,6 @@ public interface ExpertationDao {
      * @return
      */
     List<DecEditorBook> queryDecEditorBook(Long id);
-
 
 
 

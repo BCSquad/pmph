@@ -37,6 +37,31 @@
         </where>
     </select>
 
+    <select id="getProfessionTypeList" parameterType="PageParameter" resultMap="ProductTypeMap">
+        select t.*,1 as typeType from
+        product_profession_type t
+        inner join (select id from product where product_type = #{parameter.productType} and is_deleted = 0) p on p.id = t.product_id
+        <where>
+            t.is_deleted = 0
+            <if test="parameter.type_name != null and parameter.type_name != '' ">
+                and t.type_name like concat('%',#{parameter.type_name},'%')
+            </if>
+        </where>
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="getProfessionTypeCount" parameterType="PageParameter" resultType="int">
+        select count(t.id) from
+        product_profession_type t
+        inner join (select id from product where product_type = #{parameter.productType} and is_deleted = 0) p on p.id = t.product_id
+        <where>
+            t.is_deleted = 0
+            <if test="parameter.type_name != null and parameter.type_name != '' ">
+                and t.type_name like concat('%',#{parameter.type_name},'%')
+            </if>
+        </where>
+    </select>
+
     <select id="getLeafContentTypeList" parameterType="PageParameter" resultMap="ProductTypeMap">
         select
         t.id as id
@@ -76,6 +101,10 @@
         update product_subject_type set is_deleted = 1 where id = #{id}
     </update>
 
+    <update id="deleteProfessionTypeById" parameterType="java.lang.Long" >
+        update product_profession_type set is_deleted = 1 where id = #{id}
+    </update>
+
     <update id="deleteLeafContentTypeById" parameterType="java.lang.Long">
         update product_content_type        set is_deleted = 1 where id = #{id};
         update product_content_type_detail set is_deleted = 1 where product_type_id = #{id};
@@ -101,6 +130,16 @@
         inner join expertation e on e.id = t.expertation_id
     </select>
 
+    <select id="getProfessionTypeExpertationCount" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        select count(e.id)
+        from
+        (
+        select expertation_id from
+        expertation_profession_type where product_profession_type_id = #{id}
+        )t
+        inner join expertation e on e.id = t.expertation_id
+    </select>
+
     <select id="getContentTypeExpertationCount" parameterType="java.lang.Long" resultType="java.lang.Integer">
         select count(e.id)
         from
@@ -120,6 +159,18 @@
           <foreach collection="list" item="item" separator="," >
               (#{item.type_name},#{item.product_id})
           </foreach>
+        on duplicate key update is_deleted = 0
+    </insert>
+
+    <insert id="insertProfessionTypeBatch" parameterType="com.bc.pmpheep.back.vo.ProductType" >
+        insert into product_profession_type(
+        type_name
+        ,product_id
+        )
+        VALUES
+        <foreach collection="list" item="item" separator="," >
+            (#{item.type_name},#{item.product_id})
+        </foreach>
         on duplicate key update is_deleted = 0
     </insert>
 
