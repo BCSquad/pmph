@@ -11,11 +11,17 @@ public interface ProductTypeDao {
 
     int getSubjectTypeCount(PageParameter<ProductType> pageParameter);
 
+    List<ProductType> getProfessionTypeList(PageParameter<ProductType> pageParameter);
+
+    int getProfessionTypeCount(PageParameter<ProductType> pageParameter);
+
     List<ProductType> getLeafContentTypeList(PageParameter<ProductType> pageParameter);
 
     int getLeafContentTypeCount(PageParameter<ProductType> pageParameter);
 
     int deleteSubjectTypeById(Long id);
+
+    int deleteProfessionTypeById(Long id);
 
     int deleteLeafContentTypeById(Long id);
 
@@ -25,7 +31,11 @@ public interface ProductTypeDao {
 
     int getContentTypeExpertationCount(Long id);
 
+    int getProfessionTypeExpertationCount(Long id);
+
     int insertSubjectTypeBatch(List<ProductType> list);
+
+    int insertProfessionTypeBatch(List<ProductType> list);
 
     /**
      * 插入一个类，并回填其生成的id到实体类
@@ -40,4 +50,7 @@ public interface ProductTypeDao {
     Long getProductIdByProductType(Long product_type);
 
     Long queryContentTypeIdByFullNamePath(ProductType productType);
+
+
+
 }

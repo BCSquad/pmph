@@ -43,7 +43,7 @@ public class ProductTypeController {
     /**
      * 分页查询 产品分类
      * @param request
-     * @param pathType subject：学科分类；content：内容分类
+     * @param pathType subject：学科分类；content：内容分类 profession 专业分类
      * @param type_name 分类名称的模糊查询条件
      * @param pageSize
      * @param pageNumber
@@ -68,6 +68,8 @@ public class ProductTypeController {
             productType.setTypeType(1);
         }else if("content".equals(pathType)){
             productType.setTypeType(2);
+        }else if("profession".equals(pathType)){
+            productType.setTypeType(3);
         }else{
             responseBean.setCode(ResponseBean.WRONG_REQ_PARA);
             return responseBean;
@@ -95,6 +97,8 @@ public class ProductTypeController {
             productType.setTypeType(1);
         }else if("content".equals(pathType)){
             productType.setTypeType(2);
+        }else if("profession".equals(pathType)){
+            productType.setTypeType(3);
         }else{
             responseBean.setCode(ResponseBean.WRONG_REQ_PARA);
             responseBean.setMsg("未知的分类: "+pathType);
@@ -126,6 +130,8 @@ public class ProductTypeController {
             typeType =1 ;
         }else if("content".equals(pathType)){
             typeType = 2 ;
+        }else if("profession".equals(pathType)){
+            typeType = 3 ;
         }
         try {
             List<ProductType> list = productTypeService.importExcel(file,typeType,ptype);

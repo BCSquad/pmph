@@ -16,7 +16,7 @@ public class ProductType implements Serializable{
     private String type_name; //50长度 名称
     private Long product_id; //产品id
 
-    private int typeType; // 1.学科分类 2.内容分类
+    private int typeType; // 1.学科分类 2.内容分类 3.专业分类
     private Timestamp gmt_create;
     private Timestamp gmt_update;
 

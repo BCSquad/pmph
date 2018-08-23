@@ -65,6 +65,11 @@ public class ProductTypeServiceImpl implements ProductTypeService {
             if(count>0){
                 list = productTypeDao.getLeafContentTypeList(pageParameter);
             }
+        }else if(typeType==3){ //专业分类
+            count = productTypeDao.getProfessionTypeCount(pageParameter);
+            if(count>0){
+                list = productTypeDao.getProfessionTypeList(pageParameter);
+            }
         }else{
             //TODO 如果后续有新增其他分类...
         }
@@ -102,6 +107,14 @@ public class ProductTypeServiceImpl implements ProductTypeService {
                         "该分类已被临床决策申报引用，无法删除！");
             }
             count = productTypeDao.deleteLeafContentTypeById(productType.getId());
+            //productTypeDao.refreshLeafOfContentType();
+        }else if(typeType==3){ //专业分类
+            experCount = productTypeDao.getProfessionTypeExpertationCount(productType.getId());
+            if(experCount>0){
+                throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.ILLEGAL_PARAM,
+                        "该分类已被临床决策申报引用，无法删除！");
+            }
+            count = productTypeDao.deleteProfessionTypeById(productType.getId());
             //productTypeDao.refreshLeafOfContentType();
         }else{
             //TODO 如果后续有新增其他分类...
@@ -212,6 +225,8 @@ public class ProductTypeServiceImpl implements ProductTypeService {
         try{
             if (typeType==1){ //学科分类
                 int count = productTypeDao.insertSubjectTypeBatch(list);
+            }else if(typeType==3){ //专业分类
+                int count = productTypeDao.insertProfessionTypeBatch(list);
             }else if(typeType==2){ //内容分类
                 List<ProductType> tempChildList = new ArrayList<ProductType>();
                 /*for (ProductType productType: list) {
