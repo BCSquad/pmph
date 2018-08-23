@@ -130,6 +130,20 @@ public interface OrgDao {
     @Param("materialId") Long materialId);
 
     /**
+     *
+     * <pre>
+     * 功能描述：系统消息——发送新消息——发送对象（学校管理员、所有人）
+     * 使用示范：
+     *
+     * @param orgName 机构名称
+     * @param productId 教材ID
+     * @return
+     * </pre>
+     */
+    List<OrgVO> listSendClinicalToSchoolAdminOrAllUser(@Param("orgName") String orgName,
+                                               @Param("productId") Long productId);
+
+    /**
      * 
      * @param id
      * @return Org

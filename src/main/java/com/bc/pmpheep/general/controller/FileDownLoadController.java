@@ -20,8 +20,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.bc.pmpheep.back.dao.CmsContentDao;
 import com.bc.pmpheep.back.dao.ExpertationDao;
 import com.bc.pmpheep.back.dao.ProductDao;
+import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.service.*;
 import com.bc.pmpheep.back.vo.*;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -105,6 +107,7 @@ public class FileDownLoadController {
 	ZipHelper zipHelper;
 	@Resource
 	MaterialOrgService materialOrgService;
+
 	@Autowired
 	BookCorrectionService bookCorrectionService;
 	@Autowired
@@ -131,6 +134,9 @@ public class FileDownLoadController {
 
 	@Autowired
 	private ProductDao productDao;
+
+	@Autowired
+	CmsContentDao cmsContentDao;
 
 	/**
 	 * 普通文件下载
@@ -406,6 +412,72 @@ public class FileDownLoadController {
 	}
 
 	/**
+	 *
+	 * Description:导出图书纠错审核信息
+	 *
+
+	 */
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "图书评论")
+	@RequestMapping(value = "/bookCorrection/exportComments", method = RequestMethod.GET)
+	public void exportComments(HttpServletRequest request, HttpServletResponse response, CmsContentVO cmsContentVO) {
+		cmsContentVO.setCategoryId(Const.CMS_CATEGORY_ID_0);
+		String title = cmsContentVO.getTitle();
+		String userName = cmsContentVO.getUsername();
+		if (StringUtil.notEmpty(title)) {
+			cmsContentVO.setTitle(StringUtil.toAllCheck(title));
+		}
+		if (StringUtil.notEmpty(userName)) {
+			cmsContentVO.setUsername(StringUtil.toAllCheck(userName));
+		}
+		PageParameter<CmsContentVO> pageParameter =
+				new PageParameter<CmsContentVO>(null, null, cmsContentVO);
+		String sessionId = CookiesUtil.getSessionId(request);
+
+		// 获取当前登陆用户
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (ObjectUtil.isNull(pmphUser) || ObjectUtil.isNull(pmphUser.getId())) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+					CheckedExceptionResult.NULL_PARAM, "用户为空");
+		}
+		if (Const.CMS_CATEGORY_ID_0.longValue() == pageParameter.getParameter().getCategoryId()) {
+			pageParameter.getParameter().setIsAdmin(true);
+		} else {
+			pageParameter.getParameter().setIsAdmin(pmphUser.getIsAdmin());
+		}
+		pageParameter.setPageSize(100000000);
+		List<CmsContentVO> list = cmsContentDao.listCmsComment(pageParameter);
+		String[] authStatusName = new String[]{"待审核","未通过","已通过"};
+		for(CmsContentVO cmsContentVO1:list){
+			cmsContentVO1.setAuthDateS(DateUtil.formatTimeStamp("yyyy-MM-dd",cmsContentVO1.getAuthDate()));
+			cmsContentVO1.setGmtCreateS(DateUtil.formatTimeStamp("yyyy-MM-dd",cmsContentVO1.getGmtCreate()));
+			cmsContentVO1.setAuthStatusName(authStatusName[cmsContentVO1.getAuthStatus()]);
+		}
+
+		Workbook workbook = null;
+		if (list.size() == 0) {
+			list.add(new CmsContentVO());
+		}
+		try {
+			workbook = excelHelper.fromBusinessObjectList(list, "图书评论");
+
+		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+			logger.warn("数据表格化的时候失败");
+		}
+		String fileName = returnFileName(request,"图书评论.xls");
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		try (OutputStream out = response.getOutputStream()) {
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常： {}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
+	/**
 	 * 导出临床决策-申报列表
 	 * @param request
 	 * @param response
@@ -419,12 +491,14 @@ public class FileDownLoadController {
 		pageParameter.setStart(null);
 		pageParameter.setParameter(expertationVO);
 		List<ExpertationVO> list = expertationDao.queryExpertation(pageParameter);
+		String[] stateList = new String[]{"未提交","待学校审核","被学校退回","学校已审核","待学校审核","被出版社退回"};
 		for (ExpertationVO e: list) {
 			List<ProductType> clist = expertationDao.queryProductContentTypeListByExpertationId(e.getId());
 			List<ProductType> slist = expertationDao.queryProductSubjectTypeListByExpertationId(e.getId());
 			e.setProductSubjectTypeList(slist);
 			e.setProductContentTypeList(clist);
 			e.setExcelTypeStr();
+			e.setOnlineProgressName((e.getOrg_id()==0&&e.getOnline_progress()==1)?"待出版社审核":(e.getOrg_id()==0&&e.getOnline_progress()==3?"出版社已审核":stateList[e.getOnline_progress()]));
 		}
 		Workbook workbook = null;
 		try {
@@ -826,6 +900,56 @@ public class FileDownLoadController {
 		List<OrgExclVO> orgList = null;
 		try {
 			orgList = materialOrgService.getOutPutExclOrgByMaterialId(materialId);
+			if (orgList.isEmpty()) {
+				orgList.add(new OrgExclVO());
+			}
+			workbook = excelHelper.fromBusinessObjectList(orgList, "学校信息");
+		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+			logger.warn("数据表格化的时候失败");
+		}
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		String materialName = null;
+		if (CollectionUtil.isNotEmpty(orgList)) {
+			materialName = orgList.get(0).getMaterialName();// 教材名称
+		}
+		if (StringUtil.isEmpty(materialName)) {
+			materialName = "已发布学校";
+		}
+		String fileName = returnFileName(request, materialName + ".xls");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		try (OutputStream out = response.getOutputStream()) {
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常：{}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
+
+
+	/**
+	 *
+	 * <pre>
+	 * 功能描述：导出已发布教材下的学校
+	 * 使用示范：
+	 *
+	 * &#64;param materialId 教材ID
+	 * &#64;param request
+	 * &#64;param response
+	 * </pre>
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出已发布临床下的学校")
+	@RequestMapping(value = "/clinical/excel/published/org", method = RequestMethod.GET)
+	public void clinicalOrg(@RequestParam("productId") Long productId, HttpServletRequest request,
+					HttpServletResponse response) {
+		Workbook workbook = null;
+		List<OrgExclVO> orgList = null;
+		try {
+			orgList = productService.getOutPutExclOrgByProduct(productId);
 			if (orgList.isEmpty()) {
 				orgList.add(new OrgExclVO());
 			}
@@ -1351,7 +1475,7 @@ public class FileDownLoadController {
 		}
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
-		String fileName = returnFileName(request, StringUtil.isEmpty(chooseOrg)?"所有学校"+ ".xls":"所选学校" + ".xls");
+		String fileName = returnFileName(request, StringUtil.isEmpty(chooseOrg)?("所有学校"+ ".xls"):("所选学校" + ".xls"));
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
 		try (OutputStream out = response.getOutputStream()) {
 			workbook.write(out);

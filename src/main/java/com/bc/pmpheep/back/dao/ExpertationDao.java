@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.dao;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.po.*;
 import com.bc.pmpheep.back.vo.ExpertationCountnessVO;
 import com.bc.pmpheep.back.vo.ExpertationVO;
 import com.bc.pmpheep.back.vo.ProductType;
@@ -65,6 +66,41 @@ public interface ExpertationDao {
     List<ProductType> queryProductSubjectTypeListByExpertationId(Long id);
 
     List<ProductType> queryProductContentTypeListByExpertationId(Long id);
+
+    /*
+    教育经历
+     */
+    List<DecEduExp> queryDecEduExp(Long id);
+
+    /*
+    工作经历
+     */
+    List<DecWorkExp> queryDecWorkExp(Long id);
+
+    /*
+    学术经历
+     */
+    List<DecAcade> queryDecAcade(Long id);
+
+
+    /*
+    人卫社教材
+     */
+    List<DecTextbookPmph> queryDecTextbookPmph(Long id);
+
+    /*
+   主编学术专著情况
+    */
+    List<DecMonograph> queryDecMonograph(Long id);
+
+    /**
+     * 主编或参编图书情况
+     * @param id
+     * @return
+     */
+    List<DecEditorBook> queryDecEditorBook(Long id);
+
+
 
 
 }

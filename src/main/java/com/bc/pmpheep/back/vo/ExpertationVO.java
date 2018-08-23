@@ -34,6 +34,8 @@ public class ExpertationVO implements Serializable {
     private Long	experience	;	//	3	教龄
     @ExcelHeader(header = "工作单位")
     private String	org_name	;	//	60	工作单位
+
+    private long org_id; // 申报单位 为0 代表出版社
     @ExcelHeader(header = "职务")
     private String	position	;	//	36	职务
     @ExcelHeader(header = "职称")
@@ -51,6 +53,8 @@ public class ExpertationVO implements Serializable {
     private Boolean	is_dispensed	;	//	1	服从调剂
     private String	expertise	;	//	50	专业特长
     private Integer	online_progress	;	//	3	审核进度
+    @ExcelHeader(header = "审核进度")
+    private String onlineProgressName ;
     private Timestamp auth_date	;	//	0	审核通过时间
     private String	return_cause	;	//	100	退回原因
     private Boolean	is_deleted	;	//	1	是否被逻辑删除t
@@ -70,6 +74,8 @@ public class ExpertationVO implements Serializable {
     private short education; //学历 （数字代号）
     private String banknumber; //银行卡号
     private String bankaddress;//银行地址（开户行）
+    private String declare_name; //申报单位名称
+    private String syllabus_name; // 附件名称
 
 
     private List<ProductType> productSubjectTypeList; //学科分类
@@ -83,7 +89,8 @@ public class ExpertationVO implements Serializable {
     private List<DecEduExp> DecEduExpList; // 主要学习经历
     private List<DecWorkExp> DecWorkExpList; //主要工作经历
     private List<DecAcade> DecAcadeList; //主要学术兼职
-    private List<DecTextbook> DecTextbookList; // 人卫社教材编写情况
+    //private List<DecTextbook> DecTextbookList;
+    private List<DecTextbookPmph> DecTextbookPmphList;  // 人卫社教材编写情况
     private List<DecMonograph> DecMonographList; //主编学术专著情况
     private List<DecNationalPlan> DecNationalPlanList;
     private List<DecExtension> DecExtensionList; //扩展项
@@ -454,13 +461,13 @@ public class ExpertationVO implements Serializable {
         DecAcadeList = decAcadeList;
     }
 
-    public List<DecTextbook> getDecTextbookList() {
+    /*public List<DecTextbook> getDecTextbookList() {
         return DecTextbookList;
     }
 
     public void setDecTextbookList(List<DecTextbook> decTextbookList) {
         DecTextbookList = decTextbookList;
-    }
+    }*/
 
     public List<DecMonograph> getDecMonographList() {
         return DecMonographList;
@@ -540,5 +547,45 @@ public class ExpertationVO implements Serializable {
 
     public void setExperience(Long experience) {
         this.experience = experience;
+    }
+
+    public String getDeclare_name() {
+        return declare_name;
+    }
+
+    public void setDeclare_name(String declare_name) {
+        this.declare_name = declare_name;
+    }
+
+    public String getSyllabus_name() {
+        return syllabus_name;
+    }
+
+    public void setSyllabus_name(String syllabus_name) {
+        this.syllabus_name = syllabus_name;
+    }
+
+    public long getOrg_id() {
+        return org_id;
+    }
+
+    public void setOrg_id(long org_id) {
+        this.org_id = org_id;
+    }
+
+    public String getOnlineProgressName() {
+        return onlineProgressName;
+    }
+
+    public void setOnlineProgressName(String onlineProgressName) {
+        this.onlineProgressName = onlineProgressName;
+    }
+
+    public List<DecTextbookPmph> getDecTextbookPmphList() {
+        return DecTextbookPmphList;
+    }
+
+    public void setDecTextbookPmphList(List<DecTextbookPmph> decTextbookPmphList) {
+        DecTextbookPmphList = decTextbookPmphList;
     }
 }

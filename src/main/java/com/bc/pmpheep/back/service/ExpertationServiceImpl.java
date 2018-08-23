@@ -159,6 +159,15 @@ public class ExpertationServiceImpl implements ExpertationService{
 
         ExpertationVO expertationVO = expertationDao.getExpertationById(id);
 
+        expertationVO.setDecAcadeList(expertationDao.queryDecAcade(id));
+
+        expertationVO.setDecEduExpList(expertationDao.queryDecEduExp(id));
+
+        expertationVO.setDecWorkExpList(expertationDao.queryDecWorkExp(id));
+
+        expertationVO.setDecMonographList(expertationDao.queryDecMonograph(id));
+
+        expertationVO.setDecTextbookPmphList(expertationDao.queryDecTextbookPmph(id));
         return expertationVO;
     }
 
@@ -176,7 +185,7 @@ public class ExpertationServiceImpl implements ExpertationService{
         try{
             //获取申报信息
             ExpertationVO expertationVO  = expertationDao.getExpertationById(id);
-            if(2==onlineProgress.intValue()){ // 退回
+            if(4==onlineProgress.intValue()||5==onlineProgress.intValue()){ // 退回
                 if (StringUtil.strLength(returnCause) > 40) {
                     throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
                             "最多只能输入40个字符，请重新输入!");

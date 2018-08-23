@@ -494,4 +494,91 @@
         </where>
     </select>
 
+
+    <!-- 根据productId导出已发布的学校-->
+    <select id="getOutPutExclOrgByProduct" parameterType="java.lang.Long" resultType="com.bc.pmpheep.back.vo.OrgExclVO">
+        SELECT
+        o.`org_name`,
+        ou.`username`,
+        m.`product_name` as material_name
+        FROM
+        product m
+        LEFT JOIN
+        `product_org` mo
+        ON
+        m.`id`= mo.`product_id`
+        LEFT JOIN
+        org o
+        ON
+        mo.`org_id` = o.`id`
+        LEFT JOIN
+        `org_user` ou
+        ON
+        o.`id` = ou.`org_id`
+        WHERE
+        m.`is_published`=TRUE
+        AND
+        product_id=#{productId}
+    </select>
+
+
+   <!-- 发布临床-机构-->
+    <insert id="addProductOrgs" parameterType="java.util.List" >
+        insert into product_org (product_id,org_id)  values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.productId},#{item.orgId})
+        </foreach>
+    </insert>
+
+    <!--跟新发布状态-->
+    <update id="updateProduct" parameterType="com.bc.pmpheep.back.vo.ProductVO">
+        update product set is_published = #{is_published}, publisher_id = #{publisher_id} where id = #{id}
+    </update>
+
+    <!--根据临床id 获取临床-机构信息-->
+    <select id="getListProductOrgByProductId" parameterType="java.lang.Long" resultType="java.lang.Long">
+         select org_id from product_org where product_id = #{productId}
+    </select>
+
+    <select id="listProductHistory" parameterType="pageParameter" resultType="ProductHistorylVO">
+        SELECT
+        m.`id`,
+        m.`product_name`,
+        COUNT(mo.`org_id`) orgCounts,
+        m.`gmt_create`,
+        t.count
+        FROM
+        `product` m
+        LEFT JOIN
+        `product_org` mo
+        ON
+        m.`id` = mo.`product_id`,
+        (
+        SELECT
+        COUNT(*) `count`
+        FROM
+        `product` m
+        WHERE
+        m.`is_published` = TRUE
+        AND
+        m.`is_deleted`=FALSE
+        )t
+        WHERE
+        m.`is_published` = TRUE
+        AND
+        m.`is_deleted`=FALSE
+        GROUP BY
+        m.`id`
+        ORDER BY
+        m.`gmt_create` DESC
+        <if test="pageSize != null">
+            LIMIT #{start} , #{pageSize}
+        </if>
+    </select>
+
+    <!--获取临床集合-->
+    <select id="getListProduct" parameterType="java.lang.String" resultType="Product">
+        select * from product where product_name = #{productName}
+    </select>
+
 </mapper>

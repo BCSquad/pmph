@@ -21,6 +21,8 @@ public class DecExtension implements java.io.Serializable {
 	private String content;
 
 	private Long expertationId;
+
+	private String extension_name;
 	
 	public DecExtension() {
 		super();
@@ -89,5 +91,13 @@ public class DecExtension implements java.io.Serializable {
 
 	public void setExpertationId(Long expertationId) {
 		this.expertationId = expertationId;
+	}
+
+	public String getExtension_name() {
+		return extension_name;
+	}
+
+	public void setExtension_name(String extension_name) {
+		this.extension_name = extension_name;
 	}
 }

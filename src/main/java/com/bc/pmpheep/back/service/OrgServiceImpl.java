@@ -294,8 +294,14 @@ public class OrgServiceImpl extends BaseService implements OrgService {
     }
 
     @Override
+    public List<OrgVO> listSendClinicalToSchoolAdminOrAllUser(String orgName, Long productId)
+            throws CheckedServiceException {
+        return orgDao.listSendClinicalToSchoolAdminOrAllUser(orgName, productId);
+    }
+
+    @Override
     public List<OrgExclVO> listAllOrgToExcel(String listAllOrgToExcel) throws CheckedServiceException {
-        return orgDao.listAllOrgToExcel(listAllOrgToExcel.split(","));
+        return orgDao.listAllOrgToExcel(StringUtil.isEmpty(listAllOrgToExcel)?null:listAllOrgToExcel.split(","));
     }
 
 }
