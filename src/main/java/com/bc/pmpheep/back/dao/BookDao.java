@@ -268,4 +268,10 @@ public interface BookDao {
 	 * @param recommendBookId
 	 */
 	void deleterecommend(@Param("currentBookId") Long currentBookId,@Param("selectType") int selectType,@Param("recommendBookId") Long recommendBookId);
+
+	/**
+	 * 获取当前书的最大Sort值
+	 * @return
+	 */
+    Long getMaxSort();
 }

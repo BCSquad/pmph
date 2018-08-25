@@ -114,6 +114,25 @@ public interface ExpertationDao {
      */
     List<DecEditorBook> queryDecEditorBook(Long id);
 
-
+    /**
+     * 结果统计--控制显示tabs
+     * @param productType
+     * @return
+     */
     Map showTabs(Long productType);
+
+    /**
+     * 本专业获奖情况
+     * @param id
+     * @return
+     */
+    List<DecProfessionAward> queryDecProfessionAward(Long id);
+
+    /**
+     * 文章发表情况
+     * @param id
+     * @return
+     */
+    List<DecArticlePublished> queryDecArticlePublished(Long id);
+
 }

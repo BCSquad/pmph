@@ -528,6 +528,20 @@
         from dec_editor_book  where expertation_id = #{id}
     </select>
 
+    <!--文章发表情况-->
+    <select id="queryDecArticlePublished" parameterType="java.lang.Long" resultType="DecArticlePublished">
+        select
+        *
+        from dec_article_published  where expertation_id = #{id}
+    </select>
+
+    <!--本专业获奖情况-->
+    <select id="queryDecProfessionAward" parameterType="java.lang.Long" resultType="DecProfessionAward">
+        select
+        *
+        from dec_profession_award  where expertation_id = #{id}
+    </select>
+
 
     <resultMap id="expertationFullMap" type="com.bc.pmpheep.back.vo.ExpertationVO" autoMapping="true">
 
