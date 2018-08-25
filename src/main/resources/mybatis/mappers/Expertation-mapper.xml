@@ -16,6 +16,8 @@
         <result property="online_progress" column="online_progress"></result>
         <result property="online_progress" column="online_progress"></result>
         <result property="commit_date" column="commit_date"></result>
+        <result property="amIAnAuditor" column="amIAnAuditor"></result>
+
 
         <!--这种写法能支持分页，但会创建一个类似原返回list范型的类来保存结果，即在vo后加后缀如_$$_jvst... 导致反射取不到真正的范型class -->
         <!--<collection property="productSubjectTypeList" column="e_id" ofType="com.bc.pmpheep.back.vo.ProductType" javaType="list" select="queryProductSubjectTypeListByExpertationId" />
@@ -76,11 +78,14 @@
         ,pst.type_name
         ,pct.product_type_id
         ,pct.name_path*/
+        ,sum(pa.auditor_id = #{parameter.auditor_id})>0 as amIAnAuditor
+
         from
         product p
         inner join expertation e on e.product_id = p.id and  e.online_progress >0
-        <if test="parameter.auditor_id != null and parameter.auditor_id != '' ">
-            inner join product_auditor pa on pa.product_id = p.id and pa.auditor_id = #{parameter.auditor_id}
+        inner join product_auditor pa on pa.product_id = p.id
+        <if test="parameter.auditor_id != null and parameter.auditor_id != '' ">   /*系统管理员 部门领导 不用匹配*/
+            and pa.auditor_id = #{parameter.auditor_id}
         </if>
         left join writer_user u on u.id = e.user_id
         /*left join expertation_subject_type est on est.expertation_id = e.id left join product_subject_type pst on pst.id = est.product_subject_type_id

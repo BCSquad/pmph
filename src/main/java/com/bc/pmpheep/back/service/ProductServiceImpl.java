@@ -132,11 +132,16 @@ public class ProductServiceImpl implements ProductService {
         }
         Long productId = productVO.getId();
 
+        toMakeSureExpertationAuditRoles();
+
         productDao.deleteProductAuditorsByProductId(productId);
+
+        //TODO 删除此productId下的所有相关角色pmph_user_role
         if(CollectionUtil.isNotEmpty(productVO.getAuditorList())){
             for(ProductAuditor productAuditor:productVO.getAuditorList()){
                 if(ObjectUtil.isNull(productAuditor.getProduct_id()))productAuditor.setProduct_id(productVO.getId());
             }
+            //TODO 重新按list给予角色（影响菜单权限）到pmph_user_role，包含list中的用户及其领导。 而数据权限（查出来之后是审核还是查看由审核人表控制）
             productDao.saveProductAuditors(productVO.getAuditorList());
         }
 
@@ -413,5 +418,9 @@ public class ProductServiceImpl implements ProductService {
 
         productVO.setDescription(descriptionContent.getId());
 
+    }
+
+    private void toMakeSureExpertationAuditRoles(){
+        //TODO 确保有临床申报审核人相关的角色
     }
 }

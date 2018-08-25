@@ -587,16 +587,23 @@ public class FileDownLoadController {
 		paraMap.put("ttype",1);
 		List<ExpertationCountnessVO> list1 = expertationDao.getCountListGroupBySubjectType(pageParameter);
 
+		//3.专业分类
+		paraMap.put("ttype",1);
+		List<ExpertationCountnessVO> list3 = expertationDao.getCountListGroupByProfessionType(pageParameter);
+
 		if (list1.size() == 0) {
 			list1.add(new ExpertationCountnessVO());
 		}
 		if (list2.size() == 0) {
 			list2.add(new ExpertationCountnessVO());
 		}
+		if (list3.size() == 0) {
+			list3.add(new ExpertationCountnessVO());
+		}
 
 		sheetMap.put("学科分类",list1);
 		sheetMap.put("内容分类",list2);
-
+		sheetMap.put("申报专业",list3);
 
 		Workbook workbook = null;
 		if (list.size() == 0) {

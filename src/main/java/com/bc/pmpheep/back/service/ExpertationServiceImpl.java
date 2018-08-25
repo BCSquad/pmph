@@ -60,6 +60,9 @@ public class ExpertationServiceImpl implements ExpertationService{
                     "申报类型为空");
         }
 
+
+
+
         List<PmphRole> pmphRoles = pmphUserService.getListUserRole(pmphUser.getId());
         // 下面进行授权
         Boolean is_admin = false;
@@ -71,7 +74,7 @@ public class ExpertationServiceImpl implements ExpertationService{
             }
         }
 
-        //若管理员登录 则不传入此id 查询全部申报
+        //若管理员或领导登录 则不传入此id 查询全部申报 （但同时也因空id，查出的amIAnAuditor将为否 ，管理员需在前台给审核权限，领导查看即可）
         //否则
         if(!is_admin){
             //TODO 传入登录人id 作为查询条件 审核人id
@@ -83,13 +86,13 @@ public class ExpertationServiceImpl implements ExpertationService{
         List<ExpertationVO> list = new ArrayList<>();
         if(totalCount>0){
             list = expertationDao.queryExpertation(pageParameter);
-            for (ExpertationVO e: list) {
+            /*for (ExpertationVO e: list) {
                 List<ProductType> clist = expertationDao.queryProductContentTypeListByExpertationId(e.getId());
                 List<ProductType> slist = expertationDao.queryProductSubjectTypeListByExpertationId(e.getId());
                 e.setProductSubjectTypeList(slist);
                 e.setProductContentTypeList(clist);
                 e.setExcelTypeStr();
-            }
+            }*/
         }
 
         pageResult.setPageNumber(pageParameter.getPageNumber());
@@ -233,4 +236,7 @@ public class ExpertationServiceImpl implements ExpertationService{
         resultMap.put("notShowTabList",notShowTabList);
         return resultMap;
     }
+
+
+
 }

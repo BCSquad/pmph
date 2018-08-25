@@ -3,7 +3,7 @@ package com.bc.pmpheep.back.vo;
 import com.bc.pmpheep.annotation.ExcelHeader;
 
 public class ExpertationCountnessVO {
-    @ExcelHeader(header = "学科分类")
+    @ExcelHeader(header = "分类名称")
     private String typeName;
     @ExcelHeader(header = "申报人数")
     private Long countSubmit;

@@ -77,6 +77,7 @@ public class ExpertationVO implements Serializable {
     private String declare_name; //申报单位名称
     private String syllabus_name; // 附件名称
 
+    private Boolean amIAnAuditor; // 当前登录人是否是此单审核人
 
     private List<ProductType> productSubjectTypeList; //学科分类
 
@@ -587,5 +588,13 @@ public class ExpertationVO implements Serializable {
 
     public void setDecTextbookPmphList(List<DecTextbookPmph> decTextbookPmphList) {
         DecTextbookPmphList = decTextbookPmphList;
+    }
+
+    public Boolean getAmIAnAuditor() {
+        return amIAnAuditor;
+    }
+
+    public void setAmIAnAuditor(Boolean amIAnAuditor) {
+        this.amIAnAuditor = amIAnAuditor;
     }
 }
