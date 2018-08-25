@@ -135,4 +135,5 @@ public interface ExpertationDao {
      */
     List<DecArticlePublished> queryDecArticlePublished(Long id);
 
+    Boolean queryAmIAnAuditor(@Param("user_id") Long user_id,@Param("expertation_id") Long expertation_id);
 }

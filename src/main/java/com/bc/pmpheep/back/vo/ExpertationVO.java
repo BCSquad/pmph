@@ -78,6 +78,7 @@ public class ExpertationVO implements Serializable {
     private String syllabus_name; // 附件名称
 
     private Boolean amIAnAuditor; // 当前登录人是否是此单审核人
+    private List<Long> followingAuditor; //当部门领导登录时，其管辖下所有人员的id列表，用于查询这些人审核的申请，供领导查看
 
     private List<ProductType> productSubjectTypeList; //学科分类
 
@@ -615,5 +616,13 @@ public class ExpertationVO implements Serializable {
 
     public void setDecArticlePublishedList(List<DecArticlePublished> decArticlePublishedList) {
         DecArticlePublishedList = decArticlePublishedList;
+    }
+
+    public List<Long> getFollowingAuditor() {
+        return followingAuditor;
+    }
+
+    public void setFollowingAuditor(List<Long> followingAuditor) {
+        this.followingAuditor = followingAuditor;
     }
 }

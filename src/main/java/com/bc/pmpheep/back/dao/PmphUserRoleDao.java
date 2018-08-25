@@ -78,4 +78,10 @@ public interface PmphUserRoleDao {
 	 */
 	Long getPmphUserRoleCount();
 
+	/**
+	 * 删除某一角色的所有用户角色关联
+	 * @param id
+	 * @return
+	 */
+	int deletePmphUserRoleByRoleId(Long id);
 }

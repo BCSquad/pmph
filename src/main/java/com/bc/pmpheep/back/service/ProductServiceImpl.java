@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.service;
 
+import com.bc.pmpheep.back.dao.PmphRoleDao;
+import com.bc.pmpheep.back.dao.PmphUserRoleDao;
 import com.bc.pmpheep.back.dao.ProductDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
@@ -42,6 +44,15 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     ContentService contentService;
+
+    @Autowired
+    private PmphUserService pmphUserService;
+
+    @Autowired
+    private PmphUserRoleDao pmphUserRoleDao;
+
+    @Autowired
+    private PmphRoleDao pmphRoleDao;
 
     @Override
     public ProductVO getProductByType(Long product_type, String sessionId) {
@@ -100,17 +111,25 @@ public class ProductServiceImpl implements ProductService {
         //校验
         validateProductVO(productVO);
 
+        toMakeSureExpertationAuditRoles();
+
+
+        PmphRole auditorMenuRole = new PmphRole();
+
         //insert on duplicate key update 主表product 其中 unique键除主键外 还有product_type
         //keyProperty设为id 若插入 则将生成的id传回到productVO的id中 便于附表关联之
         switch (String.valueOf(productVO.getProduct_type())){
             case "1":
                 productVO.setProduct_name( "人卫临床助手");
+                auditorMenuRole = pmphRoleDao.getByName("临床助手审核人");
                 break;
             case "2":
                 productVO.setProduct_name( "人卫用药助手");
+                auditorMenuRole = pmphRoleDao.getByName("用药助手审核人");
                 break;
             case "3":
                 productVO.setProduct_name(  "人卫中医助手");
+                auditorMenuRole = pmphRoleDao.getByName("中医助手审核人");
                 break;
             default:
                 productVO.setProduct_name(  "未命名");
@@ -132,16 +151,31 @@ public class ProductServiceImpl implements ProductService {
         }
         Long productId = productVO.getId();
 
-        toMakeSureExpertationAuditRoles();
+
 
         productDao.deleteProductAuditorsByProductId(productId);
 
-        //TODO 删除此productId下的所有相关角色pmph_user_role
+
+
+        // 删除此productId下的所有相关角色pmph_user_role
+        pmphUserRoleDao.deletePmphUserRoleByRoleId(auditorMenuRole.getId());
         if(CollectionUtil.isNotEmpty(productVO.getAuditorList())){
             for(ProductAuditor productAuditor:productVO.getAuditorList()){
                 if(ObjectUtil.isNull(productAuditor.getProduct_id()))productAuditor.setProduct_id(productVO.getId());
+
+                //该审核人加角色（菜单权限）
+                PmphUserRole pmphUserRole = new PmphUserRole(productAuditor.getAuditor_id(),auditorMenuRole.getId());
+                pmphUserRoleDao.addPmphUserRole(pmphUserRole);
+
+                List<PmphUser> parentDeptsDirectors =pmphUserService.getSomebodyParentDeptsPmphUserOfSomeRole(productAuditor.getAuditor_id(),null,"主任");
+                for (PmphUser PDDirector: parentDeptsDirectors) {
+                    // 领导加角色（菜单权限）。 而数据权限（查出来之后是审核还是查看由审核人表控制）
+                    PmphUserRole userRole = new PmphUserRole(PDDirector.getId(),auditorMenuRole.getId());
+                    pmphUserRoleDao.addPmphUserRole(userRole);
+                }
             }
-            //TODO 重新按list给予角色（影响菜单权限）到pmph_user_role，包含list中的用户及其领导。 而数据权限（查出来之后是审核还是查看由审核人表控制）
+
+            //该审核人加入审核人表（数据权限）
             productDao.saveProductAuditors(productVO.getAuditorList());
         }
 

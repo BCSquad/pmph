@@ -4,15 +4,14 @@ import com.bc.pmpheep.back.dao.ExpertationDao;
 import com.bc.pmpheep.back.dao.ProductDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
+import com.bc.pmpheep.back.po.PmphDepartment;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
-import com.bc.pmpheep.back.vo.ExpertationCountnessVO;
-import com.bc.pmpheep.back.vo.ExpertationVO;
-import com.bc.pmpheep.back.vo.ProductType;
-import com.bc.pmpheep.back.vo.ProductVO;
+import com.bc.pmpheep.back.vo.*;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -36,6 +35,10 @@ public class ExpertationServiceImpl implements ExpertationService{
 
     @Autowired
     ProductDao productDao;
+
+    @Autowired
+    private PmphDepartmentService    pmphDepartmentService;
+
 
     /**
      * 查找临床决策申报列表
@@ -74,10 +77,47 @@ public class ExpertationServiceImpl implements ExpertationService{
             }
         }
 
+
+        // 如果是系统管理员，则查询所有，否则查询对应的消息
+        if (Const.FALSE == pmphUser.getIsAdmin()) {
+            List<Long> ids = new ArrayList<Long>();
+            // 如果是主任，获取主任所在部门下的所有用户
+            if (Const.TRUE == pmphUser.getIsDirector()) {
+                // 社内部门父级节点ID
+                Long parentId = 1L;
+                PmphDepartment pmphDepartment =
+                        pmphDepartmentService.getPmphDepartmentById(pmphUser.getDepartmentId());
+                // 如果是人卫社主任，则可以查看所有用户发送的消息
+                if (parentId.longValue() == pmphDepartment.getId().longValue()) {
+                    ids = null;
+                } else {
+                    // 如果是子级部门主任，则只可以查看子级部门下的用户发送的消息
+                    PageParameter<PmphUserManagerVO> parameter = new PageParameter<>(1, 2000);
+                    PmphUserManagerVO pmphUserManagerVO = new PmphUserManagerVO();
+                    pmphUserManagerVO.setPath(pmphDepartment.getPath());
+                    pmphUserManagerVO.setDepartmentId(pmphDepartment.getId());
+                    parameter.setParameter(pmphUserManagerVO);
+                    PageResult<PmphUserManagerVO> listPageResult =
+                            pmphUserService.getListPmphUser(parameter, null);
+                    List<PmphUserManagerVO> listPmphUserManagerVOs = listPageResult.getRows();
+                    for (PmphUserManagerVO pmManagerVO : listPmphUserManagerVOs) {
+                        ids.add(pmManagerVO.getId());
+                    }
+                }
+            } else {
+                ids.add(pmphUser.getId());
+            }
+            pageParameter.getParameter().setFollowingAuditor(ids);
+        }
+
+
+
+
+
         //若管理员或领导登录 则不传入此id 查询全部申报 （但同时也因空id，查出的amIAnAuditor将为否 ，管理员需在前台给审核权限，领导查看即可）
         //否则
-        if(!is_admin){
-            //TODO 传入登录人id 作为查询条件 审核人id
+        if(!is_admin && Const.TRUE != pmphUser.getIsDirector()){
+            // 传入登录人id 作为查询条件 审核人id
             pageParameter.getParameter().setAuditor_id(pmphUser.getId());
         }
 
@@ -164,7 +204,11 @@ public class ExpertationServiceImpl implements ExpertationService{
                     "用户为空");
         }
 
+
+
         ExpertationVO expertationVO = expertationDao.getExpertationById(id);
+
+        expertationVO.setAmIAnAuditor(expertationDao.queryAmIAnAuditor(pmphUser.getId(),id));
 
         expertationVO.setDecAcadeList(expertationDao.queryDecAcade(id));
 

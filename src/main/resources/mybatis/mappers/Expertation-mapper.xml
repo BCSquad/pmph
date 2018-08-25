@@ -84,8 +84,14 @@
         product p
         inner join expertation e on e.product_id = p.id and  e.online_progress >0
         inner join product_auditor pa on pa.product_id = p.id
-        <if test="parameter.auditor_id != null and parameter.auditor_id != '' ">   /*系统管理员 部门领导 不用匹配*/
+        <!--<if test="parameter.auditor_id != null and parameter.auditor_id != '' ">   /*系统管理员 部门领导 不用匹配*/
             and pa.auditor_id = #{parameter.auditor_id}
+        </if>-->
+        <if test="parameter.followingAuditor !=null and parameter.followingAuditor.size()>0">
+            and pa.auditor_id in
+            <foreach collection="parameter.followingAuditor" separator="," open="(" close=")" item="aid">
+                ${aid}
+            </foreach>
         </if>
         left join writer_user u on u.id = e.user_id
         /*left join expertation_subject_type est on est.expertation_id = e.id left join product_subject_type pst on pst.id = est.product_subject_type_id
@@ -432,7 +438,13 @@
 
         left join product_extension on product_extension.product_id = e.product_id AND product_extension.is_deleted = 0
         left join  dec_extension on dec_extension.extension_id = product_extension.id and dec_extension.expertation_id = e.id
+    </select>
 
+    <select id="queryAmIAnAuditor" resultType="java.lang.Boolean">
+
+        select count(pa.id)>0  from
+        (select * from expertation where id = #{expertation_id})e
+                join product_auditor pa on pa.product_id = e.product_id and pa.auditor_id = #{user_id}
 
     </select>
 
