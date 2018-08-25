@@ -39,6 +39,8 @@ public interface BookService {
 	 */
 	String AbuttingJoint(String[] key, Integer noteicetype) throws CheckedServiceException;
 
+	String AbuttingJoint(String[] key, Integer noteicetype,String materialName) throws CheckedServiceException;
+
 	/**
 	 * 保存图书详情
 	 *

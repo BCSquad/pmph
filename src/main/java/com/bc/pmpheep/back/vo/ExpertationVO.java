@@ -97,6 +97,9 @@ public class ExpertationVO implements Serializable {
     private List<DecExtension> DecExtensionList; //扩展项
     private List<DecEditorBook> DecEditorBookList;//主编或参编图书情况
 
+    private List<DecProfessionAward> DecProfessionAwardList; // 本专业获奖情况
+    private List<DecArticlePublished>  DecArticlePublishedList; // 文章发表情况
+
     public ExpertationVO() {
         super();
     }
@@ -596,5 +599,21 @@ public class ExpertationVO implements Serializable {
 
     public void setAmIAnAuditor(Boolean amIAnAuditor) {
         this.amIAnAuditor = amIAnAuditor;
+    }
+
+    public List<DecProfessionAward> getDecProfessionAwardList() {
+        return DecProfessionAwardList;
+    }
+
+    public void setDecProfessionAwardList(List<DecProfessionAward> decProfessionAwardList) {
+        DecProfessionAwardList = decProfessionAwardList;
+    }
+
+    public List<DecArticlePublished> getDecArticlePublishedList() {
+        return DecArticlePublishedList;
+    }
+
+    public void setDecArticlePublishedList(List<DecArticlePublished> decArticlePublishedList) {
+        DecArticlePublishedList = decArticlePublishedList;
     }
 }

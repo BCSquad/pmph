@@ -175,6 +175,10 @@ public class ExpertationServiceImpl implements ExpertationService{
         expertationVO.setDecMonographList(expertationDao.queryDecMonograph(id));
 
         expertationVO.setDecTextbookPmphList(expertationDao.queryDecTextbookPmph(id));
+
+        expertationVO.setDecArticlePublishedList(expertationDao.queryDecArticlePublished(id));
+
+        expertationVO.setDecProfessionAwardList(expertationDao.queryDecProfessionAward(id));
         return expertationVO;
     }
 
