@@ -81,12 +81,15 @@ public class ExpertationVO implements Serializable {
     private List<Long> followingAuditor; //当部门领导登录时，其管辖下所有人员的id列表，用于查询这些人审核的申请，供领导查看
 
     private List<ProductType> productSubjectTypeList; //学科分类
+    private List<ProductType> productProfessionTypeList; //专业分类
 
     private List<ProductType> productContentTypeList; //内容分类
     @ExcelHeader(header = "学科分类",cellType = "2")
     private String productSubjectTypeStr; //学科分类 excel导出字符串
     @ExcelHeader(header = "内容分类",cellType = "2")
     private String productContentTypeStr; //内容分类 excel导出字符串
+    @ExcelHeader(header = "专业分类",cellType = "2")
+    private String productProfessionTypeStr; //专业分类 excel导出字符串
 
     private List<DecEduExp> DecEduExpList; // 主要学习经历
     private List<DecWorkExp> DecWorkExpList; //主要工作经历
@@ -428,10 +431,22 @@ public class ExpertationVO implements Serializable {
         }
         return null;
     }
+    public Object setProductProfessionTypeStr() {
+        if(this.productProfessionTypeList!=null && this.productProfessionTypeList.size()>0){
+            //this.productSubjectTypeStr = "=\"\""+"&\"1.aaa.\"&CHAR(10)"+"&\"2.bbb.\"&CHAR(10)&\"3.ccc. \"";
+            this.productProfessionTypeStr = "\"\"";
+            for (int i =0;i<productProfessionTypeList.size();i++) {
+                ProductType p = productProfessionTypeList.get(i);
+                this.productProfessionTypeStr += "&\""+(i+1)+"."+p.getType_name()+"\"&CHAR(10)";
+            }
+        }
+        return null;
+    }
 
     public void setExcelTypeStr(){
         this.setProductSubjectTypeStr();
         this.setProductContentTypeStr();
+        this.setProductProfessionTypeStr();
     }
 
     public void setProductSubjectTypeStr(String productSubjectTypeStr) {
@@ -625,4 +640,21 @@ public class ExpertationVO implements Serializable {
     public void setFollowingAuditor(List<Long> followingAuditor) {
         this.followingAuditor = followingAuditor;
     }
+
+    public List<ProductType> getProductProfessionTypeList() {
+        return productProfessionTypeList;
+    }
+
+    public void setProductProfessionTypeList(List<ProductType> productProfessionTypeList) {
+        this.productProfessionTypeList = productProfessionTypeList;
+    }
+
+    public String getProductProfessionTypeStr() {
+        return productProfessionTypeStr;
+    }
+
+    public void setProductProfessionTypeStr(String productProfessionTypeStr) {
+        this.productProfessionTypeStr = productProfessionTypeStr;
+    }
+
 }

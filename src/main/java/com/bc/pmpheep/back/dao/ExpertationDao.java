@@ -81,6 +81,8 @@ public interface ExpertationDao {
 
     List<ProductType> queryProductContentTypeListByExpertationId(Long id);
 
+    List<ProductType> queryProductProfessionTypeListByExpertationId(Long id);
+
     /*
     教育经历
      */
@@ -136,4 +138,6 @@ public interface ExpertationDao {
     List<DecArticlePublished> queryDecArticlePublished(Long id);
 
     Boolean queryAmIAnAuditor(@Param("user_id") Long user_id,@Param("expertation_id") Long expertation_id);
+
+
 }

@@ -46,6 +46,14 @@
         ,pst.type_name
         from expertation_subject_type est inner join product_subject_type pst on pst.id = est.product_subject_type_id and est.expertation_id = #{id}
     </select>
+    
+    <select id="queryProductProfessionTypeListByExpertationId" parameterType="java.lang.Long" resultMap="SubjectTypeMap">
+        select
+        pst.id
+        ,pst.type_name
+        from expertation_profession_type est inner join product_profession_type pst on pst.id = est.product_profession_type_id and est.expertation_id = #{id}
+
+    </select>
 
     <resultMap id="ContentTypeMap" type="com.bc.pmpheep.back.vo.ProductType">
         <id property="id" column="id"></id>
