@@ -111,6 +111,7 @@ public class ProductServiceImpl implements ProductService {
         //校验
         validateProductVO(productVO);
 
+
         toMakeSureExpertationAuditRoles();
 
 
@@ -389,7 +390,7 @@ public class ProductServiceImpl implements ProductService {
 
         Field[] fields = productVO.getClass().getDeclaredFields();
 
-        for (Field field:fields) {  //遍历属性，进行非空判断
+       /* for (Field field:fields) {  //遍历属性，进行非空判断
             Object fieldValue = null;
             String type = null;
             String name = null;
@@ -424,11 +425,49 @@ public class ProductServiceImpl implements ProductService {
                                 || "is_unit_advise_required".equals(name)
                                 || "is_deleted".equals(name)
                             ||"is_unit_advise_used".equals(name)
+                            ||"is_acade_used".equals(name)
+                                ||"is_acade_required".equals(name)
+                            ||"is_edu_exp_used".equals(name)
+                                ||"is_edu_exp_required".equals(name)
+                                ||"is_work_exp_used".equals(name)
+                                ||"is_work_exp_required".equals(name)
+                                ||"is_pmph_textbook_used".equals(name)
+                                ||"is_pmph_textbook_required".equals(name)
+                                ||"is_monograph_used".equals(name)
+                                ||"is_monograph_required".equals(name)
+                                ||"is_edit_book_used".equals(name)
+                                ||"is_edit_book_required".equals(name)
+                                ||"is_article_published_used".equals(name)
+                                ||"is_article_published_required".equals(name)
+                                ||"is_subject_type_used".equals(name)
+                                ||"is_subject_type_required".equals(name)
+                                ||"is_content_type_used".equals(name)
 
                     )){
                 throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.NULL_PARAM,
                         name+"为空");
             }
+        }*/
+
+
+        if (ObjectUtil.isNull(productVO.getAuditorList())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.NULL_PARAM,
+                    "请选择审核人");
+        }
+
+        if (ObjectUtil.isNull(productVO.getProducntImgList())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.NULL_PARAM,
+                    "图片未上传");
+        }
+
+        if (ObjectUtil.isNull(productVO.getProductAttachmentList())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.NULL_PARAM,
+                    "附件未上传");
+        }
+
+        if (ObjectUtil.isNull(productVO.getDescriptionContent())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.NULL_PARAM,
+                    "产品简介未说明");
         }
 
         if(productVO.getIs_published() ){ //若发布
