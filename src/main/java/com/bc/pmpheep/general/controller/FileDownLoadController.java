@@ -495,8 +495,10 @@ public class FileDownLoadController {
 		for (ExpertationVO e: list) {
 			List<ProductType> clist = expertationDao.queryProductContentTypeListByExpertationId(e.getId());
 			List<ProductType> slist = expertationDao.queryProductSubjectTypeListByExpertationId(e.getId());
+			List<ProductType> plist = expertationDao.queryProductProfessionTypeListByExpertationId(e.getId());
 			e.setProductSubjectTypeList(slist);
 			e.setProductContentTypeList(clist);
+			e.setProductProfessionTypeList1(plist);
 			e.setExcelTypeStr();
 			e.setOnlineProgressName((e.getOrg_id()==0&&e.getOnline_progress()==1)?"待出版社审核":(e.getOrg_id()==0&&e.getOnline_progress()==3?"出版社已审核":stateList[e.getOnline_progress()]));
 		}

@@ -81,6 +81,8 @@ public interface ExpertationDao {
 
     List<ProductType> queryProductContentTypeListByExpertationId(Long id);
 
+    List<ProductType> queryProductProfessionTypeListByExpertationId(Long id);
+
     /*
     教育经历
      */
