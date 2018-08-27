@@ -34,6 +34,7 @@ public class ExpertationVO implements Serializable {
     private Long	experience	;	//	3	教龄
     @ExcelHeader(header = "工作单位")
     private String	org_name	;	//	60	工作单位
+    private String unitName; // 申报单位
 
     private long org_id; // 申报单位 为0 代表出版社
     @ExcelHeader(header = "职务")
@@ -634,5 +635,13 @@ public class ExpertationVO implements Serializable {
 
     public void setProductProfessionTypeList(List<ProductProfessionType> productProfessionTypeList) {
         ProductProfessionTypeList = productProfessionTypeList;
+    }
+
+    public String getUnitName() {
+        return unitName;
+    }
+
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
     }
 }
