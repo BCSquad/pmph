@@ -101,6 +101,8 @@ public class ExpertationVO implements Serializable {
     private List<DecProfessionAward> DecProfessionAwardList; // 本专业获奖情况
     private List<DecArticlePublished>  DecArticlePublishedList; // 文章发表情况
 
+    private List<ProductProfessionType> ProductProfessionTypeList; //申报专业分类
+
     public ExpertationVO() {
         super();
     }
@@ -624,5 +626,13 @@ public class ExpertationVO implements Serializable {
 
     public void setFollowingAuditor(List<Long> followingAuditor) {
         this.followingAuditor = followingAuditor;
+    }
+
+    public List<ProductProfessionType> getProductProfessionTypeList() {
+        return ProductProfessionTypeList;
+    }
+
+    public void setProductProfessionTypeList(List<ProductProfessionType> productProfessionTypeList) {
+        ProductProfessionTypeList = productProfessionTypeList;
     }
 }
