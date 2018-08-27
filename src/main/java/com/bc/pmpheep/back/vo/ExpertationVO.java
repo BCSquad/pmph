@@ -81,7 +81,7 @@ public class ExpertationVO implements Serializable {
     private List<Long> followingAuditor; //当部门领导登录时，其管辖下所有人员的id列表，用于查询这些人审核的申请，供领导查看
 
     private List<ProductType> productSubjectTypeList; //学科分类
-    private List<ProductType> productProfessionTypeList; //专业分类
+    private List<ProductType> productProfessionTypeList1; //专业分类
 
     private List<ProductType> productContentTypeList; //内容分类
     @ExcelHeader(header = "学科分类",cellType = "2")
@@ -103,6 +103,8 @@ public class ExpertationVO implements Serializable {
 
     private List<DecProfessionAward> DecProfessionAwardList; // 本专业获奖情况
     private List<DecArticlePublished>  DecArticlePublishedList; // 文章发表情况
+
+    private List<ProductProfessionType> ProductProfessionTypeList; //申报专业分类
 
     public ExpertationVO() {
         super();
@@ -432,11 +434,11 @@ public class ExpertationVO implements Serializable {
         return null;
     }
     public Object setProductProfessionTypeStr() {
-        if(this.productProfessionTypeList!=null && this.productProfessionTypeList.size()>0){
+        if(this.productProfessionTypeList1!=null && this.productProfessionTypeList1.size()>0){
             //this.productSubjectTypeStr = "=\"\""+"&\"1.aaa.\"&CHAR(10)"+"&\"2.bbb.\"&CHAR(10)&\"3.ccc. \"";
             this.productProfessionTypeStr = "\"\"";
-            for (int i =0;i<productProfessionTypeList.size();i++) {
-                ProductType p = productProfessionTypeList.get(i);
+            for (int i =0;i<productProfessionTypeList1.size();i++) {
+                ProductType p = productProfessionTypeList1.get(i);
                 this.productProfessionTypeStr += "&\""+(i+1)+"."+p.getType_name()+"\"&CHAR(10)";
             }
         }
@@ -641,12 +643,12 @@ public class ExpertationVO implements Serializable {
         this.followingAuditor = followingAuditor;
     }
 
-    public List<ProductType> getProductProfessionTypeList() {
-        return productProfessionTypeList;
+    public List<ProductType> getProductProfessionTypeList1() {
+        return productProfessionTypeList1;
     }
 
-    public void setProductProfessionTypeList(List<ProductType> productProfessionTypeList) {
-        this.productProfessionTypeList = productProfessionTypeList;
+    public void setProductProfessionTypeList1(List<ProductType> productProfessionTypeList1) {
+        this.productProfessionTypeList1 = productProfessionTypeList1;
     }
 
     public String getProductProfessionTypeStr() {
@@ -657,4 +659,12 @@ public class ExpertationVO implements Serializable {
         this.productProfessionTypeStr = productProfessionTypeStr;
     }
 
+
+    public List<ProductProfessionType> getProductProfessionTypeList() {
+        return ProductProfessionTypeList;
+    }
+
+    public void setProductProfessionTypeList(List<ProductProfessionType> productProfessionTypeList) {
+        ProductProfessionTypeList = productProfessionTypeList;
+    }
 }

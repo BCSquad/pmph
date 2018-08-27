@@ -105,11 +105,11 @@
         /*left join expertation_subject_type est on est.expertation_id = e.id left join product_subject_type pst on pst.id = est.product_subject_type_id
         left join expertation_content_type ect on ect.expertation_id = e.id left join product_content_type_detail pct on pct.product_type_id = ect.product_content_type_id*/
         where p.product_type = #{parameter.expert_type}
-        <if test="parameter.username != null and parameter.username != '' ">
-            and u.username like concat('%',#{parameter.username},'%')
-        </if>
+        <!--<if test="parameter.username != null and parameter.username != '' ">
+            and u.username like concat('%',#{parameter.realname},'%')
+        </if>-->
         <if test="parameter.realname != null and parameter.realname != '' ">
-            and e.realname like concat('%',#{parameter.realname},'%')
+            and (e.realname like concat('%',#{parameter.realname},'%') or u.username like concat('%',#{parameter.realname},'%'))
         </if>
         <if test="parameter.position != null and parameter.position != '' ">
             and e.position like concat('%',#{parameter.position},'%')
@@ -129,17 +129,17 @@
         select count(e.id)
         from
         product p
-        inner join expertation e on e.product_id = p.id
+        inner join expertation e on e.product_id = p.id and  e.online_progress >0
         left join writer_user u on u.id = e.user_id
         <if test="parameter.auditor_id != null and parameter.auditor_id != '' ">
             inner join product_auditor pa on pa.product_id = p.id and pa.auditor_id = #{parameter.auditor_id}
         </if>
         where p.product_type = #{parameter.expert_type}
-        <if test="parameter.username != null and parameter.username != '' ">
-            and u.username like concat('%',#{parameter.username},'%')
-        </if>
+        <!--<if test="parameter.username != null and parameter.username != '' ">-->
+            <!--and u.username like concat('%',#{parameter.username},'%')-->
+        <!--</if>-->
         <if test="parameter.realname != null and parameter.realname != '' ">
-            and e.realname like concat('%',#{parameter.realname},'%')
+            and (e.realname like concat('%',#{parameter.realname},'%') or u.username like concat('%',#{parameter.realname},'%'))
         </if>
         <if test="parameter.position != null and parameter.position != '' ">
             and e.position like concat('%',#{parameter.position},'%')
@@ -473,6 +473,8 @@
          from dec_edu_exp dec_edu_exp where expertation_id = #{id}
     </select>
 
+
+
     <!--工作经历-->
     <select id="queryDecWorkExp" parameterType="java.lang.Long" resultType="DecWorkExp">
         select
@@ -565,6 +567,11 @@
         select
         *
         from dec_profession_award  where expertation_id = #{id}
+    </select>
+
+    <select id="queryProfession" parameterType="long" resultType="ProductProfessionType">
+        select t2.* from expertation_profession_type t1 INNER JOIN product_profession_type t2
+        on t1.product_profession_type_id = t2.id where t1.expertation_id =#{id}
     </select>
 
 

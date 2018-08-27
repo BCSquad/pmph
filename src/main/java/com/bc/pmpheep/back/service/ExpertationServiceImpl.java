@@ -223,6 +223,8 @@ public class ExpertationServiceImpl implements ExpertationService{
         expertationVO.setDecArticlePublishedList(expertationDao.queryDecArticlePublished(id));
 
         expertationVO.setDecProfessionAwardList(expertationDao.queryDecProfessionAward(id));
+
+        expertationVO.setProductProfessionTypeList(expertationDao.queryProfession(id));
         return expertationVO;
     }
 
