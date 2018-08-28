@@ -203,4 +203,11 @@
         select product_type_id from product_content_type_detail where name_path = #{fullNamePath} and product_id = #{product_id}
     </select>
 
+    <select id="getBtnStatus" resultType="map" parameterType="long">
+--         select * from (select  if(id,true,false)  subject from product where product_type = 1)t1,
+-- (select if(id,true,false) declareMajor from product where product_type = 2)t2,
+-- (select if(id,true,false) content from product where product_type = 3) t3
+select  count(id)  subject from product where product_type = #{productType}
+    </select>
+
 </mapper>

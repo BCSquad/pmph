@@ -4,6 +4,7 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.vo.ProductType;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ProductTypeDao {
 
@@ -52,5 +53,5 @@ public interface ProductTypeDao {
     Long queryContentTypeIdByFullNamePath(ProductType productType);
 
 
-
+    Map<String,Object> getBtnStatus(Long productType);
 }

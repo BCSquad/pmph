@@ -152,7 +152,13 @@ public class ProductTypeController {
 
 
 
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取产品状态")
+    @RequestMapping(value = "/getBtnStatus", method = RequestMethod.GET)
 
+    public ResponseBean getBtnStatus( Long productType,HttpServletRequest request){
+        return  new ResponseBean(this.productTypeService.getBtnStatus(productType));
+    }
 
 
 

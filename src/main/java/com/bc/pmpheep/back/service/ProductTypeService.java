@@ -5,9 +5,11 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.vo.ProductType;
 import com.bc.pmpheep.controller.bean.ResponseBean;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ProductTypeService {
 
@@ -41,4 +43,8 @@ public interface ProductTypeService {
      * @param typeType 1.学科分类 2.内容分类
      */
     ResponseBean insertProductTypeTree(List<ProductType> list, int typeType);
+
+    Map<String,Object> getBtnStatus(Long productType) throws CheckedServiceException;
+
+
 }

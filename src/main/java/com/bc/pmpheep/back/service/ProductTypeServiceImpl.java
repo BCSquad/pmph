@@ -283,4 +283,10 @@ public class ProductTypeServiceImpl implements ProductTypeService {
 
         return responseBean;
     }
+
+    @Override
+    public Map<String,Object> getBtnStatus(Long productType) throws CheckedServiceException{
+
+        return productTypeDao.getBtnStatus(productType);
+    }
 }
