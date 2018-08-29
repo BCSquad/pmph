@@ -8,6 +8,7 @@
         <result property="realname" column="realname"></result>
         <result property="username" column="username"></result>
         <result property="org_name" column="org_name"></result>
+        <result property="unitName" column="unitName"></result>
         <result property="position" column="position"></result>
         <result property="title" column="title"></result>
         <result property="email" column="email"></result>
@@ -75,6 +76,7 @@
         ,e.realname
         ,u.username
         ,e.org_name
+        ,f.org_name as unitName
         ,e.position
         ,e.title
         ,e.email
@@ -91,6 +93,8 @@
         from
         product p
         inner join expertation e on e.product_id = p.id and  e.online_progress >0
+        LEFT JOIN (SELECT id,org_name from org UNION SELECT 0,'人民卫生出版社' from
+        org ) f on f.id=e.org_id
         inner join product_auditor pa on pa.product_id = p.id
         <!--<if test="parameter.auditor_id != null and parameter.auditor_id != '' ">   /*系统管理员 部门领导 不用匹配*/
             and pa.auditor_id = #{parameter.auditor_id}
@@ -130,6 +134,8 @@
         from
         product p
         inner join expertation e on e.product_id = p.id and  e.online_progress >0
+        LEFT JOIN (SELECT id,org_name from org UNION SELECT 0,'人民卫生出版社' from
+        org ) f on f.id=e.org_id
         left join writer_user u on u.id = e.user_id
         <if test="parameter.auditor_id != null and parameter.auditor_id != '' ">
             inner join product_auditor pa on pa.product_id = p.id and pa.auditor_id = #{parameter.auditor_id}

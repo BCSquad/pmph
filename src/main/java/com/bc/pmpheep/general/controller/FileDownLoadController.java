@@ -970,7 +970,7 @@ public class FileDownLoadController {
 		response.setContentType("application/force-download");
 		String materialName = null;
 		if (CollectionUtil.isNotEmpty(orgList)) {
-			materialName = orgList.get(0).getMaterialName();// 教材名称
+			materialName = (StringUtil.isEmpty(orgList.get(0).getMaterialName())?"":orgList.get(0).getMaterialName())+"已发布学校";// 教材名称
 		}
 		if (StringUtil.isEmpty(materialName)) {
 			materialName = "已发布学校";
