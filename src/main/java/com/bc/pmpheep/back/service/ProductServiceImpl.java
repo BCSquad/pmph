@@ -85,6 +85,30 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public ProductVO getProductByType(Long product_type) {
+
+        ProductVO productVO = productDao.queryProductByProductType(product_type, Const.CLINICAL_DECISION_FILE_DOWNLOAD);
+        if(productVO==null){
+            productVO = new ProductVO(product_type);
+            productVO.setProduct_type(product_type);
+        }
+
+        Content noteContent = null;
+        if(!StringUtil.isEmpty(productVO.getNote())){
+            noteContent =  contentService.get(productVO.getNote());
+        }
+        Content descriptionContent = null;
+        if(!StringUtil.isEmpty(productVO.getDescription())){
+            descriptionContent = contentService.get(productVO.getDescription());
+        }
+
+        productVO.setNoteContent(noteContent);
+        productVO.setDescriptionContent(descriptionContent);
+
+        return productVO;
+    }
+
+    @Override
     public int updateProductAttachmenDownLoadCountsByAttachment(String id) {
         int count = productDao.updateProductAttachmenDownLoadCountsByAttachment(id);
         return count;

@@ -18,14 +18,19 @@ import java.util.List;
 public interface ProductService {
 
     /**
-     * 查询或创建此类型的临床决策产品
+     * 查询或创建此类型的临床决策产品 校验登录
      * @param product_type 类型 1.人卫临床助手 2.人卫用药助手 3.人卫中医助手
      * @param sessionId
      * @return
      */
     public ProductVO getProductByType(Long product_type, String sessionId);
 
-
+    /**
+     * 查询或创建此类型的临床决策产品 不校验登录
+     * @param product_type 类型 1.人卫临床助手 2.人卫用药助手 3.人卫中医助手
+     * @return
+     */
+    ProductVO getProductByType(Long product_type);
 
     /**
      * 更新附件下载次数
@@ -102,4 +107,6 @@ public interface ProductService {
      * </pre>
      */
     List<Product> getListProduct(String productName);
+
+
 }

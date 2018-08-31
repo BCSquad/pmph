@@ -7,22 +7,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.bc.pmpheep.back.po.*;
+import com.bc.pmpheep.back.service.*;
+import com.bc.pmpheep.back.vo.ExpertationVO;
+import com.bc.pmpheep.back.vo.ProductVO;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bc.pmpheep.back.service.CmsContentService;
-import com.bc.pmpheep.back.service.DecPositionService;
-import com.bc.pmpheep.back.service.DeclarationService;
-import com.bc.pmpheep.back.service.MaterialProjectEditorService;
-import com.bc.pmpheep.back.service.MaterialService;
-import com.bc.pmpheep.back.service.OrgService;
-import com.bc.pmpheep.back.service.OrgUserService;
-import com.bc.pmpheep.back.service.PmphGroupMemberService;
-import com.bc.pmpheep.back.service.PmphGroupService;
-import com.bc.pmpheep.back.service.TextbookService;
-import com.bc.pmpheep.back.service.UserMessageService;
-import com.bc.pmpheep.back.service.WriterUserService;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
@@ -38,8 +29,6 @@ import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.websocket.MyWebSocketHandler;
 import com.bc.pmpheep.websocket.WebScocketMessage;
-
-import javax.servlet.http.HttpSession;
 
 /**
  * 发送系统消息公共服务类 以下方法推荐放在操作完成后
@@ -95,6 +84,12 @@ public final class SystemMessageService {
 
 	@Autowired
 	private OrgService orgService;
+
+	@Autowired
+	private ExpertationService expertationService;
+
+	@Autowired
+	private ProductService productService;
 
 	/**
 	 * 遴选公告发布时，给学校管理员和学校教师发送消息，通知他们留意报名情况或者是参加报名
@@ -708,6 +703,74 @@ public final class SystemMessageService {
 				DateUtil.getCurrentTime());
 		List<String> userIds = new ArrayList<String>(1);
 		userIds.add("2_" + declaration.getUserId());
+		myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
+	}
+
+	/**
+	 * 临床申报表审核 向作家用户发送消息
+	 *
+	 * @author Mryang
+	 * @createDate 2017年11月17日 下午4:42:14
+	 * @param expertation
+	 *            申报id
+	 * @param isPass
+	 *            true 通过/false 退回
+	 * @throws CheckedServiceException
+	 * @throws IOException
+	 */
+	public void sendWhenExpertationFormAudit(ExpertationVO expertation, boolean isPass, String returnCause, PmphUser pmphUser)
+			throws CheckedServiceException, IOException {
+		// 获取申报表
+		//ExpertationVO expertation = expertationService.getExpertationById(expertationId);
+		if (null == expertation) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.NULL_PARAM,
+					"申报表不存在");
+		}
+		if (null == expertation.getOrg_id()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.NULL_PARAM,
+					"认证的管理员为空");
+		}
+		// 获取教材
+		ProductVO product = productService.getProductByType(expertation.getExpert_type());
+		String msgContent = "";
+		/*if (expertation.getOrg_id() == 0) {// 提交的人卫社*/
+			msgContent = "抱歉，您提交的《<font color='red'>" + product.getProduct_name()
+					+ "</font>》临床申报表被[<font color='red'>出版社</font>]退回，退回原因：" + returnCause
+					+ "，请您核对后重新提交";
+			if (isPass) {// 通过
+				msgContent = "恭喜！您提交的《<font color='red'>" + product.getProduct_name()
+						+ "</font>》临床申报表已通过[<font color='red'>出版社</font>]审核";
+			}
+		/*} else {// 提交的机构
+			msgContent = "抱歉，您提交的《<font color='red'>" + product.getProduct_name()
+					+ "</font>》临床申报表被[<font color='red'>学校管理员</font>]退回，退回原因：" + returnCause
+					+ "，请您核对后重新提交";
+			if (isPass) {// 通过
+				msgContent = "恭喜！您提交的《<font color='red'>" + product.getProduct_name()
+						+ "</font>》临床申报表已通过[<font color='red'>学校管理员</font>]审核";
+			}
+		}*/
+
+		//todo 通过退回的消息
+
+		// 存入消息主体
+		Message message = new Message(msgContent);
+		message = messageService.add(message);
+		String msg_id = message.getId();
+
+		// 发送消息
+		userMessageService.addUserMessage(new UserMessage(msg_id, messageTitle, new Short("0"), pmphUser.getId(), new Short("1"),
+				expertation.getUser_id(), new Short("2"), null));
+
+
+
+
+		// websocket推送页面消息
+		WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, pmphUser.getId(), pmphUser.getRealname(),
+				Const.SENDER_TYPE_1, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle, msgContent,
+				DateUtil.getCurrentTime());
+		List<String> userIds = new ArrayList<String>(1);
+		userIds.add("2_" + expertation.getUser_id());
 		myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
 	}
 

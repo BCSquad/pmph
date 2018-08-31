@@ -7,6 +7,7 @@ import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphDepartment;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.service.common.SystemMessageService;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
@@ -39,6 +40,8 @@ public class ExpertationServiceImpl implements ExpertationService{
     @Autowired
     private PmphDepartmentService    pmphDepartmentService;
 
+    @Autowired
+    private SystemMessageService systemMessageService;
 
     /**
      * 查找临床决策申报列表
@@ -230,6 +233,36 @@ public class ExpertationServiceImpl implements ExpertationService{
         return expertationVO;
     }
 
+    /**
+     * 查询临床决策申报详情
+     * @param id 申报表主键
+     * @return
+     */
+    @Override
+    public ExpertationVO getExpertationById(Long id) {
+
+        ExpertationVO expertationVO = expertationDao.getExpertationById(id);
+
+        expertationVO.setDecAcadeList(expertationDao.queryDecAcade(id));
+
+        expertationVO.setDecEduExpList(expertationDao.queryDecEduExp(id));
+
+        expertationVO.setDecWorkExpList(expertationDao.queryDecWorkExp(id));
+
+        expertationVO.setDecMonographList(expertationDao.queryDecMonograph(id));
+
+        expertationVO.setDecTextbookPmphList(expertationDao.queryDecTextbookPmph(id));
+
+        expertationVO.setDecEditorBookList(expertationDao.queryDecEditorBook(id));
+
+        expertationVO.setDecArticlePublishedList(expertationDao.queryDecArticlePublished(id));
+
+        expertationVO.setDecProfessionAwardList(expertationDao.queryDecProfessionAward(id));
+
+        expertationVO.setProductProfessionTypeList(expertationDao.queryProfession(id));
+        return expertationVO;
+    }
+
     @Override
     public Boolean onlineProgress(Long id, Integer onlineProgress, String returnCause, PmphUser pmphUser) {
         Boolean flag = false;
@@ -244,17 +277,27 @@ public class ExpertationServiceImpl implements ExpertationService{
         try{
             //获取申报信息
             ExpertationVO expertationVO  = expertationDao.getExpertationById(id);
-            if(4==onlineProgress.intValue()||5==onlineProgress.intValue()){ // 退回
-                if (StringUtil.strLength(returnCause) > 40) {
-                    throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-                            "最多只能输入40个字符，请重新输入!");
-                }
 
+            if (StringUtil.strLength(returnCause) > 40) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.NULL_PARAM,
+                        "最多只能输入40个字符，请重新输入!");
+            }
+
+            expertationDao.updateOnlineProgress(id,onlineProgress,returnCause);
+
+            Boolean isPass = true;
+            if(4==onlineProgress.intValue()||5==onlineProgress.intValue()){ // 退回
+
+                isPass = false ;
+                expertationVO.setOnline_progress(onlineProgress);
+                expertationVO.setReturn_cause(returnCause);
+                systemMessageService.sendWhenExpertationFormAudit(expertationVO, isPass, returnCause,pmphUser);
                 // 产生一条动态消息
             }else if(3==onlineProgress.intValue()){ // 通过
                 // 产生一条动态消息
+                isPass = true ;
             }
-            expertationDao.updateOnlineProgress(id,onlineProgress,returnCause);
+
             flag = true;
         }catch (Exception e){
          e.printStackTrace();

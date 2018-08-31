@@ -29,14 +29,23 @@ public interface ExpertationService {
     PageResult getCountListGroupByType(PageParameter<Map<String, Object>> pageParameter, String sessionId);
 
     /**
-     * 查询临床决策申报详情
+     * 查询临床决策申报详情 带登录校验
      * @param id 申报表主键
      * @param sessionId
      * @return
      */
     ExpertationVO getExpertationById(Long id, String sessionId);
 
+    /**
+     * 查询临床决策申报详情 不带登录校验
+     * @param expertationId
+     * @return
+     */
+    ExpertationVO getExpertationById(Long expertationId);
+
     Boolean onlineProgress(Long id, Integer onlineProgress, String returnCause, PmphUser pmphUser);
 
     Map showTabs(Long productType);
+
+
 }
