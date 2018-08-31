@@ -718,4 +718,24 @@
 
 	</select>
 
+	<select id="getFollowingProductAuditorList" parameterType="java.lang.Long" resultType="com.bc.pmpheep.back.vo.FollowingProduntAuditor">
+		select
+			preg.*
+			,p.product_name
+			,p.product_type
+			,pa.*
+
+		from (select * from pmph_user where id = #{user_id}/*某人user_id*/) u
+		inner join
+		(select concat(d.path,'-',d.id) as fullPath,u.realname,u.id as followerId
+		from pmph_user u
+		join pmph_department d on u.department_id = d.id
+		) preg on (u.is_director =1 and preg.fullPath Regexp concat('-',u.department_id,'(-[0-9]+)*$') or u.id = preg.followerId )
+
+		inner join product_auditor pa on pa.auditor_id = preg.followerId
+		inner join product p on pa.product_id = p.id
+
+		group by p.product_type
+	</select>
+
 </mapper>

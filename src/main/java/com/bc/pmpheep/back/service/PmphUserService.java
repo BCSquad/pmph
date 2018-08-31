@@ -335,7 +335,7 @@ public interface PmphUserService {
 	PmphUser updateUser(PmphUser pmphUser);
 
     /**
-     * 根据某人id查出其 本部门及上级各部门的某角色的用户
+     * 根据某人id查出其 本部门及上级各部门的某角色的用户 (已改为查询 本部门及上级各部门的isAdmin主任用户)
      * @param SbId A某 pmphUser的id
      * @param role_id 角色id （角色名称和id 仅需一个 另一个保留为null）
      * @param role_name 角色名称 （角色名称和id 仅需一个 另一个保留为null）

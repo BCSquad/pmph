@@ -7,6 +7,7 @@ package com.bc.pmpheep.back.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.bc.pmpheep.back.vo.FollowingProduntAuditor;
 import org.apache.ibatis.annotations.Param;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
@@ -265,4 +266,11 @@ public interface PmphUserDao {
      * @return
      */
     String getUserId(Long id);
+
+    /**
+     * 部门领导获取下属中的临床审批人（或非领导查询自身是否为临床审批人）
+     * @param userId
+     * @return
+     */
+    List<FollowingProduntAuditor> getFollowingProductAuditorList(Long userId);
 }
