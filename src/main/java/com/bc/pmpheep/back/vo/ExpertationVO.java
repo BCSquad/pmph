@@ -29,7 +29,7 @@ public class ExpertationVO implements Serializable {
     private Long	user_id	;	//	20	作家姓名
     @ExcelHeader(header = " 作家姓名")
     private String	realname	;	//	20
-    private Boolean	sex	;	//	3
+    private String	sex	;	//	3
     private Date	birthday	;	//	0
     private Long	experience	;	//	3	教龄
     @ExcelHeader(header = "工作单位")
@@ -168,13 +168,7 @@ public class ExpertationVO implements Serializable {
         this.realname = realname;
     }
 
-    public Boolean getSex() {
-        return sex;
-    }
 
-    public void setSex(Boolean sex) {
-        this.sex = sex;
-    }
 
     public Date getBirthday() {
         return birthday;
@@ -778,5 +772,13 @@ public class ExpertationVO implements Serializable {
 
     public void setFinalResult(boolean finalResult) {
         isFinalResult = finalResult;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
     }
 }
