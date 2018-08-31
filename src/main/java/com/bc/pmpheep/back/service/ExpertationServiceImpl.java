@@ -241,6 +241,11 @@ public class ExpertationServiceImpl implements ExpertationService{
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
                     "审核进度不能为空!");
         }
+
+        if (StringUtil.isEmpty(returnCause)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
+                    "退回原因不能为空!");
+        }
         try{
             //获取申报信息
             ExpertationVO expertationVO  = expertationDao.getExpertationById(id);
