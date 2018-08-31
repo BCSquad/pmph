@@ -66,6 +66,8 @@ public class ExpertationVO implements Serializable {
     private String	sub_classification	;	//	100	学科分类
     private String	cont_classification	;	//	100	内容分类
     private String unit_advise; //单位意见（扫描件上传于mongodb的id）
+
+    private String unit_advise_online;//所在单位意见文字
     private String product_name; //
     private Long auditor_id; //审核人id 查询用 传入当前登录人id
     @ExcelHeader(header = "账号")
@@ -106,6 +108,13 @@ public class ExpertationVO implements Serializable {
     private List<DecArticlePublished>  DecArticlePublishedList; // 文章发表情况
 
     private List<ProductProfessionType> ProductProfessionTypeList; //申报专业分类
+
+   // private String schoolStauts;
+    //private String pmphStauts;
+    private String startCommitDate;
+    private String endCommitDate;
+    private String sql;
+    private boolean isFinalResult;
 
     public ExpertationVO() {
         super();
@@ -675,5 +684,61 @@ public class ExpertationVO implements Serializable {
 
     public void setUnitName(String unitName) {
         this.unitName = unitName;
+    }
+
+    public String getUnit_advise_online() {
+        return unit_advise_online;
+    }
+
+    public void setUnit_advise_online(String unit_advise_online) {
+        this.unit_advise_online = unit_advise_online;
+    }
+
+    public String getSql() {
+        return sql;
+    }
+
+    public void setSql(String sql) {
+        this.sql = sql;
+    }
+
+//    public String getSchoolStauts() {
+//        return schoolStauts;
+//    }
+//
+//    public void setSchoolStauts(String schoolStauts) {
+//        this.schoolStauts = schoolStauts;
+//    }
+//
+//    public String getPmphStauts() {
+//        return pmphStauts;
+//    }
+//
+//    public void setPmphStauts(String pmphStauts) {
+//        this.pmphStauts = pmphStauts;
+//    }
+
+    public String getStartCommitDate() {
+        return startCommitDate;
+    }
+
+    public void setStartCommitDate(String startCommitDate) {
+        this.startCommitDate = startCommitDate;
+    }
+
+    public String getEndCommitDate() {
+        return endCommitDate;
+    }
+
+    public void setEndCommitDate(String endCommitDate) {
+        this.endCommitDate = endCommitDate;
+    }
+
+    public boolean isFinalResult() {
+        return isFinalResult;
+    }
+
+    public void setFinalResult(boolean finalResult) {
+        isFinalResult = finalResult;
     }
 }

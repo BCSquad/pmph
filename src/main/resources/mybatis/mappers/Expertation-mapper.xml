@@ -18,6 +18,9 @@
         <result property="online_progress" column="online_progress"></result>
         <result property="commit_date" column="commit_date"></result>
         <result property="amIAnAuditor" column="amIAnAuditor"></result>
+        <result property="syllabus_name" column="syllabus_name"></result>
+        <result property="unit_advise" column="unit_advise"></result>
+        <result property="isFinalResult" column="isFinalResult"></result>
 
 
         <!--这种写法能支持分页，但会创建一个类似原返回list范型的类来保存结果，即在vo后加后缀如_$$_jvst... 导致反射取不到真正的范型class -->
@@ -84,6 +87,9 @@
         ,e.org_id
         ,e.online_progress
         ,e.commit_date
+        ,e.unit_advise
+        ,e.syllabus_name
+        ,e.isFinalResult
         /*,pst.id as pst_id
         ,pst.type_name
         ,pct.product_type_id
@@ -121,6 +127,61 @@
         <if test="parameter.title != null and parameter.title != '' ">
             and e.title like concat('%',#{parameter.title},'%')
         </if>
+        <if test="parameter.handphone != null and parameter.handphone != '' ">
+            and e.handphone like concat('%',#{parameter.handphone},'%')
+        </if>
+
+        <if test="parameter.startCommitDate !=null and parameter.startCommitDate !=''">
+            AND e.`commit_date` &gt;= str_to_date(#{parameter.startCommitDate},'%Y-%m-%d %H:%i:%s')
+        </if>
+        <if test="parameter.endCommitDate !=null and parameter.endCommitDate !='' ">
+            AND e.`commit_date`  &lt;=  str_to_date(#{parameter.endCommitDate},'%Y-%m-%d %H:%i:%s')
+        </if>
+
+
+        <!--<if test="(parameter.schoolStauts != null and parameter.schoolStauts != '') and (parameter.pmphStauts == null or parameter.pmphStauts == '')">
+            and e.org_id !=0
+            <if test="parameter.schoolStauts == 0 ">  &lt;!&ndash;提交给学校 学校待审核&ndash;&gt;
+                and  e.online_progress in (1,4)
+            </if>
+            <if test="parameter.schoolStauts == 1  ">  &lt;!&ndash;提交给学校 学校审核通过&ndash;&gt;
+                and  e.online_progress = 3
+            </if>
+            <if test="parameter.schoolStauts == 2  "> &lt;!&ndash;提交给学校 学校已退回&ndash;&gt;
+                and  e.online_progress = 2
+            </if>
+        </if>
+
+        <if test="(parameter.schoolStauts == null or parameter.schoolStauts == '') and (parameter.pmphStauts != null and parameter.pmphStauts != '')">
+            &#45;&#45; and e.org_id =0
+            <if test="parameter.pmphStauts == 0 ">  &lt;!&ndash; 出版社待审核&ndash;&gt;
+                and  ((e.org_id =0 and e.online_progress =1) or (e.org_id !=0 and e.online_progress =3))
+            </if>
+            <if test="parameter.pmphStauts == 1  ">  &lt;!&ndash;出版社审核通过&ndash;&gt;
+               and e.online_progress =6
+            </if>
+            <if test="parameter.pmphStauts == 2  "> &lt;!&ndash; 出版社退回给个人&ndash;&gt;
+                and  ((e.org_id =0 and e.online_progress =2) or (e.org_id !=0 and e.online_progress =5))
+            </if>
+            <if test="parameter.pmphStauts == 3  "> &lt;!&ndash; 出版社退回给学校&ndash;&gt;
+                and  e.org_id !=0 and e.online_progress =4
+            </if>
+            <if test="parameter.pmphStauts == 4  "> &lt;!&ndash; 出版社审核未通过&ndash;&gt;
+                and   e.online_progress =7
+            </if>
+        </if>
+        &lt;!&ndash;其他组合状态查询不出数据&ndash;&gt;
+        <if test="(parameter.schoolStauts != null and parameter.schoolStauts != '') and (parameter.pmphStauts != null and parameter.pmphStauts != '')">
+            <if test="parameter.schoolStauts == 0 and  parameter.pmphStauts == 0 ">
+                and  e.online_progress = 1
+            </if>
+            <if test="parameter.schoolStauts == 1 and  parameter.pmphStauts == 0 ">
+                and e.org_id !=0  and  e.online_progress = 3
+            </if>
+            <if test="parameter.schoolStauts == 1 and  parameter.pmphStauts == 1 ">
+                   and e.online_progress =6
+            </if>
+        </if>-->
         GROUP by e.id /*,pst_id,product_type_id*/
         <if test="start != null">
             limit ${start} ,${pageSize}
@@ -153,9 +214,63 @@
         <if test="parameter.title != null and parameter.title != '' ">
             and e.title like concat('%',#{parameter.title},'%')
         </if>
-    </select>
+        <if test="parameter.handphone != null and parameter.handphone != '' ">
+            and e.handphone like concat('%',#{parameter.handphone},'%')
+        </if>
 
-    <!--按内容分类统计 列表-->
+        <if test="parameter.startCommitDate !=null and parameter.startCommitDate !=''">
+            AND e.`commit_date` &gt;= str_to_date(#{parameter.startCommitDate},'%Y-%m-%d %H:%i:%s')
+        </if>
+        <if test="parameter.endCommitDate !=null and parameter.endCommitDate !='' ">
+            AND e.`commit_date`  &lt;=  str_to_date(#{parameter.endCommitDate},'%Y-%m-%d %H:%i:%s')
+        </if>
+
+        <!--<if test="(parameter.schoolStauts != null and parameter.schoolStauts != '') and (parameter.pmphStauts == null or parameter.pmphStauts == '')">
+        and e.org_id !=0
+        <if test="parameter.schoolStauts == 0 ">  &lt;!&ndash;提交给学校 学校待审核&ndash;&gt;
+            and  e.online_progress in (1,4)
+        </if>
+        <if test="parameter.schoolStauts == 1  ">  &lt;!&ndash;提交给学校 学校审核通过&ndash;&gt;
+            and  e.online_progress = 3
+        </if>
+        <if test="parameter.schoolStauts == 2  "> &lt;!&ndash;提交给学校 学校已退回&ndash;&gt;
+            and  e.online_progress = 2
+        </if>
+        </if>
+
+        <if test="(parameter.schoolStauts == null or parameter.schoolStauts == '') and (parameter.pmphStauts != null and parameter.pmphStauts != '')">
+            &#45;&#45; and e.org_id =0
+            <if test="parameter.pmphStauts == 0 ">  &lt;!&ndash; 出版社待审核&ndash;&gt;
+                and  ((e.org_id =0 and e.online_progress =1) or (e.org_id !=0 and e.online_progress =3))
+            </if>
+            <if test="parameter.pmphStauts == 1  ">  &lt;!&ndash;出版社审核通过&ndash;&gt;
+                and e.online_progress =6
+            </if>
+            <if test="parameter.pmphStauts == 2  "> &lt;!&ndash; 出版社退回给个人&ndash;&gt;
+                and  ((e.org_id =0 and e.online_progress =2) or (e.org_id !=0 and e.online_progress =5))
+            </if>
+            <if test="parameter.pmphStauts == 3  "> &lt;!&ndash; 出版社退回给学校&ndash;&gt;
+                and  e.org_id !=0 and e.online_progress =4
+            </if>
+            <if test="parameter.pmphStauts == 4  "> &lt;!&ndash; 出版社审核未通过&ndash;&gt;
+                and   e.online_progress =7
+            </if>
+        </if>
+        &lt;!&ndash;其他组合状态查询不出数据&ndash;&gt;
+        <if test="(parameter.schoolStauts != null and parameter.schoolStauts != '') and (parameter.pmphStauts != null and parameter.pmphStauts != '')">
+            <if test="parameter.schoolStauts == 0 and  parameter.pmphStauts == 0 ">
+                and  e.online_progress = 1
+            </if>
+            <if test="parameter.schoolStauts == 1 and  parameter.pmphStauts == 0 ">
+                and e.org_id !=0  and  e.online_progress = 3
+            </if>
+            <if test="parameter.schoolStauts == 1 and  parameter.pmphStauts == 1 ">
+                and e.online_progress =6
+            </if>
+        </if>-->
+</select>
+
+<!--按内容分类统计 列表-->
     <select id="getCountListGroupByContentType" parameterType="com.bc.pmpheep.back.plugin.PageParameter" resultType="com.bc.pmpheep.back.vo.ExpertationCountnessVO">
         select
             count(t1.eid) as count_submit,
@@ -625,6 +740,7 @@
         <result property="education" column="education"></result>
         <result property="banknumber" column="banknumber"></result>
         <result property="bankaddress" column="bankaddress"></result>
+        <result property="unit_advise_online" column="unit_advise_online"></result>
 
      <!--   <collection property="DecEduExpList" javaType="list" ofType="DecEduExp" >
             <id property="id" column="dec_edu_exp_id"></id>
