@@ -152,16 +152,12 @@ public class ProductServiceImpl implements ProductService {
         }
         Long productId = productVO.getId();
 
-
-
         productDao.deleteProductAuditorsByProductId(productId);
 
-
-
         // 删除此productId下的所有相关角色pmph_user_role
-        pmphUserRoleDao.deletePmphUserRoleByRoleId(auditorMenuRole.getId());
+        //pmphUserRoleDao.deletePmphUserRoleByRoleId(auditorMenuRole.getId());
         if(CollectionUtil.isNotEmpty(productVO.getAuditorList())){
-            for(ProductAuditor productAuditor:productVO.getAuditorList()){
+            /*for(ProductAuditor productAuditor:productVO.getAuditorList()){
                 if(ObjectUtil.isNull(productAuditor.getProduct_id()))productAuditor.setProduct_id(productVO.getId());
 
                 //该审核人加角色（菜单权限）
@@ -174,7 +170,7 @@ public class ProductServiceImpl implements ProductService {
                     PmphUserRole userRole = new PmphUserRole(PDDirector.getId(),auditorMenuRole.getId());
                     pmphUserRoleDao.addPmphUserRole(userRole);
                 }
-            }
+            }*/
 
             //该审核人加入审核人表（数据权限）
             productDao.saveProductAuditors(productVO.getAuditorList());
