@@ -36,7 +36,7 @@ public class ExpertationVO implements Serializable {
     private String	org_name	;	//	60	工作单位
     private String unitName; // 申报单位
 
-    private long org_id; // 申报单位 为0 代表出版社
+    private Long org_id; // 申报单位 为0 代表出版社
     @ExcelHeader(header = "职务")
     private String	position	;	//	36	职务
     @ExcelHeader(header = "职称")
@@ -85,12 +85,20 @@ public class ExpertationVO implements Serializable {
     private List<ProductType> productProfessionTypeList1; //专业分类
 
     private List<ProductType> productContentTypeList; //内容分类
-    @ExcelHeader(header = "学科分类",cellType = "2")
+    //@ExcelHeader(header = "学科分类",cellType = "2")
     private String productSubjectTypeStr; //学科分类 excel导出字符串
-    @ExcelHeader(header = "内容分类",cellType = "2")
+    //@ExcelHeader(header = "内容分类",cellType = "2")
     private String productContentTypeStr; //内容分类 excel导出字符串
-    @ExcelHeader(header = "专业分类",cellType = "2")
+    //@ExcelHeader(header = "专业分类",cellType = "2")
     private String productProfessionTypeStr; //专业分类 excel导出字符串
+
+
+    @ExcelHeader(header = "学科分类",cellType = "2")
+    private String productSubjectTypeStr1; //学科分类 excel导出字符串
+    @ExcelHeader(header = "内容分类",cellType = "2")
+    private String productContentTypeStr1; //内容分类 excel导出字符串
+    @ExcelHeader(header = "专业分类",cellType = "2")
+    private String productProfessionTypeStr1; //专业分类 excel导出字符串
 
     private List<DecEduExp> DecEduExpList; // 主要学习经历
     private List<DecWorkExp> DecWorkExpList; //主要工作经历
@@ -410,9 +418,11 @@ public class ExpertationVO implements Serializable {
         if(this.productSubjectTypeList!=null && this.productSubjectTypeList.size()>0){
             //this.productSubjectTypeStr = "=\"\""+"&\"1.aaa.\"&CHAR(10)"+"&\"2.bbb.\"&CHAR(10)&\"3.ccc. \"";
             this.productSubjectTypeStr = "\"\"";
+            this.productSubjectTypeStr1 = "";
             for (int i =0;i<productSubjectTypeList.size();i++) {
                 ProductType p = productSubjectTypeList.get(i);
                 this.productSubjectTypeStr += "&\""+(i+1)+"."+p.getType_name()+"\"&CHAR(10)";
+                productSubjectTypeStr1 += p.getType_name().concat("\r\n")  ;
             }
         }
         return null;
@@ -427,9 +437,11 @@ public class ExpertationVO implements Serializable {
         if(this.productContentTypeList!=null && this.productContentTypeList.size()>0){
             //this.productSubjectTypeStr = "=\"\""+"&\"1.aaa.\"&CHAR(10)"+"&\"2.bbb.\"&CHAR(10)&\"3.ccc. \"";
             this.productContentTypeStr = "\"\"";
+            this.productContentTypeStr1 = "";
             for (int i =0;i<productContentTypeList.size();i++) {
                 ProductType p = productContentTypeList.get(i);
                 this.productContentTypeStr += "&\""+(i+1)+"."+p.getType_name()+"\"&CHAR(10)";
+                productContentTypeStr1 += p.getType_name().concat("\r\n")  ;
             }
         }
         return null;
@@ -438,9 +450,11 @@ public class ExpertationVO implements Serializable {
         if(this.productProfessionTypeList1!=null && this.productProfessionTypeList1.size()>0){
             //this.productSubjectTypeStr = "=\"\""+"&\"1.aaa.\"&CHAR(10)"+"&\"2.bbb.\"&CHAR(10)&\"3.ccc. \"";
             this.productProfessionTypeStr = "\"\"";
+            this.productProfessionTypeStr1 = "";
             for (int i =0;i<productProfessionTypeList1.size();i++) {
                 ProductType p = productProfessionTypeList1.get(i);
                 this.productProfessionTypeStr += "&\""+(i+1)+"."+p.getType_name()+"\"&CHAR(10)";
+                this.productProfessionTypeStr1 += p.getType_name().concat("\r\n")  ;
             }
         }
         return null;
@@ -588,11 +602,11 @@ public class ExpertationVO implements Serializable {
         this.syllabus_name = syllabus_name;
     }
 
-    public long getOrg_id() {
+    public Long getOrg_id() {
         return org_id;
     }
 
-    public void setOrg_id(long org_id) {
+    public void setOrg_id(Long org_id) {
         this.org_id = org_id;
     }
 
@@ -675,5 +689,29 @@ public class ExpertationVO implements Serializable {
 
     public void setUnitName(String unitName) {
         this.unitName = unitName;
+    }
+
+    public String getProductSubjectTypeStr1() {
+        return productSubjectTypeStr1;
+    }
+
+    public void setProductSubjectTypeStr1(String productSubjectTypeStr1) {
+        this.productSubjectTypeStr1 = productSubjectTypeStr1;
+    }
+
+    public String getProductContentTypeStr1() {
+        return productContentTypeStr1;
+    }
+
+    public void setProductContentTypeStr1(String productContentTypeStr1) {
+        this.productContentTypeStr1 = productContentTypeStr1;
+    }
+
+    public String getProductProfessionTypeStr1() {
+        return productProfessionTypeStr1;
+    }
+
+    public void setProductProfessionTypeStr1(String productProfessionTypeStr1) {
+        this.productProfessionTypeStr1 = productProfessionTypeStr1;
     }
 }

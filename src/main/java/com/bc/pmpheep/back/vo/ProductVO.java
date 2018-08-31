@@ -305,6 +305,9 @@ public class ProductVO {
     }
 
     public void setAuditorList(List<ProductAuditor> auditorList) {
+        for (ProductAuditor productAuditor:auditorList) {
+            productAuditor.setProduct_id(id);
+        }
         this.auditorList = auditorList;
     }
 
@@ -313,6 +316,9 @@ public class ProductVO {
     }
 
     public void setProductExtensionList(List<ProductExtension> productExtensionList) {
+        for (ProductExtension productExtension:productExtensionList) {
+            productExtension.setProductId(id);
+        }
         ProductExtensionList = productExtensionList;
     }
 
@@ -321,6 +327,9 @@ public class ProductVO {
     }
 
     public void setProductAttachmentList(List<ProductAttachment> productAttachmentList) {
+        for (ProductAttachment productAttachment:productAttachmentList) {
+            productAttachment.setProduct_id(id);
+        }
         ProductAttachmentList = productAttachmentList;
     }
 
@@ -329,6 +338,9 @@ public class ProductVO {
     }
 
     public void setProducntImgList(List<ProductAttachment> producntImgList) {
+        for (ProductAttachment  productAttachment:producntImgList) {
+            productAttachment.setProduct_id(id);
+        }
         ProducntImgList = producntImgList;
     }
 
