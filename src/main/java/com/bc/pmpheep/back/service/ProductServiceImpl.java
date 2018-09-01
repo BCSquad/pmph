@@ -55,7 +55,7 @@ public class ProductServiceImpl implements ProductService {
     private PmphRoleDao pmphRoleDao;
 
     @Override
-    public ProductVO getProductByType(Long product_type, String sessionId) {
+    public ProductVO getProductByType(Long product_type,Long product_id, String sessionId) {
 
         PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
         if (ObjectUtil.isNull(pmphUser)) {
@@ -63,7 +63,7 @@ public class ProductServiceImpl implements ProductService {
                     "用户为空");
         }
 
-        ProductVO productVO = productDao.queryProductByProductType(product_type, Const.CLINICAL_DECISION_FILE_DOWNLOAD);
+        ProductVO productVO = productDao.queryProductByProductType(product_type,product_id, Const.CLINICAL_DECISION_FILE_DOWNLOAD);
         if(productVO==null){
             productVO = new ProductVO(product_type);
             productVO.setProduct_type(product_type);
@@ -85,9 +85,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductVO getProductByType(Long product_type) {
+    public ProductVO getProductByType(Long product_type,Long id) {
 
-        ProductVO productVO = productDao.queryProductByProductType(product_type, Const.CLINICAL_DECISION_FILE_DOWNLOAD);
+        ProductVO productVO = productDao.queryProductByProductType(product_type,id, Const.CLINICAL_DECISION_FILE_DOWNLOAD);
         if(productVO==null){
             productVO = new ProductVO(product_type);
             productVO.setProduct_type(product_type);

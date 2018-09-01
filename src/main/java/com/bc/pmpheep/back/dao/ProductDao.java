@@ -16,7 +16,7 @@ public interface ProductDao {
      * @param clinicalDecision 附件下载地址需要的前缀，后面拼接附件id
      * @return
      */
-    ProductVO queryProductByProductType(@Param(value = "product_type") Long product_type,@Param(value = "uri") String clinicalDecision);
+    ProductVO queryProductByProductType(@Param(value = "product_type") Long product_type,@Param(value = "product_id") Long product_id,@Param(value = "uri") String clinicalDecision);
 
     /**
      * 根据主键查询
