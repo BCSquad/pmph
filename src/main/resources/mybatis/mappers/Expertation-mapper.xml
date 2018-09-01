@@ -118,7 +118,7 @@
         left join expertation_content_type ect on ect.expertation_id = e.id left join product_content_type_detail pct on pct.product_type_id = ect.product_content_type_id*/
         where p.product_type = #{parameter.expert_type}
         <if test="parameter.id != null">
-            p.id =  #{parameter.id}
+            and  p.id =  #{parameter.id}
         </if>
         <!--<if test="parameter.username != null and parameter.username != '' ">
             and u.username like concat('%',#{parameter.realname},'%')
@@ -208,7 +208,7 @@
         </if>
         where p.product_type = #{parameter.expert_type}
         <if test="parameter.id != null">
-            p.id =  #{parameter.id}
+           and p.id =  #{parameter.id}
         </if>
         <!--<if test="parameter.username != null and parameter.username != '' ">-->
             <!--and u.username like concat('%',#{parameter.username},'%')-->

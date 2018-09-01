@@ -268,12 +268,12 @@ public class ExpertationServiceImpl implements ExpertationService{
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
                     "主键不能为空!");
         }
-        if (ObjectUtil.isNull(onlineProgress)) {
+        if (ObjectUtil.isNull(onlineProgress)  ) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
                     "审核进度不能为空!");
         }
 
-        if (StringUtil.isEmpty(returnCause)) {
+        if (StringUtil.isEmpty(returnCause) &&(onlineProgress ==4 || onlineProgress ==5)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
                     "退回原因不能为空!");
         }
