@@ -41,6 +41,9 @@
         left join product_extension pe on pe.product_id = p.id and pe.is_deleted =0
 
         where p.product_type = #{product_type}
+        <if test="product_id != null">
+          and p.id = #{product_id}
+        </if>
     </select>
 
     <!--根据id查出临床决策产品-->

@@ -731,7 +731,7 @@ public final class SystemMessageService {
 					"认证的管理员为空");
 		}
 		// 获取教材
-		ProductVO product = productService.getProductByType(expertation.getExpert_type());
+		ProductVO product = productService.getProductByType(expertation.getExpert_type(),null);
 		String msgContent = "";
 		/*if (expertation.getOrg_id() == 0) {// 提交的人卫社*/
 			msgContent = "抱歉，您提交的《<font color='red'>" + product.getProduct_name()

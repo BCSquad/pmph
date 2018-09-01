@@ -43,11 +43,13 @@ public class ProductController {
     @RequestMapping("/init")
     @ResponseBody
     public ResponseBean productInit(HttpServletRequest request
-            , @RequestParam(value = "type",required = true)Long product_type){
+            , @RequestParam(value = "type",required = true)Long product_type
+            , @RequestParam(value = "id" ,required = false)Long id
+    ){
         ResponseBean responseBean = new ResponseBean();
         String sessionId = CookiesUtil.getSessionId(request);
 
-        ProductVO product = productService.getProductByType(product_type,sessionId);
+        ProductVO product = productService.getProductByType(product_type,id,sessionId);
 
         responseBean.setData(product);
 

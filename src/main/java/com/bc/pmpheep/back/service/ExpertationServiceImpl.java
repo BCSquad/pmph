@@ -162,7 +162,7 @@ public class ExpertationServiceImpl implements ExpertationService{
         int ttype = (int)pageParameter.getParameter().get("ttype");
         int ptype = (int)pageParameter.getParameter().get("ptype");
 
-        ProductVO product = productDao.queryProductByProductType(Long.valueOf(String.valueOf(ptype)), "");
+        ProductVO product = productDao.queryProductByProductType(Long.valueOf(String.valueOf(ptype)), null,"");
         if(product!=null && product.getId() != null){
             pageParameter.getParameter().put("product_id",product.getId());
         }else{
