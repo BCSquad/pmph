@@ -83,15 +83,20 @@ public class ProductController {
     public ResponseBean list(HttpServletRequest request
                              ,String product_name
                              ,Boolean is_published
+                             ,Long product_type
+                             ,Boolean is_active
             ,@RequestParam(value = "pageSize",defaultValue = "10") Integer pageSize
             ,@RequestParam(value = "pageNumber",defaultValue = "1") Integer pageNumber){
 
         ProductVO productVO = new ProductVO();
+        productVO.setIs_active(is_active);
         productVO.setProduct_name(product_name);
         productVO.setIs_published(is_published);
+        productVO.setProduct_type(product_type);
         PageParameter<ProductVO> pageParameter = new PageParameter<ProductVO>(pageNumber, pageSize);
         pageParameter.setParameter(productVO);
         ResponseBean responseBean = productService.list(pageParameter);
+
         return responseBean;
     }
 

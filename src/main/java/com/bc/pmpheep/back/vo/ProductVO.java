@@ -49,17 +49,19 @@ public class ProductVO {
     private Boolean is_deleted	;// 是否被逻辑删除
     private Timestamp gmt_create	;//创建时间
     private Timestamp gmt_update	;//更新时间
+    private Timestamp gmt_set_active ; //设置为前台生效的时间。只有此时间最新的在前台展示
     private Long founder_id	;//创建人id
     private Long publisher_id;//最后一次发布操作的社内用户id
     private Timestamp gmt_publish	;//最后一次发布时间
     private String note	;//备注
     private String description ;//产品简介
 
-
+    private Boolean is_active; // 是否前台生效
     private Content noteContent ; // 备注mongo内容实体类
     private Content descriptionContent ; // 产品简介mongo内容实体类
     private String publisher; // 发布人姓名
     private String founder; // 创建人姓名
+    private String founderDepartment; //创建人部门名称
     private List<ProductAuditor> auditorList; //审核人列表
     private List<ProductExtension> ProductExtensionList; //扩展项列表
     private List<ProductAttachment> ProductAttachmentList; //附件列表
@@ -454,5 +456,29 @@ public class ProductVO {
 
     public void setIs_profession_award_required(Boolean is_profession_award_required) {
         this.is_profession_award_required = is_profession_award_required;
+    }
+
+    public String getFounderDepartment() {
+        return founderDepartment;
+    }
+
+    public void setFounderDepartment(String founderDepartment) {
+        this.founderDepartment = founderDepartment;
+    }
+
+    public Timestamp getGmt_set_active() {
+        return gmt_set_active;
+    }
+
+    public void setGmt_set_active(Timestamp gmt_set_active) {
+        this.gmt_set_active = gmt_set_active;
+    }
+
+    public Boolean getIs_active() {
+        return is_active;
+    }
+
+    public void setIs_active(Boolean is_active) {
+        this.is_active = is_active;
     }
 }

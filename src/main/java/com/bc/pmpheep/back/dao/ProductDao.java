@@ -19,6 +19,13 @@ public interface ProductDao {
     ProductVO queryProductByProductType(@Param(value = "product_type") Long product_type,@Param(value = "uri") String clinicalDecision);
 
     /**
+     * 根据主键查询
+     * @param product_id
+     * @return
+     */
+    ProductVO queryProductById(Long product_id);
+
+    /**
      * 更新下载次数+1
      * @param id
      * @return
@@ -131,4 +138,6 @@ public interface ProductDao {
      * @return
      */
     List<Product> getListProduct(String productName);
+
+
 }
