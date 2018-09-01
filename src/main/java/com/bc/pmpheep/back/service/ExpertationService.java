@@ -47,5 +47,10 @@ public interface ExpertationService {
 
     Map showTabs(Long productType);
 
-
+    /**
+     * 改变申报审核的状态
+     * @param status
+     * @return
+     */
+    int changeStatus(Integer status,Long id,String sessionId);
 }

@@ -114,9 +114,6 @@ public class ExpertationServiceImpl implements ExpertationService{
         }
 
 
-
-
-
         //若管理员或领导登录 则不传入此id 查询全部申报 （但同时也因空id，查出的amIAnAuditor将为否 ，管理员需在前台给审核权限，领导查看即可）
         //否则
         if(!is_admin && Const.TRUE != pmphUser.getIsDirector()){
@@ -136,6 +133,7 @@ public class ExpertationServiceImpl implements ExpertationService{
                 e.setProductContentTypeList(clist);
                 e.setExcelTypeStr();
             }*/
+
         }
 
         pageResult.setPageNumber(pageParameter.getPageNumber());
@@ -337,6 +335,19 @@ public class ExpertationServiceImpl implements ExpertationService{
         return resultMap;
     }
 
+    @Override
+    public int changeStatus(Integer status,Long id, String sessionId) {
+        if (ObjectUtil.isNull(status)){
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
+                    "审核状态不能为空!");
+        }
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+        if(!pmphUser.getIsAdmin()&&!pmphUser.getIsDirector()&&status==5){
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
+                    "非法操作!");
+        }
+        return expertationDao.changeStatus(status,id);
+    }
 
 
 }

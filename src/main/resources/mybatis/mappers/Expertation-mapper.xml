@@ -20,7 +20,8 @@
         <result property="amIAnAuditor" column="amIAnAuditor"></result>
         <result property="syllabus_name" column="syllabus_name"></result>
         <result property="unit_advise" column="unit_advise"></result>
-        <result property="isFinalResult" column="isFinalResult"></result>
+        <result property="finalResult" column="finalResult"></result>
+        <result property="pmphAudit" column="pmphAudit"></result>
 
 
         <!--这种写法能支持分页，但会创建一个类似原返回list范型的类来保存结果，即在vo后加后缀如_$$_jvst... 导致反射取不到真正的范型class -->
@@ -89,7 +90,8 @@
         ,e.commit_date
         ,e.unit_advise
         ,e.syllabus_name
-        ,e.isFinalResult
+        ,e.finalResult
+        ,e.pmphAudit
         /*,pst.id as pst_id
         ,pst.type_name
         ,pct.product_type_id
@@ -98,7 +100,7 @@
 
         from
         product p
-        inner join expertation e on e.product_id = p.id and  e.online_progress >0
+        inner join expertation e on e.product_id = p.id and  e.online_progress >0 and e.online_progress !=2
         LEFT JOIN (SELECT id,org_name from org UNION SELECT 0,'人民卫生出版社' from
         org ) f on f.id=e.org_id
         inner join product_auditor pa on pa.product_id = p.id
@@ -115,6 +117,9 @@
         /*left join expertation_subject_type est on est.expertation_id = e.id left join product_subject_type pst on pst.id = est.product_subject_type_id
         left join expertation_content_type ect on ect.expertation_id = e.id left join product_content_type_detail pct on pct.product_type_id = ect.product_content_type_id*/
         where p.product_type = #{parameter.expert_type}
+        <if test="parameter.id != null">
+            p.id =  #{parameter.id}
+        </if>
         <!--<if test="parameter.username != null and parameter.username != '' ">
             and u.username like concat('%',#{parameter.realname},'%')
         </if>-->
@@ -137,51 +142,51 @@
         <if test="parameter.endCommitDate !=null and parameter.endCommitDate !='' ">
             AND e.`commit_date`  &lt;=  str_to_date(#{parameter.endCommitDate},'%Y-%m-%d %H:%i:%s')
         </if>
-
-
-        <!--<if test="(parameter.schoolStauts != null and parameter.schoolStauts != '') and (parameter.pmphStauts == null or parameter.pmphStauts == '')">
-            and e.org_id !=0
-            <if test="parameter.schoolStauts == 0 ">  &lt;!&ndash;提交给学校 学校待审核&ndash;&gt;
-                and  e.online_progress in (1,4)
-            </if>
-            <if test="parameter.schoolStauts == 1  ">  &lt;!&ndash;提交给学校 学校审核通过&ndash;&gt;
-                and  e.online_progress = 3
-            </if>
-            <if test="parameter.schoolStauts == 2  "> &lt;!&ndash;提交给学校 学校已退回&ndash;&gt;
-                and  e.online_progress = 2
-            </if>
+        <if test="parameter.finalResult !=null  ">
+            AND e.`finalResult` = #{parameter.finalResult}
         </if>
+              <if test="(parameter.schoolStauts != null and parameter.schoolStauts != '') and (parameter.pmphStauts == null or parameter.pmphStauts == '')">
+                  and e.org_id !=0
+                  <if test="parameter.schoolStauts == 0 ">  <!--提交给学校 学校待审核-->
+                      and  e.online_progress = 1
+                  </if>
+                  <if test="parameter.schoolStauts == 1  ">  <!--提交给学校 学校审核通过-->
+                      and  e.online_progress = 3
+                  </if>
+                  <!--<if test="parameter.schoolStauts == 2  "> &lt;!&ndash;提交给学校 学校已退回&ndash;&gt;
+                      and  e.online_progress = 2
+                  </if>-->
+              </if>
 
-        <if test="(parameter.schoolStauts == null or parameter.schoolStauts == '') and (parameter.pmphStauts != null and parameter.pmphStauts != '')">
-            &#45;&#45; and e.org_id =0
-            <if test="parameter.pmphStauts == 0 ">  &lt;!&ndash; 出版社待审核&ndash;&gt;
-                and  ((e.org_id =0 and e.online_progress =1) or (e.org_id !=0 and e.online_progress =3))
-            </if>
-            <if test="parameter.pmphStauts == 1  ">  &lt;!&ndash;出版社审核通过&ndash;&gt;
-               and e.online_progress =6
-            </if>
-            <if test="parameter.pmphStauts == 2  "> &lt;!&ndash; 出版社退回给个人&ndash;&gt;
-                and  ((e.org_id =0 and e.online_progress =2) or (e.org_id !=0 and e.online_progress =5))
-            </if>
-            <if test="parameter.pmphStauts == 3  "> &lt;!&ndash; 出版社退回给学校&ndash;&gt;
-                and  e.org_id !=0 and e.online_progress =4
-            </if>
-            <if test="parameter.pmphStauts == 4  "> &lt;!&ndash; 出版社审核未通过&ndash;&gt;
-                and   e.online_progress =7
-            </if>
-        </if>
-        &lt;!&ndash;其他组合状态查询不出数据&ndash;&gt;
-        <if test="(parameter.schoolStauts != null and parameter.schoolStauts != '') and (parameter.pmphStauts != null and parameter.pmphStauts != '')">
-            <if test="parameter.schoolStauts == 0 and  parameter.pmphStauts == 0 ">
-                and  e.online_progress = 1
-            </if>
-            <if test="parameter.schoolStauts == 1 and  parameter.pmphStauts == 0 ">
-                and e.org_id !=0  and  e.online_progress = 3
-            </if>
-            <if test="parameter.schoolStauts == 1 and  parameter.pmphStauts == 1 ">
-                   and e.online_progress =6
-            </if>
-        </if>-->
+              <if test="(parameter.schoolStauts == null or parameter.schoolStauts == '') and (parameter.pmphStauts != null and parameter.pmphStauts != '')">
+                  -- and e.org_id =0
+                  <if test="parameter.pmphStauts == 0 ">  <!-- 出版社待审核-->
+                      and   ((e.pmphAudit=0   and e.org_id !=0 and e.online_progress = 1) or (e.org_id = 0 and e.pmphAudit=0))
+                  </if>
+                  <if test="parameter.pmphStauts == 1  ">  <!--出版社审核通过-->
+                     and e.pmphAudit= 1
+                  </if>
+                  <if test="parameter.pmphStauts == 2  "> <!-- 出版社审核未通过-->
+                      and e.pmphAudit= 2
+                  </if>
+                  <if test="parameter.pmphStauts == 3  "> <!-- 出版社退回-->
+                      and  (e.online_progress = 4 or e.online_progress = 5 or e.online_progress = 2)
+                  </if>
+              </if>
+              <!--组合状态查询不出数据-->
+              <!--<if test="(parameter.schoolStauts != null and parameter.schoolStauts != '') and (parameter.pmphStauts != null and parameter.pmphStauts != '')">
+                  <if test="parameter.schoolStauts == 0 and  parameter.pmphStauts == 0 ">
+                      and  e.online_progress = 1
+                  </if>
+                  <if test="parameter.schoolStauts == 1 and  parameter.pmphStauts == 0 ">
+                      and e.org_id !=0  and  e.online_progress = 3
+                  </if>
+                  <if test="parameter.schoolStauts == 1 and  parameter.pmphStauts == 1 ">
+                         and e.online_progress =6
+                  </if>
+              </if>-->
+
+
         GROUP by e.id /*,pst_id,product_type_id*/
         <if test="start != null">
             limit ${start} ,${pageSize}
@@ -194,7 +199,7 @@
         select count(e.id)
         from
         product p
-        inner join expertation e on e.product_id = p.id and  e.online_progress >0
+        inner join expertation e on e.product_id = p.id and  e.online_progress >0 and e.online_progress !=2
         LEFT JOIN (SELECT id,org_name from org UNION SELECT 0,'人民卫生出版社' from
         org ) f on f.id=e.org_id
         left join writer_user u on u.id = e.user_id
@@ -202,6 +207,9 @@
             inner join product_auditor pa on pa.product_id = p.id and pa.auditor_id = #{parameter.auditor_id}
         </if>
         where p.product_type = #{parameter.expert_type}
+        <if test="parameter.id != null">
+            p.id =  #{parameter.id}
+        </if>
         <!--<if test="parameter.username != null and parameter.username != '' ">-->
             <!--and u.username like concat('%',#{parameter.username},'%')-->
         <!--</if>-->
@@ -224,50 +232,39 @@
         <if test="parameter.endCommitDate !=null and parameter.endCommitDate !='' ">
             AND e.`commit_date`  &lt;=  str_to_date(#{parameter.endCommitDate},'%Y-%m-%d %H:%i:%s')
         </if>
-
-        <!--<if test="(parameter.schoolStauts != null and parameter.schoolStauts != '') and (parameter.pmphStauts == null or parameter.pmphStauts == '')">
-        and e.org_id !=0
-        <if test="parameter.schoolStauts == 0 ">  &lt;!&ndash;提交给学校 学校待审核&ndash;&gt;
-            and  e.online_progress in (1,4)
+        <if test="parameter.finalResult !=null  ">
+            AND e.`finalResult` = #{parameter.finalResult}
         </if>
-        <if test="parameter.schoolStauts == 1  ">  &lt;!&ndash;提交给学校 学校审核通过&ndash;&gt;
-            and  e.online_progress = 3
-        </if>
-        <if test="parameter.schoolStauts == 2  "> &lt;!&ndash;提交给学校 学校已退回&ndash;&gt;
-            and  e.online_progress = 2
-        </if>
+        <if test="(parameter.schoolStauts != null and parameter.schoolStauts != '') and (parameter.pmphStauts == null or parameter.pmphStauts == '')">
+            and e.org_id !=0
+            <if test="parameter.schoolStauts == 0 ">  <!--提交给学校 学校待审核-->
+                and  e.online_progress = 1
+            </if>
+            <if test="parameter.schoolStauts == 1  ">  <!--提交给学校 学校审核通过-->
+                and  e.online_progress = 3
+            </if>
+            <!--<if test="parameter.schoolStauts == 2  "> &lt;!&ndash;提交给学校 学校已退回&ndash;&gt;
+                and  e.online_progress = 2
+            </if>-->
         </if>
 
         <if test="(parameter.schoolStauts == null or parameter.schoolStauts == '') and (parameter.pmphStauts != null and parameter.pmphStauts != '')">
-            &#45;&#45; and e.org_id =0
-            <if test="parameter.pmphStauts == 0 ">  &lt;!&ndash; 出版社待审核&ndash;&gt;
-                and  ((e.org_id =0 and e.online_progress =1) or (e.org_id !=0 and e.online_progress =3))
+            -- and e.org_id =0
+            <if test="parameter.pmphStauts == 0 ">  <!-- 出版社待审核-->
+                and   ((e.pmphAudit=0   and e.org_id !=0 and e.online_progress = 1) or (e.org_id = 0 and e.pmphAudit=0))
             </if>
-            <if test="parameter.pmphStauts == 1  ">  &lt;!&ndash;出版社审核通过&ndash;&gt;
-                and e.online_progress =6
+            <if test="parameter.pmphStauts == 1  ">  <!--出版社审核通过-->
+                and e.pmphAudit= 1
             </if>
-            <if test="parameter.pmphStauts == 2  "> &lt;!&ndash; 出版社退回给个人&ndash;&gt;
-                and  ((e.org_id =0 and e.online_progress =2) or (e.org_id !=0 and e.online_progress =5))
+            <if test="parameter.pmphStauts == 2  "> <!-- 出版社审核未通过-->
+                and e.pmphAudit= 2
             </if>
-            <if test="parameter.pmphStauts == 3  "> &lt;!&ndash; 出版社退回给学校&ndash;&gt;
-                and  e.org_id !=0 and e.online_progress =4
-            </if>
-            <if test="parameter.pmphStauts == 4  "> &lt;!&ndash; 出版社审核未通过&ndash;&gt;
-                and   e.online_progress =7
+            <if test="parameter.pmphStauts == 3  "> <!-- 出版社退回-->
+                and  (e.online_progress = 4 or e.online_progress = 5 or e.online_progress = 2)
             </if>
         </if>
-        &lt;!&ndash;其他组合状态查询不出数据&ndash;&gt;
-        <if test="(parameter.schoolStauts != null and parameter.schoolStauts != '') and (parameter.pmphStauts != null and parameter.pmphStauts != '')">
-            <if test="parameter.schoolStauts == 0 and  parameter.pmphStauts == 0 ">
-                and  e.online_progress = 1
-            </if>
-            <if test="parameter.schoolStauts == 1 and  parameter.pmphStauts == 0 ">
-                and e.org_id !=0  and  e.online_progress = 3
-            </if>
-            <if test="parameter.schoolStauts == 1 and  parameter.pmphStauts == 1 ">
-                and e.online_progress =6
-            </if>
-        </if>-->
+
+
 </select>
 
 <!--按内容分类统计 列表-->
@@ -741,7 +738,8 @@
         <result property="banknumber" column="banknumber"></result>
         <result property="bankaddress" column="bankaddress"></result>
         <result property="unit_advise_online" column="unit_advise_online"></result>
-
+        <result property="finalResult" column="finalResult"></result>
+        <result property="pmphAudit" column="pmphAudit"></result>
      <!--   <collection property="DecEduExpList" javaType="list" ofType="DecEduExp" >
             <id property="id" column="dec_edu_exp_id"></id>
             <result property="declarationId" column="dec_edu_exp_declaration_id"></result>
@@ -888,6 +886,18 @@
         select is_subject_type_used,is_content_type_used,is_profession_type_used from product where product_type = #{productType}
     </select>
 
+    <update id="changeStatus" parameterType="map">
+        <if test="status == 1 || status == 2 || status == 0">
+            update expertation set pmphAudit = ${status}  where id = ${id}
+        </if>
+
+        <if test="status == 4 ">
+            update expertation set finalResult =1  where id = ${id}
+        </if>
+        <if test="status == 5 ">
+            update expertation set finalResult = 0  where id = ${id}
+        </if>
+    </update>
 
 
 </mapper>

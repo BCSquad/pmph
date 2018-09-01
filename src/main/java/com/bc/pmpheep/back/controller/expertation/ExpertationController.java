@@ -60,6 +60,22 @@ public class ExpertationController {
     }
 
     /**
+     * 改变申报审核的状态
+     * @param request
+     * @param status
+     * @return
+     */
+    @RequestMapping("/changeStatus")
+    @ResponseBody
+    public ResponseBean changeStatus(
+            HttpServletRequest request
+            ,Integer status,Long id ){
+        String sessionId = CookiesUtil.getSessionId(request);
+         int num = expertationService.changeStatus(status,id,sessionId);
+         return new ResponseBean(num);
+    }
+
+    /**
      *
      * @param request
      * @param ttype 分类类型 1.学科分类 2.内容分类 3.专业分类

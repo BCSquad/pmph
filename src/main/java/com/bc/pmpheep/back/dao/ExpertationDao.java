@@ -145,4 +145,11 @@ public interface ExpertationDao {
      * @return
      */
     List<ProductProfessionType> queryProfession(Long id);
+
+    /**
+     * 改变申报状态
+     * @param status
+     * @return
+     */
+    int changeStatus(@Param("status") Integer status,@Param("id") Long id);
 }

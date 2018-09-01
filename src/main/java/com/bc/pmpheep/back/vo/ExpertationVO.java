@@ -117,12 +117,13 @@ public class ExpertationVO implements Serializable {
 
     private List<ProductProfessionType> ProductProfessionTypeList; //申报专业分类
 
-   // private String schoolStauts;
-    //private String pmphStauts;
+    private String schoolStauts;
+    private String pmphStauts;
     private String startCommitDate;
     private String endCommitDate;
     private String sql;
-    private boolean isFinalResult;
+    private Boolean finalResult;
+    private short pmphAudit;
 
     public ExpertationVO() {
         super();
@@ -734,21 +735,21 @@ public class ExpertationVO implements Serializable {
         this.sql = sql;
     }
 
-//    public String getSchoolStauts() {
-//        return schoolStauts;
-//    }
-//
-//    public void setSchoolStauts(String schoolStauts) {
-//        this.schoolStauts = schoolStauts;
-//    }
-//
-//    public String getPmphStauts() {
-//        return pmphStauts;
-//    }
-//
-//    public void setPmphStauts(String pmphStauts) {
-//        this.pmphStauts = pmphStauts;
-//    }
+    public String getSchoolStauts() {
+        return schoolStauts;
+    }
+
+    public void setSchoolStauts(String schoolStauts) {
+        this.schoolStauts = schoolStauts;
+    }
+
+    public String getPmphStauts() {
+        return pmphStauts;
+    }
+
+    public void setPmphStauts(String pmphStauts) {
+        this.pmphStauts = pmphStauts;
+    }
 
     public String getStartCommitDate() {
         return startCommitDate;
@@ -766,13 +767,7 @@ public class ExpertationVO implements Serializable {
         this.endCommitDate = endCommitDate;
     }
 
-    public boolean isFinalResult() {
-        return isFinalResult;
-    }
 
-    public void setFinalResult(boolean finalResult) {
-        isFinalResult = finalResult;
-    }
 
     public String getSex() {
         return sex;
@@ -780,5 +775,21 @@ public class ExpertationVO implements Serializable {
 
     public void setSex(String sex) {
         this.sex = sex;
+    }
+
+    public short getPmphAudit() {
+        return pmphAudit;
+    }
+
+    public void setPmphAudit(short pmphAudit) {
+        this.pmphAudit = pmphAudit;
+    }
+
+    public Boolean getFinalResult() {
+        return finalResult;
+    }
+
+    public void setFinalResult(Boolean finalResult) {
+        this.finalResult = finalResult;
     }
 }
