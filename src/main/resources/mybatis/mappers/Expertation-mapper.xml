@@ -871,8 +871,14 @@
     <update id="updateOnlineProgress" parameterType="map">
         update expertation
         <set>
-        <if test="onlineProgress != null">
+        <if test="onlineProgress == 4|| onlineProgress == 5">
             online_progress=#{onlineProgress},
+        </if>
+        <if test="onlineProgress == 2">
+            pmphAudit=2,
+        </if>
+        <if test="onlineProgress == 3">
+            pmphAudit=1,
         </if>
         <if test=" returnCause != null and returnCause !='' ">
             return_cause=#{returnCause},
