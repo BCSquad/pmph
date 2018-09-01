@@ -281,7 +281,11 @@
                 ifNull(t.id,0) as tid,
                 ifNull(t.name_path,'未选择分类') as type_name
 
-            from (select * from expertation e where e.product_id = #{parameter.product_id} and e.online_progress >0) e
+            from (select e.* from expertation e inner join product p ON p.id = e.product_id
+        where p.product_type= #{parameter.ptype} and e.online_progress >0
+        <if test="parameter.id != null">
+            and  p.id = #{parameter.id}
+        </if>) e
             left join expertation_content_type et on et.expertation_id = e.id
             left join product_content_type_detail t on t.product_type_id = et.product_content_type_id
 
@@ -311,7 +315,12 @@
             (
                 select
                     ifNull(t.id,0) as tid
-                from (select * from expertation e where e.product_id = #{parameter.product_id} and e.online_progress >0) e
+                from (select e.* from expertation e inner join product p ON p.id = e.product_id
+        where p.product_type= #{parameter.ptype} and e.online_progress >0
+          <if test="parameter.id != null">
+              and  p.id = #{parameter.id}
+          </if>
+        ) e
                 left join expertation_content_type et on et.expertation_id = e.id
                 left join product_content_type_detail t on t.product_type_id = et.product_content_type_id
 
@@ -341,7 +350,12 @@
                 ifNull(t.id,0) as tid,
                 ifNull(t.type_name,'未选择分类') as type_name
 
-            from (select * from expertation e where e.product_id = #{parameter.product_id} and e.online_progress >0) e
+            from (select e.* from expertation e inner join product p ON p.id = e.product_id
+        where p.product_type= #{parameter.ptype} and e.online_progress >0
+        <if test="parameter.id != null">
+            and  p.id = #{parameter.id}
+        </if>
+        ) e
             left join expertation_subject_type et on et.expertation_id = e.id
             left join product_subject_type t on t.id = et.product_subject_type_id
 
@@ -371,7 +385,12 @@
             (
                 select
                     ifNull(t.id,0) as tid
-                from (select * from expertation e where e.product_id = #{parameter.product_id} and e.online_progress >0) e
+                from (select e.* from expertation e inner join product p ON p.id = e.product_id
+        where p.product_type= #{parameter.ptype} and e.online_progress >0
+        <if test="parameter.id != null">
+            and  p.id = #{parameter.id}
+        </if>
+        ) e
                 left join expertation_subject_type et on et.expertation_id = e.id
                 left join product_subject_type t on t.id = et.product_subject_type_id
 
@@ -402,7 +421,12 @@
         ifNull(t.id,0) as tid,
         ifNull(t.type_name,'未选择分类') as type_name
 
-        from (select * from expertation e where e.product_id = #{parameter.product_id} and e.online_progress >0) e
+        from (select e.* from expertation e inner join product p ON p.id = e.product_id
+        where p.product_type= #{parameter.ptype} and e.online_progress >0
+        <if test="parameter.id != null">
+            and  p.id = #{parameter.id}
+        </if>
+        ) e
         left join expertation_profession_type et on et.expertation_id = e.id
         left join product_profession_type t on t.id = et.product_profession_type_id
 
@@ -432,7 +456,12 @@
         (
         select
         ifNull(t.id,0) as tid
-        from (select * from expertation e where e.product_id = #{parameter.product_id} and e.online_progress >0) e
+        from (select e.* from expertation e inner join product p ON p.id = e.product_id
+        where p.product_type= #{parameter.ptype} and e.online_progress >0
+        <if test="parameter.id != null">
+            and  p.id = #{parameter.id}
+        </if>
+        ) e
         left join expertation_profession_type et on et.expertation_id = e.id
         left join product_profession_type t on t.id = et.product_profession_type_id
 

@@ -161,13 +161,16 @@ public class ExpertationServiceImpl implements ExpertationService{
 
         int ttype = (int)pageParameter.getParameter().get("ttype");
         int ptype = (int)pageParameter.getParameter().get("ptype");
+        pageParameter.getParameter().put("ptype",ptype);
 
-        ProductVO product = productDao.queryProductByProductType(Long.valueOf(String.valueOf(ptype)), "");
+        /*ProductVO product = productDao.queryProductByProductType(Long.valueOf(String.valueOf(ptype)), "");
         if(product!=null && product.getId() != null){
             pageParameter.getParameter().put("product_id",product.getId());
         }else{
             pageParameter.getParameter().put("product_id",0);
-        }
+        }*/
+        //ProductVO product =new ProductVO();
+
         List<ExpertationCountnessVO> list = new ArrayList<>();
         int totalCount = 0;
         if(ttype == 2){ //2.内容分类
