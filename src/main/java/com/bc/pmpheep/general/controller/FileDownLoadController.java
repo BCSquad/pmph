@@ -492,7 +492,9 @@ public class FileDownLoadController {
 		pageParameter.setParameter(expertationVO);
 		List<ExpertationVO> list = expertationDao.queryExpertation(pageParameter);
 		String[] stateList = new String[]{"未提交","待学校审核","被学校退回","学校已审核","待学校审核","被出版社退回"};
+
 		for (ExpertationVO e: list) {
+			ProductVO productVO = productDao.queryProductById(e.getProduct_id());
 			List<ProductType> clist = expertationDao.queryProductContentTypeListByExpertationId(e.getId());
 			List<ProductType> slist = expertationDao.queryProductSubjectTypeListByExpertationId(e.getId());
 			List<ProductType> plist = expertationDao.queryProductProfessionTypeListByExpertationId(e.getId());

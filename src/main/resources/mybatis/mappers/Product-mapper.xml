@@ -43,6 +43,45 @@
         where p.product_type = #{product_type}
     </select>
 
+    <!--根据id查出临床决策产品-->
+    <select id="queryProductById" parameterType="Long" resultMap="resultMapProductVO">
+        select
+        p.*
+        ,pp.realname as publisher
+        ,fu.realname as founder
+
+        ,pu.id as u_id
+        ,pu.auditor_id as u_uid
+        ,u.realname  as u_realname
+
+        ,pa.id as a_id
+        ,pa.attachment as a_attachment
+        ,pa.attachment_name as a_attachment_name
+        ,pa.download as a_download
+        ,pa.is_scan_img as a_is_scan_img
+
+        ,pimg.id as pimg_id
+        ,pimg.attachment as pimg_attachment
+        ,pimg.attachment_name as pimg_attachment_name
+        ,pimg.download as pimg_download
+        ,pimg.is_scan_img as pimg_is_scan_img
+
+        ,pe.id as pe_id
+        ,pe.extension_name as pe_extension_name
+        ,pe.is_required as pe_is_required
+
+        from
+        product p
+        left join pmph_user pp on pp.id = p.publisher_id
+        left join pmph_user fu on fu.id = p.founder_id
+        left join product_auditor pu on pu.product_id = p.id left join pmph_user u on pu.auditor_id = u.id
+        left join product_attachment pa on pa.product_id = p.id and pa.is_scan_img = 0 and pa.is_deleted = 0
+        left join product_attachment pimg on pimg.product_id = p.id and pimg.is_scan_img = 1 and pimg.is_deleted = 0
+        left join product_extension pe on pe.product_id = p.id and pe.is_deleted =0
+
+        where p.id = #{product_id}
+    </select>
+
     <resultMap id="resultMapProductVO" type="com.bc.pmpheep.back.vo.ProductVO">
         <id column="id" property="id" ></id>
         <result column="product_type" property="product_type"></result>
@@ -85,6 +124,10 @@
         <result column="description" property="description"></result>
         <result column="publisher" property="publisher"></result>
         <result column="founder" property="founder"></result>
+        <result column="founderDepartment" property="founderDepartment"></result>
+        <result column="is_active" property="is_active"></result>
+        <result column="gmt_set_active" property="gmt_set_active"></result>
+
         <collection property="auditorList" javaType="java.util.List" ofType="com.bc.pmpheep.back.po.ProductAuditor">
             <id column="u_id" property="id"></id>
             <result column="u_uid" property="auditor_id"></result>
@@ -565,17 +608,34 @@
     </insert>
 
     <select id="queryList" resultMap="resultMapProductVO" parameterType="com.bc.pmpheep.back.plugin.PageParameter">
-        SELECT p.*,u.realname as founder FROM
+        SELECT p.*
+            ,new.gmt_set_active = p.gmt_set_active as is_active
+            ,u.realname as founder
+            ,d.dp_name as founderDepartment
+        FROM
         product p
         left join pmph_user u on p.founder_id = u.id
+        left join pmph_department d on d.id = u.department_id
+        left join (select id, gmt_set_active from product
+                    <where>
+                        is_deleted = 0 and is_published = 1
+                        <if test="parameter.product_type != null ">
+                            and product_type = #{parameter.product_type}
+                        </if>
+                    </where>
+                    ORDER by gmt_set_active desc limit 1)new on new.id = p.id
         <where>
             <if test="parameter.product_name != null and parameter.product_name !='' ">
                 and p.product_name like concat('%',#{parameter.product_name},'%')
             </if>
-            <if test="(parameter.is_published != null)">
+            <if test="parameter.is_published != null">
                 and p.is_published = #{parameter.is_published}
             </if>
+            <if test="parameter.product_type != null ">
+                and p.product_type = #{parameter.product_type}
+            </if>
         </where>
+        ORDER BY p.gmt_set_active desc
         limit #{start},#{pageSize}
     </select>
 
@@ -588,6 +648,9 @@
             </if>
             <if test="(parameter.is_published != null)">
                 and is_published = #{parameter.is_published}
+            </if>
+            <if test="parameter.product_type != null ">
+                and product_type = #{parameter.product_type}
             </if>
         </where>
     </select>
