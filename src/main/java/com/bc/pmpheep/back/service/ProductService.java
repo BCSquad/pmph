@@ -64,7 +64,7 @@ public interface ProductService {
      * @param sessionId
      * @return
      */
-    Integer noticePublished(Long productId, List<Long> orgIds, String sessionId);
+    Integer noticePublished(Long productId, List<Long> orgIds,Boolean is_active, String sessionId);
 
     /**
      * 发布临床-机构

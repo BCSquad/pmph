@@ -66,6 +66,7 @@ public class ProductVO {
     private List<ProductExtension> ProductExtensionList; //扩展项列表
     private List<ProductAttachment> ProductAttachmentList; //附件列表
     private List<ProductAttachment> ProducntImgList; //上传图片列表
+    private Date actualDeadline; //报名截止时间
 
     public ProductVO() {
 
@@ -73,6 +74,12 @@ public class ProductVO {
     public ProductVO(Long productId, boolean b) {
         this.id = productId;
         this.is_published = b;
+    }
+
+    public ProductVO(Long productId, Boolean b,Boolean is_active) {
+        this.id = productId;
+        this.is_published = b;
+        this.is_active = is_active;
     }
 
     public ProductVO(Long product_type) {
@@ -480,5 +487,13 @@ public class ProductVO {
 
     public void setIs_active(Boolean is_active) {
         this.is_active = is_active;
+    }
+
+    public Date getActualDeadline() {
+        return actualDeadline;
+    }
+
+    public void setActualDeadline(Date actualDeadline) {
+        this.actualDeadline = actualDeadline;
     }
 }

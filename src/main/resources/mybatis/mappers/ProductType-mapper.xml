@@ -15,9 +15,9 @@
     <select id="getSubjectTypeList" parameterType="PageParameter" resultMap="ProductTypeMap">
         select t.*,1 as typeType from
         product_subject_type t
-        inner join (select id from product where product_type = #{parameter.productType} and is_deleted = 0) p on p.id = t.product_id
+        inner join product  p on p.product_type = t.product_type
         <where>
-            t.is_deleted = 0
+            t.is_deleted = 0 and p.product_type = #{parameter.productType}   and p.is_deleted = 0
             <if test="parameter.type_name != null and parameter.type_name != '' ">
                 and t.type_name like concat('%',#{parameter.type_name},'%')
             </if>
@@ -28,9 +28,9 @@
     <select id="getSubjectTypeCount" parameterType="PageParameter" resultType="int">
         select count(t.id) from
         product_subject_type t
-        inner join (select id from product where product_type = #{parameter.productType} and is_deleted = 0) p on p.id = t.product_id
+        inner join product  p on p.product_type = t.product_type
         <where>
-            t.is_deleted = 0
+            t.is_deleted = 0 and p.product_type = #{parameter.productType}   and p.is_deleted = 0
             <if test="parameter.type_name != null and parameter.type_name != '' ">
                 and t.type_name like concat('%',#{parameter.type_name},'%')
             </if>
@@ -40,9 +40,9 @@
     <select id="getProfessionTypeList" parameterType="PageParameter" resultMap="ProductTypeMap">
         select t.*,1 as typeType from
         product_profession_type t
-        inner join (select id from product where product_type = #{parameter.productType} and is_deleted = 0) p on p.id = t.product_id
+        inner join product  p on p.product_type = t.product_type
         <where>
-            t.is_deleted = 0
+            t.is_deleted = 0 and p.product_type = #{parameter.productType}   and p.is_deleted = 0
             <if test="parameter.type_name != null and parameter.type_name != '' ">
                 and t.type_name like concat('%',#{parameter.type_name},'%')
             </if>
@@ -53,9 +53,9 @@
     <select id="getProfessionTypeCount" parameterType="PageParameter" resultType="int">
         select count(t.id) from
         product_profession_type t
-        inner join (select id from product where product_type = #{parameter.productType} and is_deleted = 0) p on p.id = t.product_id
+        inner join product  p on p.product_type = t.product_type
         <where>
-            t.is_deleted = 0
+            t.is_deleted = 0 and p.product_type = #{parameter.productType}   and p.is_deleted = 0
             <if test="parameter.type_name != null and parameter.type_name != '' ">
                 and t.type_name like concat('%',#{parameter.type_name},'%')
             </if>
@@ -72,9 +72,9 @@
         from
         product_content_type_detail d
         inner join product_content_type t on d.product_type_id = t.id and d.is_deleted = 0 and t.is_deleted = 0
-        inner join (select id from product where product_type = #{parameter.productType} and is_deleted = 0) p on p.id = t.product_id
+        inner join product  p on p.product_type = t.product_type
         <where>
-            d.is_leaf = 1
+            d.is_leaf = 1 and p.product_type = #{parameter.productType}   and p.is_deleted = 0
             <if test="parameter.type_name != null and parameter.type_name != '' ">
                 and d.name_path like concat('%',#{parameter.type_name},'%')
             </if>
@@ -87,10 +87,10 @@
         COUNT(d.id)
         from
         product_content_type_detail d
-        inner join (select id from product where product_type = #{parameter.productType} and is_deleted = 0) p on p.id = d.product_id
+        inner join product  p on p.product_type = d.product_type
         <where>
             d.is_deleted = 0
-            and d.is_leaf = 1
+            and d.is_leaf = 1 and p.product_type = #{parameter.productType}   and p.is_deleted = 0
             <if test="parameter.type_name != null and parameter.type_name != '' ">
                 and d.name_path like concat('%',#{parameter.type_name},'%')
             </if>
@@ -116,7 +116,7 @@
 
     <update id="refreshLeafOfContentType" >
         /*更新叶子节点*/
-        update product_content_type_detail dp left join product_content_type t on t.parent_id = dp.product_type_id and t.is_deleted = 0 and dp.product_id = t.product_id
+        update product_content_type_detail dp left join product_content_type t on t.parent_id = dp.product_type_id and t.is_deleted = 0 and dp.product_type = t.product_type
         set dp.is_leaf = isNull(t.id);
     </update>
 
@@ -153,11 +153,11 @@
     <insert id="insertSubjectTypeBatch" parameterType="com.bc.pmpheep.back.vo.ProductType" >
         insert into product_subject_type(
         type_name
-        ,product_id
+        ,product_type
         )
         VALUES
           <foreach collection="list" item="item" separator="," >
-              (#{item.type_name},#{item.product_id})
+              (#{item.type_name},#{item.productType})
           </foreach>
         on duplicate key update is_deleted = 0
     </insert>
@@ -165,11 +165,11 @@
     <insert id="insertProfessionTypeBatch" parameterType="com.bc.pmpheep.back.vo.ProductType" >
         insert into product_profession_type(
         type_name
-        ,product_id
+        ,product_type
         )
         VALUES
         <foreach collection="list" item="item" separator="," >
-            (#{item.type_name},#{item.product_id})
+            (#{item.type_name},#{item.productType})
         </foreach>
         on duplicate key update is_deleted = 0
     </insert>
@@ -180,13 +180,13 @@
           id,
           type_name,
           parent_id,
-          product_id
+          product_type
         )
         VALUES (
-          (select product_type_id as id from product_content_type_detail where name_path = #{fullNamePath} and product_id = #{product_id}),
+          (select product_type_id as id from product_content_type_detail where name_path = #{fullNamePath} and product_type = #{productType}),
           #{type_name},
           #{parent_id},
-          #{product_id}
+          #{productType}
         )
         on duplicate key UPDATE is_deleted = 0
     </insert>
@@ -200,7 +200,7 @@
     </select>
 
     <select id="queryContentTypeIdByFullNamePath" parameterType="com.bc.pmpheep.back.vo.ProductType" resultType="java.lang.Long">
-        select product_type_id from product_content_type_detail where name_path = #{fullNamePath} and product_id = #{product_id}
+        select product_type_id from product_content_type_detail where name_path = #{fullNamePath} and product_type = #{productType}
     </select>
 
     <select id="getBtnStatus" resultType="map" parameterType="long">

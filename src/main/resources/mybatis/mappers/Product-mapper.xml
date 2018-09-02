@@ -41,9 +41,9 @@
         left join product_extension pe on pe.product_id = p.id and pe.is_deleted =0
 
         where p.product_type = #{product_type}
-        <if test="product_id != null">
+
           and p.id = #{product_id}
-        </if>
+
     </select>
 
     <!--根据id查出临床决策产品-->
@@ -130,6 +130,7 @@
         <result column="founderDepartment" property="founderDepartment"></result>
         <result column="is_active" property="is_active"></result>
         <result column="gmt_set_active" property="gmt_set_active"></result>
+        <result column="actualDeadline" property="actualDeadline"></result>
 
         <collection property="auditorList" javaType="java.util.List" ofType="com.bc.pmpheep.back.po.ProductAuditor">
             <id column="u_id" property="id"></id>
@@ -169,7 +170,10 @@
     <sql id="key">
         <!-- 去掉最后一个, -->
         <trim suffixOverrides=",">
-            <if test="product_name!=null">
+            <if test="id!=null">
+                id,
+            </if>
+            <if test="product_name!=null and product_name!=''">
                 product_name,
             </if>
             <if test="product_type!=null">
@@ -272,6 +276,9 @@
             <if test="description!=null">
                 description,
             </if>
+            <if test="actualDeadline!=null">
+                actualDeadline,
+            </if>
         </trim>
     </sql>
 
@@ -279,7 +286,11 @@
     <sql id="value">
     <!-- 去掉最后一个, -->
         <trim suffixOverrides=",">
-            <if test="product_name!=null">
+            <if test="id!=null">
+                #{id},
+            </if>
+
+            <if test="product_name!=null and product_name != ''">
                 #{product_name},
             </if>
             <if test="product_type!=null">
@@ -380,12 +391,18 @@
             <if test="description!=null">
                 #{description},
             </if>
+            <if test="actualDeadline!=null">
+                #{actualDeadline},
+            </if>
         </trim>
     </sql>
 
     <sql id="update">
         <trim suffixOverrides=",">
-            <if test="product_name != null ">
+            <if test="id!=null">
+               id =#{id},
+            </if>
+            <if test="product_name != null and product_name !=  '' ">
                 product_name	=	#{product_name}	,
             </if>
             <if test="product_type != null ">
@@ -485,6 +502,9 @@
             </if>
             <if test="description!=null">
                 description= #{description},
+            </if>
+            <if test="actualDeadline!=null">
+                actualDeadline= #{actualDeadline}
             </if>
         </trim>
     </sql>
@@ -611,18 +631,18 @@
     </insert>
 
     <select id="queryList" resultMap="resultMapProductVO" parameterType="com.bc.pmpheep.back.plugin.PageParameter">
-        SELECT p.*
-            ,new.gmt_set_active = p.gmt_set_active as is_active
-            ,u.realname as founder
-            ,d.dp_name as founderDepartment
+        select * from (SELECT p.*
+        ,new.gmt_set_active = p.gmt_set_active as is_active
+        ,u.realname as founder
+        ,d.dp_name as founderDepartment
         FROM
         product p
         left join pmph_user u on p.founder_id = u.id
         left join pmph_department d on d.id = u.department_id
         left join (select id, gmt_set_active from product
-                    <where>
-                        is_deleted = 0 and is_published = 1
-                        <if test="parameter.product_type != null ">
+        <where>is_deleted = 0 and is_published = 1
+            <if test="
+            parameter.product_type != null ">
                             and product_type = #{parameter.product_type}
                         </if>
                     </where>
@@ -637,7 +657,12 @@
             <if test="parameter.product_type != null ">
                 and p.product_type = #{parameter.product_type}
             </if>
-        </where>
+
+
+            <if test="parameter.is_active">
+                order by gmt_set_active DESC limit 1
+            </if>
+        </where>)p
         ORDER BY p.gmt_set_active desc
         limit #{start},#{pageSize}
     </select>
@@ -652,8 +677,12 @@
             <if test="(parameter.is_published != null)">
                 and is_published = #{parameter.is_published}
             </if>
+
             <if test="parameter.product_type != null ">
                 and product_type = #{parameter.product_type}
+            </if>
+            <if test="parameter.is_active">
+               order by gmt_set_active DESC limit 1
             </if>
         </where>
     </select>
@@ -696,7 +725,11 @@
 
     <!--跟新发布状态-->
     <update id="updateProduct" parameterType="com.bc.pmpheep.back.vo.ProductVO">
-        update product set is_published = #{is_published}, publisher_id = #{publisher_id} where id = #{id}
+        update product set is_published = #{is_published}, publisher_id = #{publisher_id}
+         <if test="is_active">
+             ,gmt_set_active = now()
+         </if>
+         where id = #{id}
     </update>
 
     <!--根据临床id 获取临床-机构信息-->

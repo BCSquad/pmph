@@ -113,15 +113,16 @@ public class ProductController {
      * @return
      */
     @RequestMapping(value = "/published",method = RequestMethod.POST)
-    @LogDetail(businessType = BUSINESS_TYPE, logRemark = "教材通知发布")
+    @LogDetail(businessType = BUSINESS_TYPE, logRemark = "产品通知发布")
     @ResponseBody
     public ResponseBean published(HttpServletRequest request,
-                                  @RequestParam("productId") Long productId, @RequestParam("orgIds") List<Long> orgIds){
+                                  @RequestParam("productId") Long productId, @RequestParam("orgIds") List<Long> orgIds,
+                                  @RequestParam("is_active") Boolean is_active){
 
         String sessionId = CookiesUtil.getSessionId(request);
         try {
             return new ResponseBean(productService.noticePublished(productId,
-                    orgIds,
+                    orgIds,is_active,
                     sessionId));
         } catch (Exception e) {
             return new ResponseBean(e);

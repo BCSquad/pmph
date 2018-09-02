@@ -117,13 +117,15 @@ public class ExpertationVO implements Serializable {
 
     private List<ProductProfessionType> ProductProfessionTypeList; //申报专业分类
 
+    @ExcelHeader(header = "学校审核状态")
     private String schoolStauts;
+    @ExcelHeader(header = "出版社审核状态")
     private String pmphStauts;
     private String startCommitDate;
     private String endCommitDate;
     private String sql;
     private Boolean finalResult;
-    private short pmphAudit;
+    private Short pmphAudit;
 
     public ExpertationVO() {
         super();
@@ -777,11 +779,11 @@ public class ExpertationVO implements Serializable {
         this.sex = sex;
     }
 
-    public short getPmphAudit() {
+    public Short getPmphAudit() {
         return pmphAudit;
     }
 
-    public void setPmphAudit(short pmphAudit) {
+    public void setPmphAudit(Short pmphAudit) {
         this.pmphAudit = pmphAudit;
     }
 

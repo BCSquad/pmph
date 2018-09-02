@@ -117,8 +117,8 @@
         /*left join expertation_subject_type est on est.expertation_id = e.id left join product_subject_type pst on pst.id = est.product_subject_type_id
         left join expertation_content_type ect on ect.expertation_id = e.id left join product_content_type_detail pct on pct.product_type_id = ect.product_content_type_id*/
         where p.product_type = #{parameter.expert_type}
-        <if test="parameter.id != null">
-            and  p.id =  #{parameter.id}
+        <if test="parameter.product_id != null">
+            and  p.id =  #{parameter.product_id}
         </if>
         <!--<if test="parameter.username != null and parameter.username != '' ">
             and u.username like concat('%',#{parameter.realname},'%')
@@ -207,8 +207,8 @@
             inner join product_auditor pa on pa.product_id = p.id and pa.auditor_id = #{parameter.auditor_id}
         </if>
         where p.product_type = #{parameter.expert_type}
-        <if test="parameter.id != null">
-           and p.id =  #{parameter.id}
+        <if test="parameter.product_id != null">
+           and p.id =  #{parameter.product_id}
         </if>
         <!--<if test="parameter.username != null and parameter.username != '' ">-->
             <!--and u.username like concat('%',#{parameter.username},'%')-->

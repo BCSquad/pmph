@@ -170,8 +170,8 @@ public class ProductTypeServiceImpl implements ProductTypeService {
                 for(int cellNum = 0;cellNum < row.getLastCellNum();cellNum++){
                     //给每个单元格创建或关联实体类
                     ProductType cellProductType = new ProductType(ptype);
-                    Long product_id = productTypeDao.getProductIdByProductType(ptype);
-                    cellProductType.setProduct_id(product_id);
+                   // Long product_id = productTypeDao.getProductIdByProductType(ptype);
+                    //cellProductType.setProduct_id(product_id);
                     cellProductType.setTypeType(typeType);
                     Cell cell = row.getCell(cellNum);
                     String cell_type_name = StringUtil.getCellValue(cell);
