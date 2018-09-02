@@ -13,8 +13,10 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import com.bc.pmpheep.back.util.*;
+import com.bc.pmpheep.back.vo.*;
 import com.bc.pmpheep.general.bean.FileType;
 import org.apache.commons.io.FileUtils;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,20 +38,6 @@ import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.PmphUserRole;
 import com.bc.pmpheep.back.po.SysOperation;
 import com.bc.pmpheep.back.po.Textbook;
-import com.bc.pmpheep.back.vo.BookCorrectionAuditVO;
-import com.bc.pmpheep.back.vo.BookUserCommentVO;
-import com.bc.pmpheep.back.vo.CmsContentVO;
-import com.bc.pmpheep.back.vo.MaterialListVO;
-import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
-import com.bc.pmpheep.back.vo.PmphEditorVO;
-import com.bc.pmpheep.back.vo.PmphGroupListVO;
-import com.bc.pmpheep.back.vo.PmphIdentity;
-import com.bc.pmpheep.back.vo.PmphRoleVO;
-import com.bc.pmpheep.back.vo.PmphUserManagerVO;
-import com.bc.pmpheep.back.vo.TopicDeclarationVO;
-import com.bc.pmpheep.back.vo.TopicDirectorVO;
-import com.bc.pmpheep.back.vo.TopicEditorVO;
-import com.bc.pmpheep.back.vo.TopicOPtsManagerVO;
 import com.bc.pmpheep.general.bean.ImageType;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -525,9 +513,20 @@ public class PmphUserServiceImpl implements PmphUserService {
     }
 
     @Override
-    public int updateUserOpenid(String openid, String username) {
-        return pmphUserDao.updateUserOpenid(openid, username);
+    public int updateUserOpenid(String openid, String username,Long userid) {
+        return pmphUserDao.updateUserOpenid(openid, username,userid);
     }
+
+    /**
+     * \解除绑定
+     * @param openid
+     * @return
+     */
+    @Override
+   public int deletePmphUserIdAndWechatId(@Param("openid") String openid) throws CheckedServiceException{
+        return pmphUserDao.deletePmphUserIdAndWechatId(openid);
+    }
+    /**
 
     /**
      * 查询所有的用户对象列表
@@ -757,6 +756,22 @@ public class PmphUserServiceImpl implements PmphUserService {
         if (CollectionUtil.isEmpty(list)) {
             list.add(1L);
         }
+
+        // 部门领导获取下属中的临床审批人（或非领导查询自身是否为临床审批人）
+        List<FollowingProduntAuditor> productAuditorList = pmphUserDao.getFollowingProductAuditorList(userId);
+
+        for (FollowingProduntAuditor auditor:productAuditorList) {
+            if(auditor.getProductType()==1L){ // 有 临床助手申报表 的菜单权限
+                list.add(49L);
+            }
+            if(auditor.getProductType()==2L){ // 有 用药助手申报表 的菜单权限
+                list.add(50L);
+            }
+            if(auditor.getProductType()==3L){// 有 中医助手申报表 的菜单权限
+                list.add(51L);
+            }
+        }
+
         return list;
     }
 
@@ -1022,7 +1037,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 
     @Override
     /**
-     * 根据某人id查出其 本部门及上级各部门的某角色的用户
+     * 根据某人id查出其 本部门及上级各部门的某角色的用户 (已改为查询 本部门及上级各部门的isAdmin主任用户)
      * @param SbId A某 pmphUser的id
      * @param role_id 角色id （角色名称和id 仅需一个 另一个保留为null）
      * @param role_name 角色名称 （角色名称和id 仅需一个 另一个保留为null）
@@ -1037,11 +1052,40 @@ public class PmphUserServiceImpl implements PmphUserService {
         return result;
     }
 
+
+
     @Override
     public PmphUser getPmphUserByOpenid(String wechatUserId) {
         PmphUser pmphUser = pmphUserDao.getPmphUserByOpenid(wechatUserId);
         return pmphUser;
     }
 
-    ;
+    /**
+     * 查看是否绑定
+     * @param id
+     * @return
+     */
+    @Override
+    public Boolean IsUserId(Long id) {
+        int count1 = pmphUserDao.IsPmphUserId(id);
+        int count2 = pmphUserDao.IsPmphWeChatUserId(id);
+        Boolean flag = false;
+        if(count1>0&&count2>0){
+            flag = true;
+        }
+        return flag;
+    }
+
+
+    /**
+     * h获取userId
+     * @param id
+     * @return
+     */
+    @Override
+    public String getUserId(Long id) {
+        return pmphUserDao.getUserId(id);
+    }
+
+
 }

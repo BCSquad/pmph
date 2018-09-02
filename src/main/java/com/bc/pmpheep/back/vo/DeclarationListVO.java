@@ -1,7 +1,10 @@
 package com.bc.pmpheep.back.vo;
 
 
+import com.sun.tools.corba.se.idl.constExpr.Times;
 import org.apache.ibatis.type.Alias;
+
+import java.sql.Timestamp;
 
 /**
  *申报表审核列表
@@ -42,6 +45,8 @@ public class DeclarationListVO implements java.io.Serializable {
     //书籍名称
     private String textbookName;
     private Integer orgId;
+    //提交日期
+    private Timestamp commitDate;
 
     
 	public String getTextbookName() {
@@ -178,5 +183,13 @@ public class DeclarationListVO implements java.io.Serializable {
 
 	public void setOrgId(Integer orgId) {
 		this.orgId = orgId;
+	}
+
+	public Timestamp getCommitDate() {
+		return commitDate;
+	}
+
+	public void setCommitDate(Timestamp commitDate) {
+		this.commitDate = commitDate;
 	}
 }

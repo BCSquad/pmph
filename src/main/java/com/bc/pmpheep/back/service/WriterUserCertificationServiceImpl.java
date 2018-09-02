@@ -254,12 +254,12 @@ WriterUserCertificationService {
         	for (WriterUser writerUser : users) {
         		if (1 == writerUser.getAuthUserType()) {//社内用户
         			PmphUser pmphUser = pmphUserService.get(writerUser.getAuthUserId());
-        			systemMessageService.sendWhenTeacherCertificationAudit(pmphUser.getRealname(), teacherIds, isPass);
+        			systemMessageService.sendWhenTeacherCertificationAudit(pmphUser.getRealname(), teacherIds, isPass,pmphUser);
         		}
         		if (2 == writerUser.getAuthUserType()) {//学校机构用户
         			OrgUser orgUsers = orgUserService.getOrgUserById(writerUser.getAuthUserId());
         			Org org = orgService.getOrgById(orgUsers.getOrgId());
-        			systemMessageService.sendWhenTeacherCertificationAudit(org.getOrgName(), teacherIds, isPass);
+        			systemMessageService.sendWhenTeacherCertificationAudit(org.getOrgName(), teacherIds, isPass,orgUsers);
         		}
 			}
         }

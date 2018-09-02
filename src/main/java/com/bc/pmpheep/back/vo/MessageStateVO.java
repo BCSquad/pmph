@@ -38,6 +38,8 @@ public class MessageStateVO implements Serializable {
 	private String username;
 	// 接收人单位
 	private String dptname;
+	//工作单位
+	private String workplace;
 	// 接收人电话
 	private String handphone;
 	// 接收者类型 1=社内用户/2=作家/3=机构用户
@@ -108,6 +110,10 @@ public class MessageStateVO implements Serializable {
 	}
 
 	public String getHandphone() {
+		if("-".equals(this.handphone)){
+			return "";
+		}
+
 		return handphone;
 	}
 
@@ -185,5 +191,16 @@ public class MessageStateVO implements Serializable {
 
 	public void setOrgusername(String orgusername) {
 		this.orgusername = orgusername;
+	}
+
+	public String getWorkplace() {
+		if ("-".equals(this.workplace)){
+			return "";
+		}
+		return workplace;
+	}
+
+	public void setWorkplace(String workplace) {
+		this.workplace = workplace;
 	}
 }

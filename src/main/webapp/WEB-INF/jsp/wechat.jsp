@@ -13,12 +13,12 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <script type="text/javascript">
             //var appLogin = "120.76.221.250";//app 测试微信访问
-           /// var appLogin = "119.254.226.115";//app 业务测试微信访问
-            var appLogin = "medu.ipmph.com/wx";//app 正式
+            var appLogin = "medu.ipmph.com/pmphvuewx";//app 业务测试微信访问
+            //var appLogin = "szbsj.f3322.net:8802/wx"; //app 测试微信访问
+            //var appLogin = "medu.ipmph.com/wx";//app
            // var appLogin = "127.0.0.1:8088"; // app开发
-     //       var pcLogin = "120.76.221.250";//测试
-//            var pcLogin = "119.254.226.115";//业务测试
-            var pcLogin = "192.168.100.135";//测试
+ //           var pcLogin = "120.76.221.250";//测试
+            var pcLogin = "119.254.226.115";//业务测试
 
             //var pcLogin = "127.0.0.1:8089"; //开发
             var Cookie ={
@@ -122,16 +122,18 @@
 
         </script>
         <script type="text/javascript">
-        	//alert('${UserId}');
+            <%--alert('${UserId}');--%>
+            <%--alert( '${isLogin}'); --%>
+            //var  _pmphUserPermissionIds =Empty(${pmphUserPermissionIds})?"":eval('${pmphUserPermissionIds}');
             var userData={
                 userSessionId:'${userSessionId}' ,
                 sessionPmphUserToken:'${sessionPmphUserToken}',
-                sessionPmphUser:Empty(${sessionPmphUser})?"":${sessionPmphUser},
-                pmphUserPermissionIds:Empty(${pmphUserPermissionIds})?"":${pmphUserPermissionIds}
+                sessionPmphUser:${sessionPmphUser},
+                pmphUserPermissionIds:${pmphUserPermissionIds}
             }
-            mySessionStorage.set('currentUser',userData,'json');
-            Cookie.set('sessionId','${userSessionId}',2)
-            Cookie.set('token','${sessionPmphUserToken}',2)
+            <%--mySessionStorage.set('currentUser',userData,'json');--%>
+            <%--Cookie.set('sessionId','${userSessionId}',2)--%>
+            <%--Cookie.set('token','${sessionPmphUserToken}',2)--%>
             if((3 == '${isLogin}'||4 == '${isLogin}') &&
                 ((1=='${appType}' && !Empty('${materialId}' &&!Empty('${declarationId}'))
                     ||(2=='${appType}')
@@ -140,28 +142,18 @@
                     window.location.href= 'http://'+appLogin+'/#/material/${materialId}/expert?declarationId=${declarationId}&sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
                 }else if(3=='${appType}'){
                     <%--console.log('http://'+appLogin+'/wx/#/checkbook?bookName=${bookName}&type=${type}&id=${id}&sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}'--%>
-                <%--)--%>
+                    <%--)--%>
                     window.location.href= 'http://'+appLogin+'/#/checkbook?bookName=${bookName}&type=${type}&id=${id}&sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
                 }else{
                     window.location.href= 'http://'+appLogin+'/#/topic/list?sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
                 }
-
             }else if((3 == '${isLogin}'||4 == '${isLogin}') && !Empty('${appType}')){ //从企业微信登录 app vue 如果找不到对应的参数则进入首页
-                      window.location.href='http://'+appLogin+'/#/index?sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
+                window.location.href='http://'+appLogin+'/#/index?sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
             }else if(0 == '${isLogin}'){
-                //alert(1);
                 //window.location.href='http://'+pcLogin+'/#/login?wechatUserId='+'${UserId}';
                 //window.location.href='http://120.76.221.250/#/login';
                 // alert('http://'+appLogin+'/wx/#/login?wechatUserId='+'${UserId}'+'&isIndexOrCommission='+${isIndexOrCommission});
-                 //var a = document.body.createElement("a");
-                // a.setAttribute("href", 'http://'+appLogin+'/wx/#/login?timestamp='+((new Date()).getTime()+Math.random())+'&wechatUserId='+'${UserId}'+'&isIndexOrCommission='+${isIndexOrCommission});
-                //a.setAttribute("id","aId");
-                //a.setAttribute("style","visibility: hidden;");
-                //document.body.appendChild(a);
-                //document.getElementById("aId").click();
-               location.href='http://'+appLogin+'/#/login?timestamp='+((new Date()).getTime()+Math.random())+'&wechatUserId='+'${UserId}'+'&isIndexOrCommission=${isIndexOrCommission}';  //app 登录
-
-
+                location.href='http://'+appLogin+'/#/login?timestamp='+((new Date()).getTime()+Math.random())+'&wechatUserId='+'${UserId}'+'&isIndexOrCommission=${isIndexOrCommission}';  //app 登录
             }else if(1=='${isLogin}'){
                 //window.location.href='http://'+pcLogin+'/#/login?username='+'${username}'+'&password='+'${password}'+'&wechatUserId='+'${UserId}'+'&token='+'${token}';
                 window.location.href='http://'+appLogin+'/#/index?sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';// 这个地方应该直接跳转到app 首页
@@ -170,10 +162,10 @@
                 //window.location.href='http://192.168.100.135/#/login?username='+'${username}'+'&password='+'${password}'+'&token='+'${token}'+'&wechatUserId='+'${UserId}';
                 window.location.href='http://'+pcLogin+'/#/index?sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
             }else if(5 == '${isLogin}'){ //代办页面
-                window.location.href='http://'+appLogin+'/#/wxMessageList?sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
+                window.location.href='http://'+appLogin+'/#/wxMessage?sessionId=${userSessionId}'+'&token=${sessionPmphUserToken}'+'&currentUser='+JSON.stringify(userData)+'&permissionIds=${pmphUserPermissionIds}';
             }
 
-		</script>
+        </script>
     </head>
     <body ></body>
 </html>

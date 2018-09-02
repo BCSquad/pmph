@@ -7,6 +7,7 @@ package com.bc.pmpheep.back.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.bc.pmpheep.back.vo.FollowingProduntAuditor;
 import org.apache.ibatis.annotations.Param;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
@@ -69,7 +70,14 @@ public interface PmphUserDao {
 
     PmphUser getByOpenid(@Param("openid") String openid);
 
-    int updateUserOpenid(@Param("openid") String openid, @Param("username") String username);
+    int updateUserOpenid(@Param("openid") String openid, @Param("username") String username,@Param("userid") Long userid);
+
+    /**
+     * \解除绑定
+     * @param openid
+     * @return
+     */
+    int deletePmphUserIdAndWechatId(@Param("openid") String openid);
 
     /**
      * 根据角色 id 查询所有是该角色的用户列表
@@ -237,4 +245,32 @@ public interface PmphUserDao {
      * @return
      */
     List<PmphUser> getSomebodyParentDeptsDirectorPmphUser(Long sbId);
+
+    /**
+     * 查看是否绑定userId
+     * @param id
+     * @return
+     */
+    int IsPmphUserId(Long id);
+
+    /**
+     * 查看是否绑定userId
+     * @param id
+     * @return
+     */
+    int IsPmphWeChatUserId(Long id);
+
+    /**
+     * 获取userId
+     * @param id
+     * @return
+     */
+    String getUserId(Long id);
+
+    /**
+     * 部门领导获取下属中的临床审批人（或非领导查询自身是否为临床审批人）
+     * @param userId
+     * @return
+     */
+    List<FollowingProduntAuditor> getFollowingProductAuditorList(Long userId);
 }

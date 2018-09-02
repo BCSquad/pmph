@@ -15,6 +15,7 @@
                 and userid = #{parameter.userid}
             </if>
         </where>
+        order by is_deal asc,gmt_create desc
         limit #{start},#{pageSize}
     </select>
 
@@ -32,6 +33,11 @@
             </if>
         </where>
     </select>
+
+    <!--设为已读-->
+    <update id="haveRead" parameterType="Long">
+        update wx_message set is_deal = 1 where id = #{id}
+    </update>
 
 
 </mapper>

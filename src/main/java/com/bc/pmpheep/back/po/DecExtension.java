@@ -19,6 +19,10 @@ public class DecExtension implements java.io.Serializable {
 	private Long declarationId;
 	//扩展值
 	private String content;
+
+	private Long expertationId;
+
+	private String extension_name;
 	
 	public DecExtension() {
 		super();
@@ -72,11 +76,28 @@ public class DecExtension implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		return "{id:" + id + ", extensionId:" + extensionId
-				+ ", declarationId:" + declarationId + ", content:" + content
-				+ "}";
+		return "DecExtension{" +
+				"id=" + id +
+				", extensionId=" + extensionId +
+				", declarationId=" + declarationId +
+				", content='" + content + '\'' +
+				", expertationId=" + expertationId +
+				'}';
 	}
-	
-	
-	
+
+	public Long getExpertationId() {
+		return expertationId;
+	}
+
+	public void setExpertationId(Long expertationId) {
+		this.expertationId = expertationId;
+	}
+
+	public String getExtension_name() {
+		return extension_name;
+	}
+
+	public void setExtension_name(String extension_name) {
+		this.extension_name = extension_name;
+	}
 }

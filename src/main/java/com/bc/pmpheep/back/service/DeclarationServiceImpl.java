@@ -203,7 +203,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 	@Override
 	public PageResult<DeclarationListVO> pageDeclaration(Integer pageNumber, Integer pageSize, Long materialId,
 														 String textBookids, String realname, String position, String title, String orgName, Long orgId,
-														 String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress, Boolean haveFile,Boolean isSelected, String tag,
+														 String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress, Boolean haveFile,Boolean isSelected,String startCommitDate,String endCommitDate,  String tag,
 														 HttpServletRequest request)
 			throws CheckedServiceException {
 		if (null == request.getSession(false)) {
@@ -270,6 +270,12 @@ public class DeclarationServiceImpl implements DeclarationService {
 		}
 		if (null != isSelected) {
 			map.put("isSelected", isSelected); // 是否被遴选中
+		}
+		if (null != startCommitDate) {
+			map.put("startCommitDate", startCommitDate); // 是否被遴选中
+		}
+		if (null != endCommitDate) {
+			map.put("endCommitDate", endCommitDate); // 是否被遴选中
 		}
 		// 包装参数实体
 		PageParameter<Map<String, Object>> pageParameter = new PageParameter<Map<String, Object>>(pageNumber, pageSize,
@@ -341,12 +347,12 @@ public class DeclarationServiceImpl implements DeclarationService {
 		if(0 == offlineProgress){
 			isPass = false;
 		}
-		systemMessageService.sendWhenReceiptAudit(declarationCon.getId(), isPass); // 发送系统消息
+		systemMessageService.sendWhenReceiptAudit(declarationCon.getId(), isPass,pmphUser); // 发送系统消息
 		return declarationCon;
 	}
 
 	@Override
-	public Declaration onlineProgress(Long id, Integer onlineProgress, String returnCause)
+	public Declaration onlineProgress(Long id, Integer onlineProgress, String returnCause,PmphUser pmphUser)
 			throws CheckedServiceException, IOException {
 		if (ObjectUtil.isNull(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
@@ -383,7 +389,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			writerUserTrendst.setBookCommentId(null);
 			writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
 			// 发送系统消息
-			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), true, returnCause); 
+			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), true, returnCause,pmphUser);
 			// 获取审核进度是4并且通过或者不通过审核单位并且不是提交到出版社0则被退回给申报单位
 			// 提交审核单位，审核单位通过或者不通过，出版社都退回给申报单位操作
 		} else if (4 == onlineProgress.intValue() && 0 != declarationCon.getOrgId()) {
@@ -420,7 +426,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			writerUserTrendst.setBookCommentId(null);
 			writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);*/
 			// 发送系统消息
-			systemMessageService.sendWhenDeclarationFormAuditToOrgUser(declarationCon.getId(), false, returnCause, onlineProgress);
+			systemMessageService.sendWhenDeclarationFormAuditToOrgUser(declarationCon.getId(), false, returnCause, onlineProgress,pmphUser);
 			// 获取审核进度是5并且通过或者不通过审核单位并且不是提交到出版社0则被退回给个人
 			// 提交审核单位，审核单位通过或者不通过，出版社都可以退回给个人操作
 		} else if (5 == onlineProgress.intValue() && 0 != declarationCon.getOrgId()) {
@@ -457,7 +463,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			writerUserTrendst.setBookCommentId(null);
 			writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
 			// 发送系统消息
-			systemMessageService.sendWhenDeclarationFormAuditToOrgUser(declarationCon.getId(), false, returnCause, onlineProgress);
+			systemMessageService.sendWhenDeclarationFormAuditToOrgUser(declarationCon.getId(), false, returnCause, onlineProgress,pmphUser);
 			// 获取审核进度是5并且机构id为出版社0则被退回给个人
 			// 提交到出版社，出版社退回给个人操作
 		} else if (5 == onlineProgress.intValue() && 0 == declarationCon.getOrgId()) {
@@ -494,7 +500,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			writerUserTrendst.setBookCommentId(null);
 			writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
 			// 发送系统消息
-			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), false, returnCause); 
+			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), false, returnCause,pmphUser);
 		}
 
 		//撤销某(人)申报表的所有遴选，dec_positiond的choosePosition设为0，dec_pisition_published相应删除
@@ -992,6 +998,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			if (null != declarationOrDisplayVO.getBirthday()) {
 				birthday = DateUtil.date2Str(declarationOrDisplayVO.getBirthday(), "yyyy-MM-dd");
 			}
+
 			if (null == declarationOrDisplayVO.getPosition() || "".equals(declarationOrDisplayVO.getPosition())) {
 				declarationOrDisplayVO.setPosition("无");
 			}
@@ -1143,7 +1150,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			String textbookName = declarationOrDisplayVO.getTextbookName() + "第"
 					+ declarationOrDisplayVO.getTextbookRound() + "版";
 			DeclarationEtcBO declarationEtcBO = new DeclarationEtcBO(declarationOrDisplayVO.getRealname(),
-					declarationOrDisplayVO.getUsername(), sex, birthday, declarationOrDisplayVO.getExperience(),
+					declarationOrDisplayVO.getUsername(), sex, birthday, declarationOrDisplayVO.getExperience(),DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",declarationOrDisplayVO.getCommitDate()),
 					declarationOrDisplayVO.getOrgName(), declarationOrDisplayVO.getPosition(),
 					declarationOrDisplayVO.getTitle(), declarationOrDisplayVO.getAddress(),
 					declarationOrDisplayVO.getPostcode(), declarationOrDisplayVO.getTelephone(),
@@ -1507,7 +1514,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			String textbookName = declarationOrDisplayVO.getTextbookName() + "第"
 					+ declarationOrDisplayVO.getTextbookRound() + "版";
 			DeclarationEtcBO declarationEtcBO = new DeclarationEtcBO(declarationOrDisplayVO.getRealname(),
-					declarationOrDisplayVO.getUsername(), sex, birthday, declarationOrDisplayVO.getExperience(),
+					declarationOrDisplayVO.getUsername(), sex, birthday, declarationOrDisplayVO.getExperience(),DateUtil.formatTimeStamp("yyyy-MM-dd",declarationOrDisplayVO.getCommitDate()),
 					declarationOrDisplayVO.getOrgName(), declarationOrDisplayVO.getPosition(),
 					declarationOrDisplayVO.getTitle(), declarationOrDisplayVO.getAddress(),
 					declarationOrDisplayVO.getPostcode(), declarationOrDisplayVO.getTelephone(),

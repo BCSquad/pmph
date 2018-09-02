@@ -29,7 +29,7 @@ public class WxSendMessageServiceImpl implements WxSendMessageService {
         List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
         for(Long userid:useridList){
             Map<String,Object> map = new HashMap<String,Object>();
-            String hrefTypeFormat = SendWXMessageUtil.getHrefType(hrefType);
+            String hrefTypeFormat = SendWXMessageUtil.getHrefType("6");
             String hrefContent = SendWXMessageUtil.getHrefContent(hrefContentType);
             map.put("content",content + String.format(hrefTypeFormat,paramUrl,hrefContent));
             map.put("msgdbtype",msgdbtype);

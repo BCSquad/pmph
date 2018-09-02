@@ -3,6 +3,8 @@ package com.bc.pmpheep.back.vo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import com.bc.pmpheep.annotation.ExcelHeader;
+import com.bc.pmpheep.back.util.DateUtil;
 import org.apache.ibatis.type.Alias;
 
 @SuppressWarnings("serial")
@@ -17,6 +19,7 @@ public class CmsContentVO implements Serializable {
     // 类别名称
     private String    categoryName;
     // 内容标题
+    @ExcelHeader(header = " 文章标题")
     private String    title;
     // 作者类型
     private Short     authorType;
@@ -42,19 +45,27 @@ public class CmsContentVO implements Serializable {
     private Boolean   isAuth;
     // 审核者id
     private Long      authUserId;
+    @ExcelHeader(header = "审核人")
+    private String      authUserName;
     // 审核通过时间
     private Timestamp authDate;
+    @ExcelHeader(header = "审核时间")
+    private String authDateS;
     // 发布开始时间
     private String    startAuDate;
     // 发布结束时间
     private String    endAuDate;
     // 审核状态
     private Short     authStatus;
+    // 审核状态
+    @ExcelHeader(header = "审核状态")
+    private String     authStatusName;
     // 条件分页总条数分页查询
     private Integer   count;
     // 页面查询条件（状态）
     private Integer   status;
     // 作家姓名
+    @ExcelHeader(header = "评论人")
     private String    username;
     // 是否为管理员
     private Boolean   isAdmin;
@@ -64,6 +75,9 @@ public class CmsContentVO implements Serializable {
     private Boolean   isMaterialEntry;
     // 创建时间
     private Timestamp gmtCreate;
+    // 创建时间
+    @ExcelHeader(header = "评论时间")
+    private String gmtCreateS;
     // 创建开始时间
     private String    startCreateDate;
     // 创建结束时间
@@ -539,5 +553,44 @@ public class CmsContentVO implements Serializable {
 
     public void setApporpc(int apporpc) {
         this.apporpc = apporpc;
+    }
+
+    public String getAuthStatusName() {
+        return authStatusName;
+    }
+
+    public void setAuthStatusName(String authStatusName) {
+        /*String[] authArray = new String[]{"待审核","未通过","已通过"};
+        this.authStatusName = authArray[this.authStatus];*/
+        this.authStatusName = authStatusName;
+    }
+
+
+
+
+    public String getAuthDateS() {
+        return authDateS;
+    }
+
+    public void setAuthDateS(String authDateS) {
+        //this.authDateS = DateUtil.formatTimeStamp("yyyy-MM-dd",this.authDate);
+        this.authDateS = authDateS;
+    }
+
+    public String getAuthUserName() {
+        return authUserName;
+    }
+
+    public void setAuthUserName(String authUserName) {
+        this.authUserName = authUserName;
+    }
+
+    public String getGmtCreateS() {
+        return gmtCreateS;
+    }
+
+    public void setGmtCreateS(String gmtCreateS) {
+       // this.gmtCreateS = DateUtil.formatTimeStamp("yyyy-MM-dd",this.gmtCreate);
+        this.gmtCreateS = gmtCreateS;
     }
 }

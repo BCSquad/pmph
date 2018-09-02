@@ -321,9 +321,29 @@
 	<update id="updateUserOpenid" parameterType="map">
 		update pmph_user set openid=NULL where openid=#{openid};
 		update pmph_user set openid=#{openid} where username=#{username};
+		insert into pmph_user_wechat(username,wechat_id,userid) VALUES(#{username},#{openid},#{userid}) ON DUPLICATE KEY UPDATE userid=#{userid},wechat_id=#{openid};
 	</update>
 
 
+	<!--解除绑定 -->
+	<delete id="deletePmphUserIdAndWechatId" parameterType="map">
+		 update pmph_user set openid=NULL where openid=#{openid};
+		 delete from  pmph_user_wechat where wechat_id=#{openid};
+	</delete>
+
+	<!--查看是否绑定userId-->
+	<select id="IsPmphUserId" parameterType="java.lang.Long" resultType="int">
+		select count(openid) from  pmph_user where id=#{id};
+	</select>
+
+	<!--查看是否绑定userId-->
+	<select id="IsPmphWeChatUserId" parameterType="java.lang.Long" resultType="int">
+		select count(wechat_id) from  pmph_user_wechat where userid=#{id};
+	</select>
+
+	<select id="getUserId" parameterType="java.lang.Long" resultType="String">
+		select openid from  pmph_user where id=#{id};
+	</select>
 
 	<select id="getListByRole" parameterType="Long" resultType="PmphUser">
 		SELECT
@@ -696,6 +716,26 @@
 		select * from pmph_user
 		where openid=#{wechatUserId}
 
+	</select>
+
+	<select id="getFollowingProductAuditorList" parameterType="java.lang.Long" resultType="com.bc.pmpheep.back.vo.FollowingProduntAuditor">
+		select
+			preg.*
+			,p.product_name
+			,p.product_type
+			,pa.*
+
+		from (select * from pmph_user where id = #{user_id}/*某人user_id*/) u
+		inner join
+		(select concat(d.path,'-',d.id) as fullPath,u.realname,u.id as followerId
+		from pmph_user u
+		join pmph_department d on u.department_id = d.id
+		) preg on (u.is_director =1 and preg.fullPath Regexp concat('-',u.department_id,'(-[0-9]+)*$') or u.id = preg.followerId )
+
+		inner join product_auditor pa on pa.auditor_id = preg.followerId
+		inner join product p on pa.product_id = p.id
+
+		group by p.product_type
 	</select>
 
 </mapper>

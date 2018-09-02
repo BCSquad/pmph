@@ -290,6 +290,7 @@
 	<!-- 系统消息——发送新消息——发送对象（学校管理员、所有人） -->
 	<select id="listSendToSchoolAdminOrAllUser" parameterType="map"
 		resultType="OrgVO">
+		SET SESSION group_concat_max_len=102400; /*group_concat默认长度1024，部分学校名称被截断，故加长*/
 		SELECT
 		GROUP_CONCAT(o.`id`) id,
 		GROUP_CONCAT(o.`org_name`)org_name,
@@ -323,6 +324,51 @@
 		</if>
 		<if test="materialId !=null ">
 			AND mo.`material_id`= #{materialId}
+		</if>
+		GROUP BY
+		o.`area_id`
+		ORDER BY
+		o.`area_id`,o.`id` ASC;
+	</select>
+
+
+	<!-- 系统消息——发送新消息——发送对象（学校管理员、所有人） -->
+	<select id="listSendClinicalToSchoolAdminOrAllUser" parameterType="map"
+			resultType="OrgVO">
+		SET SESSION group_concat_max_len=102400; /*group_concat默认长度1024，部分学校名称被截断，故加长*/
+		SELECT
+		GROUP_CONCAT(o.`id`) id,
+		GROUP_CONCAT(o.`org_name`)org_name,
+		o.`area_id`,
+		o.`parent_id`,
+		GROUP_CONCAT(o.`org_type_id`)org_type_id,
+		ar.`area_name`
+		FROM
+		<if test="productId !=null ">
+			`product_org` mo
+			LEFT JOIN
+			`org` o
+			ON
+			mo.`org_id` = o.`id`
+		</if>
+		<if test="productId ==null ">
+			`org` o
+		</if>
+		LEFT JOIN
+		`org_type` ot
+		ON
+		o.`org_type_id` =
+		ot.`id`
+		LEFT JOIN
+		`area` ar ON
+		o.`area_id` = ar.`id`
+		WHERE
+		1=1
+		<if test="orgName !=null and orgName != '' ">
+			and o.`org_name` LIKE CONCAT(CONCAT('%',#{orgName},'%'))
+		</if>
+		<if test="productId !=null ">
+			AND mo.`product_id`= #{productId}
 		</if>
 		GROUP BY
 		o.`area_id`
@@ -469,7 +515,7 @@
 		o.`area_id` = ar.`id`
 		where 1=1
 
-			<if test="chooseOrg != null and chooseOrg.length >1 ">
+			<if test="chooseOrg != null and chooseOrg != ''  ">
 				and o.id in
 				<foreach collection="chooseOrg " item="item" open="(" close=")" separator=",">
 					#{item}

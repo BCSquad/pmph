@@ -95,6 +95,9 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
     @Autowired
     private PmphDepartmentService    pmphDepartmentService;
 
+    @Autowired
+    ProductService productService;
+
     @Override
     public UserMessage addUserMessage(UserMessage userMessage) throws CheckedServiceException {
         if (null == userMessage) {
@@ -251,6 +254,30 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
     }
 
     @Override
+    public Map<String, Object> listSendClinicalmessageOject(Integer sendType, Integer pageNumber,
+                                             Integer pageSize, String orgName, Long productId, String userNameOrUserCode,
+                                             String productName) throws CheckedServiceException {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        if (ObjectUtil.isNull(sendType)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                    CheckedExceptionResult.NULL_PARAM, "发送对象未选择，请选择发送对象!");
+        }
+        // 1 发送给学校管理员 //2 所有人
+        if (Const.SEND_OBJECT_1.intValue() == sendType.intValue()
+                || Const.SEND_OBJECT_2.intValue() == sendType.intValue()) {
+            resultMap.put("orgVo", orgService.listSendClinicalToSchoolAdminOrAllUser(orgName, productId));
+        }
+        // 指定用户
+        if (Const.SEND_OBJECT_3.intValue() == sendType.intValue()) {
+            // 调用用户管理的接口
+        }
+        // 教材所有报名者
+        if (Const.SEND_OBJECT_4.intValue() == sendType.intValue()) {
+            resultMap.put("product", productService.getListProduct(productName));
+        }
+        return resultMap;
+    }
+    @Override
     public Integer addOrUpdateUserMessage(HttpServletRequest request, Message message,
     String title, Integer sendType, String orgIds, Long senderId, String userIds, String bookIds,
     boolean isSave, String[] files, String sessionId) throws CheckedServiceException, IOException {
@@ -305,7 +332,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             for (OrgUser orgUser : orgUserList) {
                 userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_1,
                                                     senderUserId, Const.SENDER_TYPE_1,
-                                                    orgUser.getId(), Const.RECEIVER_TYPE_3, 0L));
+                                                    orgUser.getId(), Const.RECEIVER_TYPE_3, 0L,sendType.shortValue()));
             }
             // 作家用户
             if (Const.SEND_OBJECT_2.intValue() == sendType.intValue()) {
@@ -315,7 +342,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                     userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_1,
                                                         senderUserId, Const.SENDER_TYPE_1,
                                                         writerUser.getId(), Const.RECEIVER_TYPE_2,
-                                                        0L));
+                                                        0L,sendType.shortValue()));
                 }
             }
         }
@@ -335,7 +362,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                                                             Const.MSG_TYPE_1, senderUserId,
                                                             Const.SENDER_TYPE_1,
                                                             Long.parseLong(userId),
-                                                            new Short(userType), 0L));
+                                                            new Short(userType), 0L,sendType.shortValue()));
                     }
                 }
             }
@@ -351,7 +378,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             for (Long userId : userIdList) {
                 userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_1,
                                                     senderUserId, Const.SENDER_TYPE_1, userId,
-                                                    Const.RECEIVER_TYPE_2, 0L));
+                                                    Const.RECEIVER_TYPE_2, 0L,sendType.shortValue()));
             }
             // 获取到书籍id然后根据书籍id在dec_position表中获取到申报表id根据申报表id在declaration表中获取作家id放入userMessage的接收人中
         }
@@ -384,6 +411,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                         flag = true;
                         break;
                     }
+
                 }
                 if (!flag) {
                     temp.add(userMessage);

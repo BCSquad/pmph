@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.service;
 import java.io.IOException;
 import java.util.List;
 
+import com.bc.pmpheep.back.po.PmphUser;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
@@ -80,7 +81,7 @@ public interface OrgUserService {
 	 * &#64;throws CheckedServiceException
 	 * </pre>
 	 */
-	Integer updateOrgUserProgressById(Integer progress, List<Long> orgUserIds,String backReason)
+	Integer updateOrgUserProgressById(Integer progress, List<Long> orgUserIds,String backReason,PmphUser pmphUser)
 			throws CheckedServiceException, IOException;
 
 	/**

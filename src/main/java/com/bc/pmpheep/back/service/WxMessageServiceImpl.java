@@ -44,4 +44,10 @@ public class WxMessageServiceImpl implements WxMessageService{
 
         return resultMap;
     }
+
+    @Override
+    public int haveRead(Long id) {
+        int count = wxMessageDao.haveRead(id);
+        return count;
+    }
 }

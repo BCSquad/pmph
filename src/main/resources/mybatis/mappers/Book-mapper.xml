@@ -706,6 +706,10 @@
 				AND type = #{selectType}
 	</delete>
 
+	<select id="getMaxSort" resultType="java.lang.Long">
+		select max(sort) from book
+	</select>
+
 	<!-- 查询总数 -->
 	<select id="getBookPreferenceAnalysis" resultType="BookPreferenceAnalysisVO">
 		SELECT

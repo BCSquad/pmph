@@ -187,14 +187,15 @@ public class Front implements Runnable {
 					}
 				}
 				if (!CollectionUtil.isEmpty(list)) {
+
 					StringBuilder sb = new StringBuilder();
-                    sb.append(src);
-                    sb.append(this.id);
-                    sb.append(File.separator);
-                    sb.append(FileUtil.replaceIllegalCharForFileName(material.getMaterialName()));
-                    sb.append(File.separator);
-                    sb.append((i + 1) + "." + FileUtil.replaceIllegalCharForFileName(name));
-                    sb.append(File.separator);
+					sb.append(src);
+					sb.append(this.id);
+					sb.append(File.separator);
+					sb.append(FileUtil.replaceIllegalCharForFileName(material.getMaterialName()));
+					sb.append(File.separator);
+					sb.append((i + 1) + "." + FileUtil.replaceIllegalCharForFileName(name));
+					sb.append(File.separator);
 
 					/*sb.append(src);
 					sb.append(this.id);
@@ -203,8 +204,9 @@ public class Front implements Runnable {
 					sb.append(File.separator);
 					sb.append(name);
 					sb.append(File.separator);*/
+
 					this.wordHelper.export(material.getMaterialName(), sb.toString(), list, str.toString(),
-							this.materialExtensionService.getMaterialExtensionByMaterialId(material.getId()));
+							this.materialExtensionService.getMaterialExtensionByMaterialId(material.getId()),(i + 1));
 					list.removeAll(list);
 				}
 			}

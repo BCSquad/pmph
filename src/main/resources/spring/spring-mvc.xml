@@ -40,6 +40,9 @@
                 <property name="excludeUrls"> 
                     <list>
                     	<value>/pmph/login</value><!-- 登陆  -->
+                        <value>/pmph/SSOIndex</value>
+                        <value>/wxMessages/list</value>
+                        <value>/messages/list/myMessageIcon</value>
                     	<value>/pmph/logout</value><!-- 退出  -->
                         <value>/sys/operation/new</value><!-- 操作日志  -->
                         <value>/sys/operation/operations</value><!-- 操作日志 -->
@@ -64,6 +67,8 @@
 			<mvc:exclude-mapping path="/sys/operation/new" />
 			<mvc:exclude-mapping path="/sys/operation/operations" />
 			<mvc:exclude-mapping path="/image/*" />
+          <!--  <mvc:exclude-mapping path="/sso/login" />-->
+           <!-- <mvc:exclude-mapping path="/**/*wechat*" />-->
 			<bean id="oauth2Interceptor" class="com.bc.pmpheep.wechat.interceptor.OAuth2Interceptor"></bean>
 		</mvc:interceptor>
 		
@@ -90,6 +95,6 @@
     </bean>
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <property name="defaultEncoding" value="utf-8" />
-        <property name="maxUploadSize" value="104857600" />
+        <property name="maxUploadSize" value="209715200" />
     </bean>
 </beans>

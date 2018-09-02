@@ -60,6 +60,14 @@
 		user_id=#{userId} ;
 	</delete>
 
+
+	<delete id="deletePmphUserRoleByRoleId" parameterType="java.lang.Long">
+		delete
+		from
+		pmph_user_role where
+		role_id=#{roleId} ;
+	</delete>
+
 	<!-- 更新PmphUserRole -->
 	<update id="updatePmphUserRole" parameterType="PmphUserRole">
 		update Pmph_User_Role

@@ -30,4 +30,10 @@ public interface WxMessageService {
 	 */
 	Map<String,Object> listMessage(PageParameter<WxMessageVO> pageParameter, String sessionId);
 
+	/**
+	 * 将一条微信message设为已读
+	 * @param id
+	 * @return
+	 */
+    int haveRead(Long id);
 }

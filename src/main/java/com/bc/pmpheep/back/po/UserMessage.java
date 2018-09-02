@@ -44,8 +44,8 @@ public class UserMessage implements java.io.Serializable {
     private Timestamp gmtUpdate;
     //教材id
     private Long materialId ;
-    
-    
+    //接收者筛选类型
+    private Short receiverFilterType;
 
     public Long getMaterialId() {
 		return materialId;
@@ -122,7 +122,32 @@ public class UserMessage implements java.io.Serializable {
      * @param materialId 教材id
      */
     public UserMessage(String msgId, String title, Short msgType, Long senderId, Short senderType,
-    Long receiverId, Short receiverType,Long materialId) {
+    Long receiverId, Short receiverType,Long materialId,Short receiverFilterType) {
+        super();
+        this.msgId = msgId;
+        this.title = title;
+        this.msgType = msgType;
+        this.senderId = senderId;
+        this.senderType = senderType;
+        this.receiverId = receiverId;
+        this.receiverType = receiverType;
+        this.materialId = materialId == null ? 0L : materialId ;
+        this.receiverFilterType = receiverFilterType;
+    }
+
+    /**
+     *
+     * @param msgId 消息id
+     * @param title 消息标题
+     * @param msgType 消息类型
+     * @param senderId 发送者id
+     * @param senderType 发送者类型
+     * @param receiverId 收收人id
+     * @param receiverType 收收人类型
+     * @param materialId 教材id
+     */
+    public UserMessage(String msgId, String title, Short msgType, Long senderId, Short senderType,
+                       Long receiverId, Short receiverType,Long materialId) {
         super();
         this.msgId = msgId;
         this.title = title;
@@ -272,4 +297,11 @@ public class UserMessage implements java.io.Serializable {
 				+ super.toString() + "}";
 	}
 
+    public Short getReceiverFilterType() {
+        return receiverFilterType;
+    }
+
+    public void setReceiverFilterType(Short receiverFilterType) {
+        this.receiverFilterType = receiverFilterType;
+    }
 }
