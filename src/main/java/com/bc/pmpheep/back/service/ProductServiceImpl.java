@@ -157,11 +157,11 @@ public class ProductServiceImpl implements ProductService {
         // 删除此productId下的所有相关角色pmph_user_role
         //pmphUserRoleDao.deletePmphUserRoleByRoleId(auditorMenuRole.getId());
         if(CollectionUtil.isNotEmpty(productVO.getAuditorList())){
-            /*for(ProductAuditor productAuditor:productVO.getAuditorList()){
+           for(ProductAuditor productAuditor:productVO.getAuditorList()){
                 if(ObjectUtil.isNull(productAuditor.getProduct_id()))productAuditor.setProduct_id(productVO.getId());
 
                 //该审核人加角色（菜单权限）
-                PmphUserRole pmphUserRole = new PmphUserRole(productAuditor.getAuditor_id(),auditorMenuRole.getId());
+                /* PmphUserRole pmphUserRole = new PmphUserRole(productAuditor.getAuditor_id(),auditorMenuRole.getId());
                 pmphUserRoleDao.addPmphUserRole(pmphUserRole);
 
                 List<PmphUser> parentDeptsDirectors =pmphUserService.getSomebodyParentDeptsPmphUserOfSomeRole(productAuditor.getAuditor_id(),null,"主任");
@@ -169,8 +169,8 @@ public class ProductServiceImpl implements ProductService {
                     // 领导加角色（菜单权限）。 而数据权限（查出来之后是审核还是查看由审核人表控制）
                     PmphUserRole userRole = new PmphUserRole(PDDirector.getId(),auditorMenuRole.getId());
                     pmphUserRoleDao.addPmphUserRole(userRole);
-                }
-            }*/
+                }*/
+            }
 
             //该审核人加入审核人表（数据权限）
             productDao.saveProductAuditors(productVO.getAuditorList());

@@ -24,6 +24,7 @@ import com.bc.pmpheep.back.dao.CmsContentDao;
 import com.bc.pmpheep.back.dao.ExpertationDao;
 import com.bc.pmpheep.back.dao.ProductDao;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.po.Product;
 import com.bc.pmpheep.back.service.*;
 import com.bc.pmpheep.back.vo.*;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -491,14 +492,21 @@ public class FileDownLoadController {
 		pageParameter.setStart(null);
 		pageParameter.setParameter(expertationVO);
 		List<ExpertationVO> list = expertationDao.queryExpertation(pageParameter);
+		ProductVO product = expertationDao.getProductByProductType(expertationVO.getExpert_type());
 		String[] stateList = new String[]{"未提交","待学校审核","被学校退回","学校已审核","待学校审核","被出版社退回"};
 		for (ExpertationVO e: list) {
 			List<ProductType> clist = expertationDao.queryProductContentTypeListByExpertationId(e.getId());
 			List<ProductType> slist = expertationDao.queryProductSubjectTypeListByExpertationId(e.getId());
 			List<ProductType> plist = expertationDao.queryProductProfessionTypeListByExpertationId(e.getId());
-			e.setProductSubjectTypeList(slist);
-			e.setProductContentTypeList(clist);
-			e.setProductProfessionTypeList1(plist);
+			if(product.getIs_profession_award_used()){
+				e.setProductProfessionTypeList1(plist);
+			}
+			if(product.getIs_subject_type_used()){
+				e.setProductSubjectTypeList(slist);
+			}
+
+			if (product.getIs_content_type_used()) e.setProductContentTypeList(clist);
+
 			e.setExcelTypeStr();
 			e.setOnlineProgressName((e.getOrg_id()==0&&e.getOnline_progress()==1)?"待出版社审核":(e.getOrg_id()==0&&e.getOnline_progress()==3?"出版社已审核":stateList[e.getOnline_progress()]));
 		}

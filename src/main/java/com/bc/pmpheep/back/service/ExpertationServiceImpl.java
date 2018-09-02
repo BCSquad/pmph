@@ -234,16 +234,16 @@ public class ExpertationServiceImpl implements ExpertationService{
     public Boolean onlineProgress(Long id, Integer onlineProgress, String returnCause, PmphUser pmphUser) {
         Boolean flag = false;
         if (ObjectUtil.isNull(id)) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
                     "主键不能为空!");
         }
         if (ObjectUtil.isNull(onlineProgress)) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
                     "审核进度不能为空!");
         }
 
-        if (StringUtil.isEmpty(returnCause)) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
+        if (StringUtil.isEmpty(returnCause)&&(onlineProgress.intValue()==4||onlineProgress.intValue()==5)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.ILLEGAL_PARAM,
                     "退回原因不能为空!");
         }
         try{
@@ -251,7 +251,7 @@ public class ExpertationServiceImpl implements ExpertationService{
             ExpertationVO expertationVO  = expertationDao.getExpertationById(id);
             if(4==onlineProgress.intValue()||5==onlineProgress.intValue()){ // 退回
                 if (StringUtil.strLength(returnCause) > 40) {
-                    throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+                    throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.NULL_PARAM,
                             "最多只能输入40个字符，请重新输入!");
                 }
 

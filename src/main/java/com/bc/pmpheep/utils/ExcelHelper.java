@@ -506,12 +506,20 @@ public class ExcelHelper {
 						if (null != o) {
 							String value = o.toString();
 							if(StringUtil.notEmpty(cellType)&&"2".equals(cellType)){
-								cell.setCellType(Integer.parseInt(cellType));
-								cell.setCellFormula(value);
+								//cell.setCellType(Integer.parseInt(cellType));
+								//cell.setCellFormula(value);
+								cell.setCellValue(value);
 								if(StringUtil.notEmpty(value)){
-									String seperator = "&CHAR(10)";
-									String nowrapStr = value.replace(seperator,"");
-									int lineHeight = (value.length()-nowrapStr.length())/seperator.length() +1;
+									String seperator = "\r\n";
+									//String nowrapStr = value.replace(seperator,"");
+									//int lineHeight = (value.length()-nowrapStr.length())/seperator.length() +1;
+									String[] strPerLine= value.split(seperator);
+									int lineHeight = strPerLine.length+1;
+									for (String s:strPerLine) {
+										if(s.length()>15){
+											lineHeight += 1;
+										}
+									}
 									maxLineHeight =  (short) lineHeight>maxLineHeight?(short) lineHeight:maxLineHeight;
 								}
 							}else{
@@ -589,13 +597,25 @@ public class ExcelHelper {
 							if (null != o) {
 								String value = o.toString();
 								if(StringUtil.notEmpty(cellType)&&"2".equals(cellType)){
-									cell.setCellType(Integer.parseInt(cellType));
-									cell.setCellFormula(value);
+									//cell.setCellType(Integer.parseInt(cellType));
+									//cell.setCellFormula(value);
+									cell.setCellValue(value);
 									if(StringUtil.notEmpty(value)){
-										String seperator = "&CHAR(10)";
+										String seperator = "\r\n";
+
 										String nowrapStr = value.replace(seperator,"");
-										int lineHeight = (value.length()-nowrapStr.length())/seperator.length() +1;
+										//int lineHeight = (value.length()-nowrapStr.length())/seperator.length() +1;
+
+										String[] strPerLine= value.split(nowrapStr);
+										int lineHeight = strPerLine.length+1;
+										for (String s:strPerLine) {
+											if(s.length()>15){
+												lineHeight += 1;
+											}
+										}
+
 										maxLineHeight =  (short) lineHeight>maxLineHeight?(short) lineHeight:maxLineHeight;
+
 									}
 								}else{
 									cell.setCellValue(value);

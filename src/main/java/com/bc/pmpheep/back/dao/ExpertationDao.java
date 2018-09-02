@@ -5,6 +5,7 @@ import com.bc.pmpheep.back.po.*;
 import com.bc.pmpheep.back.vo.ExpertationCountnessVO;
 import com.bc.pmpheep.back.vo.ExpertationVO;
 import com.bc.pmpheep.back.vo.ProductType;
+import com.bc.pmpheep.back.vo.ProductVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -145,4 +146,11 @@ public interface ExpertationDao {
      * @return
      */
     List<ProductProfessionType> queryProfession(Long id);
+
+    /**
+     * 获取产品
+     * @param expert_type
+     * @return
+     */
+    ProductVO getProductByProductType(Long expert_type);
 }

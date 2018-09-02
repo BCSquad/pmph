@@ -4,6 +4,7 @@ import com.bc.pmpheep.back.po.ProductAuditor;
 import com.bc.pmpheep.back.po.ProductAttachment;
 import com.bc.pmpheep.back.po.ProductExtension;
 import com.bc.pmpheep.general.po.Content;
+import org.apache.ibatis.type.Alias;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -12,6 +13,8 @@ import java.util.List;
 /**
  * 临床决策-数据传输类
  */
+@SuppressWarnings("serial")
+@Alias("ProductVO")
 public class ProductVO {
     /**
     * 主键
