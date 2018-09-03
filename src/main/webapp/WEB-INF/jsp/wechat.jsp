@@ -128,8 +128,8 @@
             var userData={
                 userSessionId:'${userSessionId}' ,
                 sessionPmphUserToken:'${sessionPmphUserToken}',
-                sessionPmphUser:${sessionPmphUser},
-                pmphUserPermissionIds:${pmphUserPermissionIds}
+                sessionPmphUser:Empty(${sessionPmphUser})?"":${sessionPmphUser},
+                pmphUserPermissionIds:Empty(${pmphUserPermissionIds})?"":${pmphUserPermissionIds}
             }
             <%--mySessionStorage.set('currentUser',userData,'json');--%>
             <%--Cookie.set('sessionId','${userSessionId}',2)--%>
