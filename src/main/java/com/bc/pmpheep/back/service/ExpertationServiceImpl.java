@@ -277,7 +277,7 @@ public class ExpertationServiceImpl implements ExpertationService{
                     "审核进度不能为空!");
         }
 
-        if (StringUtil.isEmpty(returnCause)) {
+        if (StringUtil.isEmpty(returnCause)&&(4==onlineProgress.intValue()||5==onlineProgress.intValue())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
                     "退回原因不能为空!");
         }

@@ -7,7 +7,8 @@
     <!--根据分类查出临床决策产品-->
     <select id="queryProductByProductType" resultMap="resultMapProductVO">
         select
-        p.*
+        p.*,
+       if(new.gmt_set_active = p.gmt_set_active,true,false) AS is_active
         ,pp.realname as publisher
         ,fu.realname as founder
 
@@ -30,9 +31,9 @@
         ,pe.id as pe_id
         ,pe.extension_name as pe_extension_name
         ,pe.is_required as pe_is_required
-
-        from
-        product p
+        from product  p
+        LEFT JOIN (SELECT id, gmt_set_active FROM product WHERE is_deleted = 0 AND is_published = 1 ORDER BY gmt_set_active DESC LIMIT 1) new
+        ON new.id = p.id
         left join pmph_user pp on pp.id = p.publisher_id
         left join pmph_user fu on fu.id = p.founder_id
         left join product_auditor pu on pu.product_id = p.id left join pmph_user u on pu.auditor_id = u.id
@@ -279,6 +280,9 @@
             <if test="actualDeadline!=null">
                 actualDeadline,
             </if>
+            <if test="is_active">
+                gmt_set_active,
+            </if>
         </trim>
     </sql>
 
@@ -394,6 +398,9 @@
             <if test="actualDeadline!=null">
                 #{actualDeadline},
             </if>
+            <if test="is_active">
+                 now()
+            </if>
         </trim>
     </sql>
 
@@ -504,7 +511,10 @@
                 description= #{description},
             </if>
             <if test="actualDeadline!=null">
-                actualDeadline= #{actualDeadline}
+                actualDeadline= #{actualDeadline},
+            </if>
+            <if test="is_active">
+                gmt_set_active = now()
             </if>
         </trim>
     </sql>
@@ -640,7 +650,8 @@
         left join pmph_user u on p.founder_id = u.id
         left join pmph_department d on d.id = u.department_id
         left join (select id, gmt_set_active from product
-        <where>is_deleted = 0 and is_published = 1
+        <where>
+            is_deleted = 0 and is_published = 1
             <if test="
             parameter.product_type != null ">
                             and product_type = #{parameter.product_type}
@@ -660,7 +671,7 @@
 
 
             <if test="parameter.is_active">
-                order by gmt_set_active DESC limit 1
+                order by gmt_set_active and is_deleted = 0 and is_published = 1 DESC limit 1
             </if>
         </where>)p
         ORDER BY p.gmt_set_active desc
@@ -725,10 +736,10 @@
 
     <!--跟新发布状态-->
     <update id="updateProduct" parameterType="com.bc.pmpheep.back.vo.ProductVO">
-        update product set is_published = #{is_published}, publisher_id = #{publisher_id}
-         <if test="is_active">
+        update product set is_published = #{is_published}, publisher_id = #{publisher_id},gmt_publish=#{gmt_publish}
+        <!-- <if test="is_active">
              ,gmt_set_active = now()
-         </if>
+         </if>-->
          where id = #{id}
     </update>
 

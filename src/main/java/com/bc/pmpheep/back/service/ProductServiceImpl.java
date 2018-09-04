@@ -310,7 +310,7 @@ public class ProductServiceImpl implements ProductService {
      * @return
      */
     @Override
-    public Integer noticePublished(Long productId, List<Long> orgIds,Boolean is_active, String sessionId) {
+    public Integer noticePublished(Long productId, List<Long> orgIds,/*Boolean is_active,*/ String sessionId) {
         if (CollectionUtil.isEmpty(orgIds)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
                     CheckedExceptionResult.NULL_PARAM, "机构为空");
@@ -352,7 +352,7 @@ public class ProductServiceImpl implements ProductService {
 
         }
 
-        count = this.updateProduct(new ProductVO(productId, true,is_active), sessionId);
+        count = this.updateProduct(new ProductVO(productId, true/*,is_active*/), sessionId);
         return count;
     }
 
@@ -386,6 +386,7 @@ public class ProductServiceImpl implements ProductService {
                     "用户为空");
         }
         productVO.setPublisher_id(pmphUser.getId());
+        productVO.setGmt_publish(DateUtil.getCurrentTime());
         return productDao.updateProduct(productVO);
     }
 
@@ -497,10 +498,10 @@ public class ProductServiceImpl implements ProductService {
                     "附件未上传");
         }
 
-        if (ObjectUtil.isNull(productVO.getDescriptionContent())) {
+        /*if (ObjectUtil.isNull(productVO.getDescriptionContent())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.NULL_PARAM,
                     "产品简介未说明");
-        }
+        }*/
 
         if(productVO.getIs_published() ){ //若发布
             if(productVO.getAuditorList()==null || productVO.getAuditorList().size() < 1 ){
@@ -517,11 +518,14 @@ public class ProductServiceImpl implements ProductService {
             productVO.setNote("");
         }
 
-        Content descriptionContent = contentService.add(productVO.getDescriptionContent());
+        if(!StringUtil.isEmpty(productVO.getNoteContent().getContent())){
+            Content descriptionContent = contentService.add(productVO.getDescriptionContent());
+            productVO.setDescriptionContent(descriptionContent);
+            productVO.setDescription(descriptionContent.getId());
+        }else{
+            productVO.setDescription("");
+        }
 
-        productVO.setDescriptionContent(descriptionContent);
-
-        productVO.setDescription(descriptionContent.getId());
 
     }
 
