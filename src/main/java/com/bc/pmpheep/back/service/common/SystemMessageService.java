@@ -10,6 +10,7 @@ import com.bc.pmpheep.back.po.*;
 import com.bc.pmpheep.back.service.*;
 import com.bc.pmpheep.back.vo.ExpertationVO;
 import com.bc.pmpheep.back.vo.ProductVO;
+import com.bc.pmpheep.general.bean.ProductTypeEnum;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -707,21 +708,18 @@ public final class SystemMessageService {
 	}
 
 	/**
-	 * 临床申报表审核 向作家用户发送消息
+	 * 临床申报表审核 向用户发送消息
 	 *
-	 * @author Mryang
 	 * @createDate 2017年11月17日 下午4:42:14
-	 * @param expertation
+	 * @param expertationId
 	 *            申报id
-	 * @param isPass
-	 *            true 通过/false 退回
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
-	public void sendWhenExpertationFormAudit(ExpertationVO expertation, boolean isPass, String returnCause, PmphUser pmphUser)
+	public void sendWhenExpertationFormAudit(Long expertationId, PmphUser pmphUser)
 			throws CheckedServiceException, IOException {
 		// 获取申报表
-		//ExpertationVO expertation = expertationService.getExpertationById(expertationId);
+		ExpertationVO expertation = expertationService.getExpertationById(expertationId);
 		if (null == expertation) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.NULL_PARAM,
 					"申报表不存在");
@@ -730,49 +728,88 @@ public final class SystemMessageService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.NULL_PARAM,
 					"认证的管理员为空");
 		}
+
+		String returnCause = expertation.getReturn_cause();
+
+		String productTypeName = ProductTypeEnum.getName(expertation.getExpert_type());
+
 		// 获取教材
 		ProductVO product = productService.getProductByType(expertation.getExpert_type(),null);
+
 		String msgContent = "";
-		/*if (expertation.getOrg_id() == 0) {// 提交的人卫社*/
-			msgContent = "抱歉，您提交的《<font color='red'>" + product.getProduct_name()
-					+ "</font>》临床申报表被[<font color='red'>出版社</font>]退回，退回原因：" + returnCause
-					+ "，请您核对后重新提交";
-			if (isPass) {// 通过
-				msgContent = "恭喜！您提交的《<font color='red'>" + product.getProduct_name()
-						+ "</font>》临床申报表已通过[<font color='red'>出版社</font>]审核";
-			}
-		/*} else {// 提交的机构
-			msgContent = "抱歉，您提交的《<font color='red'>" + product.getProduct_name()
-					+ "</font>》临床申报表被[<font color='red'>学校管理员</font>]退回，退回原因：" + returnCause
-					+ "，请您核对后重新提交";
-			if (isPass) {// 通过
-				msgContent = "恭喜！您提交的《<font color='red'>" + product.getProduct_name()
-						+ "</font>》临床申报表已通过[<font color='red'>学校管理员</font>]审核";
-			}
-		}*/
+		Long receiverId = null;
+		Short receiverType = null;
 
-		//todo 通过退回的消息
+		if(expertation.getFinalResult() && expertation.getPmphAudit() == 1){ //通过最终审核
 
+			/*msgContent = "恭喜！您提交的《<font color='red'>" + product.getProduct_name()
+					+ "</font>》"+productTypeName+"专家申报表已通过<font color='red'>出版社</font>审核";*/
+			msgContent = "恭喜您被选为中国临床决策辅助系统--人卫"+productTypeName+"的专家工作委员会成员！";
+			receiverId = expertation.getUser_id();
+			receiverType = 2;
+			sendMessage(receiverId,receiverType, msgContent,pmphUser);
+
+			if(expertation.getOrg_id() >0 ){
+				/*msgContent = "恭喜！您校"+expertation.getRealname()+"提交的《<font color='red'>" + product.getProduct_name()
+						+ "</font>》"+productTypeName+"专家申报表已通过<font color='red'>出版社</font>审核";*/
+				msgContent = "恭喜！您单位的<font color='red'>"+expertation.getRealname()+"</font>被选为中国临床决策辅助系统--人卫"+productTypeName+"的专家工作委员会成员！";
+				OrgUser orgUser = orgUserService.getOrgUserByOrgId(expertation.getOrg_id());
+				receiverId = orgUser.getId();
+				receiverType = 3;
+				sendMessage(receiverId,receiverType, msgContent,pmphUser);
+			}
+
+		}else if(5 == expertation.getOnline_progress()){ //出版社退回个人
+			/*msgContent = "抱歉，您提交的《<font color='red'>" + product.getProduct_name()
+					+ "</font>》"+productTypeName+"专家申报表被<font color='red'>出版社</font>退回，退回原因：" + returnCause
+					+ "，请您核对后重新提交";*/
+			msgContent = "抱歉，您提交的<font color='red'>" +productTypeName+"</font>专家申报表被<font color='red'>出版社</font>退回，退回原因：" + returnCause
+					+ "，请您核对后重新提交";
+			receiverId = expertation.getUser_id();
+			receiverType = 2;
+			sendMessage(receiverId,receiverType, msgContent,pmphUser);
+		}else if(4 == expertation.getOnline_progress()){ //出版社退回申报单位
+			/*msgContent = "抱歉，您校<font color='red'>"+expertation.getRealname()+"</font>老师提交的《<font color='red'>" + product.getProduct_name()
+					+ "</font>》"+productTypeName+"专家申报表被<font color='red'>出版社</font>退回，退回原因：" + returnCause
+					+ "，请及时处理";*/
+			msgContent = "抱歉，您单位的<font color='red'>"+expertation.getRealname()+"</font>提交的<font color='red'>" + productTypeName
+					+ "</font>专家申报表被<font color='red'>出版社</font>退回，退回原因：" + returnCause;
+
+
+			OrgUser orgUser = orgUserService.getOrgUserByOrgId(expertation.getOrg_id());
+			receiverId = orgUser.getId();
+			receiverType = 3;
+			sendMessage(receiverId,receiverType, msgContent,pmphUser);
+		}
+
+	}
+
+	/**
+	 * 后台用户向前台发送消息 先插入mongdb，再插入usermessage表,最后推送websocket
+	 * @param receiverId
+	 * @param receiverType
+	 * @param msgContent
+	 * @param pmphUser
+	 * @return
+	 */
+	private void sendMessage(Long receiverId,short receiverType,String msgContent,PmphUser pmphUser) throws IOException {
 		// 存入消息主体
 		Message message = new Message(msgContent);
 		message = messageService.add(message);
 		String msg_id = message.getId();
+		List<String> userIds = new ArrayList<String>(1);
+		userIds.add(receiverType +"_" + receiverId);
 
 		// 发送消息
 		userMessageService.addUserMessage(new UserMessage(msg_id, messageTitle, new Short("0"), pmphUser.getId(), new Short("1"),
-				expertation.getUser_id(), new Short("2"), null));
-
-
-
+				receiverId, receiverType, null));
 
 		// websocket推送页面消息
 		WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, pmphUser.getId(), pmphUser.getRealname(),
 				Const.SENDER_TYPE_1, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle, msgContent,
 				DateUtil.getCurrentTime());
-		List<String> userIds = new ArrayList<String>(1);
-		userIds.add("2_" + expertation.getUser_id());
 		myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
-	}
+	};
 
 	/**
 	 * 人卫社审核教材申报表 向机构用户发送信息

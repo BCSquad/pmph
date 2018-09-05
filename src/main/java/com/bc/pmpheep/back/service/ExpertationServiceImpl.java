@@ -20,6 +20,7 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -282,8 +283,6 @@ public class ExpertationServiceImpl implements ExpertationService{
                     "退回原因不能为空!");
         }
         try{
-            //获取申报信息
-            ExpertationVO expertationVO  = expertationDao.getExpertationById(id);
 
             if (StringUtil.strLength(returnCause) > 40) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.NULL_PARAM,
@@ -292,18 +291,14 @@ public class ExpertationServiceImpl implements ExpertationService{
 
             expertationDao.updateOnlineProgress(id,onlineProgress,returnCause);
 
-            Boolean isPass = true;
             if(4==onlineProgress.intValue()||5==onlineProgress.intValue()){ // 退回
-
-                isPass = false ;
-                expertationVO.setOnline_progress(onlineProgress);
-                expertationVO.setReturn_cause(returnCause);
-                systemMessageService.sendWhenExpertationFormAudit(expertationVO, isPass, returnCause,pmphUser);
                 // 产生一条动态消息
             }else if(3==onlineProgress.intValue()){ // 通过
                 // 产生一条动态消息
-                isPass = true ;
             }
+
+            //发用户消息
+            systemMessageService.sendWhenExpertationFormAudit(id,pmphUser);
 
             flag = true;
         }catch (Exception e){
@@ -350,7 +345,17 @@ public class ExpertationServiceImpl implements ExpertationService{
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
                     "非法操作!");
         }
-        return expertationDao.changeStatus(status,id);
+        int result = expertationDao.changeStatus(status, id);
+
+        if(status == 4){
+            //发用户消息
+            try {
+                systemMessageService.sendWhenExpertationFormAudit(id,pmphUser);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
     }
 
 
