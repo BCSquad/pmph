@@ -495,6 +495,7 @@ public class ExcelHelper {
 			columnProperties.setColCount(1);
 			for (Field field : fields) {
 				field.setAccessible(true);// 可访问性设置
+
 				if (field.isAnnotationPresent(ExcelHeader.class)) {
 					ExcelHeader excelHeader = (ExcelHeader) field.getAnnotation(ExcelHeader.class);
 					String headerName = excelHeader.header();
