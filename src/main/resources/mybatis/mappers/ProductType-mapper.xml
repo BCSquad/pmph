@@ -15,9 +15,8 @@
     <select id="getSubjectTypeList" parameterType="PageParameter" resultMap="ProductTypeMap">
         select t.*,1 as typeType from
         product_subject_type t
-        inner join product  p on p.product_type = t.product_type
         <where>
-            t.is_deleted = 0 and p.product_type = #{parameter.productType}   and p.is_deleted = 0
+            t.is_deleted = 0 and t.product_type = #{parameter.productType}
             <if test="parameter.type_name != null and parameter.type_name != '' ">
                 and t.type_name like concat('%',#{parameter.type_name},'%')
             </if>
@@ -28,9 +27,8 @@
     <select id="getSubjectTypeCount" parameterType="PageParameter" resultType="int">
         select count(t.id) from
         product_subject_type t
-        inner join product  p on p.product_type = t.product_type
         <where>
-            t.is_deleted = 0 and p.product_type = #{parameter.productType}   and p.is_deleted = 0
+            t.is_deleted = 0 and t.product_type = #{parameter.productType}
             <if test="parameter.type_name != null and parameter.type_name != '' ">
                 and t.type_name like concat('%',#{parameter.type_name},'%')
             </if>
@@ -40,9 +38,8 @@
     <select id="getProfessionTypeList" parameterType="PageParameter" resultMap="ProductTypeMap">
         select t.*,1 as typeType from
         product_profession_type t
-        inner join product  p on p.product_type = t.product_type
         <where>
-            t.is_deleted = 0 and p.product_type = #{parameter.productType}   and p.is_deleted = 0
+            t.is_deleted = 0 and t.product_type = #{parameter.productType}
             <if test="parameter.type_name != null and parameter.type_name != '' ">
                 and t.type_name like concat('%',#{parameter.type_name},'%')
             </if>
@@ -53,9 +50,8 @@
     <select id="getProfessionTypeCount" parameterType="PageParameter" resultType="int">
         select count(t.id) from
         product_profession_type t
-        inner join product  p on p.product_type = t.product_type
         <where>
-            t.is_deleted = 0 and p.product_type = #{parameter.productType}   and p.is_deleted = 0
+            t.is_deleted = 0 and t.product_type = #{parameter.productType}
             <if test="parameter.type_name != null and parameter.type_name != '' ">
                 and t.type_name like concat('%',#{parameter.type_name},'%')
             </if>
@@ -72,9 +68,9 @@
         from
         product_content_type_detail d
         inner join product_content_type t on d.product_type_id = t.id and d.is_deleted = 0 and t.is_deleted = 0
-        inner join product  p on p.product_type = t.product_type
+
         <where>
-            d.is_leaf = 1 and p.product_type = #{parameter.productType}   and p.is_deleted = 0
+            d.is_leaf = 1 and d.product_type = #{parameter.productType}
             <if test="parameter.type_name != null and parameter.type_name != '' ">
                 and d.name_path like concat('%',#{parameter.type_name},'%')
             </if>
@@ -87,10 +83,9 @@
         COUNT(d.id)
         from
         product_content_type_detail d
-        inner join product  p on p.product_type = d.product_type
         <where>
             d.is_deleted = 0
-            and d.is_leaf = 1 and p.product_type = #{parameter.productType}   and p.is_deleted = 0
+            and d.is_leaf = 1 and d.product_type = #{parameter.productType}
             <if test="parameter.type_name != null and parameter.type_name != '' ">
                 and d.name_path like concat('%',#{parameter.type_name},'%')
             </if>
