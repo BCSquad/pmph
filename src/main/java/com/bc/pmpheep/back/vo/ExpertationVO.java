@@ -82,11 +82,13 @@ public class ExpertationVO implements Serializable {
 
     private Boolean amIAnAuditor; // 当前登录人是否是此单审核人
     private List<Long> followingAuditor; //当部门领导登录时，其管辖下所有人员的id列表，用于查询这些人审核的申请，供领导查看
-
+    @ExcelHeader(header = "学科分类", usedPropertyName = "is_subject_type_used")
     private List<ProductType> productSubjectTypeList; //学科分类
     private List<ProductType> productProfessionTypeList1; //专业分类
-
+    @ExcelHeader(header = "内容分类", usedPropertyName = "is_content_type_used")
     private List<ProductType> productContentTypeList; //内容分类
+    @ExcelHeader(header = "申报专业", usedPropertyName = "is_profession_type_used")
+    private List<ProductProfessionType> ProductProfessionTypeList; //申报专业分类
     //@ExcelHeader(header = "学科分类",cellType = "2")
     private String productSubjectTypeStr; //学科分类 excel导出字符串
     //@ExcelHeader(header = "内容分类",cellType = "2")
@@ -95,27 +97,36 @@ public class ExpertationVO implements Serializable {
     private String productProfessionTypeStr; //专业分类 excel导出字符串
 
 
-    @ExcelHeader(header = "学科分类",cellType = "2")
+    //@ExcelHeader(header = "学科分类",cellType = "2")
     private String productSubjectTypeStr1; //学科分类 excel导出字符串
-    @ExcelHeader(header = "内容分类",cellType = "2")
+    //@ExcelHeader(header = "内容分类",cellType = "2")
     private String productContentTypeStr1; //内容分类 excel导出字符串
-    @ExcelHeader(header = "专业分类",cellType = "2")
+    //@ExcelHeader(header = "专业分类",cellType = "2")
     private String productProfessionTypeStr1; //专业分类 excel导出字符串
 
+    @ExcelHeader(header = "学习经历", usedPropertyName = "is_edu_exp_used",headerTotalLevel=2)
     private List<DecEduExp> DecEduExpList; // 主要学习经历
+    @ExcelHeader(header = "工作经历", usedPropertyName = "is_work_exp_used",headerTotalLevel=2)
     private List<DecWorkExp> DecWorkExpList; //主要工作经历
+    @ExcelHeader(header = "学术兼职", usedPropertyName = "is_acade_used",headerTotalLevel=2)
     private List<DecAcade> DecAcadeList; //主要学术兼职
     //private List<DecTextbook> DecTextbookList;
+    @ExcelHeader(header = "人卫社教材编写情况", usedPropertyName = "is_pmph_textbook_used",headerTotalLevel=2)
     private List<DecTextbookPmph> DecTextbookPmphList;  // 人卫社教材编写情况
-    private List<DecMonograph> DecMonographList; //主编学术专著情况
-    private List<DecNationalPlan> DecNationalPlanList;
-    private List<DecExtension> DecExtensionList; //扩展项
-    private List<DecEditorBook> DecEditorBookList;//主编或参编图书情况
+    @ExcelHeader(header = "图书出版情况", usedPropertyName = "is_monograph_used",headerTotalLevel=2)
+    private List<DecMonograph> DecMonographList; //图书出版情况
 
+    private List<DecNationalPlan> DecNationalPlanList;
+    @ExcelHeader(header = "作家扩展项")
+    private List<DecExtension> DecExtensionList; //扩展项
+    @ExcelHeader(header = "主编或参编图书情况", usedPropertyName = "is_edit_book_used",headerTotalLevel=2)
+    private List<DecEditorBook> DecEditorBookList;//主编或参编图书情况
+    @ExcelHeader(header = "本专业获奖情况", usedPropertyName = "is_profession_award_used",headerTotalLevel=2)
     private List<DecProfessionAward> DecProfessionAwardList; // 本专业获奖情况
+    @ExcelHeader(header = "文章发表情况", usedPropertyName = "is_article_published_used",headerTotalLevel=2)
     private List<DecArticlePublished>  DecArticlePublishedList; // 文章发表情况
 
-    private List<ProductProfessionType> ProductProfessionTypeList; //申报专业分类
+
 
     @ExcelHeader(header = "学校审核状态")
     private String schoolStauts;
