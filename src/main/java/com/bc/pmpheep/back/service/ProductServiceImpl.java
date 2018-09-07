@@ -518,7 +518,7 @@ public class ProductServiceImpl implements ProductService {
             productVO.setNote("");
         }
 
-        if(!StringUtil.isEmpty(productVO.getNoteContent().getContent())){
+        if(!StringUtil.isEmpty(productVO.getDescriptionContent().getContent())){
             Content descriptionContent = contentService.add(productVO.getDescriptionContent());
             productVO.setDescriptionContent(descriptionContent);
             productVO.setDescription(descriptionContent.getId());
