@@ -8,7 +8,7 @@
     <select id="queryProductByProductType" resultMap="resultMapProductVO">
         select
         p.*,
-       if(new.gmt_set_active = p.gmt_set_active,true,false) AS is_active
+        if(p.is_new,true,false) AS is_active
         ,pp.realname as publisher
         ,fu.realname as founder
 
@@ -32,8 +32,7 @@
         ,pe.extension_name as pe_extension_name
         ,pe.is_required as pe_is_required
         from product  p
-        LEFT JOIN (SELECT id, gmt_set_active FROM product WHERE is_deleted = 0 AND is_published = 1 and product_type =  #{product_type} and is_new = 1  ORDER BY gmt_set_active DESC LIMIT 1) new
-        ON new.id = p.id
+
         left join pmph_user pp on pp.id = p.publisher_id
         left join pmph_user fu on fu.id = p.founder_id
         left join product_auditor pu on pu.product_id = p.id left join pmph_user u on pu.auditor_id = u.id
@@ -680,7 +679,7 @@
                 order by p.gmt_set_active and p.is_deleted = 0 and p.is_published = 1 and p.is_new = 1 DESC limit 1
             </if>
         </where>)p
-        ORDER BY p.gmt_set_active desc
+        ORDER BY  p.is_new desc ,p.is_published desc, p.gmt_set_active desc
         limit #{start},#{pageSize}
     </select>
 
@@ -742,7 +741,7 @@
 
     <!--跟新发布状态-->
     <update id="updateProduct" parameterType="com.bc.pmpheep.back.vo.ProductVO">
-        update product set is_new = 0;
+        update product set is_new = 0 where product_type = (select product_type from product where id = #{id}) and is_published = 1;
         update product set is_published = #{is_published}, publisher_id = #{publisher_id},gmt_publish=#{gmt_publish},is_new = 1
         <!-- <if test="is_active">
              ,gmt_set_active = now()

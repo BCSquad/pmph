@@ -137,6 +137,22 @@ public interface ExpertationDao {
      */
     List<DecArticlePublished> queryDecArticlePublished(Long id);
 
+    /**
+     * 查询审核人的id
+     * @param user_id
+     * @param expertation_id
+     * @return
+     */
+    String queryAuditorArray(@Param("user_id") Long user_id,@Param("expertation_id") Long expertation_id);
+
+    /**
+     * 查询审核人主任的id
+     * @param user_id
+     * @param expertation_id
+     * @return
+     */
+    String queryDirector(@Param("user_id") Long user_id,@Param("expertation_id") Long expertation_id);
+
     Boolean queryAmIAnAuditor(@Param("user_id") Long user_id,@Param("expertation_id") Long expertation_id);
 
     /**

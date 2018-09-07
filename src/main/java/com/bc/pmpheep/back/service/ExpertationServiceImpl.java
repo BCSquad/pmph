@@ -66,24 +66,19 @@ public class ExpertationServiceImpl implements ExpertationService{
             throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.NULL_PARAM,
                     "申报类型为空");
         }
-
-
-
-
         List<PmphRole> pmphRoles = pmphUserService.getListUserRole(pmphUser.getId());
         // 下面进行授权
-        Boolean is_admin = false;
+        /*Boolean is_admin = false;
         // 系统管理员权限检查
         for (PmphRole pmphRole : pmphRoles) {
             if (null != pmphRole && null != pmphRole.getRoleName() && "系统管理员".equals(pmphRole.getRoleName())) {
                 // 我是系统管理原
                 is_admin = true;
             }
-        }
-
+        }*/
 
         // 如果是系统管理员，则查询所有，否则查询对应的消息
-        if (Const.FALSE == pmphUser.getIsAdmin()) {
+       /* if (Const.FALSE == pmphUser.getIsAdmin()) {
             List<Long> ids = new ArrayList<Long>();
             // 如果是主任，获取主任所在部门下的所有用户
             if (Const.TRUE == pmphUser.getIsDirector()) {
@@ -112,15 +107,15 @@ public class ExpertationServiceImpl implements ExpertationService{
                 ids.add(pmphUser.getId());
             }
             pageParameter.getParameter().setFollowingAuditor(ids);
-        }
+        }*/
 
 
         //若管理员或领导登录 则不传入此id 查询全部申报 （但同时也因空id，查出的amIAnAuditor将为否 ，管理员需在前台给审核权限，领导查看即可）
         //否则
-        if(!is_admin && Const.TRUE != pmphUser.getIsDirector()){
+       /* if(!is_admin && Const.TRUE != pmphUser.getIsDirector()){
             // 传入登录人id 作为查询条件 审核人id
             pageParameter.getParameter().setAuditor_id(pmphUser.getId());
-        }
+        }*/
 
         PageResult pageResult = new PageResult();
         int totalCount = expertationDao.queryExpertationCount(pageParameter);
@@ -214,7 +209,9 @@ public class ExpertationServiceImpl implements ExpertationService{
 
         ExpertationVO expertationVO = expertationDao.getExpertationById(id);
 
-        expertationVO.setAmIAnAuditor(expertationDao.queryAmIAnAuditor(pmphUser.getId(),id));
+        //expertationVO.setAmIAnAuditor(expertationDao.queryAmIAnAuditor(pmphUser.getId(),id));
+        expertationVO.setAuditorArray(expertationDao.queryAuditorArray(pmphUser.getId(),id));
+        expertationVO.setDirector(expertationDao.queryDirector(pmphUser.getId(),id));
 
         expertationVO.setDecAcadeList(expertationDao.queryDecAcade(id));
 

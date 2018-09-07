@@ -81,6 +81,7 @@ public class ExpertationVO implements Serializable {
     private String syllabus_name; // 附件名称
 
     private Boolean amIAnAuditor; // 当前登录人是否是此单审核人
+    private String  auditorArray; // 当前登录人是否是此单审核人
     private List<Long> followingAuditor; //当部门领导登录时，其管辖下所有人员的id列表，用于查询这些人审核的申请，供领导查看
     @ExcelHeader(header = "学科分类", usedPropertyName = "is_subject_type_used")
     private List<ProductType> productSubjectTypeList; //学科分类
@@ -137,6 +138,7 @@ public class ExpertationVO implements Serializable {
     private String sql;
     private Boolean finalResult;
     private Short pmphAudit;
+    private String director; //主任的id
 
     public ExpertationVO() {
         super();
@@ -804,5 +806,22 @@ public class ExpertationVO implements Serializable {
 
     public void setFinalResult(Boolean finalResult) {
         this.finalResult = finalResult;
+    }
+
+
+    public String getAuditorArray() {
+        return auditorArray;
+    }
+
+    public void setAuditorArray(String auditorArray) {
+        this.auditorArray = auditorArray;
+    }
+
+    public String getDirector() {
+        return director;
+    }
+
+    public void setDirector(String director) {
+        this.director = director;
     }
 }

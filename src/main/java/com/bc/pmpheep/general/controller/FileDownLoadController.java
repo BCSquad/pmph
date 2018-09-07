@@ -594,7 +594,7 @@ public class FileDownLoadController {
 		pageParameter.setStart(null);
 		pageParameter.setParameter(paraMap);
 
-		ProductVO product = productDao.queryProductByProductType(Long.valueOf(String.valueOf(ptype)), null,"");
+		ProductVO product = productDao.queryProductByProductType(Long.valueOf(String.valueOf(ptype)), null);
 		if(product!=null && product.getId() != null){
 			paraMap.put("product_id",product.getId());
 		}else{

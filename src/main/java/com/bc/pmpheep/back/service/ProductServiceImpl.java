@@ -66,7 +66,7 @@ public class ProductServiceImpl implements ProductService {
             throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.NULL_PARAM,
                     "id不为空");
         }
-        ProductVO productVO = productDao.queryProductByProductType(product_type,product_id, Const.CLINICAL_DECISION_FILE_DOWNLOAD);
+        ProductVO productVO = productDao.queryProductByProductType(product_type,product_id);
         if(productVO==null){
             productVO = new ProductVO(product_type);
             productVO.setProduct_type(product_type);
@@ -90,7 +90,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductVO getProductByType(Long product_type,Long id) {
 
-        ProductVO productVO = productDao.queryProductByProductType(product_type,id, Const.CLINICAL_DECISION_FILE_DOWNLOAD);
+        ProductVO productVO = productDao.queryProductByProductType(product_type,id);
         if(productVO==null){
             productVO = new ProductVO(product_type);
             productVO.setProduct_type(product_type);
