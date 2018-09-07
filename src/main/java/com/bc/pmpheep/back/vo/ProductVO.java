@@ -30,8 +30,8 @@ public class ProductVO {
     private Boolean is_acade_required ;// 主要学术兼职是否必填
     private Boolean is_pmph_textbook_used	;// 	人卫社教材编写情况是否启用
     private Boolean is_pmph_textbook_required	;// 人卫社教材编写情况是否必填
-    private Boolean is_monograph_used	;// 主编学术专著情况 是否启用
-    private Boolean is_monograph_required	;// 主编学术专著情况 是否必填
+    private Boolean is_monograph_used	;// 图书出版情况 是否启用
+    private Boolean is_monograph_required	;// 图书出版情况 是否必填
     private Boolean is_edit_book_used	;// 	主编或参编图书情况 是否起用
     private Boolean is_edit_book_required	;// 主编或参编图书情况 是否必填
 
@@ -63,9 +63,9 @@ public class ProductVO {
     private String founder; // 创建人姓名
     private String founderDepartment; //创建人部门名称
     private List<ProductAuditor> auditorList; //审核人列表
-    private List<ProductExtension> ProductExtensionList; //扩展项列表
-    private List<ProductAttachment> ProductAttachmentList; //附件列表
-    private List<ProductAttachment> ProducntImgList; //上传图片列表
+    private List<ProductExtension> productExtensionList; //扩展项列表
+    private List<ProductAttachment> productAttachmentList; //附件列表
+    private List<ProductAttachment> producntImgList; //上传图片列表
     private Date actualDeadline; //报名截止时间
 
     public ProductVO() {
@@ -321,36 +321,36 @@ public class ProductVO {
     }
 
     public List<ProductExtension> getProductExtensionList() {
-        return ProductExtensionList;
+        return productExtensionList;
     }
 
     public void setProductExtensionList(List<ProductExtension> productExtensionList) {
         for (ProductExtension productExtension:productExtensionList) {
             productExtension.setProductId(id);
         }
-        ProductExtensionList = productExtensionList;
+        this.productExtensionList = productExtensionList;
     }
 
     public List<ProductAttachment> getProductAttachmentList() {
-        return ProductAttachmentList;
+        return productAttachmentList;
     }
 
     public void setProductAttachmentList(List<ProductAttachment> productAttachmentList) {
         for (ProductAttachment productAttachment:productAttachmentList) {
             productAttachment.setProduct_id(id);
         }
-        ProductAttachmentList = productAttachmentList;
+        this.productAttachmentList = productAttachmentList;
     }
 
     public List<ProductAttachment> getProducntImgList() {
-        return ProducntImgList;
+        return producntImgList;
     }
 
     public void setProducntImgList(List<ProductAttachment> producntImgList) {
         for (ProductAttachment  productAttachment:producntImgList) {
             productAttachment.setProduct_id(id);
         }
-        ProducntImgList = producntImgList;
+        this.producntImgList = producntImgList;
     }
 
     public String getPublisher() {

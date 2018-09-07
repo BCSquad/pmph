@@ -120,6 +120,9 @@ public class FileDownLoadController {
 	OrgService orgService;
 	@Autowired
 	ExpertationDao expertationDao;
+	@Autowired
+	ExpertationService expertationService;
+
 	// 当前业务类型
 	private static final String BUSSINESS_TYPE = "文件下载";
 
@@ -492,16 +495,23 @@ public class FileDownLoadController {
 		pageParameter.setParameter(expertationVO);
 		List<ExpertationVO> list = expertationDao.queryExpertation(pageParameter);
 		//String[] stateList = new String[]{"未提交","待学校审核","被学校退回","学校已审核","待学校审核","被出版社退回"};
-
-		for (ExpertationVO e: list) {
-			ProductVO productVO = productDao.queryProductById(e.getProduct_id());
-			List<ProductType> clist = expertationDao.queryProductContentTypeListByExpertationId(e.getId());
+		ProductVO productVO = null;
+		if(!CollectionUtil.isEmpty(list) ){
+			productVO = productDao.queryProductById(list.get(0).getProduct_id());
+		}
+		for (int i= 0;i<list.size();i++) {
+			ExpertationVO e = list.get(i);
+			/*List<ProductType> clist = expertationDao.queryProductContentTypeListByExpertationId(e.getId());
 			List<ProductType> slist = expertationDao.queryProductSubjectTypeListByExpertationId(e.getId());
 			List<ProductType> plist = expertationDao.queryProductProfessionTypeListByExpertationId(e.getId());
 			e.setProductSubjectTypeList(slist);
 			e.setProductContentTypeList(clist);
-			e.setProductProfessionTypeList1(plist);
+			e.setProductProfessionTypeList1(plist);*/
+
+			e = expertationService.getExpertationById(e.getId());
+
 			e.setExcelTypeStr();
+
 			e.setSchoolStauts((e.getOrg_id().intValue() != 0 && e.getOnline_progress().intValue()==1)?"待审核"
 					:((e.getOrg_id().intValue() != 0 && e.getOnline_progress().intValue()==3)?"审核通过":
 					(e.getOrg_id().intValue() !=0 && e.getPmphAudit().intValue()==0  && (e.getOnline_progress().intValue()  == 4||e.getOnline_progress().intValue() == 5)?
@@ -512,6 +522,7 @@ public class FileDownLoadController {
 									:((e.getPmphAudit().intValue()==0  && e.getOrg_id().intValue() !=0  && (e.getOnline_progress().intValue() == 1||e.getOnline_progress().intValue() == 3 )) || (e.getOrg_id().intValue() ==0 && e.getPmphAudit().intValue()==0))?"待审核":""
 							)));
 			//e.setOnlineProgressName((e.getOrg_id()==0&&e.getOnline_progress()==1)?"待出版社审核":(e.getOrg_id()==0&&e.getOnline_progress()==3?"出版社已审核":stateList[e.getOnline_progress()]));
+			list.set(i,e);
 		}
 		Workbook workbook = null;
 		try {
@@ -519,7 +530,8 @@ public class FileDownLoadController {
 			if (list.size() == 0) {
 				list.add(new ExpertationVO());
 			}
-			workbook = excelHelper.fromBusinessObjectList(list, expertationVO.getProduct_name()!=null?getExportName(expertationVO.getExpert_type()+""):"临床决策申报");
+			//workbook = excelHelper.fromBusinessObjectList(list, expertationVO.getProduct_name()!=null?getExportName(expertationVO.getExpert_type()+""):"临床决策申报");
+			workbook = excelHelper.fromExpertationList(productVO,list, expertationVO.getProduct_name()!=null?getExportName(expertationVO.getExpert_type()+""):"临床决策申报");
 
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");

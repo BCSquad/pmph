@@ -4,6 +4,7 @@
 
     <resultMap id="expertationListMap" type="com.bc.pmpheep.back.vo.ExpertationVO">
         <id property="id" column="e_id"></id>
+        <result property="product_id" column="product_id"></result>
         <result property="product_name" column="product_name"></result>
         <result property="realname" column="realname"></result>
         <result property="username" column="username"></result>
@@ -76,6 +77,7 @@
     <select id="queryExpertation" parameterType="com.bc.pmpheep.back.plugin.PageParameter" resultMap="expertationListMap">
         select
         p.product_name
+        ,p.id as product_id
         ,e.id as e_id
         ,e.realname
         ,u.username
@@ -551,7 +553,7 @@
 
         product_extension.extension_name as extension_name,
         dec_extension.id as dec_extension_id,
-        dec_extension.extension_id as dec_extension_extension_id,
+        product_extension.id as dec_extension_extension_id,
         dec_extension.declaration_id as dec_extension_declaration_id,
         dec_extension.content as dec_extension_content,
         dec_extension.expertation_id as dec_extension_expertation_id,
@@ -859,6 +861,7 @@
 
         <collection property="DecExtensionList" javaType="list" ofType="DecExtension">
             <id property="extension_name" column="extension_name"></id>
+
             <result property="id" column="dec_extension_id"></result>
             <result property="extensionId" column="dec_extension_extension_id"></result>
             <result property="declarationId" column="dec_extension_declaration_id"></result>

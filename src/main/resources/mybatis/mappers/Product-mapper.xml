@@ -139,13 +139,13 @@
             <!--<result column="id" property="product_id"></result>-->
             <result column="u_realname" property="auditor_name"></result>
         </collection>
-        <collection property="ProductExtensionList" javaType="java.util.List" ofType="com.bc.pmpheep.back.po.ProductExtension">
+        <collection property="productExtensionList" javaType="java.util.List" ofType="com.bc.pmpheep.back.po.ProductExtension">
             <id column="pe_id" property="id"></id>
             <!--<result column="id" property="productId"></result>-->
             <result column="pe_extension_name" property="extensionName"></result>
             <result column="pe_is_required" property="isRequired"></result>
         </collection>
-        <collection property="ProductAttachmentList" javaType="java.util.List" ofType="com.bc.pmpheep.back.po.ProductAttachment">
+        <collection property="productAttachmentList" javaType="java.util.List" ofType="com.bc.pmpheep.back.po.ProductAttachment">
             <id column="a_id" property="id"></id>
             <!--<result column="id" property="product_id"></result>-->
             <result column="a_attachment" property="attachment"></result>
@@ -153,7 +153,7 @@
             <result column="a_download" property="download"></result>
             <result column="a_is_scan_img" property="is_scan_img"></result>
         </collection>
-        <collection property="ProducntImgList" javaType="java.util.List" ofType="com.bc.pmpheep.back.po.ProductAttachment">
+        <collection property="producntImgList" javaType="java.util.List" ofType="com.bc.pmpheep.back.po.ProductAttachment">
             <id column="pimg_id" property="id"></id>
             <!--<result column="id" property="product_id"></result>-->
             <result column="pimg_attachment" property="attachment"></result>
