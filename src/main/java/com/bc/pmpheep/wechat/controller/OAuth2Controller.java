@@ -69,7 +69,7 @@ public class OAuth2Controller {
         String redirectUrl = "";
         if (resultUrl != null) {
             // String reqUrl = request.getLocalAddr();
-            // String reqUrl = "medu.ipmph.com/pmpheepwx";// 备案域名
+           // String reqUrl = "medu.ipmph.com/pmpheepwx";// 备案域名
             Properties pp = new Properties();
             String reqUrl = "";
             InputStream fis  = OAuth2Controller.class.getClassLoader().getResourceAsStream("pmphapi-config.properties");
@@ -79,7 +79,7 @@ public class OAuth2Controller {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            reqUrl = StringUtil.isEmpty("rootAdrr")?"szbsj.f3322.net:8802/pmpheep":reqUrl;// pmphwx 20097r18u8.iask.in
+            reqUrl = StringUtil.isEmpty("rootAdrr")?"medu.ipmph.com/pmphwx":reqUrl;// pmphwx 20097r18u8.iask.in
             //String reqUrl = "120.76.221.250:11000";// 备案域名
             // System.out.println("request.getServletPath()=" + request.getServletPath());
             // System.out.println("request.getRequestURL()=" + request.getRequestURL());
@@ -110,7 +110,7 @@ public class OAuth2Controller {
      */
     @RequestMapping(value = { "/oauth2url" })
     public void Oauth2MeUrl(HttpServletRequest request, HttpServletResponse response, @RequestParam String code,
-                            @RequestParam String oauth2url) {
+                               @RequestParam String oauth2url) {
         logger.info("oauth2url___:   "+oauth2url);
         AccessToken accessToken = QiYeUtil.getAccessToken(Constants.CORPID, Constants.SECRET);
         HttpSession session = request.getSession();
@@ -155,8 +155,8 @@ public class OAuth2Controller {
             logger.error("URL转码出现异常：{}", e.getMessage());
         }
         String oauth2Url =
-                "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + corpid + "&redirect_uri="
-                        + redirect_uri + "&response_type=code&scope=snsapi_base&state=STATE&connect_redirect=1#wechat_redirect";
+        "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + corpid + "&redirect_uri="
+        + redirect_uri + "&response_type=code&scope=snsapi_base&state=STATE&connect_redirect=1#wechat_redirect";
         // System.out.println("oauth2Url=" + oauth2Url);
         return oauth2Url;
     }
@@ -174,9 +174,9 @@ public class OAuth2Controller {
      * </pre>
      */
     public String getMemberGuidByCode(String token, String code, int agentId) {
-        System.out.println("code==" + code + "\ntoken=" + token + "\nagentid=" + agentId);
-        Result<String> result = QiYeUtil.oAuth2GetUserByCode(token, code, agentId);
-        System.out.println("result=" + result);
+         System.out.println("code==" + code + "\ntoken=" + token + "\nagentid=" + agentId);
+         Result<String> result = QiYeUtil.oAuth2GetUserByCode(token, code, agentId);
+         System.out.println("result=" + result);
         if (result.getErrcode() == "0") {
             if (result.getObj() != null) {
                 // 此处可以通过微信授权用code还钱的Userid查询自己本地服务器中的数据

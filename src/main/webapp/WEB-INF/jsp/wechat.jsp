@@ -13,8 +13,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <script type="text/javascript">
             //var appLogin = "120.76.221.250";//app 测试微信访问
-            //var appLogin = "medu.ipmph.com/pmphvuewx";//app 业务测试微信访问
-            var appLogin = "szbsj.f3322.net:8802/wx"; //app 测试微信访问
+            var appLogin = "medu.ipmph.com/pmphvuewx";//app 业务测试微信访问
+            //var appLogin = "szbsj.f3322.net:8802/wx"; //app 测试微信访问
             //var appLogin = "medu.ipmph.com/wx";//app
            // var appLogin = "127.0.0.1:8088"; // app开发
  //           var pcLogin = "120.76.221.250";//测试
