@@ -47,6 +47,9 @@
 			<if test="materialId != null ">
 				material_id,
 			</if>
+			<if test="isProduct != null ">
+				is_product,
+			</if>
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
@@ -91,6 +94,9 @@
 			</if>
 			<if test="materialId != null ">
 				#{materialId},
+			</if>
+			<if test="isProduct != null ">
+				#{isProduct},
 			</if>
 		</trim>
 	</sql>
@@ -171,6 +177,9 @@
 			<if test="materialId != null ">
 				material_id = #{materialId},
 			</if>
+			<if test="isProduct != null ">
+				is_product = #{isProduct},
+			</if>
 		</set>
 		where id = #{id} ;
 	</update>
@@ -242,6 +251,7 @@ AND t.is_withdraw = 1;
 		sender_id,sender_type,
 		receiver_id,receiver_type,
 		material_id,receiver_filter_type
+		,is_product
 		)
 		values
 		<foreach collection="list" item="UserMessage" index="index"
@@ -254,7 +264,8 @@ AND t.is_withdraw = 1;
 			#{UserMessage.receiverId},
 			#{UserMessage.receiverType},
 			#{UserMessage.materialId},
-			#{UserMessage.receiverFilterType}
+			#{UserMessage.receiverFilterType},
+			#{UserMessage.isProduct}
 			)
 		</foreach>
 	</insert>
@@ -375,6 +386,9 @@ AND t.is_withdraw = 1;
 			<if test="parameter.receiverType != null and parameter.receiverType >0 ">
 				and receiver_type = #{parameter.receiverType}
 			</if>
+			<if test="parameter.isProduct != null  ">
+				and is_product = #{parameter.isProduct}
+			</if>
 
 		</if>
 		) t
@@ -404,6 +418,9 @@ AND t.is_withdraw = 1;
 			</if>
 			<if test="parameter.receiverType != null and parameter.receiverType >0 ">
 				and receiver_type = #{parameter.receiverType}
+			</if>
+			<if test="parameter.isProduct != null  ">
+				and is_product = #{parameter.isProduct}
 			</if>
 		</if>
 		order by name

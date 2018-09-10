@@ -18,14 +18,19 @@ import java.util.List;
 public interface ProductService {
 
     /**
-     * 查询或创建此类型的临床决策产品
+     * 查询或创建此类型的临床决策产品 校验登录
      * @param product_type 类型 1.人卫临床助手 2.人卫用药助手 3.人卫中医助手
      * @param sessionId
      * @return
      */
-    public ProductVO getProductByType(Long product_type, String sessionId);
+    public ProductVO getProductByType(Long product_type,Long product_id, String sessionId);
 
-
+    /**
+     * 查询或创建此类型的临床决策产品 不校验登录
+     * @param product_type 类型 1.人卫临床助手 2.人卫用药助手 3.人卫中医助手
+     * @return
+     */
+    ProductVO getProductByType(Long product_type,Long id);
 
     /**
      * 更新附件下载次数
@@ -59,7 +64,7 @@ public interface ProductService {
      * @param sessionId
      * @return
      */
-    Integer noticePublished(Long productId, List<Long> orgIds, String sessionId);
+    Integer noticePublished(Long productId, List<Long> orgIds,/*Boolean is_active,*/ String sessionId) throws IOException;
 
     /**
      * 发布临床-机构
@@ -102,4 +107,12 @@ public interface ProductService {
      * </pre>
      */
     List<Product> getListProduct(String productName);
+
+
+    /**
+     * 根据productId 获取产品的名字
+     * @param materialId
+     * @return
+     */
+    String getProductNameById(Long materialId);
 }

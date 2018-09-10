@@ -43,11 +43,13 @@ public class ProductController {
     @RequestMapping("/init")
     @ResponseBody
     public ResponseBean productInit(HttpServletRequest request
-            , @RequestParam(value = "type",required = true)Long product_type){
+            , @RequestParam(value = "type",required = true)Long product_type
+            , @RequestParam(value = "id" ,required = false)Long id
+    ){
         ResponseBean responseBean = new ResponseBean();
         String sessionId = CookiesUtil.getSessionId(request);
 
-        ProductVO product = productService.getProductByType(product_type,sessionId);
+        ProductVO product = productService.getProductByType(product_type,id,sessionId);
 
         responseBean.setData(product);
 
@@ -83,15 +85,20 @@ public class ProductController {
     public ResponseBean list(HttpServletRequest request
                              ,String product_name
                              ,Boolean is_published
+                             ,Long product_type
+                             ,Boolean is_active
             ,@RequestParam(value = "pageSize",defaultValue = "10") Integer pageSize
             ,@RequestParam(value = "pageNumber",defaultValue = "1") Integer pageNumber){
 
         ProductVO productVO = new ProductVO();
+        productVO.setIs_active(is_active);
         productVO.setProduct_name(product_name);
         productVO.setIs_published(is_published);
+        productVO.setProduct_type(product_type);
         PageParameter<ProductVO> pageParameter = new PageParameter<ProductVO>(pageNumber, pageSize);
         pageParameter.setParameter(productVO);
         ResponseBean responseBean = productService.list(pageParameter);
+
         return responseBean;
     }
 
@@ -106,15 +113,16 @@ public class ProductController {
      * @return
      */
     @RequestMapping(value = "/published",method = RequestMethod.POST)
-    @LogDetail(businessType = BUSINESS_TYPE, logRemark = "教材通知发布")
+    @LogDetail(businessType = BUSINESS_TYPE, logRemark = "产品通知发布")
     @ResponseBody
     public ResponseBean published(HttpServletRequest request,
-                                  @RequestParam("productId") Long productId, @RequestParam("orgIds") List<Long> orgIds){
+                                  @RequestParam("productId") Long productId, @RequestParam("orgIds") List<Long> orgIds/*,
+                                  @RequestParam("is_active") Boolean is_active*/){
 
         String sessionId = CookiesUtil.getSessionId(request);
         try {
             return new ResponseBean(productService.noticePublished(productId,
-                    orgIds,
+                    orgIds,/*is_active,*/
                     sessionId));
         } catch (Exception e) {
             return new ResponseBean(e);

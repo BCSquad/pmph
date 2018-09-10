@@ -4,6 +4,7 @@
 
     <resultMap id="expertationListMap" type="com.bc.pmpheep.back.vo.ExpertationVO">
         <id property="id" column="e_id"></id>
+        <result property="product_id" column="product_id"></result>
         <result property="product_name" column="product_name"></result>
         <result property="realname" column="realname"></result>
         <result property="username" column="username"></result>
@@ -18,9 +19,12 @@
         <result property="online_progress" column="online_progress"></result>
         <result property="commit_date" column="commit_date"></result>
         <result property="amIAnAuditor" column="amIAnAuditor"></result>
+        <result property="auditorArray" column="auditorArray"></result>
         <result property="syllabus_name" column="syllabus_name"></result>
         <result property="unit_advise" column="unit_advise"></result>
-        <result property="isFinalResult" column="isFinalResult"></result>
+        <result property="finalResult" column="finalResult"></result>
+        <result property="pmphAudit" column="pmphAudit"></result>
+        <result property="director" column="director"></result>
 
 
         <!--这种写法能支持分页，但会创建一个类似原返回list范型的类来保存结果，即在vo后加后缀如_$$_jvst... 导致反射取不到真正的范型class -->
@@ -50,8 +54,9 @@
         ,pst.type_name
         from expertation_subject_type est inner join product_subject_type pst on pst.id = est.product_subject_type_id and est.expertation_id = #{id}
     </select>
-    
-    <select id="queryProductProfessionTypeListByExpertationId" parameterType="java.lang.Long" resultMap="SubjectTypeMap">
+
+    <select id="queryProductProfessionTypeListByExpertationId" parameterType="java.lang.Long"
+            resultMap="SubjectTypeMap">
         select
         pst.id
         ,pst.type_name
@@ -72,9 +77,11 @@
     </select>
 
 
-    <select id="queryExpertation" parameterType="com.bc.pmpheep.back.plugin.PageParameter" resultMap="expertationListMap">
+    <select id="queryExpertation" parameterType="com.bc.pmpheep.back.plugin.PageParameter"
+            resultMap="expertationListMap">
         select
         p.product_name
+        ,p.id as product_id
         ,e.id as e_id
         ,e.realname
         ,u.username
@@ -89,37 +96,34 @@
         ,e.commit_date
         ,e.unit_advise
         ,e.syllabus_name
-        ,e.isFinalResult
-        /*,pst.id as pst_id
-        ,pst.type_name
-        ,pct.product_type_id
-        ,pct.name_path*/
-        ,sum(pa.auditor_id = #{parameter.auditor_id})>0 as amIAnAuditor
+        ,e.finalResult
+        ,e.pmphAudit
+
+        ,(select GROUP_CONCAT(auditor_id) from product_auditor where product_id = #{parameter.product_id} group by
+        product_id) as auditorArray
+        ,(SELECT GROUP_CONCAT(t.id)
+        FROM (SELECT pu.id,1 AS cs FROM pmph_user pu WHERE pu.is_director = 1 AND pu.department_id IN
+        (SELECT u.department_id FROM product_auditor pa INNER JOIN pmph_user u ON pa.auditor_id = u.id WHERE product_id
+        = #{parameter.product_id})) t
+        GROUP BY
+        t.cs) as director
 
         from
         product p
-        inner join expertation e on e.product_id = p.id and  e.online_progress >0
+        inner join expertation e on e.product_id = p.id and e.online_progress >0 and e.online_progress !=2
         LEFT JOIN (SELECT id,org_name from org UNION SELECT 0,'人民卫生出版社' from
         org ) f on f.id=e.org_id
-        inner join product_auditor pa on pa.product_id = p.id
-        <!--<if test="parameter.auditor_id != null and parameter.auditor_id != '' ">   /*系统管理员 部门领导 不用匹配*/
-            and pa.auditor_id = #{parameter.auditor_id}
-        </if>-->
-        <if test="parameter.followingAuditor !=null and parameter.followingAuditor.size()>0">
-            and pa.auditor_id in
-            <foreach collection="parameter.followingAuditor" separator="," open="(" close=")" item="aid">
-                ${aid}
-            </foreach>
-        </if>
+
         left join writer_user u on u.id = e.user_id
-        /*left join expertation_subject_type est on est.expertation_id = e.id left join product_subject_type pst on pst.id = est.product_subject_type_id
-        left join expertation_content_type ect on ect.expertation_id = e.id left join product_content_type_detail pct on pct.product_type_id = ect.product_content_type_id*/
+
         where p.product_type = #{parameter.expert_type}
-        <!--<if test="parameter.username != null and parameter.username != '' ">
-            and u.username like concat('%',#{parameter.realname},'%')
-        </if>-->
+        <if test="parameter.product_id != null">
+            and p.id = #{parameter.product_id}
+        </if>
+
         <if test="parameter.realname != null and parameter.realname != '' ">
-            and (e.realname like concat('%',#{parameter.realname},'%') or u.username like concat('%',#{parameter.realname},'%'))
+            and (e.realname like concat('%',#{parameter.realname},'%') or u.username like
+            concat('%',#{parameter.realname},'%'))
         </if>
         <if test="parameter.position != null and parameter.position != '' ">
             and e.position like concat('%',#{parameter.position},'%')
@@ -135,54 +139,40 @@
             AND e.`commit_date` &gt;= str_to_date(#{parameter.startCommitDate},'%Y-%m-%d %H:%i:%s')
         </if>
         <if test="parameter.endCommitDate !=null and parameter.endCommitDate !='' ">
-            AND e.`commit_date`  &lt;=  str_to_date(#{parameter.endCommitDate},'%Y-%m-%d %H:%i:%s')
+            AND e.`commit_date` &lt;= str_to_date(#{parameter.endCommitDate},'%Y-%m-%d %H:%i:%s')
         </if>
-
-
-        <!--<if test="(parameter.schoolStauts != null and parameter.schoolStauts != '') and (parameter.pmphStauts == null or parameter.pmphStauts == '')">
+        <if test="parameter.finalResult !=null  ">
+            AND e.`finalResult` = #{parameter.finalResult}
+        </if>
+        <if test="(parameter.schoolStauts != null and parameter.schoolStauts != '') and (parameter.pmphStauts == null or parameter.pmphStauts == '')">
             and e.org_id !=0
-            <if test="parameter.schoolStauts == 0 ">  &lt;!&ndash;提交给学校 学校待审核&ndash;&gt;
-                and  e.online_progress in (1,4)
+            <if test="parameter.schoolStauts == 0 ">  <!--提交给学校 学校待审核-->
+                and e.online_progress = 1
             </if>
-            <if test="parameter.schoolStauts == 1  ">  &lt;!&ndash;提交给学校 学校审核通过&ndash;&gt;
-                and  e.online_progress = 3
+            <if test="parameter.schoolStauts == 1  ">  <!--提交给学校 学校审核通过-->
+                and e.online_progress = 3
             </if>
-            <if test="parameter.schoolStauts == 2  "> &lt;!&ndash;提交给学校 学校已退回&ndash;&gt;
-                and  e.online_progress = 2
-            </if>
+
         </if>
 
         <if test="(parameter.schoolStauts == null or parameter.schoolStauts == '') and (parameter.pmphStauts != null and parameter.pmphStauts != '')">
-            &#45;&#45; and e.org_id =0
-            <if test="parameter.pmphStauts == 0 ">  &lt;!&ndash; 出版社待审核&ndash;&gt;
-                and  ((e.org_id =0 and e.online_progress =1) or (e.org_id !=0 and e.online_progress =3))
+            -- and e.org_id =0
+            <if test="parameter.pmphStauts == 0 ">  <!-- 出版社待审核-->
+                and ((e.pmphAudit=0 and e.org_id !=0 and e.online_progress = 1) or (e.org_id = 0 and e.pmphAudit=0))
             </if>
-            <if test="parameter.pmphStauts == 1  ">  &lt;!&ndash;出版社审核通过&ndash;&gt;
-               and e.online_progress =6
+            <if test="parameter.pmphStauts == 1  ">  <!--出版社审核通过-->
+                and e.pmphAudit= 1
             </if>
-            <if test="parameter.pmphStauts == 2  "> &lt;!&ndash; 出版社退回给个人&ndash;&gt;
-                and  ((e.org_id =0 and e.online_progress =2) or (e.org_id !=0 and e.online_progress =5))
+            <if test="parameter.pmphStauts == 2  "> <!-- 出版社审核未通过-->
+                and e.pmphAudit= 2
             </if>
-            <if test="parameter.pmphStauts == 3  "> &lt;!&ndash; 出版社退回给学校&ndash;&gt;
-                and  e.org_id !=0 and e.online_progress =4
-            </if>
-            <if test="parameter.pmphStauts == 4  "> &lt;!&ndash; 出版社审核未通过&ndash;&gt;
-                and   e.online_progress =7
+            <if test="parameter.pmphStauts == 3  "> <!-- 出版社退回-->
+                and (e.online_progress = 4 or e.online_progress = 5 or e.online_progress = 2)
             </if>
         </if>
-        &lt;!&ndash;其他组合状态查询不出数据&ndash;&gt;
-        <if test="(parameter.schoolStauts != null and parameter.schoolStauts != '') and (parameter.pmphStauts != null and parameter.pmphStauts != '')">
-            <if test="parameter.schoolStauts == 0 and  parameter.pmphStauts == 0 ">
-                and  e.online_progress = 1
-            </if>
-            <if test="parameter.schoolStauts == 1 and  parameter.pmphStauts == 0 ">
-                and e.org_id !=0  and  e.online_progress = 3
-            </if>
-            <if test="parameter.schoolStauts == 1 and  parameter.pmphStauts == 1 ">
-                   and e.online_progress =6
-            </if>
-        </if>-->
-        GROUP by e.id /*,pst_id,product_type_id*/
+
+
+        GROUP by e.id
         <if test="start != null">
             limit ${start} ,${pageSize}
         </if>
@@ -194,19 +184,22 @@
         select count(e.id)
         from
         product p
-        inner join expertation e on e.product_id = p.id and  e.online_progress >0
+        inner join expertation e on e.product_id = p.id and e.online_progress >0 and e.online_progress !=2
         LEFT JOIN (SELECT id,org_name from org UNION SELECT 0,'人民卫生出版社' from
         org ) f on f.id=e.org_id
+
         left join writer_user u on u.id = e.user_id
         <if test="parameter.auditor_id != null and parameter.auditor_id != '' ">
             inner join product_auditor pa on pa.product_id = p.id and pa.auditor_id = #{parameter.auditor_id}
         </if>
         where p.product_type = #{parameter.expert_type}
-        <!--<if test="parameter.username != null and parameter.username != '' ">-->
-            <!--and u.username like concat('%',#{parameter.username},'%')-->
-        <!--</if>-->
+        <if test="parameter.product_id != null">
+            and p.id = #{parameter.product_id}
+        </if>
+
         <if test="parameter.realname != null and parameter.realname != '' ">
-            and (e.realname like concat('%',#{parameter.realname},'%') or u.username like concat('%',#{parameter.realname},'%'))
+            and (e.realname like concat('%',#{parameter.realname},'%') or u.username like
+            concat('%',#{parameter.realname},'%'))
         </if>
         <if test="parameter.position != null and parameter.position != '' ">
             and e.position like concat('%',#{parameter.position},'%')
@@ -222,78 +215,70 @@
             AND e.`commit_date` &gt;= str_to_date(#{parameter.startCommitDate},'%Y-%m-%d %H:%i:%s')
         </if>
         <if test="parameter.endCommitDate !=null and parameter.endCommitDate !='' ">
-            AND e.`commit_date`  &lt;=  str_to_date(#{parameter.endCommitDate},'%Y-%m-%d %H:%i:%s')
+            AND e.`commit_date` &lt;= str_to_date(#{parameter.endCommitDate},'%Y-%m-%d %H:%i:%s')
         </if>
+        <if test="parameter.finalResult !=null  ">
+            AND e.`finalResult` = #{parameter.finalResult}
+        </if>
+        <if test="(parameter.schoolStauts != null and parameter.schoolStauts != '') and (parameter.pmphStauts == null or parameter.pmphStauts == '')">
+            and e.org_id !=0
+            <if test="parameter.schoolStauts == 0 ">  <!--提交给学校 学校待审核-->
+                and e.online_progress = 1
+            </if>
+            <if test="parameter.schoolStauts == 1  ">  <!--提交给学校 学校审核通过-->
+                and e.online_progress = 3
+            </if>
 
-        <!--<if test="(parameter.schoolStauts != null and parameter.schoolStauts != '') and (parameter.pmphStauts == null or parameter.pmphStauts == '')">
-        and e.org_id !=0
-        <if test="parameter.schoolStauts == 0 ">  &lt;!&ndash;提交给学校 学校待审核&ndash;&gt;
-            and  e.online_progress in (1,4)
-        </if>
-        <if test="parameter.schoolStauts == 1  ">  &lt;!&ndash;提交给学校 学校审核通过&ndash;&gt;
-            and  e.online_progress = 3
-        </if>
-        <if test="parameter.schoolStauts == 2  "> &lt;!&ndash;提交给学校 学校已退回&ndash;&gt;
-            and  e.online_progress = 2
-        </if>
         </if>
 
         <if test="(parameter.schoolStauts == null or parameter.schoolStauts == '') and (parameter.pmphStauts != null and parameter.pmphStauts != '')">
-            &#45;&#45; and e.org_id =0
-            <if test="parameter.pmphStauts == 0 ">  &lt;!&ndash; 出版社待审核&ndash;&gt;
-                and  ((e.org_id =0 and e.online_progress =1) or (e.org_id !=0 and e.online_progress =3))
+            -- and e.org_id =0
+            <if test="parameter.pmphStauts == 0 ">  <!-- 出版社待审核-->
+                and ((e.pmphAudit=0 and e.org_id !=0 and e.online_progress = 1) or (e.org_id = 0 and e.pmphAudit=0))
             </if>
-            <if test="parameter.pmphStauts == 1  ">  &lt;!&ndash;出版社审核通过&ndash;&gt;
-                and e.online_progress =6
+            <if test="parameter.pmphStauts == 1  ">  <!--出版社审核通过-->
+                and e.pmphAudit= 1
             </if>
-            <if test="parameter.pmphStauts == 2  "> &lt;!&ndash; 出版社退回给个人&ndash;&gt;
-                and  ((e.org_id =0 and e.online_progress =2) or (e.org_id !=0 and e.online_progress =5))
+            <if test="parameter.pmphStauts == 2  "> <!-- 出版社审核未通过-->
+                and e.pmphAudit= 2
             </if>
-            <if test="parameter.pmphStauts == 3  "> &lt;!&ndash; 出版社退回给学校&ndash;&gt;
-                and  e.org_id !=0 and e.online_progress =4
-            </if>
-            <if test="parameter.pmphStauts == 4  "> &lt;!&ndash; 出版社审核未通过&ndash;&gt;
-                and   e.online_progress =7
+            <if test="parameter.pmphStauts == 3  "> <!-- 出版社退回-->
+                and (e.online_progress = 4 or e.online_progress = 5 or e.online_progress = 2)
             </if>
         </if>
-        &lt;!&ndash;其他组合状态查询不出数据&ndash;&gt;
-        <if test="(parameter.schoolStauts != null and parameter.schoolStauts != '') and (parameter.pmphStauts != null and parameter.pmphStauts != '')">
-            <if test="parameter.schoolStauts == 0 and  parameter.pmphStauts == 0 ">
-                and  e.online_progress = 1
-            </if>
-            <if test="parameter.schoolStauts == 1 and  parameter.pmphStauts == 0 ">
-                and e.org_id !=0  and  e.online_progress = 3
-            </if>
-            <if test="parameter.schoolStauts == 1 and  parameter.pmphStauts == 1 ">
-                and e.online_progress =6
-            </if>
-        </if>-->
-</select>
 
-<!--按内容分类统计 列表-->
-    <select id="getCountListGroupByContentType" parameterType="com.bc.pmpheep.back.plugin.PageParameter" resultType="com.bc.pmpheep.back.vo.ExpertationCountnessVO">
+
+    </select>
+
+    <!--按内容分类统计 列表-->
+    <select id="getCountListGroupByContentType" parameterType="com.bc.pmpheep.back.plugin.PageParameter"
+            resultType="com.bc.pmpheep.back.vo.ExpertationCountnessVO">
         select
-            count(t1.eid) as count_submit,
-            sum(t1.online_progress=3) as count_success,
-            t1.type_name
+        count(t1.eid) as count_submit,
+        sum(t1.pmphAudit=1) as count_success,
+        t1.type_name
         from
         (
-            select
-                e.id as eid,
-                e.online_progress,
-                ifNull(t.id,0) as tid,
-                ifNull(t.name_path,'未选择分类') as type_name
+        select
+        e.id as eid,
+        e.pmphAudit,
+        ifNull(t.id,0) as tid,
+        ifNull(t.name_path,'未选择分类') as type_name
 
-            from (select * from expertation e where e.product_id = #{parameter.product_id} and e.online_progress >0) e
-            left join expertation_content_type et on et.expertation_id = e.id
-            left join product_content_type_detail t on t.product_type_id = et.product_content_type_id
+        from expertation e
+        left join expertation_content_type et on et.expertation_id = e.id
+        left join product_content_type_detail t on t.product_type_id = et.product_content_type_id
 
-            <where>
-                <if test="parameter.type_name != null and parameter.type_name != '' ">
-                    and t.name_path like concat('%',#{parameter.type_name},'%')
-                </if>
-            </where>
-            group by tid,eid
+        <where>
+            e.online_progress >0 and e.online_progress !=2
+            <if test="parameter.id != null">
+                and e.product_id = #{parameter.id}
+            </if>
+            <if test="parameter.type_name != null and parameter.type_name != '' ">
+                and t.name_path like concat('%',#{parameter.type_name},'%')
+            </if>
+        </where>
+        group by tid,eid
 
         )t1
 
@@ -305,55 +290,63 @@
     </select>
 
     <!--按内容分类统计 列表总数-->
-    <select id="getCountListGroupByContentTypeCount" parameterType="com.bc.pmpheep.back.plugin.PageParameter" resultType="int">
+    <select id="getCountListGroupByContentTypeCount" parameterType="com.bc.pmpheep.back.plugin.PageParameter"
+            resultType="int">
         select count(t2.tid)
         from(
-            select
-                t1.tid
-            from
-            (
-                select
-                    ifNull(t.id,0) as tid
-                from (select * from expertation e where e.product_id = #{parameter.product_id} and e.online_progress >0) e
-                left join expertation_content_type et on et.expertation_id = e.id
-                left join product_content_type_detail t on t.product_type_id = et.product_content_type_id
-
-                <where>
-                    <if test="parameter.type_name != null and parameter.type_name != '' ">
-                        and t.name_path like concat('%',#{parameter.type_name},'%')
-                    </if>
-                </where>
+        select
+        t1.tid
+        from
+        (
+        select
+        ifNull(t.id,0) as tid
+        from expertation e
+        left join expertation_content_type et on et.expertation_id = e.id
+        left join product_content_type_detail t on t.product_type_id = et.product_content_type_id
+        <where>
+            e.online_progress >0 and e.online_progress !=2
+            <if test="parameter.id != null">
+                and e.product_id = #{parameter.id}
+            </if>
+            <if test="parameter.type_name != null and parameter.type_name != '' ">
+                and t.name_path like concat('%',#{parameter.type_name},'%')
+            </if>
+        </where>
 
         )t1
 
-            group by t1.tid
+        group by t1.tid
         )t2
     </select>
 
     <!--按学科分类统计 列表-->
-    <select id="getCountListGroupBySubjectType" parameterType="com.bc.pmpheep.back.plugin.PageParameter" resultType="com.bc.pmpheep.back.vo.ExpertationCountnessVO">
+    <select id="getCountListGroupBySubjectType" parameterType="com.bc.pmpheep.back.plugin.PageParameter"
+            resultType="com.bc.pmpheep.back.vo.ExpertationCountnessVO">
         select
-            count(t1.eid) as count_submit,
-            sum(t1.online_progress=3) as count_success,
-            t1.type_name
+        count(t1.eid) as count_submit,
+        sum(t1.pmphAudit=1) as count_success,
+        t1.type_name
         from
         (
-            select
-                e.id as eid,
-                e.online_progress,
-                ifNull(t.id,0) as tid,
-                ifNull(t.type_name,'未选择分类') as type_name
+        select
+        e.id as eid,
+        e.pmphAudit,
+        ifNull(t.id,0) as tid,
+        ifNull(t.type_name,'未选择分类') as type_name
 
-            from (select * from expertation e where e.product_id = #{parameter.product_id} and e.online_progress >0) e
-            left join expertation_subject_type et on et.expertation_id = e.id
-            left join product_subject_type t on t.id = et.product_subject_type_id
-
-            <where>
-                <if test="parameter.type_name != null and parameter.type_name != '' ">
-                    and t.type_name like concat('%',#{parameter.type_name},'%')
-                </if>
-            </where>
-            group by tid,eid
+        from expertation e
+        left join expertation_subject_type et on et.expertation_id = e.id
+        left join product_subject_type t on t.id = et.product_subject_type_id
+        <where>
+            e.online_progress >0 and e.online_progress !=2
+            <if test="parameter.id != null">
+                and e.product_id = #{parameter.id}
+            </if>
+            <if test="parameter.type_name != null and parameter.type_name != '' ">
+                and t.type_name like concat('%',#{parameter.type_name},'%')
+            </if>
+        </where>
+        group by tid,eid
 
         )t1
 
@@ -365,51 +358,57 @@
     </select>
 
     <!--按学科分类统计 列表总数-->
-    <select id="getCountListGroupBySubjectTypeCount"  parameterType="com.bc.pmpheep.back.plugin.PageParameter" resultType="int">
+    <select id="getCountListGroupBySubjectTypeCount" parameterType="com.bc.pmpheep.back.plugin.PageParameter"
+            resultType="int">
         SELECT count(t2.tid)
         FROM (
-          select
-                t1.tid
-            from
-            (
-                select
-                    ifNull(t.id,0) as tid
-                from (select * from expertation e where e.product_id = #{parameter.product_id} and e.online_progress >0) e
-                left join expertation_subject_type et on et.expertation_id = e.id
-                left join product_subject_type t on t.id = et.product_subject_type_id
-
-                <where>
-                    <if test="parameter.type_name != null and parameter.type_name != '' ">
-                        and t.type_name like concat('%',#{parameter.type_name},'%')
-                    </if>
-                </where>
-
-            )t1
-
-            group by t1.tid
+        select
+        t1.tid
+        from
+        (
+        select
+        ifNull(et.product_subject_type_id,0) as tid
+        from expertation e
+        left join expertation_subject_type et on et.expertation_id = e.id
+        left join product_subject_type t on t.id = et.product_subject_type_id
+        <where>
+            e.online_progress >0 and e.online_progress !=2
+            <if test="parameter.id != null">
+                and e.product_id = #{parameter.id}
+            </if>
+            <if test="parameter.type_name != null and parameter.type_name != '' ">
+                and t.type_name like concat('%',#{parameter.type_name},'%')
+            </if>
+        </where>
+        )t1
+        group by t1.tid
         )t2
     </select>
 
 
     <!--按专业分类统计 列表-->
-    <select id="getCountListGroupByProfessionType" parameterType="com.bc.pmpheep.back.plugin.PageParameter" resultType="com.bc.pmpheep.back.vo.ExpertationCountnessVO">
+    <select id="getCountListGroupByProfessionType" parameterType="com.bc.pmpheep.back.plugin.PageParameter"
+            resultType="com.bc.pmpheep.back.vo.ExpertationCountnessVO">
         select
         count(t1.eid) as count_submit,
-        sum(t1.online_progress=3) as count_success,
+        sum(t1.pmphAudit=1) as count_success,
         t1.type_name
         from
         (
         select
         e.id as eid,
-        e.online_progress,
+        e.pmphAudit,
         ifNull(t.id,0) as tid,
         ifNull(t.type_name,'未选择分类') as type_name
 
-        from (select * from expertation e where e.product_id = #{parameter.product_id} and e.online_progress >0) e
+        from expertation e
         left join expertation_profession_type et on et.expertation_id = e.id
         left join product_profession_type t on t.id = et.product_profession_type_id
-
         <where>
+            e.online_progress >0 and e.online_progress !=2
+            <if test="parameter.id != null">
+                and e.product_id = #{parameter.id}
+            </if>
             <if test="parameter.type_name != null and parameter.type_name != '' ">
                 and t.type_name like concat('%',#{parameter.type_name},'%')
             </if>
@@ -426,7 +425,8 @@
     </select>
 
     <!--按专业分类统计 列表总数-->
-    <select id="getCountListGroupByProfessionTypeCount"  parameterType="com.bc.pmpheep.back.plugin.PageParameter" resultType="int">
+    <select id="getCountListGroupByProfessionTypeCount" parameterType="com.bc.pmpheep.back.plugin.PageParameter"
+            resultType="int">
         SELECT count(t2.tid)
         FROM (
         select
@@ -435,11 +435,15 @@
         (
         select
         ifNull(t.id,0) as tid
-        from (select * from expertation e where e.product_id = #{parameter.product_id} and e.online_progress >0) e
+        from expertation e
         left join expertation_profession_type et on et.expertation_id = e.id
         left join product_profession_type t on t.id = et.product_profession_type_id
 
         <where>
+            e.online_progress >0 and e.online_progress !=2
+            <if test="parameter.id != null">
+                and e.product_id = #{parameter.id}
+            </if>
             <if test="parameter.type_name != null and parameter.type_name != '' ">
                 and t.type_name like concat('%',#{parameter.type_name},'%')
             </if>
@@ -525,7 +529,7 @@
 
         product_extension.extension_name as extension_name,
         dec_extension.id as dec_extension_id,
-        dec_extension.extension_id as dec_extension_extension_id,
+        product_extension.id as dec_extension_extension_id,
         dec_extension.declaration_id as dec_extension_declaration_id,
         dec_extension.content as dec_extension_content,
         dec_extension.expertation_id as dec_extension_expertation_id,
@@ -575,7 +579,23 @@
         (select * from expertation where id = #{expertation_id})e
                 join product_auditor pa on pa.product_id = e.product_id and pa.auditor_id = #{user_id}
 
+
     </select>
+
+    <!--查询审核人的id-->
+    <select id="queryAuditorArray" resultType="java.lang.String">
+      select GROUP_CONCAT(auditor_id) from product_auditor where product_id = (select product_id from expertation where id = #{expertation_id})  group by product_id
+    </select>
+
+    <!--查询审核人主任的id-->
+    <select id="queryDirector" resultType="java.lang.String">
+        SELECT GROUP_CONCAT(t.id)
+        FROM (SELECT pu.id,1 AS cs FROM pmph_user pu WHERE pu.is_director = 1 AND pu.department_id IN
+        (SELECT u.department_id FROM product_auditor pa INNER JOIN pmph_user u ON pa.auditor_id = u.id WHERE product_id = (select product_id from expertation where id = #{expertation_id})
+        )) t
+        GROUP BY
+        t.cs
+            </select>
 
     <!--教育经历-->
     <select id="queryDecEduExp" parameterType="java.lang.Long" resultType="DecEduExp">
@@ -593,7 +613,6 @@
         expertation_id
          from dec_edu_exp dec_edu_exp where expertation_id = #{id}
     </select>
-
 
 
     <!--工作经历-->
@@ -781,43 +800,44 @@
         <result property="banknumber" column="banknumber"></result>
         <result property="bankaddress" column="bankaddress"></result>
         <result property="unit_advise_online" column="unit_advise_online"></result>
-
-     <!--   <collection property="DecEduExpList" javaType="list" ofType="DecEduExp" >
-            <id property="id" column="dec_edu_exp_id"></id>
-            <result property="declarationId" column="dec_edu_exp_declaration_id"></result>
-            <result property="schoolName" column="dec_edu_exp_school_name"></result>
-            <result property="major" column="dec_edu_exp_major"></result>
-            <result property="degree" column="dec_edu_exp_degree"></result>
-            <result property="note" column="dec_edu_exp_note"></result>
-            <result property="dateBegin" column="dec_edu_exp_date_begin"></result>
-            <result property="dateEnd" column="dec_edu_exp_date_end"></result>
-            <result property="sort" column="dec_edu_exp_sort"></result>
-            <result property="perId" column="dec_edu_exp_per_id"></result>
-            <result property="expertationId" column="dec_edu_exp_expertation_id"></result>
-        </collection>-->
-      <!--  <collection property="DecWorkExpList" javaType="list" ofType="DecWorkExp">
-            <id property="id" column="dec_work_exp_id"></id>
-            <result property="declarationId" column="dec_work_exp_declaration_id"></result>
-            <result property="orgName" column="dec_work_exp_org_name"></result>
-            <result property="position" column="dec_work_exp_position"></result>
-            <result property="note" column="dec_work_exp_note"></result>
-            <result property="dateBegin" column="dec_work_exp_date_begin"></result>
-            <result property="dateEnd" column="dec_work_exp_date_end"></result>
-            <result property="sort" column="dec_work_exp_sort"></result>
-            <result property="perId" column="dec_work_exp_per_id"></result>
-            <result property="expertationId" column="dec_work_exp_expertation_id"></result>
-        </collection>-->
-      <!--  <collection property="DecAcadeList" javaType="list" ofType="DecAcade">
-            <id property="id" column="dec_acade_id"></id>
-            <result property="declarationId" column="dec_acade_declaration_id"></result>
-            <result property="orgName" column="dec_acade_org_name"></result>
-            <result property="rank" column="dec_acade_rank"></result>
-            <result property="position" column="dec_acade_position"></result>
-            <result property="note" column="dec_acade_note"></result>
-            <result property="sort" column="dec_acade_sort"></result>
-            <result property="perId" column="dec_acade_per_id"></result>
-            <result property="expertationId" column="dec_acade_expertation_id"></result>
-        </collection>-->
+        <result property="finalResult" column="finalResult"></result>
+        <result property="pmphAudit" column="pmphAudit"></result>
+        <!--   <collection property="DecEduExpList" javaType="list" ofType="DecEduExp" >
+               <id property="id" column="dec_edu_exp_id"></id>
+               <result property="declarationId" column="dec_edu_exp_declaration_id"></result>
+               <result property="schoolName" column="dec_edu_exp_school_name"></result>
+               <result property="major" column="dec_edu_exp_major"></result>
+               <result property="degree" column="dec_edu_exp_degree"></result>
+               <result property="note" column="dec_edu_exp_note"></result>
+               <result property="dateBegin" column="dec_edu_exp_date_begin"></result>
+               <result property="dateEnd" column="dec_edu_exp_date_end"></result>
+               <result property="sort" column="dec_edu_exp_sort"></result>
+               <result property="perId" column="dec_edu_exp_per_id"></result>
+               <result property="expertationId" column="dec_edu_exp_expertation_id"></result>
+           </collection>-->
+        <!--  <collection property="DecWorkExpList" javaType="list" ofType="DecWorkExp">
+              <id property="id" column="dec_work_exp_id"></id>
+              <result property="declarationId" column="dec_work_exp_declaration_id"></result>
+              <result property="orgName" column="dec_work_exp_org_name"></result>
+              <result property="position" column="dec_work_exp_position"></result>
+              <result property="note" column="dec_work_exp_note"></result>
+              <result property="dateBegin" column="dec_work_exp_date_begin"></result>
+              <result property="dateEnd" column="dec_work_exp_date_end"></result>
+              <result property="sort" column="dec_work_exp_sort"></result>
+              <result property="perId" column="dec_work_exp_per_id"></result>
+              <result property="expertationId" column="dec_work_exp_expertation_id"></result>
+          </collection>-->
+        <!--  <collection property="DecAcadeList" javaType="list" ofType="DecAcade">
+              <id property="id" column="dec_acade_id"></id>
+              <result property="declarationId" column="dec_acade_declaration_id"></result>
+              <result property="orgName" column="dec_acade_org_name"></result>
+              <result property="rank" column="dec_acade_rank"></result>
+              <result property="position" column="dec_acade_position"></result>
+              <result property="note" column="dec_acade_note"></result>
+              <result property="sort" column="dec_acade_sort"></result>
+              <result property="perId" column="dec_acade_per_id"></result>
+              <result property="expertationId" column="dec_acade_expertation_id"></result>
+          </collection>-->
         <!--<collection property="DecTextbookList" javaType="list" ofType="DecTextbook">
             <id property="id" column="dec_textbook_pmph_id"></id>
             <result property="declarationId" column="dec_textbook_pmph_declaration_id"></result>
@@ -860,18 +880,19 @@
         </collection>-->
 
         <!--<collection property="DecEditorBookList" javaType="list" ofType="DecEditorBook">-->
-            <!--<id property="id" column="dec_editor_book_id"></id>-->
-            <!--<result property="expertationId" column="dec_editor_book_expertation_id"></result>-->
-            <!--<result property="materialName" column="dec_editor_book_material_name"></result>-->
-            <!--<result property="publisher" column="dec_editor_book_publisher"></result>-->
-            <!--<result property="publishDate" column="dec_editor_book_publish_date"></result>-->
-            <!--<result property="note" column="dec_editor_book_note"></result>-->
-            <!--<result property="sort" column="dec_editor_book_sort"></result>-->
-            <!--<result property="perId" column="dec_editor_book_per_id"></result>-->
+        <!--<id property="id" column="dec_editor_book_id"></id>-->
+        <!--<result property="expertationId" column="dec_editor_book_expertation_id"></result>-->
+        <!--<result property="materialName" column="dec_editor_book_material_name"></result>-->
+        <!--<result property="publisher" column="dec_editor_book_publisher"></result>-->
+        <!--<result property="publishDate" column="dec_editor_book_publish_date"></result>-->
+        <!--<result property="note" column="dec_editor_book_note"></result>-->
+        <!--<result property="sort" column="dec_editor_book_sort"></result>-->
+        <!--<result property="perId" column="dec_editor_book_per_id"></result>-->
         <!--</collection>-->
 
         <collection property="DecExtensionList" javaType="list" ofType="DecExtension">
             <id property="extension_name" column="extension_name"></id>
+
             <result property="id" column="dec_extension_id"></result>
             <result property="extensionId" column="dec_extension_extension_id"></result>
             <result property="declarationId" column="dec_extension_declaration_id"></result>
@@ -894,9 +915,6 @@
     </resultMap>
 
 
-
-
-
     <!--<select id="getProductSubjectTypeListByExpertationId" parameterType="java.lang.Long" resultType="com.bc.pmpheep.back.vo.ProductType">
         select
         t.id,
@@ -913,13 +931,19 @@
     <update id="updateOnlineProgress" parameterType="map">
         update expertation
         <set>
-        <if test="onlineProgress != null">
-            online_progress=#{onlineProgress},
-        </if>
-        <if test=" returnCause != null and returnCause !='' ">
-            return_cause=#{returnCause},
-        </if>
-    </set>
+            <if test="onlineProgress == 4|| onlineProgress == 5">
+                online_progress=#{onlineProgress},
+            </if>
+            <if test="onlineProgress == 2">
+                pmphAudit=2,
+            </if>
+            <if test="onlineProgress == 3">
+                pmphAudit=1,
+            </if>
+            <if test=" returnCause != null and returnCause !='' ">
+                return_cause=#{returnCause},
+            </if>
+        </set>
         where
         id=#{id} ;
     </update>
@@ -928,6 +952,18 @@
         select is_subject_type_used,is_content_type_used,is_profession_type_used from product where product_type = #{productType}
     </select>
 
+    <update id="changeStatus" parameterType="map">
+        <if test="status == 1 || status == 2 || status == 0">
+            update expertation set pmphAudit = ${status} where id = ${id}
+        </if>
+
+        <if test="status == 4 ">
+            update expertation set finalResult =1 where id = ${id}
+        </if>
+        <if test="status == 5 ">
+            update expertation set finalResult = 0 where id = ${id}
+        </if>
+    </update>
 
 
 </mapper>
