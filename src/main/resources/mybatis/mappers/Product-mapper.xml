@@ -7,8 +7,9 @@
     <!--根据分类查出临床决策产品-->
     <select id="queryProductByProductType" resultMap="resultMapProductVO">
         select
-        p.*,
-        if(p.is_new,true,false) AS is_active
+        p.*
+        -- if(p.is_new,true,false) AS is_active
+        ,new.gmt_set_active = p.gmt_set_active as is_active
         ,pp.realname as publisher
         ,fu.realname as founder
 
@@ -32,7 +33,7 @@
         ,pe.extension_name as pe_extension_name
         ,pe.is_required as pe_is_required
         from product  p
-
+        left join (select id, gmt_set_active from product where  is_deleted = 0 and is_published = 1 and is_new = 1 and product_type = #{product_type} ORDER by gmt_set_active desc limit 1)new on new.id = p.id
         left join pmph_user pp on pp.id = p.publisher_id
         left join pmph_user fu on fu.id = p.founder_id
         left join product_auditor pu on pu.product_id = p.id left join pmph_user u on pu.auditor_id = u.id
@@ -741,7 +742,8 @@
 
     <!--跟新发布状态-->
     <update id="updateProduct" parameterType="com.bc.pmpheep.back.vo.ProductVO">
-        update product set is_new = 0 where product_type = (select product_type from product where id = #{id}) and is_published = 1;
+        UPDATE product t2 SET t2.is_new = 0  WHERE
+        t2.product_type = (SELECT t3.* FROM (SELECT t1.product_type FROM product t1 WHERE t1.id = #{id} ) t3 ) AND t2.is_published = 1;
         update product set is_published = #{is_published}, publisher_id = #{publisher_id},gmt_publish=#{gmt_publish},is_new = 1
         <!-- <if test="is_active">
              ,gmt_set_active = now()
@@ -793,6 +795,32 @@
     <!--获取临床集合-->
     <select id="getListProduct" parameterType="java.lang.String" resultType="Product">
         select * from product where product_name = #{productName}
+    </select>
+
+   <!-- 根据产品id 获取产品的名字-->
+    <select id="getProductNameById" parameterType="long" resultType="string">
+        select product_name  from product where id=#{materialId}
+    </select>
+
+    <!--根据产品id 获取到审核人-->
+    <select id="getAuthorList" parameterType="long" resultType="java.lang.Long">
+        select auditor_id from product_auditor where product_id = #{productId}
+    </select>
+
+    <!--获取所有审核人的名字-->
+    <select id="getAllAuthorName" parameterType="long" resultType="string">
+         select t.realname from
+          (SELECT GROUP_CONCAT(pu.realname) realname, 'group' groupByName FROM product_auditor pa LEFT JOIN pmph_user pu on pa.auditor_id = pu.id
+              WHERE product_id = #{productId} group by groupByName)t
+    </select>
+
+    <!--获取到审核者的openid-->
+    <select id="getAuthorOpenid" parameterType="java.util.List" resultType="java.lang.String">
+        select pu.openid  FROM product_auditor pa INNER JOIN pmph_user pu on pa.auditor_id = pu.id where pa.auditor_id in
+        <foreach item="auditorId" collection="list" open="(" separator=","
+                 close=")">
+            #{auditorId}
+        </foreach>
     </select>
 
 </mapper>

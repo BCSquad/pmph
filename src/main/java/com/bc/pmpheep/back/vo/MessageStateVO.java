@@ -30,6 +30,8 @@ public class MessageStateVO implements Serializable {
 	 * 教材id
 	 */
 	private Long materialId;
+	//是否是产品类消息
+	private Boolean isProduct;
 	// 接收时间
 	private Timestamp reciveTime;
 	// 接收人
@@ -48,6 +50,8 @@ public class MessageStateVO implements Serializable {
 	private Boolean isWithdraw;
 	// 条件分页总条数分页查询
 	private Integer count;
+
+
 
 	public MessageStateVO() {
 		super();
@@ -202,5 +206,15 @@ public class MessageStateVO implements Serializable {
 
 	public void setWorkplace(String workplace) {
 		this.workplace = workplace;
+	}
+
+
+
+	public Boolean getIsProduct() {
+		return isProduct;
+	}
+
+	public void setIsProduct(Boolean isProduct) {
+		this.isProduct = isProduct;
 	}
 }

@@ -107,8 +107,8 @@ public final class SystemMessageService {
 	 * @throws IOException
 	 * @return
 	 */
-	public void materialSend(Long materialId, List<Long> ids,PmphUser pmphUser) throws CheckedServiceException, IOException {
-		this.materialSend(materialId, ids, false,pmphUser);
+	public void materialSend(Long materialId, List<Long> ids,PmphUser pmphUser,Boolean isProduct) throws CheckedServiceException, IOException {
+		this.materialSend(materialId, ids, false,pmphUser,isProduct);
 	}
 
 	/**
@@ -126,10 +126,10 @@ public final class SystemMessageService {
 	 * @throws IOException
 	 * @return
 	 */
-	public void materialSend(Long materialId, List<Long> ids, boolean isOnlyManager,PmphUser pmphUser)
+	public void materialSend(Long materialId, List<Long> ids, boolean isOnlyManager,PmphUser pmphUser,Boolean isProduct)
 			throws CheckedServiceException, IOException {
 
-		String materialName = materialService.getMaterialNameById(materialId);
+		String materialName = isProduct?productService.getProductNameById(materialId):materialService.getMaterialNameById(materialId);
 		if (StringUtils.isEmpty(materialName)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM,
 					"消息体为空");
@@ -154,7 +154,7 @@ public final class SystemMessageService {
 				for (WriterUser writerUser : writerUserList) {
 					// 信息是由系统发出
 					UserMessage userMessage = new UserMessage(msg_id, messageTitle, new Short("0"), pmphUser.getId(), new Short("1"),
-							writerUser.getId(), new Short("2"), materialId);
+							writerUser.getId(), new Short("2"), materialId,isProduct);
 					userMessageList.add(userMessage);
 					userIds.add("2_" + writerUser.getId());
 				}
@@ -179,7 +179,7 @@ public final class SystemMessageService {
 			List<String> userIds = new ArrayList<String>(orgUserList.size());
 			for (OrgUser orgUser : orgUserList) {
 				UserMessage userMessage = new UserMessage(msg_id, messageTitle, new Short("0"), pmphUser.getId(), new Short("1"),
-						orgUser.getId(), new Short("3"), materialId);
+						orgUser.getId(), new Short("3"), materialId,isProduct);
 				userMessageList.add(userMessage);
 				userIds.add("3_" + orgUser.getId());
 			}

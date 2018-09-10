@@ -64,7 +64,7 @@ public interface ProductService {
      * @param sessionId
      * @return
      */
-    Integer noticePublished(Long productId, List<Long> orgIds,/*Boolean is_active,*/ String sessionId);
+    Integer noticePublished(Long productId, List<Long> orgIds,/*Boolean is_active,*/ String sessionId) throws IOException;
 
     /**
      * 发布临床-机构
@@ -109,4 +109,10 @@ public interface ProductService {
     List<Product> getListProduct(String productName);
 
 
+    /**
+     * 根据productId 获取产品的名字
+     * @param materialId
+     * @return
+     */
+    String getProductNameById(Long materialId);
 }

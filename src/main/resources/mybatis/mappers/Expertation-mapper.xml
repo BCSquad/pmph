@@ -99,10 +99,12 @@
         ,e.finalResult
         ,e.pmphAudit
 
-        ,(select GROUP_CONCAT(auditor_id) from product_auditor where product_id =  #{parameter.product_id}  group by product_id) as auditorArray
+        ,(select GROUP_CONCAT(auditor_id) from product_auditor where product_id = #{parameter.product_id} group by
+        product_id) as auditorArray
         ,(SELECT GROUP_CONCAT(t.id)
         FROM (SELECT pu.id,1 AS cs FROM pmph_user pu WHERE pu.is_director = 1 AND pu.department_id IN
-        (SELECT u.department_id FROM product_auditor pa INNER JOIN pmph_user u ON pa.auditor_id = u.id WHERE product_id = #{parameter.product_id})) t
+        (SELECT u.department_id FROM product_auditor pa INNER JOIN pmph_user u ON pa.auditor_id = u.id WHERE product_id
+        = #{parameter.product_id})) t
         GROUP BY
         t.cs) as director
 
@@ -168,7 +170,6 @@
                 and (e.online_progress = 4 or e.online_progress = 5 or e.online_progress = 2)
             </if>
         </if>
-
 
 
         GROUP by e.id
@@ -299,7 +300,7 @@
         (
         select
         ifNull(t.id,0) as tid
-         from expertation e
+        from expertation e
         left join expertation_content_type et on et.expertation_id = e.id
         left join product_content_type_detail t on t.product_type_id = et.product_content_type_id
         <where>
@@ -371,9 +372,9 @@
         left join expertation_subject_type et on et.expertation_id = e.id
         left join product_subject_type t on t.id = et.product_subject_type_id
         <where>
-             e.online_progress >0 and e.online_progress !=2
+            e.online_progress >0 and e.online_progress !=2
             <if test="parameter.id != null">
-            and e.product_id = #{parameter.id}
+                and e.product_id = #{parameter.id}
             </if>
             <if test="parameter.type_name != null and parameter.type_name != '' ">
                 and t.type_name like concat('%',#{parameter.type_name},'%')
@@ -441,7 +442,7 @@
         <where>
             e.online_progress >0 and e.online_progress !=2
             <if test="parameter.id != null">
-                and  e.product_id = #{parameter.id}
+                and e.product_id = #{parameter.id}
             </if>
             <if test="parameter.type_name != null and parameter.type_name != '' ">
                 and t.type_name like concat('%',#{parameter.type_name},'%')

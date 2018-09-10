@@ -7,6 +7,7 @@ import com.bc.pmpheep.back.vo.ProductVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ProductDao {
 
@@ -140,4 +141,32 @@ public interface ProductDao {
     List<Product> getListProduct(String productName);
 
 
+    /**
+     * 根据产品id 获取产品的名字
+     * @param materialId
+     * @return
+     */
+    String getProductNameById(Long materialId);
+
+    /**
+     * 根据产品id 获取到审核人
+     * @param productId
+     * @return
+     */
+    List<Long> getAuthorList(Long productId);
+
+    /**
+     *根据
+     * @param useridList
+     * @return
+     */
+    Set<String> getAuthorOpenid(List<Long> useridList);
+
+
+    /**
+     * 获取到所有审核人的名字
+     * @param productId
+     * @return
+     */
+    String getAllAuthorName(Long productId);
 }
