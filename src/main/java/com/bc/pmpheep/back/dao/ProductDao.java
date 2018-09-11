@@ -169,4 +169,11 @@ public interface ProductDao {
      * @return
      */
     String getAllAuthorName(Long productId);
+
+    /**
+     * 获取是否勾选了 当前产品公告 is_new
+     * @param id
+     * @return
+     */
+    Boolean getIsActiveByProductId(Long id);
 }
