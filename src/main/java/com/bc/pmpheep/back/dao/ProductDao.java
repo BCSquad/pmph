@@ -7,6 +7,7 @@ import com.bc.pmpheep.back.vo.ProductVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ProductDao {
 
@@ -16,7 +17,14 @@ public interface ProductDao {
      * @param clinicalDecision 附件下载地址需要的前缀，后面拼接附件id
      * @return
      */
-    ProductVO queryProductByProductType(@Param(value = "product_type") Long product_type,@Param(value = "uri") String clinicalDecision);
+    ProductVO queryProductByProductType(@Param(value = "product_type") Long product_type,@Param(value = "product_id") Long product_id);
+
+    /**
+     * 根据主键查询
+     * @param product_id
+     * @return
+     */
+    ProductVO queryProductById(Long product_id);
 
     /**
      * 更新下载次数+1
@@ -131,4 +139,41 @@ public interface ProductDao {
      * @return
      */
     List<Product> getListProduct(String productName);
+
+
+    /**
+     * 根据产品id 获取产品的名字
+     * @param materialId
+     * @return
+     */
+    String getProductNameById(Long materialId);
+
+    /**
+     * 根据产品id 获取到审核人
+     * @param productId
+     * @return
+     */
+    List<Long> getAuthorList(Long productId);
+
+    /**
+     *根据
+     * @param useridList
+     * @return
+     */
+    Set<String> getAuthorOpenid(List<Long> useridList);
+
+
+    /**
+     * 获取到所有审核人的名字
+     * @param productId
+     * @return
+     */
+    String getAllAuthorName(Long productId);
+
+    /**
+     * 获取是否勾选了 当前产品公告 is_new
+     * @param id
+     * @return
+     */
+    Boolean getIsActiveByProductId(Long id);
 }

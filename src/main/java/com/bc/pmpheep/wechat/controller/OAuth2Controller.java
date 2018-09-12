@@ -25,18 +25,18 @@ import com.bc.pmpheep.wechat.util.QiYeUtil;
 import com.bc.pmpheep.wechat.util.Result;
 
 /**
- * 
+ *
  * <pre>
  * 功能描述： OAuth2 处理控制器
  * 使用示范：
- * 
- * 
+ *
+ *
  * @author (作者) nyz
- * 
+ *
  * @since (该版本支持的JDK版本) ：JDK 1.6或以上
  * @version (版本) 1.0
  * @date (开发日期) 2018-2-27
- * @modify (最后修改时间) 
+ * @modify (最后修改时间)
  * @修改人 ：nyz 
  * @审核人 ：
  * </pre>
@@ -51,7 +51,7 @@ public class OAuth2Controller {
         return "redirect:"+val;
     }
     /**
-     * 
+     *
      * <pre>
      * 功能描述：构造参数并将请求重定向到微信API获取登录信息
      * 使用示范：
@@ -97,7 +97,7 @@ public class OAuth2Controller {
     }
 
     /**
-     * 
+     *
      * <pre>
      * 功能描述：根据code获取Userid后跳转到需要带用户信息的最终页面
      * 使用示范：
@@ -138,7 +138,7 @@ public class OAuth2Controller {
     }
 
     /**
-     * 
+     *
      * <pre>
      * 功能描述：构造带员工身份信息的URL
      * 使用示范：
@@ -162,7 +162,7 @@ public class OAuth2Controller {
     }
 
     /**
-     * 
+     *
      * <pre>
      * 功能描述：调用接口获取用户信息
      * 使用示范：

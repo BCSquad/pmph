@@ -7,6 +7,7 @@ import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphDepartment;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.service.common.SystemMessageService;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
@@ -19,6 +20,7 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +41,8 @@ public class ExpertationServiceImpl implements ExpertationService{
     @Autowired
     private PmphDepartmentService    pmphDepartmentService;
 
+    @Autowired
+    private SystemMessageService systemMessageService;
 
     /**
      * 查找临床决策申报列表
@@ -62,24 +66,19 @@ public class ExpertationServiceImpl implements ExpertationService{
             throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.NULL_PARAM,
                     "申报类型为空");
         }
-
-
-
-
         List<PmphRole> pmphRoles = pmphUserService.getListUserRole(pmphUser.getId());
         // 下面进行授权
-        Boolean is_admin = false;
+        /*Boolean is_admin = false;
         // 系统管理员权限检查
         for (PmphRole pmphRole : pmphRoles) {
             if (null != pmphRole && null != pmphRole.getRoleName() && "系统管理员".equals(pmphRole.getRoleName())) {
                 // 我是系统管理原
                 is_admin = true;
             }
-        }
-
+        }*/
 
         // 如果是系统管理员，则查询所有，否则查询对应的消息
-        if (Const.FALSE == pmphUser.getIsAdmin()) {
+       /* if (Const.FALSE == pmphUser.getIsAdmin()) {
             List<Long> ids = new ArrayList<Long>();
             // 如果是主任，获取主任所在部门下的所有用户
             if (Const.TRUE == pmphUser.getIsDirector()) {
@@ -108,18 +107,15 @@ public class ExpertationServiceImpl implements ExpertationService{
                 ids.add(pmphUser.getId());
             }
             pageParameter.getParameter().setFollowingAuditor(ids);
-        }
-
-
-
+        }*/
 
 
         //若管理员或领导登录 则不传入此id 查询全部申报 （但同时也因空id，查出的amIAnAuditor将为否 ，管理员需在前台给审核权限，领导查看即可）
         //否则
-        if(!is_admin && Const.TRUE != pmphUser.getIsDirector()){
+       /* if(!is_admin && Const.TRUE != pmphUser.getIsDirector()){
             // 传入登录人id 作为查询条件 审核人id
             pageParameter.getParameter().setAuditor_id(pmphUser.getId());
-        }
+        }*/
 
         PageResult pageResult = new PageResult();
         int totalCount = expertationDao.queryExpertationCount(pageParameter);
@@ -133,6 +129,7 @@ public class ExpertationServiceImpl implements ExpertationService{
                 e.setProductContentTypeList(clist);
                 e.setExcelTypeStr();
             }*/
+
         }
 
         pageResult.setPageNumber(pageParameter.getPageNumber());
@@ -160,13 +157,17 @@ public class ExpertationServiceImpl implements ExpertationService{
 
         int ttype = (int)pageParameter.getParameter().get("ttype");
         int ptype = (int)pageParameter.getParameter().get("ptype");
+        pageParameter.getParameter().put("ptype",ptype);
 
-        ProductVO product = productDao.queryProductByProductType(Long.valueOf(String.valueOf(ptype)), "");
+        /*ProductVO product = productDao.queryProductByProductType(Long.valueOf(String.valueOf(ptype)), "");
+        ProductVO product = productDao.queryProductByProductType(Long.valueOf(String.valueOf(ptype)), null,"");
         if(product!=null && product.getId() != null){
             pageParameter.getParameter().put("product_id",product.getId());
         }else{
             pageParameter.getParameter().put("product_id",0);
-        }
+        }*/
+        //ProductVO product =new ProductVO();
+
         List<ExpertationCountnessVO> list = new ArrayList<>();
         int totalCount = 0;
         if(ttype == 2){ //2.内容分类
@@ -208,7 +209,39 @@ public class ExpertationServiceImpl implements ExpertationService{
 
         ExpertationVO expertationVO = expertationDao.getExpertationById(id);
 
-        expertationVO.setAmIAnAuditor(expertationDao.queryAmIAnAuditor(pmphUser.getId(),id));
+        //expertationVO.setAmIAnAuditor(expertationDao.queryAmIAnAuditor(pmphUser.getId(),id));
+        expertationVO.setAuditorArray(expertationDao.queryAuditorArray(pmphUser.getId(),id));
+        expertationVO.setDirector(expertationDao.queryDirector(pmphUser.getId(),id));
+
+        expertationVO.setDecAcadeList(expertationDao.queryDecAcade(id));
+
+        expertationVO.setDecEduExpList(expertationDao.queryDecEduExp(id));
+
+        expertationVO.setDecWorkExpList(expertationDao.queryDecWorkExp(id));
+
+        expertationVO.setDecMonographList(expertationDao.queryDecMonograph(id));
+
+        expertationVO.setDecTextbookPmphList(expertationDao.queryDecTextbookPmph(id));
+
+        expertationVO.setDecEditorBookList(expertationDao.queryDecEditorBook(id));
+
+        expertationVO.setDecArticlePublishedList(expertationDao.queryDecArticlePublished(id));
+
+        expertationVO.setDecProfessionAwardList(expertationDao.queryDecProfessionAward(id));
+
+        expertationVO.setProductProfessionTypeList(expertationDao.queryProfession(id));
+        return expertationVO;
+    }
+
+    /**
+     * 查询临床决策申报详情
+     * @param id 申报表主键
+     * @return
+     */
+    @Override
+    public ExpertationVO getExpertationById(Long id) {
+
+        ExpertationVO expertationVO = expertationDao.getExpertationById(id);
 
         expertationVO.setDecAcadeList(expertationDao.queryDecAcade(id));
 
@@ -234,32 +267,36 @@ public class ExpertationServiceImpl implements ExpertationService{
     public Boolean onlineProgress(Long id, Integer onlineProgress, String returnCause, PmphUser pmphUser) {
         Boolean flag = false;
         if (ObjectUtil.isNull(id)) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
                     "主键不能为空!");
         }
         if (ObjectUtil.isNull(onlineProgress)) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
                     "审核进度不能为空!");
         }
 
-        if (StringUtil.isEmpty(returnCause)&&(onlineProgress.intValue()==4||onlineProgress.intValue()==5)) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.ILLEGAL_PARAM,
+        if (StringUtil.isEmpty(returnCause)&&(4==onlineProgress.intValue()||5==onlineProgress.intValue())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
                     "退回原因不能为空!");
         }
         try{
-            //获取申报信息
-            ExpertationVO expertationVO  = expertationDao.getExpertationById(id);
-            if(4==onlineProgress.intValue()||5==onlineProgress.intValue()){ // 退回
-                if (StringUtil.strLength(returnCause) > 40) {
-                    throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.NULL_PARAM,
-                            "最多只能输入40个字符，请重新输入!");
-                }
 
+            if (StringUtil.strLength(returnCause) > 40) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.NULL_PARAM,
+                        "最多只能输入40个字符，请重新输入!");
+            }
+
+            expertationDao.updateOnlineProgress(id,onlineProgress,returnCause);
+
+            if(4==onlineProgress.intValue()||5==onlineProgress.intValue()){ // 退回
                 // 产生一条动态消息
             }else if(3==onlineProgress.intValue()){ // 通过
                 // 产生一条动态消息
             }
-            expertationDao.updateOnlineProgress(id,onlineProgress,returnCause);
+
+            //发用户消息
+            systemMessageService.sendWhenExpertationFormAudit(id,pmphUser);
+
             flag = true;
         }catch (Exception e){
          e.printStackTrace();
@@ -294,6 +331,29 @@ public class ExpertationServiceImpl implements ExpertationService{
         return resultMap;
     }
 
+    @Override
+    public int changeStatus(Integer status,Long id, String sessionId) {
+        if (ObjectUtil.isNull(status)){
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
+                    "审核状态不能为空!");
+        }
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+        if(!pmphUser.getIsAdmin()&&!pmphUser.getIsDirector()&&status==5){
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
+                    "非法操作!");
+        }
+        int result = expertationDao.changeStatus(status, id);
+
+        if(status == 4){
+            //发用户消息
+            try {
+                systemMessageService.sendWhenExpertationFormAudit(id,pmphUser);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
 
 
 }

@@ -60,6 +60,22 @@ public class ExpertationController {
     }
 
     /**
+     * 改变申报审核的状态
+     * @param request
+     * @param status
+     * @return
+     */
+    @RequestMapping("/changeStatus")
+    @ResponseBody
+    public ResponseBean changeStatus(
+            HttpServletRequest request
+            ,Integer status,Long id ){
+        String sessionId = CookiesUtil.getSessionId(request);
+         int num = expertationService.changeStatus(status,id,sessionId);
+         return new ResponseBean(num);
+    }
+
+    /**
      *
      * @param request
      * @param ttype 分类类型 1.学科分类 2.内容分类 3.专业分类
@@ -72,6 +88,7 @@ public class ExpertationController {
                                                 @PathVariable("ttype")int ttype,
                                                 @PathVariable("ptype")int ptype,
                                                 @RequestParam(value = "type_name",required = false)String type_name,
+                                                @RequestParam(value = "id",required = false) Long id,
                                                 @RequestParam(value = "pageSize",defaultValue = "10") Integer pageSize,
                                                 @RequestParam(value = "pageNumber",defaultValue = "1") Integer pageNumber)
     {
@@ -82,6 +99,7 @@ public class ExpertationController {
         paraMap.put("ttype",ttype); //分类类型 1.学科分类 2.内容分类 3.专业分类
         paraMap.put("ptype",ptype); // 临床决策产品类型 1.人卫临床助手 2.人卫用药助手 3.人卫中医助手  ect
         paraMap.put("type_name",type_name); //分类名称模糊查询
+        paraMap.put("id",id);
         pageParameter.setParameter(paraMap);
 
         PageResult pageResult = expertationService.getCountListGroupByType(pageParameter,sessionId);

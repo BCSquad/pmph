@@ -8,6 +8,49 @@
     <select id="queryProductByProductType" resultMap="resultMapProductVO">
         select
         p.*
+        -- if(p.is_new,true,false) AS is_active
+        ,if(p.is_published = 1,new.gmt_set_active = p.gmt_set_active,p.is_new) as is_active
+        ,pp.realname as publisher
+        ,fu.realname as founder
+
+        ,pu.id as u_id
+        ,pu.auditor_id as u_uid
+        ,u.realname  as u_realname
+
+        ,pa.id as a_id
+        ,pa.attachment as a_attachment
+        ,pa.attachment_name as a_attachment_name
+        ,pa.download as a_download
+        ,pa.is_scan_img as a_is_scan_img
+
+        ,pimg.id as pimg_id
+        ,pimg.attachment as pimg_attachment
+        ,pimg.attachment_name as pimg_attachment_name
+        ,pimg.download as pimg_download
+        ,pimg.is_scan_img as pimg_is_scan_img
+
+        ,pe.id as pe_id
+        ,pe.extension_name as pe_extension_name
+        ,pe.is_required as pe_is_required
+        from product  p
+        left join (select id, gmt_set_active from product where  is_deleted = 0 and is_published = 1 and is_new = 1 and product_type = #{product_type} ORDER by gmt_set_active desc limit 1)new on new.id = p.id
+        left join pmph_user pp on pp.id = p.publisher_id
+        left join pmph_user fu on fu.id = p.founder_id
+        left join product_auditor pu on pu.product_id = p.id left join pmph_user u on pu.auditor_id = u.id
+        left join product_attachment pa on pa.product_id = p.id and pa.is_scan_img = 0 and pa.is_deleted = 0
+        left join product_attachment pimg on pimg.product_id = p.id and pimg.is_scan_img = 1 and pimg.is_deleted = 0
+        left join product_extension pe on pe.product_id = p.id and pe.is_deleted =0
+
+        where p.product_type = #{product_type}
+
+          and p.id = #{product_id}
+
+    </select>
+
+    <!--根据id查出临床决策产品-->
+    <select id="queryProductById" parameterType="Long" resultMap="resultMapProductVO">
+        select
+        p.*
         ,pp.realname as publisher
         ,fu.realname as founder
 
@@ -40,7 +83,7 @@
         left join product_attachment pimg on pimg.product_id = p.id and pimg.is_scan_img = 1 and pimg.is_deleted = 0
         left join product_extension pe on pe.product_id = p.id and pe.is_deleted =0
 
-        where p.product_type = #{product_type}
+        where p.id = #{product_id}
     </select>
 
     <resultMap id="resultMapProductVO" type="com.bc.pmpheep.back.vo.ProductVO">
@@ -85,19 +128,24 @@
         <result column="description" property="description"></result>
         <result column="publisher" property="publisher"></result>
         <result column="founder" property="founder"></result>
+        <result column="founderDepartment" property="founderDepartment"></result>
+        <result column="is_active" property="is_active"></result>
+        <result column="gmt_set_active" property="gmt_set_active"></result>
+        <result column="actualDeadline" property="actualDeadline"></result>
+
         <collection property="auditorList" javaType="java.util.List" ofType="com.bc.pmpheep.back.po.ProductAuditor">
             <id column="u_id" property="id"></id>
             <result column="u_uid" property="auditor_id"></result>
             <!--<result column="id" property="product_id"></result>-->
             <result column="u_realname" property="auditor_name"></result>
         </collection>
-        <collection property="ProductExtensionList" javaType="java.util.List" ofType="com.bc.pmpheep.back.po.ProductExtension">
+        <collection property="productExtensionList" javaType="java.util.List" ofType="com.bc.pmpheep.back.po.ProductExtension">
             <id column="pe_id" property="id"></id>
             <!--<result column="id" property="productId"></result>-->
             <result column="pe_extension_name" property="extensionName"></result>
             <result column="pe_is_required" property="isRequired"></result>
         </collection>
-        <collection property="ProductAttachmentList" javaType="java.util.List" ofType="com.bc.pmpheep.back.po.ProductAttachment">
+        <collection property="productAttachmentList" javaType="java.util.List" ofType="com.bc.pmpheep.back.po.ProductAttachment">
             <id column="a_id" property="id"></id>
             <!--<result column="id" property="product_id"></result>-->
             <result column="a_attachment" property="attachment"></result>
@@ -105,7 +153,7 @@
             <result column="a_download" property="download"></result>
             <result column="a_is_scan_img" property="is_scan_img"></result>
         </collection>
-        <collection property="ProducntImgList" javaType="java.util.List" ofType="com.bc.pmpheep.back.po.ProductAttachment">
+        <collection property="producntImgList" javaType="java.util.List" ofType="com.bc.pmpheep.back.po.ProductAttachment">
             <id column="pimg_id" property="id"></id>
             <!--<result column="id" property="product_id"></result>-->
             <result column="pimg_attachment" property="attachment"></result>
@@ -123,7 +171,10 @@
     <sql id="key">
         <!-- 去掉最后一个, -->
         <trim suffixOverrides=",">
-            <if test="product_name!=null">
+            <if test="id!=null">
+                id,
+            </if>
+            <if test="product_name!=null and product_name!=''">
                 product_name,
             </if>
             <if test="product_type!=null">
@@ -226,6 +277,13 @@
             <if test="description!=null">
                 description,
             </if>
+            <if test="actualDeadline!=null">
+                actualDeadline,
+            </if>
+            <if test="is_active">
+                gmt_set_active,
+                is_new,
+            </if>
         </trim>
     </sql>
 
@@ -233,7 +291,11 @@
     <sql id="value">
     <!-- 去掉最后一个, -->
         <trim suffixOverrides=",">
-            <if test="product_name!=null">
+            <if test="id!=null">
+                #{id},
+            </if>
+
+            <if test="product_name!=null and product_name != ''">
                 #{product_name},
             </if>
             <if test="product_type!=null">
@@ -334,12 +396,22 @@
             <if test="description!=null">
                 #{description},
             </if>
+            <if test="actualDeadline!=null">
+                #{actualDeadline},
+            </if>
+            <if test="is_active">
+                 now(),
+                1
+            </if>
         </trim>
     </sql>
 
     <sql id="update">
         <trim suffixOverrides=",">
-            <if test="product_name != null ">
+            <if test="id!=null">
+               id =#{id},
+            </if>
+            <if test="product_name != null and product_name !=  '' ">
                 product_name	=	#{product_name}	,
             </if>
             <if test="product_type != null ">
@@ -440,6 +512,16 @@
             <if test="description!=null">
                 description= #{description},
             </if>
+            <if test="actualDeadline!=null">
+                actualDeadline= #{actualDeadline},
+            </if>
+            <if test="is_active">
+                gmt_set_active = now(),
+                is_new = 1
+            </if>
+            <if test="!is_active">
+                is_new = 0
+            </if>
         </trim>
     </sql>
 
@@ -448,6 +530,9 @@
      * insert on duplicate key update 主表product 其中 unique键除主键外 还有product_type
      * keyProperty设为id 若插入 则将生成的id传回到productVO的id中 便于附表关联之-->
     <insert id="saveProduct" useGeneratedKeys="true" keyProperty="id" parameterType="com.bc.pmpheep.back.vo.ProductVO">
+        <if test="is_published and is_active">
+            UPDATE product t2 SET t2.is_new = 0  WHERE  t2.product_type = #{product_type} AND t2.is_published = 1;
+        </if>
         insert into product
         (
           <include refid="key" />
@@ -565,17 +650,40 @@
     </insert>
 
     <select id="queryList" resultMap="resultMapProductVO" parameterType="com.bc.pmpheep.back.plugin.PageParameter">
-        SELECT p.*,u.realname as founder FROM
+        select * from (SELECT p.*
+        ,if( p.is_published = 1,new.gmt_set_active = p.gmt_set_active,is_new) as is_active
+        ,u.realname as founder
+        ,d.dp_name as founderDepartment
+        FROM
         product p
         left join pmph_user u on p.founder_id = u.id
+        left join pmph_department d on d.id = u.department_id
+        left join (select id, gmt_set_active from product
+        <where>
+            is_deleted = 0 and is_published = 1 and is_new = 1
+            <if test="
+            parameter.product_type != null ">
+                            and product_type = #{parameter.product_type}
+                        </if>
+                    </where>
+                    ORDER by gmt_set_active desc limit 1)new on new.id = p.id
         <where>
             <if test="parameter.product_name != null and parameter.product_name !='' ">
                 and p.product_name like concat('%',#{parameter.product_name},'%')
             </if>
-            <if test="(parameter.is_published != null)">
+            <if test="parameter.is_published != null">
                 and p.is_published = #{parameter.is_published}
             </if>
-        </where>
+            <if test="parameter.product_type != null ">
+                and p.product_type = #{parameter.product_type}
+            </if>
+
+
+            <if test="parameter.is_active">
+                order by p.gmt_set_active and p.is_deleted = 0 and p.is_published = 1 and p.is_new = 1 DESC limit 1
+            </if>
+        </where>)p
+        ORDER BY  p.is_new desc ,p.is_published desc, p.gmt_set_active desc
         limit #{start},#{pageSize}
     </select>
 
@@ -588,6 +696,13 @@
             </if>
             <if test="(parameter.is_published != null)">
                 and is_published = #{parameter.is_published}
+            </if>
+
+            <if test="parameter.product_type != null ">
+                and product_type = #{parameter.product_type}
+            </if>
+            <if test="parameter.is_active">
+                order by gmt_set_active and is_deleted = 0 and is_published = 1 and is_new = 1 DESC limit 1
             </if>
         </where>
     </select>
@@ -630,8 +745,25 @@
 
     <!--跟新发布状态-->
     <update id="updateProduct" parameterType="com.bc.pmpheep.back.vo.ProductVO">
-        update product set is_published = #{is_published}, publisher_id = #{publisher_id} where id = #{id}
+        <if test="is_active"> /*此处is_active 代表 is_new*/
+            UPDATE product t2 SET t2.is_new = 0  WHERE
+            t2.product_type = (SELECT t3.* FROM (SELECT t1.product_type FROM product t1 WHERE t1.id = #{id} ) t3 ) AND t2.is_published = 1;
+        </if>
+
+        update product set is_published = #{is_published}, publisher_id = #{publisher_id},gmt_publish=#{gmt_publish}
+        <if test="is_active"> /*此处is_active 代表 is_new*/
+        ,is_new = 1
+        </if>
+        <!-- <if test="is_active">
+             ,gmt_set_active = now()
+         </if>-->
+         where id = #{id}
     </update>
+
+    <!--获取是否勾选了 当前产品公告 is_new-->
+    <select id="getIsActiveByProductId" parameterType="java.lang.Long" resultType="java.lang.Boolean">
+        select is_new from product where id = #{id}
+    </select>
 
     <!--根据临床id 获取临床-机构信息-->
     <select id="getListProductOrgByProductId" parameterType="java.lang.Long" resultType="java.lang.Long">
@@ -677,6 +809,32 @@
     <!--获取临床集合-->
     <select id="getListProduct" parameterType="java.lang.String" resultType="Product">
         select * from product where product_name = #{productName}
+    </select>
+
+   <!-- 根据产品id 获取产品的名字-->
+    <select id="getProductNameById" parameterType="long" resultType="string">
+        select product_name  from product where id=#{materialId}
+    </select>
+
+    <!--根据产品id 获取到审核人-->
+    <select id="getAuthorList" parameterType="long" resultType="java.lang.Long">
+        select auditor_id from product_auditor where product_id = #{productId}
+    </select>
+
+    <!--获取所有审核人的名字-->
+    <select id="getAllAuthorName" parameterType="long" resultType="string">
+         select t.realname from
+          (SELECT GROUP_CONCAT(pu.realname) realname, 'group' groupByName FROM product_auditor pa LEFT JOIN pmph_user pu on pa.auditor_id = pu.id
+              WHERE product_id = #{productId} group by groupByName)t
+    </select>
+
+    <!--获取到审核者的openid-->
+    <select id="getAuthorOpenid" parameterType="java.util.List" resultType="java.lang.String">
+        select pu.openid  FROM product_auditor pa INNER JOIN pmph_user pu on pa.auditor_id = pu.id where pa.auditor_id in
+        <foreach item="auditorId" collection="list" open="(" separator=","
+                 close=")">
+            #{auditorId}
+        </foreach>
     </select>
 
 </mapper>

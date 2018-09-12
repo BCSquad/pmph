@@ -6,6 +6,7 @@ import com.bc.pmpheep.back.dao.ProductDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.*;
+import com.bc.pmpheep.back.service.common.SystemMessageService;
 import com.bc.pmpheep.back.util.*;
 import com.bc.pmpheep.back.vo.MateriaHistorylVO;
 import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
@@ -19,6 +20,7 @@ import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
+import com.bc.pmpheep.wx.service.WXQYUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,17 +55,50 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private PmphRoleDao pmphRoleDao;
+    @Autowired
+    private SystemMessageService systemMessageService;
+    @Autowired
+    WXQYUserService wxqyUserService;
+    @Autowired
+    WxSendMessageService wxSendMessageService;
 
     @Override
-    public ProductVO getProductByType(Long product_type, String sessionId) {
+    public ProductVO getProductByType(Long product_type,Long product_id, String sessionId) {
 
         PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
         if (ObjectUtil.isNull(pmphUser)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.NULL_PARAM,
                     "用户为空");
         }
+        if(ObjectUtil.isNull(product_id)){
+            throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.NULL_PARAM,
+                    "id不为空");
+        }
+        ProductVO productVO = productDao.queryProductByProductType(product_type,product_id);
+        if(productVO==null){
+            productVO = new ProductVO(product_type);
+            productVO.setProduct_type(product_type);
+        }
 
-        ProductVO productVO = productDao.queryProductByProductType(product_type, Const.CLINICAL_DECISION_FILE_DOWNLOAD);
+        Content noteContent = null;
+        if(!StringUtil.isEmpty(productVO.getNote())){
+            noteContent =  contentService.get(productVO.getNote());
+        }
+        Content descriptionContent = null;
+        if(!StringUtil.isEmpty(productVO.getDescription())){
+            descriptionContent = contentService.get(productVO.getDescription());
+        }
+
+        productVO.setNoteContent(noteContent);
+        productVO.setDescriptionContent(descriptionContent);
+
+        return productVO;
+    }
+
+    @Override
+    public ProductVO getProductByType(Long product_type,Long id) {
+
+        ProductVO productVO = productDao.queryProductByProductType(product_type,id);
         if(productVO==null){
             productVO = new ProductVO(product_type);
             productVO.setProduct_type(product_type);
@@ -91,6 +126,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+
     public ResponseBean saveProductVO(ProductVO productVO,String sessionId, HttpServletRequest request) throws IOException {
 
         ResponseBean responseBean = new ResponseBean();
@@ -99,6 +135,14 @@ public class ProductServiceImpl implements ProductService {
         if (ObjectUtil.isNull(pmphUser)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.NULL_PARAM,
                     "用户为空");
+        }
+        if (StringUtil.isEmpty(productVO.getProduct_name())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.NULL_PARAM,
+                    "产品名称不能为空");
+        }
+        if (ObjectUtil.isNull(productVO.getActualDeadline())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.NULL_PARAM,
+                    "报名截止日期不为空");
         }
 
         //if(productVO.getId()==null){ //新建 保存创建人
@@ -121,15 +165,15 @@ public class ProductServiceImpl implements ProductService {
         //keyProperty设为id 若插入 则将生成的id传回到productVO的id中 便于附表关联之
         switch (String.valueOf(productVO.getProduct_type())){
             case "1":
-                productVO.setProduct_name( "人卫临床助手");
+               // productVO.setProduct_name( "人卫临床助手");
                 auditorMenuRole = pmphRoleDao.getByName("临床助手审核人");
                 break;
             case "2":
-                productVO.setProduct_name( "人卫用药助手");
+                //productVO.setProduct_name( "人卫用药助手");
                 auditorMenuRole = pmphRoleDao.getByName("用药助手审核人");
                 break;
             case "3":
-                productVO.setProduct_name(  "人卫中医助手");
+               // productVO.setProduct_name(  "人卫中医助手");
                 auditorMenuRole = pmphRoleDao.getByName("中医助手审核人");
                 break;
             default:
@@ -157,11 +201,11 @@ public class ProductServiceImpl implements ProductService {
         // 删除此productId下的所有相关角色pmph_user_role
         //pmphUserRoleDao.deletePmphUserRoleByRoleId(auditorMenuRole.getId());
         if(CollectionUtil.isNotEmpty(productVO.getAuditorList())){
-           for(ProductAuditor productAuditor:productVO.getAuditorList()){
+            for(ProductAuditor productAuditor:productVO.getAuditorList()){
                 if(ObjectUtil.isNull(productAuditor.getProduct_id()))productAuditor.setProduct_id(productVO.getId());
-
+/*
                 //该审核人加角色（菜单权限）
-                /* PmphUserRole pmphUserRole = new PmphUserRole(productAuditor.getAuditor_id(),auditorMenuRole.getId());
+                PmphUserRole pmphUserRole = new PmphUserRole(productAuditor.getAuditor_id(),auditorMenuRole.getId());
                 pmphUserRoleDao.addPmphUserRole(pmphUserRole);
 
                 List<PmphUser> parentDeptsDirectors =pmphUserService.getSomebodyParentDeptsPmphUserOfSomeRole(productAuditor.getAuditor_id(),null,"主任");
@@ -274,7 +318,7 @@ public class ProductServiceImpl implements ProductService {
      * @return
      */
     @Override
-    public Integer noticePublished(Long productId, List<Long> orgIds, String sessionId) {
+    public Integer noticePublished(Long productId, List<Long> orgIds,/*Boolean is_active,*/ String sessionId) throws IOException {
         if (CollectionUtil.isEmpty(orgIds)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
                     CheckedExceptionResult.NULL_PARAM, "机构为空");
@@ -298,6 +342,29 @@ public class ProductServiceImpl implements ProductService {
                 productOrgList.add(new ProductOrg(productId, orgId));
             }
             count = this.addProductOrgs(productOrgList);
+            if (count > 0) {
+                //给微信发送消息 通知审核人。
+                Set<String> touserOpenidSet = new HashSet<String>();
+                //获取到审核人
+                List<Long> useridList = productDao.getAuthorList(productId);
+                // 获取到审核人的openid
+                if(ObjectUtil.isNull(useridList)){
+                        throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                CheckedExceptionResult.NULL_PARAM,
+                                "审核人为空");
+                }
+                touserOpenidSet = productDao.getAuthorOpenid(useridList);
+                String authorNameS = productDao.getAllAuthorName(productId);
+                String msg1 =  authorNameS+"已被选为“" + productDao.getProductNameById(productId) + "”的审核人。";
+                systemMessageService.materialSend(productId, listOrgIds, pmphUser,true);
+                touserOpenidSet.remove(null);
+                String touser = touserOpenidSet.toString();
+                if (touserOpenidSet.size() > 0) {
+                    wxqyUserService.sendTextMessage("0", "0", touser, "", "", "text", msg1, (short) 0,"");
+                }
+                wxSendMessageService.batchInsertWxMessage(msg1,0,useridList,"0","0","");
+
+            }
 
         } else {// 不为空
             List<Long> newOrgIds = new ArrayList<Long>();// 新选中的机构
@@ -313,10 +380,12 @@ public class ProductServiceImpl implements ProductService {
                         "当前选中的学校已发送，无需要再次发送");
             }
             count = this.addProductOrgs(productOrgList);
+            if (count > 0) {
+                systemMessageService.materialSend(productId, newOrgIds,pmphUser,true);
+            }
 
         }
-
-        count = this.updateProduct(new ProductVO(productId, true), sessionId);
+        count = this.updateProduct(new ProductVO(productId, true/*,is_active*/), sessionId);
         return count;
     }
 
@@ -350,6 +419,8 @@ public class ProductServiceImpl implements ProductService {
                     "用户为空");
         }
         productVO.setPublisher_id(pmphUser.getId());
+        productVO.setGmt_publish(DateUtil.getCurrentTime());
+        productVO.setIs_active(productDao.getIsActiveByProductId(productVO.getId()));
         return productDao.updateProduct(productVO);
     }
 
@@ -375,6 +446,17 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> getListProduct(String productName) {
         return productDao.getListProduct(productName);
+    }
+
+    /**
+     * 根据产品id 获取产品的名字
+     * @param materialId
+     * @return
+     */
+    @Override
+    public String getProductNameById(Long materialId) {
+
+        return productDao.getProductNameById(materialId);
     }
 
 
@@ -461,10 +543,10 @@ public class ProductServiceImpl implements ProductService {
                     "附件未上传");
         }
 
-        if (ObjectUtil.isNull(productVO.getDescriptionContent())) {
+        /*if (ObjectUtil.isNull(productVO.getDescriptionContent())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.NULL_PARAM,
                     "产品简介未说明");
-        }
+        }*/
 
         if(productVO.getIs_published() ){ //若发布
             if(productVO.getAuditorList()==null || productVO.getAuditorList().size() < 1 ){
@@ -481,11 +563,14 @@ public class ProductServiceImpl implements ProductService {
             productVO.setNote("");
         }
 
-        Content descriptionContent = contentService.add(productVO.getDescriptionContent());
+        if(!StringUtil.isEmpty(productVO.getDescriptionContent().getContent())){
+            Content descriptionContent = contentService.add(productVO.getDescriptionContent());
+            productVO.setDescriptionContent(descriptionContent);
+            productVO.setDescription(descriptionContent.getId());
+        }else{
+            productVO.setDescription("");
+        }
 
-        productVO.setDescriptionContent(descriptionContent);
-
-        productVO.setDescription(descriptionContent.getId());
 
     }
 

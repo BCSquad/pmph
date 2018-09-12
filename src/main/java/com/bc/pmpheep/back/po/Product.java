@@ -38,6 +38,7 @@ public class Product implements Serializable {
     private Timestamp gmt_publish	;//最后一次发布时间
     private String note	;//备注
     private String description ;//产品简介
+    private Date actualDeadline; //报名截止时间
 
     public Product() {
     }
@@ -251,4 +252,11 @@ public class Product implements Serializable {
     }
 
 
+    public Date getActualDeadline() {
+        return actualDeadline;
+    }
+
+    public void setActualDeadline(Date actualDeadline) {
+        this.actualDeadline = actualDeadline;
+    }
 }
