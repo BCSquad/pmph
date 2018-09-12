@@ -530,7 +530,7 @@
      * insert on duplicate key update 主表product 其中 unique键除主键外 还有product_type
      * keyProperty设为id 若插入 则将生成的id传回到productVO的id中 便于附表关联之-->
     <insert id="saveProduct" useGeneratedKeys="true" keyProperty="id" parameterType="com.bc.pmpheep.back.vo.ProductVO">
-        <if test="is_published">
+        <if test="is_published and is_active">
             UPDATE product t2 SET t2.is_new = 0  WHERE  t2.product_type = #{product_type} AND t2.is_published = 1;
         </if>
         insert into product
@@ -745,14 +745,25 @@
 
     <!--跟新发布状态-->
     <update id="updateProduct" parameterType="com.bc.pmpheep.back.vo.ProductVO">
-        UPDATE product t2 SET t2.is_new = 0  WHERE
-        t2.product_type = (SELECT t3.* FROM (SELECT t1.product_type FROM product t1 WHERE t1.id = #{id} ) t3 ) AND t2.is_published = 1;
-        update product set is_published = #{is_published}, publisher_id = #{publisher_id},gmt_publish=#{gmt_publish},is_new = 1
+        <if test="is_active"> /*此处is_active 代表 is_new*/
+            UPDATE product t2 SET t2.is_new = 0  WHERE
+            t2.product_type = (SELECT t3.* FROM (SELECT t1.product_type FROM product t1 WHERE t1.id = #{id} ) t3 ) AND t2.is_published = 1;
+        </if>
+
+        update product set is_published = #{is_published}, publisher_id = #{publisher_id},gmt_publish=#{gmt_publish}
+        <if test="is_active"> /*此处is_active 代表 is_new*/
+        ,is_new = 1
+        </if>
         <!-- <if test="is_active">
              ,gmt_set_active = now()
          </if>-->
          where id = #{id}
     </update>
+
+    <!--获取是否勾选了 当前产品公告 is_new-->
+    <select id="getIsActiveByProductId" parameterType="java.lang.Long" resultType="java.lang.Boolean">
+        select is_new from product where id = #{id}
+    </select>
 
     <!--根据临床id 获取临床-机构信息-->
     <select id="getListProductOrgByProductId" parameterType="java.lang.Long" resultType="java.lang.Long">
