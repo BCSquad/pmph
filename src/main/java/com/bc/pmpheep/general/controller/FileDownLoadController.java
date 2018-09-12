@@ -521,6 +521,7 @@ public class FileDownLoadController {
 							((e.getOnline_progress().intValue()==2||e.getOnline_progress().intValue()==4||e.getOnline_progress().intValue()==5 )?"出版社退回"
 									:((e.getPmphAudit().intValue()==0  && e.getOrg_id().intValue() !=0  && (e.getOnline_progress().intValue() == 1||e.getOnline_progress().intValue() == 3 )) || (e.getOrg_id().intValue() ==0 && e.getPmphAudit().intValue()==0))?"待审核":""
 							)));
+			e.setFinalResultStr(e.getFinalResult()?"已公布":"未公布");
 			//e.setOnlineProgressName((e.getOrg_id()==0&&e.getOnline_progress()==1)?"待出版社审核":(e.getOrg_id()==0&&e.getOnline_progress()==3?"出版社已审核":stateList[e.getOnline_progress()]));
 			list.set(i,e);
 		}
@@ -584,22 +585,24 @@ public class FileDownLoadController {
 	public void exportExpertationCount(HttpServletRequest request, HttpServletResponse response,
 									   //int ttype,
 									   @RequestParam(value = "ptype" ,required = true) int ptype,
+									   @RequestParam(value = "productId" ,required = true) Long id,
 									   @RequestParam(value = "type_name",required = false)String type_name) {
 		Map<String,Object> paraMap = new HashMap<>();
 
 
 		paraMap.put("ptype",ptype);
 		paraMap.put("type_name",type_name);
+		paraMap.put("id",id);
 		PageParameter pageParameter = new PageParameter();
 		pageParameter.setStart(null);
 		pageParameter.setParameter(paraMap);
 
-		ProductVO product = productDao.queryProductByProductType(Long.valueOf(String.valueOf(ptype)), null);
-		if(product!=null && product.getId() != null){
-			paraMap.put("product_id",product.getId());
-		}else{
-			paraMap.put("product_id",0);
-		}
+//		ProductVO product = productDao.queryProductByProductType(Long.valueOf(String.valueOf(ptype)), null);
+//		if(product!=null && product.getId() != null){
+//			paraMap.put("product_id",product.getId());
+//		}else{
+//			paraMap.put("product_id",0);
+//		}
 
 		Map<String,Object> sheetMap = new HashMap<>();
 		List<ExpertationCountnessVO> list = new ArrayList<>();
