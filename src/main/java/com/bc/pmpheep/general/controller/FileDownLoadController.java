@@ -584,22 +584,24 @@ public class FileDownLoadController {
 	public void exportExpertationCount(HttpServletRequest request, HttpServletResponse response,
 									   //int ttype,
 									   @RequestParam(value = "ptype" ,required = true) int ptype,
+									   @RequestParam(value = "productId" ,required = true) Long id,
 									   @RequestParam(value = "type_name",required = false)String type_name) {
 		Map<String,Object> paraMap = new HashMap<>();
 
 
 		paraMap.put("ptype",ptype);
 		paraMap.put("type_name",type_name);
+		paraMap.put("id",id);
 		PageParameter pageParameter = new PageParameter();
 		pageParameter.setStart(null);
 		pageParameter.setParameter(paraMap);
 
-		ProductVO product = productDao.queryProductByProductType(Long.valueOf(String.valueOf(ptype)), null);
-		if(product!=null && product.getId() != null){
-			paraMap.put("product_id",product.getId());
-		}else{
-			paraMap.put("product_id",0);
-		}
+//		ProductVO product = productDao.queryProductByProductType(Long.valueOf(String.valueOf(ptype)), null);
+//		if(product!=null && product.getId() != null){
+//			paraMap.put("product_id",product.getId());
+//		}else{
+//			paraMap.put("product_id",0);
+//		}
 
 		Map<String,Object> sheetMap = new HashMap<>();
 		List<ExpertationCountnessVO> list = new ArrayList<>();
