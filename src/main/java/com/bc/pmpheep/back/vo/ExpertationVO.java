@@ -54,7 +54,12 @@ public class ExpertationVO implements Serializable {
     private Boolean	is_dispensed	;	//	1	服从调剂
     private String	expertise	;	//	50	专业特长
     private Integer	online_progress	;	//	3	审核进度
-    @ExcelHeader(header = "审核进度")
+    @ExcelHeader(header = "学校审核状态")
+    private String schoolStauts;
+    @ExcelHeader(header = "出版社审核状态")
+    private String pmphStauts;
+    @ExcelHeader(header = "最终结果公布")
+    private String finalResultStr;
     private String onlineProgressName ;
     private Timestamp auth_date	;	//	0	审核通过时间
     private String	return_cause	;	//	100	退回原因
@@ -129,10 +134,7 @@ public class ExpertationVO implements Serializable {
 
 
 
-    @ExcelHeader(header = "学校审核状态")
-    private String schoolStauts;
-    @ExcelHeader(header = "出版社审核状态")
-    private String pmphStauts;
+
     private String startCommitDate;
     private String endCommitDate;
     private String sql;
@@ -823,5 +825,13 @@ public class ExpertationVO implements Serializable {
 
     public void setDirector(String director) {
         this.director = director;
+    }
+
+    public String getFinalResultStr() {
+        return finalResultStr;
+    }
+
+    public void setFinalResultStr(String finalResultStr) {
+        this.finalResultStr = finalResultStr;
     }
 }

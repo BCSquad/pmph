@@ -521,6 +521,7 @@ public class FileDownLoadController {
 							((e.getOnline_progress().intValue()==2||e.getOnline_progress().intValue()==4||e.getOnline_progress().intValue()==5 )?"出版社退回"
 									:((e.getPmphAudit().intValue()==0  && e.getOrg_id().intValue() !=0  && (e.getOnline_progress().intValue() == 1||e.getOnline_progress().intValue() == 3 )) || (e.getOrg_id().intValue() ==0 && e.getPmphAudit().intValue()==0))?"待审核":""
 							)));
+			e.setFinalResultStr(e.getFinalResult()?"已公布":"未公布");
 			//e.setOnlineProgressName((e.getOrg_id()==0&&e.getOnline_progress()==1)?"待出版社审核":(e.getOrg_id()==0&&e.getOnline_progress()==3?"出版社已审核":stateList[e.getOnline_progress()]));
 			list.set(i,e);
 		}
