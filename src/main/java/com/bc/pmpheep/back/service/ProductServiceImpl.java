@@ -420,6 +420,7 @@ public class ProductServiceImpl implements ProductService {
         }
         productVO.setPublisher_id(pmphUser.getId());
         productVO.setGmt_publish(DateUtil.getCurrentTime());
+        productVO.setIs_active(productDao.getIsActiveByProductId(productVO.getId()));
         return productDao.updateProduct(productVO);
     }
 
