@@ -763,14 +763,22 @@ public class PmphUserServiceImpl implements PmphUserService {
         for (FollowingProduntAuditor auditor:productAuditorList) {
             if(auditor.getProductType()==1L){ // 有 临床助手申报表 的菜单权限
                 list.add(49L);
-            }
-            if(auditor.getProductType()==2L){ // 有 用药助手申报表 的菜单权限
-                list.add(50L);
-            }
-            if(auditor.getProductType()==3L){// 有 中医助手申报表 的菜单权限
-                list.add(51L);
+                break;
             }
         }
+        for (FollowingProduntAuditor auditor:productAuditorList) {
+            if(auditor.getProductType()==2L){ // 有 用药助手申报表 的菜单权限
+                list.add(50L);
+                break;
+            }
+        }
+        for (FollowingProduntAuditor auditor:productAuditorList) {
+            if(auditor.getProductType()==3L){// 有 中医助手申报表 的菜单权限
+                list.add(51L);
+                break;
+            }
+        }
+
 
         return list;
     }
