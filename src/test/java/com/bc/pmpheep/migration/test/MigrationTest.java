@@ -69,79 +69,80 @@ public class MigrationTest extends BaseTest {
     @Test
     @Rollback(true)
     public void testMigrationStageOne() {
-        //migrationStageOne.start();
+       // migrationStageOne.start();
+        System.out.println("MigrationTest disabled");
     }
 
-    @Test
+    /*@Test
     @Rollback(true)
     public void testMigrationStageTwo() {
-        //migrationStageTwo.start();
+        migrationStageTwo.start();
     }
 
     @Test
     @Rollback(true)
     public void testMigrationStageThree() {
-        //migrationStageThree.start();
+        migrationStageThree.start();
     }
 
     @Test
     @Rollback(true)
     public void testMigrationStageFour() {
-        //migrationStageFour.start();
+        migrationStageFour.start();
     }
 
     @Test
     @Rollback(true)
     public void testMigrationStageFive() {
-        //migrationStageFive.start();
+        migrationStageFive.start();
     }
 
     @Test
     @Rollback(true)
     public void testMigrationStageSix() {
-        //migrationStageSix.start();
+        migrationStageSix.start();
     }
 
     @Test
     @Rollback(true)
     public void testMigrationStageSeven() {
-        //migrationStageSeven.start();
+        migrationStageSeven.start();
     }
 
     @Test
     @Rollback(true)
     public void testMigrationStageEight() {
-        //migrationStageEight.start();
+        migrationStageEight.start();
     }
 
     @Test
     @Rollback(true)
     public void testMigrationStageNine() {
-        //migrationStageNine.start();
+        migrationStageNine.start();
     }
 
     @Test
     @Rollback(true)
     public void testMigrationStageTen() {
-        //migrationStageTen.start();
+        migrationStageTen.start();
     }
 
     @Test
     @Rollback(true)
     public void testMigrationPlus() {
-       // migrationPlus.start();
+        migrationPlus.start();
     }
 
     @Ignore
     @Test
     @Rollback(true)
     public void testAddTestUser() {
-        //addTestUser.addTestUser();
+        addTestUser.addTestUser();
     }
 
     @Test
     @Rollback(true)
     public void addBook() {
-        //migrationBook.start();
-    }
+        migrationBook.start();
+    }*/
 }
