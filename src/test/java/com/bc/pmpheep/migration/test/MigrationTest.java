@@ -66,7 +66,7 @@ public class MigrationTest extends BaseTest {
     @Resource
     AddTestUser addTestUser;
 
-    @Test
+   /* @Test
     @Rollback(true)
     public void testMigrationStageOne() {
         migrationStageOne.start();
@@ -143,5 +143,5 @@ public class MigrationTest extends BaseTest {
     @Rollback(true)
     public void addBook() {
         migrationBook.start();
-    }
+    }*/
 }
