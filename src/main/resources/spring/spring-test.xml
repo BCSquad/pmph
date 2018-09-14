@@ -4,7 +4,6 @@
        xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:mongo="http://www.springframework.org/schema/data/mongo"
-       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
        xmlns:util="http://www.springframework.org/schema/util"
 
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
@@ -13,7 +12,7 @@
           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd
           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
           http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.10.2.xsd
-          http://www.springframework.org/schema/data/jpa ">
+        ">
 
     <!-- 使用cglib进行动态代理 -->
     <aop:aspectj-autoproxy proxy-target-class="true"/>
