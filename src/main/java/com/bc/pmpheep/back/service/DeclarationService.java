@@ -8,6 +8,7 @@ import com.bc.pmpheep.back.bo.DeclarationEtcBO;
 import java.io.IOException;
 import java.util.List;
 
+import com.bc.pmpheep.back.po.PmphUser;
 import org.apache.ibatis.annotations.Param;
 
 import com.bc.pmpheep.back.plugin.PageResult;
@@ -122,7 +123,7 @@ public interface DeclarationService {
 	 */
 	public PageResult<DeclarationListVO> pageDeclaration(Integer pageNumber, Integer pageSize, Long materialId,
 			String textBookids, String realname, String position, String title, String orgName, Long orgId,
-			String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress, Boolean haveFile,Boolean isSelected,String tag,
+			String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress, Boolean haveFile,Boolean isSelected,String startCommitDate,String endCommitDate,String tag,
 														 HttpServletRequest request)
 			throws CheckedServiceException;
 
@@ -149,7 +150,7 @@ public interface DeclarationService {
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
-	Declaration onlineProgress(Long id, Integer onlineProgress, String returnCause)
+	Declaration onlineProgress(Long id, Integer onlineProgress, String returnCause,PmphUser pmphUser)
 			throws CheckedServiceException, IOException;
 
 	/**

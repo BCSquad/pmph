@@ -10,6 +10,8 @@ import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
 import com.bc.pmpheep.back.vo.MaterialVO;
 import com.bc.pmpheep.wx.service.WXQYUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,9 +59,9 @@ public class WXFrontMsgPushController {
      * @param response
      * @return
      */
-    @RequestMapping(value = "/projectEditorPleaseAdit/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/projectEditorPleaseAdit/{id}", method = RequestMethod.GET,produces= MediaType.APPLICATION_JSON_VALUE+";charset=utf-8")
     @ResponseBody
-    public boolean projectEditorPleaseAdit(HttpServletRequest request, @PathVariable(value = "id", required = true) Long decId, HttpServletResponse response) {
+    public String projectEditorPleaseAdit(HttpServletRequest request, @PathVariable(value = "id", required = true) Long decId, HttpServletResponse response,String callback) {
         //企业微信推送对象的微信id集合
         Set<String> touserOpenidSet = new HashSet<String>();
         Declaration dec = declarationService.getDeclarationById(decId);
@@ -79,8 +81,8 @@ public class WXFrontMsgPushController {
         String msg = dec.getRealname() + "已提交《" + material.getMaterialName() + "》的申报表，";//“请审核” 已被超链接补齐，此处不需显示
         //String url = "/materialrouter/materialnav/" + decId + "/presscheck";
         //&UserId&materialId=&declarationId=
-        //String paramUrlFormat = "&UserId=%s&materialId=%s&declarationId=%s";
-        String paramUrlFormat = "/#/material/%s/expert?declarationId=%s";
+        String paramUrlFormat = "&UserId=%s&materialId=%s&declarationId=%s";
+        //String paramUrlFormat = "/#/material/%s/expert?declarationId=%s";
         String hrefType = "2";
         String hrefContentType = "2";
         for (String t: touserOpenidSet) {
@@ -88,11 +90,11 @@ public class WXFrontMsgPushController {
             Map resultMap = wxqyUserService.sendTextMessage(hrefType, hrefContentType, t, "", "", "text", msg, (short) 0,paramUrl);
             //return ((int) resultMap.get("errcode")) == 0;
         }
-        String paramUrl=String.format(paramUrlFormat,"",dec.getMaterialId(),dec.getId());
-        wxSendMessageService.batchInsertWxMessage(msg,"0".equals(hrefType)?0:1,useridList,hrefType,hrefContentType,paramUrl);
+        String paramUrlFormat1 = "/#/material/%s/expert?declarationId=%s";
+        String paramUrl=String.format(paramUrlFormat1,dec.getMaterialId(),dec.getId());
+        wxSendMessageService.batchInsertWxMessage(msg,"0".equals(hrefType)?0:1,useridList,"6",hrefContentType,paramUrl);
 
-
-        return false;
+        return callback+"(1)";
     }
 
     /**
@@ -101,10 +103,11 @@ public class WXFrontMsgPushController {
      * @param uid 第一主编id
      * @return
      */
-    @RequestMapping(value = "/firstEditorChooseSubmit/{id}/{uid}", method = RequestMethod.GET)
+    @RequestMapping(value = "/firstEditorChooseSubmit/{id}/{uid}", method = RequestMethod.GET,produces= MediaType.APPLICATION_JSON_VALUE+";charset=utf-8")
     @ResponseBody
-    public boolean firstEditorChooseSubmit(@PathVariable(value = "id")Long textBookId
-                                            ,@PathVariable(value = "uid")Long uid){
+    public String firstEditorChooseSubmit(@PathVariable(value = "id")Long textBookId
+                                            ,@PathVariable(value = "uid")Long uid
+                                            ,String callback){
 
         WriterUser firstEditor = writerUserService.get(uid);
         Textbook textbook = textbookService.getTextbookById(textBookId);
@@ -145,20 +148,18 @@ public class WXFrontMsgPushController {
         String hrefContentType = "0";
         for (String t: touserOpenidSet) {
             Map resultMap = wxqyUserService.sendTextMessage(hrefType, hrefContentType, t, "", "", "text", msg, (short) 0,"");
-            return ((int) resultMap.get("errcode")) == 0;
+            // return callback+"("+("0".equals(resultMap.get("errcode"))?"1":"0")+")";
         }
-
         wxSendMessageService.batchInsertWxMessage(msg,"0".equals(hrefType)?0:1,useridList,hrefType,hrefContentType,"");
-
-        return false;
+        return callback+"(1)";
     }
 
     /**
      * 前台用户提交选题申报后，向有管理员身份的社内用户推送微信消息
      */
-    @RequestMapping(value = "topicSubmit/{tid}/{uid}",method = RequestMethod.GET)
+    @RequestMapping(value = "topicSubmit/{tid}/{uid}",method = RequestMethod.GET,produces= MediaType.APPLICATION_JSON_VALUE+";charset=utf-8")
     @ResponseBody
-    public boolean topicSubmit(@PathVariable(value = "tid")Long tid,@PathVariable(value = "uid")long uid){
+    public String topicSubmit(@PathVariable(value = "tid")Long tid,@PathVariable(value = "uid")long uid,String callback){
 
         Set<String> touserOpenidSet = new HashSet<String>();
         WriterUser submiter = writerUserService.get(uid);
@@ -179,20 +180,20 @@ public class WXFrontMsgPushController {
             Map resultMap = wxqyUserService.sendTextMessage(hrefType, hrefContentType, t, "", "", "text", msg, (short) 0,paramUrl);
             //return ((int) resultMap.get("errcode")) == 0;
         }
-        String paramUrl = String.format(paramUrlFormat,"");
-        wxSendMessageService.batchInsertWxMessage(msg,"0".equals(hrefType)?0:1,useridList,hrefType,hrefContentType,paramUrl);
+        String paramUrl = "/#/topic/list";
+        wxSendMessageService.batchInsertWxMessage(msg,"0".equals(hrefType)?0:1,useridList,"6",hrefContentType,paramUrl);
 
 
 
-        return false;
+        return callback+"(1)";
     }
 
 
-    @GetMapping("/bookError/{bookId}/{submitId}/{correctId}")
+    @GetMapping(value = "/bookError/{bookId}/{submitId}/{correctId}",produces= MediaType.APPLICATION_JSON_VALUE+";charset=utf-8")
     @ResponseBody
-    public Map bookEoor(@PathVariable(value = "submitId") Long submitId,
+    public Object bookEoor(@PathVariable(value = "submitId") Long submitId,
                         @PathVariable(value = "bookId") Long bookId,
-                        @PathVariable(value = "correctId")Long correctId ,HttpServletRequest request){
+                        @PathVariable(value = "correctId")Long correctId ,HttpServletRequest request,String callback){
     //这本图书的图书的策划编辑
         Book book = bookDao.getBookById(bookId);
 
@@ -217,11 +218,14 @@ public class WXFrontMsgPushController {
             String paramUrl=String.format(paramUrlFormat,t,book.getBookname(),"check",correctId);
             resultMap = wxqyUserService.sendTextMessage(hrefType, hrefContentType, t, "", "", "text", msg, (short) 0,paramUrl);
         }
-        String paramUrl = String.format(paramUrlFormat,"",book.getBookname(),"check",correctId);
-        wxSendMessageService.batchInsertWxMessage(msg,"0".equals(hrefType)?0:1,useridList,hrefType,hrefContentType,paramUrl);
+        String paramUrlFormat1="/#/checkbook?bookName=%s&type=%s&id=%s";
+        String paramUrl = String.format(paramUrlFormat1,book.getBookname(),"check",correctId);
+        wxSendMessageService.batchInsertWxMessage(msg,"0".equals(hrefType)?0:1,useridList,"6",hrefContentType,paramUrl);
+        String resultmessage=resultMap!=null?resultMap.toString():"{'errcode':'0','errmsg':'ok','invaliduser':''}";
+        MappingJacksonValue mappingJacksonValue=new MappingJacksonValue(resultmessage);
+        mappingJacksonValue.setJsonpFunction(callback);
+        return mappingJacksonValue;
 
-
-        return resultMap;
     }
 
     /*String[] openids = touser.split("\\|");

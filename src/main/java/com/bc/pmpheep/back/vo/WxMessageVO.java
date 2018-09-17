@@ -39,7 +39,7 @@ public class WxMessageVO implements Serializable {
     }
 
     public void setDeal(Boolean deal) {
-        isDeal = deal;
+        this.isDeal = deal;
     }
 
     public int getMsgdbtype() {

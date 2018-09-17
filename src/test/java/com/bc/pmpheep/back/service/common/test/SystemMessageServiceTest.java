@@ -35,7 +35,7 @@ public class SystemMessageServiceTest extends BaseTest  {
 	@Test
 	@Rollback(Const.ISROLLBACK)
 	public void testMaterialSend() throws CheckedServiceException, IOException {
-		systemMessageService.materialSend(materialId, Arrays.asList(orgIds));
+		systemMessageService.materialSend(materialId, Arrays.asList(orgIds),null,false);
 	}
 
 	// @Test
@@ -52,7 +52,7 @@ public class SystemMessageServiceTest extends BaseTest  {
 		Long groupId = 5L;
 		Long[] invitedPersonIds = new Long[] { 530L, 270L, 79L };
 		systemMessageService.sendWhenInviteJoinGroup(inviterName, groupId, Arrays.asList(invitedPersonIds),
-				new Short("1"));
+				new Short("1"),null);
 	}
 
 	@Test
@@ -68,13 +68,13 @@ public class SystemMessageServiceTest extends BaseTest  {
 	@Rollback(Const.ISROLLBACK)
 	public void testSendWhenTeacherCertificationAudit() throws CheckedServiceException, IOException {
 		String auditorOrgName = "首都也可大学";
-		systemMessageService.sendWhenTeacherCertificationAudit(auditorOrgName, Arrays.asList(orgIds), true);
+		systemMessageService.sendWhenTeacherCertificationAudit(auditorOrgName, Arrays.asList(orgIds), true,null);
 	}
 
 	@Test
 	@Rollback(Const.ISROLLBACK)
 	public void testSendWhenManagerCertificationAudit() throws CheckedServiceException, IOException {
-		systemMessageService.sendWhenManagerCertificationAudit(Arrays.asList(orgIds), true,"");
+		systemMessageService.sendWhenManagerCertificationAudit(Arrays.asList(orgIds), true,"",null);
 
 	}
 
@@ -89,14 +89,14 @@ public class SystemMessageServiceTest extends BaseTest  {
 	@Test
 	@Rollback(Const.ISROLLBACK)
 	public void testSendWhenDeclarationFormAudit() throws CheckedServiceException, IOException {
-		systemMessageService.sendWhenDeclarationFormAudit(5L, true, "");
+		systemMessageService.sendWhenDeclarationFormAudit(5L, true, "",null);
 
 	}
 
 	@Test
 	@Rollback(Const.ISROLLBACK)
 	public void testSendWhenReceiptAudit() throws CheckedServiceException, IOException {
-		systemMessageService.sendWhenReceiptAudit(5L, true);
+		systemMessageService.sendWhenReceiptAudit(5L, true,null);
 
 	}
 

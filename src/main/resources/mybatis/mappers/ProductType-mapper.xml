@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.ProductTypeDao">
+
+    <resultMap id="ProductTypeMap" type="com.bc.pmpheep.back.vo.ProductType">
+        <id property="id" column="id"></id>
+        <result property="parent_id" column="parent_id"></result>
+        <result property="type_name" column="type_name"></result>
+        <result property="typeType" column="typeType"></result>
+        <result property="gmt_create" column="gmt_create"></result>
+        <result property="gmt_update" column="gmt_update"></result>
+    </resultMap>
+
+    <select id="getSubjectTypeList" parameterType="PageParameter" resultMap="ProductTypeMap">
+        select t.*,1 as typeType from
+        product_subject_type t
+        <where>
+            t.is_deleted = 0 and t.product_type = #{parameter.productType}
+            <if test="parameter.type_name != null and parameter.type_name != '' ">
+                and t.type_name like concat('%',#{parameter.type_name},'%')
+            </if>
+        </where>
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="getSubjectTypeCount" parameterType="PageParameter" resultType="int">
+        select count(t.id) from
+        product_subject_type t
+        <where>
+            t.is_deleted = 0 and t.product_type = #{parameter.productType}
+            <if test="parameter.type_name != null and parameter.type_name != '' ">
+                and t.type_name like concat('%',#{parameter.type_name},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getProfessionTypeList" parameterType="PageParameter" resultMap="ProductTypeMap">
+        select t.*,1 as typeType from
+        product_profession_type t
+        <where>
+            t.is_deleted = 0 and t.product_type = #{parameter.productType}
+            <if test="parameter.type_name != null and parameter.type_name != '' ">
+                and t.type_name like concat('%',#{parameter.type_name},'%')
+            </if>
+        </where>
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="getProfessionTypeCount" parameterType="PageParameter" resultType="int">
+        select count(t.id) from
+        product_profession_type t
+        <where>
+            t.is_deleted = 0 and t.product_type = #{parameter.productType}
+            <if test="parameter.type_name != null and parameter.type_name != '' ">
+                and t.type_name like concat('%',#{parameter.type_name},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getLeafContentTypeList" parameterType="PageParameter" resultMap="ProductTypeMap">
+        select
+        t.id as id
+        ,d.name_path as type_name
+        ,t.parent_id as parent_id,
+        t.gmt_create as gmt_create,
+        2 as typeType
+        from
+        product_content_type_detail d
+        inner join product_content_type t on d.product_type_id = t.id and d.is_deleted = 0 and t.is_deleted = 0
+
+        <where>
+            d.is_leaf = 1 and d.product_type = #{parameter.productType}
+            <if test="parameter.type_name != null and parameter.type_name != '' ">
+                and d.name_path like concat('%',#{parameter.type_name},'%')
+            </if>
+        </where>
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="getLeafContentTypeCount" parameterType="PageParameter" resultType="int">
+        select
+        COUNT(d.id)
+        from
+        product_content_type_detail d
+        <where>
+            d.is_deleted = 0
+            and d.is_leaf = 1 and d.product_type = #{parameter.productType}
+            <if test="parameter.type_name != null and parameter.type_name != '' ">
+                and d.name_path like concat('%',#{parameter.type_name},'%')
+            </if>
+        </where>
+    </select>
+
+    <update id="deleteSubjectTypeById" parameterType="java.lang.Long" >
+        update product_subject_type set is_deleted = 1 where id = #{id}
+    </update>
+
+    <update id="deleteProfessionTypeById" parameterType="java.lang.Long" >
+        update product_profession_type set is_deleted = 1 where id = #{id}
+    </update>
+
+    <update id="deleteLeafContentTypeById" parameterType="java.lang.Long">
+        update product_content_type        set is_deleted = 1 where id = #{id};
+        update product_content_type_detail set is_deleted = 1 where product_type_id = #{id};
+        /*更新叶子节点*/
+        update product_content_type_detail dp left join product_content_type t on t.parent_id = dp.product_type_id and t.is_deleted = 0
+        set dp.is_leaf = isNull(t.id);
+
+    </update>
+
+    <update id="refreshLeafOfContentType" >
+        /*更新叶子节点*/
+        update product_content_type_detail dp left join product_content_type t on t.parent_id = dp.product_type_id and t.is_deleted = 0 and dp.product_type = t.product_type
+        set dp.is_leaf = isNull(t.id);
+    </update>
+
+    <select id="getSubjectTypeExpertationCount" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        select count(e.id)
+        from
+        (
+        select expertation_id from
+        expertation_subject_type where product_subject_type_id = #{id}
+        )t
+        inner join expertation e on e.id = t.expertation_id
+    </select>
+
+    <select id="getProfessionTypeExpertationCount" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        select count(e.id)
+        from
+        (
+        select expertation_id from
+        expertation_profession_type where product_profession_type_id = #{id}
+        )t
+        inner join expertation e on e.id = t.expertation_id
+    </select>
+
+    <select id="getContentTypeExpertationCount" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        select count(e.id)
+        from
+        (
+        select expertation_id from
+        expertation_content_type where product_content_type_id = #{id}
+        )t
+        inner join expertation e on e.id = t.expertation_id
+    </select>
+
+    <insert id="insertSubjectTypeBatch" parameterType="com.bc.pmpheep.back.vo.ProductType" >
+        insert into product_subject_type(
+        type_name
+        ,product_type
+        )
+        VALUES
+          <foreach collection="list" item="item" separator="," >
+              (#{item.type_name},#{item.productType})
+          </foreach>
+        on duplicate key update is_deleted = 0
+    </insert>
+
+    <insert id="insertProfessionTypeBatch" parameterType="com.bc.pmpheep.back.vo.ProductType" >
+        insert into product_profession_type(
+        type_name
+        ,product_type
+        )
+        VALUES
+        <foreach collection="list" item="item" separator="," >
+            (#{item.type_name},#{item.productType})
+        </foreach>
+        on duplicate key update is_deleted = 0
+    </insert>
+
+    <insert id="insertContentType" parameterType="ProductType" keyProperty="id" keyColumn="id" useGeneratedKeys="true">
+        insert INTO product_content_type
+        (
+          id,
+          type_name,
+          parent_id,
+          product_type
+        )
+        VALUES (
+          (select product_type_id as id from product_content_type_detail where name_path = #{fullNamePath} and product_type = #{productType}),
+          #{type_name},
+          #{parent_id},
+          #{productType}
+        )
+        on duplicate key UPDATE is_deleted = 0
+    </insert>
+
+    <update id="callUpdateProductTypeDetail" parameterType="java.lang.Long">
+        call update_product_type_detail(#{id});
+    </update>
+
+    <select id="getProductIdByProductType" parameterType="java.lang.Long" resultType="java.lang.Long">
+        select id from product where product_type =  #{productType}
+    </select>
+
+    <select id="queryContentTypeIdByFullNamePath" parameterType="com.bc.pmpheep.back.vo.ProductType" resultType="java.lang.Long">
+        select product_type_id from product_content_type_detail where name_path = #{fullNamePath} and product_type = #{productType}
+    </select>
+
+    <select id="getBtnStatus" resultType="map" parameterType="long">
+--         select * from (select  if(id,true,false)  subject from product where product_type = 1)t1,
+-- (select if(id,true,false) declareMajor from product where product_type = 2)t2,
+-- (select if(id,true,false) content from product where product_type = 3) t3
+select  count(id)  subject from product where product_type = #{productType}
+    </select>
+
+</mapper>

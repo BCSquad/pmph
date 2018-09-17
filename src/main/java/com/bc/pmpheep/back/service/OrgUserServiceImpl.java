@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.vo.WriterUserManagerVO;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.OfficeXmlFileException;
@@ -153,7 +154,7 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService, A
 	}
 
 	@Override
-	public Integer updateOrgUserProgressById(Integer progress, List<Long> orgUserIds,String backReason)
+	public Integer updateOrgUserProgressById(Integer progress, List<Long> orgUserIds,String backReason,PmphUser pmphUser)
 			throws CheckedServiceException, IOException {
 		if (CollectionUtil.isEmpty(orgUserIds) || ObjectUtil.isNull(progress)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.SCHOOL_ADMIN_CHECK,
@@ -186,7 +187,7 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService, A
 			isPass = false;
 		}
 		if (null != isPass) {// 推送机构认证审核信息
-			systemMessageService.sendWhenManagerCertificationAudit(orgUserIds, isPass,backReason);
+			systemMessageService.sendWhenManagerCertificationAudit(orgUserIds, isPass,backReason,pmphUser);
 		}
 		return count;
 	}
@@ -438,14 +439,14 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService, A
 		// }
 		orgDao.addOrg(org);
 		if (StringUtil.isEmpty(orgUser.getRealname())) {
-			orgUser.setRealname("");//orgUser.setRealname(orgUser.getUsername());
+			orgUser.setRealname("");
 		}
 		orgUser.setAvatar(RouteUtil.DEFAULT_USER_AVATAR);// 默认机构用户头像路径
 		orgUser.setOrgId(orgDao.getOrgid(org.getOrgName()));
 		orgUser.setPassword(new DesRun("", Const.DEFAULT_PASSWORD).enpsw);// 后台添加用户设置默认密码为123456
                 SsoHelper ssoHelper = context.getBean(SsoHelper.class);
 		String result = ssoHelper.createSSOAccount(orgUser);
-		if (!result.equals("success")) {
+		if (!result.equals("success")&&result.indexOf("已被使用")<=-1) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.FAILURE_SSO_CALLBACK,
 					result);
 		}

@@ -17,6 +17,7 @@ import com.bc.pmpheep.back.service.BookService;
 import com.bc.pmpheep.back.vo.BookPreferenceAnalysisVO;
 import com.bc.pmpheep.back.vo.BookVO;
 import com.bc.pmpheep.test.BaseTest;
+import org.springframework.test.annotation.Rollback;
 
 /**
  * 图书单元测试
@@ -103,12 +104,15 @@ public class BookServiceTest extends BaseTest {
 	}
 
 	@Test
+	@Rollback(false)
 	public void testAbuttingJoint() {
 		String returnSring = "ERROR";
-		String[] vns = { "2013005332","2016001491","2013002293" };
-		returnSring = bookService.AbuttingJoint(vns, 1);
+		String[] vns = { "2017005940","2017006373","2017006050","2017005547","2017005211","2017006370","2017005212","2017005949","2017005213","2017005900" ,"2017005557","2017005558"};
+		returnSring = bookService.AbuttingJoint(vns, 1,null);
 		Assert.assertEquals("书籍同步成功", "SUCCESS", returnSring);
 	}
+
+
 
 	@Test
 	public void testGetBookPreferenceAnalysis() {

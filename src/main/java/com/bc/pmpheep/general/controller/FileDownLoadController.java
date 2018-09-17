@@ -13,15 +13,17 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.bc.pmpheep.back.dao.CmsContentDao;
+import com.bc.pmpheep.back.dao.ExpertationDao;
+import com.bc.pmpheep.back.dao.ProductDao;
+import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.service.*;
 import com.bc.pmpheep.back.vo.*;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -105,6 +107,7 @@ public class FileDownLoadController {
 	ZipHelper zipHelper;
 	@Resource
 	MaterialOrgService materialOrgService;
+
 	@Autowired
 	BookCorrectionService bookCorrectionService;
 	@Autowired
@@ -115,6 +118,11 @@ public class FileDownLoadController {
 	private ThreadPoolTaskExecutor taskExecutor;
 	@Autowired
 	OrgService orgService;
+	@Autowired
+	ExpertationDao expertationDao;
+	@Autowired
+	ExpertationService expertationService;
+
 	// 当前业务类型
 	private static final String BUSSINESS_TYPE = "文件下载";
 
@@ -123,6 +131,15 @@ public class FileDownLoadController {
 
 	@Autowired
 	private WriterUserService writerUserService;
+
+	@Autowired
+	private ProductService productService;
+
+	@Autowired
+	private ProductDao productDao;
+
+	@Autowired
+	CmsContentDao cmsContentDao;
 
 	/**
 	 * 普通文件下载
@@ -195,6 +212,9 @@ public class FileDownLoadController {
 			}
 			if (Const.MATERIAL_NOTE_TYPE.equals(type)) {// 教材备注
 				materialNoteAttachmentService.updateMaterialNoteAttachmentDownLoadCountsByAttachment(id);
+			}
+			if(Const.CLINICAL_DECISION.equals(type)){ //临床决断
+				productService.updateProductAttachmenDownLoadCountsByAttachment(id);
 			}
 		} catch (IOException ex) {
 			logger.error("文件下载时出现IO异常：{}", ex.getMessage());
@@ -394,6 +414,252 @@ public class FileDownLoadController {
 		}
 	}
 
+	/**
+	 *
+	 * Description:导出图书纠错审核信息
+	 *
+
+	 */
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "图书评论")
+	@RequestMapping(value = "/bookCorrection/exportComments", method = RequestMethod.GET)
+	public void exportComments(HttpServletRequest request, HttpServletResponse response, CmsContentVO cmsContentVO) {
+		cmsContentVO.setCategoryId(Const.CMS_CATEGORY_ID_0);
+		String title = cmsContentVO.getTitle();
+		String userName = cmsContentVO.getUsername();
+		if (StringUtil.notEmpty(title)) {
+			cmsContentVO.setTitle(StringUtil.toAllCheck(title));
+		}
+		if (StringUtil.notEmpty(userName)) {
+			cmsContentVO.setUsername(StringUtil.toAllCheck(userName));
+		}
+		PageParameter<CmsContentVO> pageParameter =
+				new PageParameter<CmsContentVO>(null, null, cmsContentVO);
+		String sessionId = CookiesUtil.getSessionId(request);
+
+		// 获取当前登陆用户
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (ObjectUtil.isNull(pmphUser) || ObjectUtil.isNull(pmphUser.getId())) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+					CheckedExceptionResult.NULL_PARAM, "用户为空");
+		}
+		if (Const.CMS_CATEGORY_ID_0.longValue() == pageParameter.getParameter().getCategoryId()) {
+			pageParameter.getParameter().setIsAdmin(true);
+		} else {
+			pageParameter.getParameter().setIsAdmin(pmphUser.getIsAdmin());
+		}
+		pageParameter.setPageSize(100000000);
+		List<CmsContentVO> list = cmsContentDao.listCmsComment(pageParameter);
+		String[] authStatusName = new String[]{"待审核","未通过","已通过"};
+		for(CmsContentVO cmsContentVO1:list){
+			cmsContentVO1.setAuthDateS(DateUtil.formatTimeStamp("yyyy-MM-dd",cmsContentVO1.getAuthDate()));
+			cmsContentVO1.setGmtCreateS(DateUtil.formatTimeStamp("yyyy-MM-dd",cmsContentVO1.getGmtCreate()));
+			cmsContentVO1.setAuthStatusName(authStatusName[cmsContentVO1.getAuthStatus()]);
+		}
+
+		Workbook workbook = null;
+		if (list.size() == 0) {
+			list.add(new CmsContentVO());
+		}
+		try {
+			workbook = excelHelper.fromBusinessObjectList(list, "图书评论");
+
+		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+			logger.warn("数据表格化的时候失败");
+		}
+		String fileName = returnFileName(request,"图书评论.xls");
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		try (OutputStream out = response.getOutputStream()) {
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常： {}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
+	/**
+	 * 导出临床决策-申报列表
+	 * @param request
+	 * @param response
+	 * @param expertationVO 可接受两个模糊查询条件 username realname
+	 */
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出临床决策-申报列表")
+	@RequestMapping(value = "/expertation/exportExpertation", method = RequestMethod.GET)
+	public void exportExpertation(HttpServletRequest request, HttpServletResponse response,ExpertationVO expertationVO) {
+
+		PageParameter pageParameter = new PageParameter();
+		pageParameter.setStart(null);
+		pageParameter.setParameter(expertationVO);
+		List<ExpertationVO> list = expertationDao.queryExpertation(pageParameter);
+		//String[] stateList = new String[]{"未提交","待学校审核","被学校退回","学校已审核","待学校审核","被出版社退回"};
+		ProductVO productVO = null;
+		if(!CollectionUtil.isEmpty(list) ){
+			productVO = productDao.queryProductById(list.get(0).getProduct_id());
+		}
+		for (int i= 0;i<list.size();i++) {
+			ExpertationVO e = list.get(i);
+			/*List<ProductType> clist = expertationDao.queryProductContentTypeListByExpertationId(e.getId());
+			List<ProductType> slist = expertationDao.queryProductSubjectTypeListByExpertationId(e.getId());
+			List<ProductType> plist = expertationDao.queryProductProfessionTypeListByExpertationId(e.getId());
+			e.setProductSubjectTypeList(slist);
+			e.setProductContentTypeList(clist);
+			e.setProductProfessionTypeList1(plist);*/
+
+			e = expertationService.getExpertationById(e.getId());
+
+			e.setExcelTypeStr();
+
+			e.setSchoolStauts((e.getOrg_id().intValue() != 0 && e.getOnline_progress().intValue()==1)?"待审核"
+					:((e.getOrg_id().intValue() != 0 && e.getOnline_progress().intValue()==3)?"审核通过":
+					(e.getOrg_id().intValue() !=0 && e.getPmphAudit().intValue()==0  && (e.getOnline_progress().intValue()  == 4||e.getOnline_progress().intValue() == 5)?
+							"出版社退回":(e.getOrg_id().intValue()==0?"":""))));
+			e.setPmphStauts((e.getPmphAudit().intValue()==1?"通过":
+					(e.getPmphAudit().intValue()==2)?"不通过":
+							((e.getOnline_progress().intValue()==2||e.getOnline_progress().intValue()==4||e.getOnline_progress().intValue()==5 )?"出版社退回"
+									:((e.getPmphAudit().intValue()==0  && e.getOrg_id().intValue() !=0  && (e.getOnline_progress().intValue() == 1||e.getOnline_progress().intValue() == 3 )) || (e.getOrg_id().intValue() ==0 && e.getPmphAudit().intValue()==0))?"待审核":""
+							)));
+			e.setFinalResultStr(e.getFinalResult()?"已公布":"未公布");
+			//e.setOnlineProgressName((e.getOrg_id()==0&&e.getOnline_progress()==1)?"待出版社审核":(e.getOrg_id()==0&&e.getOnline_progress()==3?"出版社已审核":stateList[e.getOnline_progress()]));
+			list.set(i,e);
+		}
+		Workbook workbook = null;
+		try {
+			//Thread.currentThread().sleep(3000);//毫秒
+			if (list.size() == 0) {
+				list.add(new ExpertationVO());
+			}
+			//workbook = excelHelper.fromBusinessObjectList(list, expertationVO.getProduct_name()!=null?getExportName(expertationVO.getExpert_type()+""):"临床决策申报");
+			workbook = excelHelper.fromExpertationList(productVO,list, expertationVO.getProduct_name()!=null?getExportName(expertationVO.getExpert_type()+""):"临床决策申报");
+
+		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+			logger.warn("数据表格化的时候失败");
+		}
+		String fileName = returnFileName(request,"临床决策申报.xls");
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		try (OutputStream out = response.getOutputStream()) {
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常： {}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
+
+	private String  getExportName(String expert_type){
+		String returnName = "";
+		switch (expert_type) {
+
+			case "1":
+				returnName= "人卫临床助手申报";
+				break;
+			case "2":
+				returnName= "人卫用药助手";
+				break;
+			case "3":
+				returnName= "人卫中医助手";
+				break;
+
+			default:
+				returnName= "临床决策申报";;
+		}
+		return returnName;
+
+	}
+
+	/**
+	 *
+	 * @param request
+	 * @param response
+	 * @param ptype  产品分类 必须 （1=临床/2=用药/3=中医）
+	 * @param type_name  （学科/内容）分类 名称模糊查询
+	 */
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出临床决策-申报结果统计列表")
+	@RequestMapping(value = "/expertation/exportExpertationCount", method = RequestMethod.GET)
+	public void exportExpertationCount(HttpServletRequest request, HttpServletResponse response,
+									   //int ttype,
+									   @RequestParam(value = "ptype" ,required = true) int ptype,
+									   @RequestParam(value = "productId" ,required = true) Long id,
+									   @RequestParam(value = "type_name",required = false)String type_name) {
+		Map<String,Object> paraMap = new HashMap<>();
+
+
+		paraMap.put("ptype",ptype);
+		paraMap.put("type_name",type_name);
+		paraMap.put("id",id);
+		PageParameter pageParameter = new PageParameter();
+		pageParameter.setStart(null);
+		pageParameter.setParameter(paraMap);
+
+//		ProductVO product = productDao.queryProductByProductType(Long.valueOf(String.valueOf(ptype)), null);
+//		if(product!=null && product.getId() != null){
+//			paraMap.put("product_id",product.getId());
+//		}else{
+//			paraMap.put("product_id",0);
+//		}
+
+		Map<String,Object> sheetMap = new HashMap<>();
+		List<ExpertationCountnessVO> list = new ArrayList<>();
+
+		//2.内容分类
+		paraMap.put("ttype",2);
+		List<ExpertationCountnessVO> list2 = expertationDao.getCountListGroupByContentType(pageParameter);
+
+		//1.学科分类
+		paraMap.put("ttype",1);
+		List<ExpertationCountnessVO> list1 = expertationDao.getCountListGroupBySubjectType(pageParameter);
+
+		//3.专业分类
+		paraMap.put("ttype",1);
+		List<ExpertationCountnessVO> list3 = expertationDao.getCountListGroupByProfessionType(pageParameter);
+
+		if (list1.size() == 0) {
+			list1.add(new ExpertationCountnessVO());
+		}
+		if (list2.size() == 0) {
+			list2.add(new ExpertationCountnessVO());
+		}
+		if (list3.size() == 0) {
+			list3.add(new ExpertationCountnessVO());
+		}
+
+		sheetMap.put("学科分类",list1);
+		sheetMap.put("内容分类",list2);
+		sheetMap.put("申报专业",list3);
+
+		Workbook workbook = null;
+		if (list.size() == 0) {
+			list.add(new ExpertationCountnessVO());
+		}
+
+		try {
+			workbook = excelHelper.fromSheetMap(sheetMap);
+			//workbook = excelHelper.fromBusinessObjectList(list, (ttype == 2?"内容分类":"学科分类")+"-临床决策申报");
+
+		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+			logger.warn("数据表格化的时候失败");
+		}
+		String fileName = returnFileName(request,"临床决策申报统计.xls");
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		try (OutputStream out = response.getOutputStream()) {
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常： {}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
+
 
 	/**
 	 * 
@@ -532,7 +798,7 @@ public class FileDownLoadController {
 	 *            1待审核 3已经审核
 	 * @param offlineProgress
 	 *            0 未 2 收到
-	 * @param response
+
 	 * 
 	 */
 	@ResponseBody
@@ -553,9 +819,9 @@ public class FileDownLoadController {
 	 * 功能描述：申报表批量导出word
 	 * 
 	 * 
-	 * @param ids
+
 	 *            申报表ids
-	 * @param response
+
 	 * 
 	 */
 	@ResponseBody
@@ -681,6 +947,56 @@ public class FileDownLoadController {
 		String materialName = null;
 		if (CollectionUtil.isNotEmpty(orgList)) {
 			materialName = orgList.get(0).getMaterialName();// 教材名称
+		}
+		if (StringUtil.isEmpty(materialName)) {
+			materialName = "已发布学校";
+		}
+		String fileName = returnFileName(request, materialName + ".xls");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		try (OutputStream out = response.getOutputStream()) {
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常：{}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
+
+
+	/**
+	 *
+	 * <pre>
+	 * 功能描述：导出已发布教材下的学校
+	 * 使用示范：
+	 *
+	 * &#64;param materialId 教材ID
+	 * &#64;param request
+	 * &#64;param response
+	 * </pre>
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出已发布临床下的学校")
+	@RequestMapping(value = "/clinical/excel/published/org", method = RequestMethod.GET)
+	public void clinicalOrg(@RequestParam("productId") Long productId, HttpServletRequest request,
+					HttpServletResponse response) {
+		Workbook workbook = null;
+		List<OrgExclVO> orgList = null;
+		try {
+			orgList = productService.getOutPutExclOrgByProduct(productId);
+			if (orgList.isEmpty()) {
+				orgList.add(new OrgExclVO());
+			}
+			workbook = excelHelper.fromBusinessObjectList(orgList, "学校信息");
+		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+			logger.warn("数据表格化的时候失败");
+		}
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		String materialName = null;
+		if (CollectionUtil.isNotEmpty(orgList)) {
+			materialName = (StringUtil.isEmpty(orgList.get(0).getMaterialName())?"":orgList.get(0).getMaterialName())+"已发布学校";// 教材名称
 		}
 		if (StringUtil.isEmpty(materialName)) {
 			materialName = "已发布学校";
@@ -1194,7 +1510,7 @@ public class FileDownLoadController {
 		}
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
-		String fileName = returnFileName(request, StringUtil.isEmpty(chooseOrg)?"所有学校"+ ".xls":"学校名单" + ".xls");
+		String fileName = returnFileName(request, StringUtil.isEmpty(chooseOrg)?("所有学校"+ ".xls"):("所选学校" + ".xls"));
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
 		try (OutputStream out = response.getOutputStream()) {
 			workbook.write(out);

@@ -13,6 +13,7 @@ import com.bc.pmpheep.back.vo.PmphEditorVO;
 import com.bc.pmpheep.back.vo.PmphIdentity;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * PmphUserService 接口
@@ -179,7 +180,14 @@ public interface PmphUserService {
 
     PmphUser login(String openid) throws CheckedServiceException;
 
-    int updateUserOpenid(String openid,String username);
+    int updateUserOpenid(String openid,String username,Long id);
+
+    /**
+     * \解除绑定
+     * @param openid
+     * @return
+     */
+    int deletePmphUserIdAndWechatId(@Param("openid") String openid)throws CheckedServiceException;
     /**
      * 查询所有的用户对象列表
      *
@@ -327,7 +335,7 @@ public interface PmphUserService {
 	PmphUser updateUser(PmphUser pmphUser);
 
     /**
-     * 根据某人id查出其 本部门及上级各部门的某角色的用户
+     * 根据某人id查出其 本部门及上级各部门的某角色的用户 (已改为查询 本部门及上级各部门的isAdmin主任用户)
      * @param SbId A某 pmphUser的id
      * @param role_id 角色id （角色名称和id 仅需一个 另一个保留为null）
      * @param role_name 角色名称 （角色名称和id 仅需一个 另一个保留为null）
@@ -341,4 +349,18 @@ public interface PmphUserService {
      * @return
      */
     PmphUser getPmphUserByOpenid(String wechatUserId);
+
+    /**
+     * 查看是否绑定userId
+     * @param id
+     * @return
+     */
+    Boolean IsUserId(Long id);
+
+    /**
+     * 获取userId
+     * @param id
+     * @return
+     */
+    String getUserId(Long id);
 }

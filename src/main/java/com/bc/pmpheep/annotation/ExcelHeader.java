@@ -21,4 +21,9 @@ import java.lang.annotation.Target;
 public @interface ExcelHeader {
 
     String header() default "";
+    String cellType() default "";
+
+    int headerTotalLevel() default 1;
+    String usedPropertyName() default "";
+
 }

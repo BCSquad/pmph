@@ -111,24 +111,28 @@ public class SendWXMessageUtil {
         String href = "%s";
         Properties pp = new Properties();
         String rootAdrr = "";
+        String appAdrr = "";
         InputStream fis  = SendWXMessageUtil.class.getClassLoader().getResourceAsStream("pmphapi-config.properties");
         try {
             pp.load(fis);
             rootAdrr =pp.getProperty("rootAdrr").toString();
+            appAdrr =pp.getProperty("appAdrr").toString();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        rootAdrr = StringUtil.isEmpty("rootAdrr")?"medu.ipmph.com/pmphwx":rootAdrr;//  20097r18u8.iask.in
+        rootAdrr = StringUtil.isEmpty("rootAdrr")?"szbsj.f3322.net:8802/pmpheep/":rootAdrr;//  20097r18u8.iask.in
+        appAdrr = StringUtil.isEmpty("appAdrr")?"szbsj.f3322.net:8802/":appAdrr;//  20097r18u8.iask.in
         if(StringUtil.isEmpty(hrefType)){
             hrefType = "0";
         }
         switch (hrefType){
             case "0":href="%s";break;
-            case "1":href="<a class=\"wxmsg_a\" href=\"http://"+rootAdrr+"/meduwx%s\">%s</a>";break;
-            case "2":href="<a class=\"wxmsg_a\" href=\"http://"+rootAdrr+"/wx/#%s\">%s</a>";break;
+            case "1":href="<a class=\"wxmsg_a\" href=\"http://"+appAdrr+"/meduwx%s\">%s</a>";break;
+            case "2":href="<a class=\"wxmsg_a\" href=\"http://"+appAdrr+"/wx/#/login%s\">%s</a>";break;
             case "3":href="<a class=\"wxmsg_a\" href=\"http://"+rootAdrr+"/sso/login?appType=1%s\">%s</a>";break; //教材审核  &UserId&materialId=&declarationId=
             case "4":href="<a class=\"wxmsg_a\" href=\"http://"+rootAdrr+"/sso/login?appType=2%s\">%s</a>";break; //选题申报  &UserId
             case "5":href="<a class=\"wxmsg_a\" href=\"http://"+rootAdrr+"/sso/login?appType=3%s\">%s</a>";break; //图书纠错 &UserId&bookName=&type=&id=
+            case "6":href="<a class=\"wxmsg_a\" vueHerf=\"http://"+appAdrr+"/wx%s\">%s</a>";break;
             default: href="%s";break;
         }
         return href;

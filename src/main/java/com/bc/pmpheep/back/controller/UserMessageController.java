@@ -64,12 +64,14 @@ public class UserMessageController {
     @RequestMapping(value = "/list/message", method = RequestMethod.GET)
     public ResponseBean message(@RequestParam("pageNumber") Integer pageNumber,
     @RequestParam("pageSize") Integer pageSize, @RequestParam("title") String title,
-    HttpServletRequest request) {
+                                @RequestParam("receiverFilterType") Short receiverFilterType,
+                                HttpServletRequest request) {
         PageParameter<UserMessageVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
         UserMessageVO userMessageVO = new UserMessageVO();
         if (StringUtil.notEmpty(title)) {
             userMessageVO.setTitle(title.replaceAll(" ", ""));// 去除空格
         }
+        userMessageVO.setReceiverFilterType(receiverFilterType);
         pageParameter.setParameter(userMessageVO);
         String sessionId = CookiesUtil.getSessionId(request);
         return new ResponseBean(userMessageService.listMessage(pageParameter, sessionId));
@@ -87,8 +89,13 @@ public class UserMessageController {
     @RequestMapping(value = "/message/state", method = RequestMethod.GET)
     public ResponseBean state(
     @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
-    @RequestParam(name = "pageSize") Integer pageSize, MessageStateVO messageStateVO,
+    @RequestParam(name = "pageSize") Integer pageSize, MessageStateVO messageStateVO,String personalOrOrg,
     HttpServletRequest request) {
+        if("personal".equals(personalOrOrg)){
+            messageStateVO.setReceiverType((short) 2);
+        }else if("org".equals(personalOrOrg)){
+            messageStateVO.setReceiverType((short) 3);
+        }
         PageParameter<MessageStateVO> pageParameter =
         new PageParameter<MessageStateVO>(pageNumber, pageSize, messageStateVO);
         String sessionId = CookiesUtil.getSessionId(request);
@@ -129,6 +136,39 @@ public class UserMessageController {
                                                                  materialName));
     }
 
+    /**
+     *
+     * <pre>
+     * 功能描述：初始化数据(选择向各个对象发送消息)
+     * 使用示范：
+     *
+     * &#64;param sendType //1 发送给学校管理员 //2 所有人 //3指定用户 //4发送给教材所有报名者
+     * &#64;param pageNumber
+     * &#64;param pageSize
+     * &#64;param orgName 机构名称
+     * &#64;param materialId 教材ID
+     * &#64;param userNameOrUserCode 用户姓名/用户账号
+     * &#64;param materialName 教材名称
+     * &#64;return
+     * </pre>
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "加载选择对象业务数据")
+    @RequestMapping(value = "/clinicalmessage/sendObject", method = RequestMethod.GET)
+    public ResponseBean sendClinicalmessageObject(@RequestParam("sendType") Integer sendType,
+                                   @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
+                                   @RequestParam(name = "pageSize") Integer pageSize, String orgName,
+                                   @RequestParam("productId") Long productId,
+                                    String userNameOrUserCode,
+                                    String productName) {
+        return new ResponseBean(userMessageService.listSendClinicalmessageOject(sendType,
+                pageNumber,
+                pageSize,
+                orgName,
+                productId,
+                userNameOrUserCode,
+                productName));
+    }
     /**
      * 
      * <pre>
@@ -193,7 +233,6 @@ public class UserMessageController {
      * @param sendType //1 发送给学校管理员 //2 所有人 //3指定用户 //4发送给教材所有报名者
      * @param orgIds
      * @param userIds
-     * @param bookids
      * @return
      */
     @ResponseBody
@@ -424,9 +463,6 @@ public class UserMessageController {
      * 
      * @author tyc
      * @createDate 2017年11月24日 上午11:04:00
-     * @param message
-     * @param userId 接收者id
-     * @param sessionId
      * @return
      */
     @ResponseBody

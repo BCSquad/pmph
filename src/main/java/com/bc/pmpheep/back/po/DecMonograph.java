@@ -33,6 +33,8 @@ public class DecMonograph implements Serializable {
 	private Integer sort;
 	//个人资料id
 	private String perId;
+	//临床决策申报id
+	private String expertationId;
 
 	public DecMonograph() {
 
@@ -136,5 +138,21 @@ public class DecMonograph implements Serializable {
 
 	public void setPerId(String perId) {
 		this.perId = perId;
+	}
+
+	public Boolean getSelfPaid() {
+		return isSelfPaid;
+	}
+
+	public void setSelfPaid(Boolean selfPaid) {
+		isSelfPaid = selfPaid;
+	}
+
+	public String getExpertationId() {
+		return expertationId;
+	}
+
+	public void setExpertationId(String expertationId) {
+		this.expertationId = expertationId;
 	}
 }

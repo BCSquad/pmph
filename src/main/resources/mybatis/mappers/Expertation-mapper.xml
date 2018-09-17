@@ -1,0 +1,969 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bc.pmpheep.back.dao.ExpertationDao">
+
+    <resultMap id="expertationListMap" type="com.bc.pmpheep.back.vo.ExpertationVO">
+        <id property="id" column="e_id"></id>
+        <result property="product_id" column="product_id"></result>
+        <result property="product_name" column="product_name"></result>
+        <result property="realname" column="realname"></result>
+        <result property="username" column="username"></result>
+        <result property="org_name" column="org_name"></result>
+        <result property="unitName" column="unitName"></result>
+        <result property="position" column="position"></result>
+        <result property="title" column="title"></result>
+        <result property="email" column="email"></result>
+        <result property="handphone" column="handphone"></result>
+        <result property="org_id" column="org_id"></result>
+        <result property="online_progress" column="online_progress"></result>
+        <result property="online_progress" column="online_progress"></result>
+        <result property="commit_date" column="commit_date"></result>
+        <result property="amIAnAuditor" column="amIAnAuditor"></result>
+        <result property="auditorArray" column="auditorArray"></result>
+        <result property="syllabus_name" column="syllabus_name"></result>
+        <result property="unit_advise" column="unit_advise"></result>
+        <result property="finalResult" column="finalResult"></result>
+        <result property="pmphAudit" column="pmphAudit"></result>
+        <result property="director" column="director"></result>
+
+
+        <!--这种写法能支持分页，但会创建一个类似原返回list范型的类来保存结果，即在vo后加后缀如_$$_jvst... 导致反射取不到真正的范型class -->
+        <!--<collection property="productSubjectTypeList" column="e_id" ofType="com.bc.pmpheep.back.vo.ProductType" javaType="list" select="queryProductSubjectTypeListByExpertationId" />
+        <collection property="productContentTypeList" column="e_id" ofType="com.bc.pmpheep.back.vo.ProductType" javaType="list" select="queryProductContentTypeListByExpertationId" />
+        -->
+
+        <!--这种写法一次查询，但不支持数据库分页-->
+        <!--<collection property="productSubjectTypeList" javaType="list" ofType="com.bc.pmpheep.back.vo.ProductType">
+            <id property="id" column="pst_id"></id>
+            <result property="type_name" column="type_name"></result>
+        </collection>
+        <collection property="productContentTypeList" javaType="list" ofType="com.bc.pmpheep.back.vo.ProductType">
+            <id property="id" column="product_type_id"></id>
+            <result property="type_name" column="name_path"></result>
+        </collection>-->
+    </resultMap>
+
+    <resultMap id="SubjectTypeMap" type="com.bc.pmpheep.back.vo.ProductType">
+        <id property="id" column="id"></id>
+        <result property="type_name" column="type_name"></result>
+    </resultMap>
+
+    <select id="queryProductSubjectTypeListByExpertationId" parameterType="java.lang.Long" resultMap="SubjectTypeMap">
+        select
+        pst.id
+        ,pst.type_name
+        from expertation_subject_type est inner join product_subject_type pst on pst.id = est.product_subject_type_id and est.expertation_id = #{id}
+    </select>
+
+    <select id="queryProductProfessionTypeListByExpertationId" parameterType="java.lang.Long"
+            resultMap="SubjectTypeMap">
+        select
+        pst.id
+        ,pst.type_name
+        from expertation_profession_type est inner join product_profession_type pst on pst.id = est.product_profession_type_id and est.expertation_id = #{id}
+
+    </select>
+
+    <resultMap id="ContentTypeMap" type="com.bc.pmpheep.back.vo.ProductType">
+        <id property="id" column="id"></id>
+        <result property="type_name" column="type_name"></result>
+    </resultMap>
+
+    <select id="queryProductContentTypeListByExpertationId" parameterType="java.lang.Long" resultMap="ContentTypeMap">
+        select
+        pst.product_type_id as id
+        ,pst.name_path as type_name
+        from expertation_content_type est inner join product_content_type_detail pst on pst.product_type_id = est.product_content_type_id and est.expertation_id = #{id}
+    </select>
+
+
+    <select id="queryExpertation" parameterType="com.bc.pmpheep.back.plugin.PageParameter"
+            resultMap="expertationListMap">
+        select
+        p.product_name
+        ,p.id as product_id
+        ,e.id as e_id
+        ,e.realname
+        ,u.username
+        ,e.org_name
+        ,f.org_name as unitName
+        ,e.position
+        ,e.title
+        ,e.email
+        ,e.handphone
+        ,e.org_id
+        ,e.online_progress
+        ,e.commit_date
+        ,e.unit_advise
+        ,e.syllabus_name
+        ,e.finalResult
+        ,e.pmphAudit
+
+        ,(select GROUP_CONCAT(auditor_id) from product_auditor where product_id = #{parameter.product_id} group by
+        product_id) as auditorArray
+        ,(SELECT GROUP_CONCAT(t.id)
+        FROM (SELECT pu.id,1 AS cs FROM pmph_user pu WHERE pu.is_director = 1 AND pu.department_id IN
+        (SELECT u.department_id FROM product_auditor pa INNER JOIN pmph_user u ON pa.auditor_id = u.id WHERE product_id
+        = #{parameter.product_id})) t
+        GROUP BY
+        t.cs) as director
+
+        from
+        product p
+        inner join expertation e on e.product_id = p.id and e.online_progress >0 and e.online_progress !=2
+        LEFT JOIN (SELECT id,org_name from org UNION SELECT 0,'人民卫生出版社' from
+        org ) f on f.id=e.org_id
+
+        left join writer_user u on u.id = e.user_id
+
+        where p.product_type = #{parameter.expert_type}
+        <if test="parameter.product_id != null">
+            and p.id = #{parameter.product_id}
+        </if>
+
+        <if test="parameter.realname != null and parameter.realname != '' ">
+            and (e.realname like concat('%',#{parameter.realname},'%') or u.username like
+            concat('%',#{parameter.realname},'%'))
+        </if>
+        <if test="parameter.position != null and parameter.position != '' ">
+            and e.position like concat('%',#{parameter.position},'%')
+        </if>
+        <if test="parameter.title != null and parameter.title != '' ">
+            and e.title like concat('%',#{parameter.title},'%')
+        </if>
+        <if test="parameter.handphone != null and parameter.handphone != '' ">
+            and e.handphone like concat('%',#{parameter.handphone},'%')
+        </if>
+
+        <if test="parameter.startCommitDate !=null and parameter.startCommitDate !=''">
+            AND e.`commit_date` &gt;= str_to_date(#{parameter.startCommitDate},'%Y-%m-%d %H:%i:%s')
+        </if>
+        <if test="parameter.endCommitDate !=null and parameter.endCommitDate !='' ">
+            AND e.`commit_date` &lt;= str_to_date(#{parameter.endCommitDate},'%Y-%m-%d %H:%i:%s')
+        </if>
+        <if test="parameter.finalResult !=null  ">
+            AND e.`finalResult` = #{parameter.finalResult}
+        </if>
+        <if test="(parameter.schoolStauts != null and parameter.schoolStauts != '') and (parameter.pmphStauts == null or parameter.pmphStauts == '')">
+            and e.org_id !=0
+            <if test="parameter.schoolStauts == 0 ">  <!--提交给学校 学校待审核-->
+                and e.online_progress = 1
+            </if>
+            <if test="parameter.schoolStauts == 1  ">  <!--提交给学校 学校审核通过-->
+                and e.online_progress = 3
+            </if>
+
+        </if>
+
+        <if test="(parameter.schoolStauts == null or parameter.schoolStauts == '') and (parameter.pmphStauts != null and parameter.pmphStauts != '')">
+            -- and e.org_id =0
+            <if test="parameter.pmphStauts == 0 ">  <!-- 出版社待审核-->
+                and ((e.pmphAudit=0 and e.org_id !=0 and e.online_progress = 1) or (e.org_id = 0 and e.pmphAudit=0))
+            </if>
+            <if test="parameter.pmphStauts == 1  ">  <!--出版社审核通过-->
+                and e.pmphAudit= 1
+            </if>
+            <if test="parameter.pmphStauts == 2  "> <!-- 出版社审核未通过-->
+                and e.pmphAudit= 2
+            </if>
+            <if test="parameter.pmphStauts == 3  "> <!-- 出版社退回-->
+                and (e.online_progress = 4 or e.online_progress = 5 or e.online_progress = 2)
+            </if>
+        </if>
+
+
+        GROUP by e.id
+        <if test="start != null">
+            limit ${start} ,${pageSize}
+        </if>
+
+
+    </select>
+
+    <select id="queryExpertationCount" parameterType="com.bc.pmpheep.back.plugin.PageParameter" resultType="int">
+        select count(e.id)
+        from
+        product p
+        inner join expertation e on e.product_id = p.id and e.online_progress >0 and e.online_progress !=2
+        LEFT JOIN (SELECT id,org_name from org UNION SELECT 0,'人民卫生出版社' from
+        org ) f on f.id=e.org_id
+
+        left join writer_user u on u.id = e.user_id
+        <if test="parameter.auditor_id != null and parameter.auditor_id != '' ">
+            inner join product_auditor pa on pa.product_id = p.id and pa.auditor_id = #{parameter.auditor_id}
+        </if>
+        where p.product_type = #{parameter.expert_type}
+        <if test="parameter.product_id != null">
+            and p.id = #{parameter.product_id}
+        </if>
+
+        <if test="parameter.realname != null and parameter.realname != '' ">
+            and (e.realname like concat('%',#{parameter.realname},'%') or u.username like
+            concat('%',#{parameter.realname},'%'))
+        </if>
+        <if test="parameter.position != null and parameter.position != '' ">
+            and e.position like concat('%',#{parameter.position},'%')
+        </if>
+        <if test="parameter.title != null and parameter.title != '' ">
+            and e.title like concat('%',#{parameter.title},'%')
+        </if>
+        <if test="parameter.handphone != null and parameter.handphone != '' ">
+            and e.handphone like concat('%',#{parameter.handphone},'%')
+        </if>
+
+        <if test="parameter.startCommitDate !=null and parameter.startCommitDate !=''">
+            AND e.`commit_date` &gt;= str_to_date(#{parameter.startCommitDate},'%Y-%m-%d %H:%i:%s')
+        </if>
+        <if test="parameter.endCommitDate !=null and parameter.endCommitDate !='' ">
+            AND e.`commit_date` &lt;= str_to_date(#{parameter.endCommitDate},'%Y-%m-%d %H:%i:%s')
+        </if>
+        <if test="parameter.finalResult !=null  ">
+            AND e.`finalResult` = #{parameter.finalResult}
+        </if>
+        <if test="(parameter.schoolStauts != null and parameter.schoolStauts != '') and (parameter.pmphStauts == null or parameter.pmphStauts == '')">
+            and e.org_id !=0
+            <if test="parameter.schoolStauts == 0 ">  <!--提交给学校 学校待审核-->
+                and e.online_progress = 1
+            </if>
+            <if test="parameter.schoolStauts == 1  ">  <!--提交给学校 学校审核通过-->
+                and e.online_progress = 3
+            </if>
+
+        </if>
+
+        <if test="(parameter.schoolStauts == null or parameter.schoolStauts == '') and (parameter.pmphStauts != null and parameter.pmphStauts != '')">
+            -- and e.org_id =0
+            <if test="parameter.pmphStauts == 0 ">  <!-- 出版社待审核-->
+                and ((e.pmphAudit=0 and e.org_id !=0 and e.online_progress = 1) or (e.org_id = 0 and e.pmphAudit=0))
+            </if>
+            <if test="parameter.pmphStauts == 1  ">  <!--出版社审核通过-->
+                and e.pmphAudit= 1
+            </if>
+            <if test="parameter.pmphStauts == 2  "> <!-- 出版社审核未通过-->
+                and e.pmphAudit= 2
+            </if>
+            <if test="parameter.pmphStauts == 3  "> <!-- 出版社退回-->
+                and (e.online_progress = 4 or e.online_progress = 5 or e.online_progress = 2)
+            </if>
+        </if>
+
+
+    </select>
+
+    <!--按内容分类统计 列表-->
+    <select id="getCountListGroupByContentType" parameterType="com.bc.pmpheep.back.plugin.PageParameter"
+            resultType="com.bc.pmpheep.back.vo.ExpertationCountnessVO">
+        select
+        count(t1.eid) as count_submit,
+        sum(t1.pmphAudit=1) as count_success,
+        t1.type_name
+        from
+        (
+        select
+        e.id as eid,
+        e.pmphAudit,
+        ifNull(t.id,0) as tid,
+        ifNull(t.name_path,'未选择分类') as type_name
+
+        from expertation e
+        left join expertation_content_type et on et.expertation_id = e.id
+        left join product_content_type_detail t on t.product_type_id = et.product_content_type_id
+
+        <where>
+            e.online_progress >0 and e.online_progress !=2
+            <if test="parameter.id != null">
+                and e.product_id = #{parameter.id}
+            </if>
+            <if test="parameter.type_name != null and parameter.type_name != '' ">
+                and t.name_path like concat('%',#{parameter.type_name},'%')
+            </if>
+        </where>
+        group by tid,eid
+
+        )t1
+
+        group by t1.tid
+        <if test="start != null">
+            limit #{start},#{pageSize}
+        </if>
+
+    </select>
+
+    <!--按内容分类统计 列表总数-->
+    <select id="getCountListGroupByContentTypeCount" parameterType="com.bc.pmpheep.back.plugin.PageParameter"
+            resultType="int">
+        select count(t2.tid)
+        from(
+        select
+        t1.tid
+        from
+        (
+        select
+        ifNull(t.id,0) as tid
+        from expertation e
+        left join expertation_content_type et on et.expertation_id = e.id
+        left join product_content_type_detail t on t.product_type_id = et.product_content_type_id
+        <where>
+            e.online_progress >0 and e.online_progress !=2
+            <if test="parameter.id != null">
+                and e.product_id = #{parameter.id}
+            </if>
+            <if test="parameter.type_name != null and parameter.type_name != '' ">
+                and t.name_path like concat('%',#{parameter.type_name},'%')
+            </if>
+        </where>
+
+        )t1
+
+        group by t1.tid
+        )t2
+    </select>
+
+    <!--按学科分类统计 列表-->
+    <select id="getCountListGroupBySubjectType" parameterType="com.bc.pmpheep.back.plugin.PageParameter"
+            resultType="com.bc.pmpheep.back.vo.ExpertationCountnessVO">
+        select
+        count(t1.eid) as count_submit,
+        sum(t1.pmphAudit=1) as count_success,
+        t1.type_name
+        from
+        (
+        select
+        e.id as eid,
+        e.pmphAudit,
+        ifNull(t.id,0) as tid,
+        ifNull(t.type_name,'未选择分类') as type_name
+
+        from expertation e
+        left join expertation_subject_type et on et.expertation_id = e.id
+        left join product_subject_type t on t.id = et.product_subject_type_id
+        <where>
+            e.online_progress >0 and e.online_progress !=2
+            <if test="parameter.id != null">
+                and e.product_id = #{parameter.id}
+            </if>
+            <if test="parameter.type_name != null and parameter.type_name != '' ">
+                and t.type_name like concat('%',#{parameter.type_name},'%')
+            </if>
+        </where>
+        group by tid,eid
+
+        )t1
+
+        group by t1.tid
+
+        <if test="start != null">
+            limit #{start},#{pageSize}
+        </if>
+    </select>
+
+    <!--按学科分类统计 列表总数-->
+    <select id="getCountListGroupBySubjectTypeCount" parameterType="com.bc.pmpheep.back.plugin.PageParameter"
+            resultType="int">
+        SELECT count(t2.tid)
+        FROM (
+        select
+        t1.tid
+        from
+        (
+        select
+        ifNull(et.product_subject_type_id,0) as tid
+        from expertation e
+        left join expertation_subject_type et on et.expertation_id = e.id
+        left join product_subject_type t on t.id = et.product_subject_type_id
+        <where>
+            e.online_progress >0 and e.online_progress !=2
+            <if test="parameter.id != null">
+                and e.product_id = #{parameter.id}
+            </if>
+            <if test="parameter.type_name != null and parameter.type_name != '' ">
+                and t.type_name like concat('%',#{parameter.type_name},'%')
+            </if>
+        </where>
+        )t1
+        group by t1.tid
+        )t2
+    </select>
+
+
+    <!--按专业分类统计 列表-->
+    <select id="getCountListGroupByProfessionType" parameterType="com.bc.pmpheep.back.plugin.PageParameter"
+            resultType="com.bc.pmpheep.back.vo.ExpertationCountnessVO">
+        select
+        count(t1.eid) as count_submit,
+        sum(t1.pmphAudit=1) as count_success,
+        t1.type_name
+        from
+        (
+        select
+        e.id as eid,
+        e.pmphAudit,
+        ifNull(t.id,0) as tid,
+        ifNull(t.type_name,'未选择分类') as type_name
+
+        from expertation e
+        left join expertation_profession_type et on et.expertation_id = e.id
+        left join product_profession_type t on t.id = et.product_profession_type_id
+        <where>
+            e.online_progress >0 and e.online_progress !=2
+            <if test="parameter.id != null">
+                and e.product_id = #{parameter.id}
+            </if>
+            <if test="parameter.type_name != null and parameter.type_name != '' ">
+                and t.type_name like concat('%',#{parameter.type_name},'%')
+            </if>
+        </where>
+        group by tid,eid
+
+        )t1
+
+        group by t1.tid
+
+        <if test="start != null">
+            limit #{start},#{pageSize}
+        </if>
+    </select>
+
+    <!--按专业分类统计 列表总数-->
+    <select id="getCountListGroupByProfessionTypeCount" parameterType="com.bc.pmpheep.back.plugin.PageParameter"
+            resultType="int">
+        SELECT count(t2.tid)
+        FROM (
+        select
+        t1.tid
+        from
+        (
+        select
+        ifNull(t.id,0) as tid
+        from expertation e
+        left join expertation_profession_type et on et.expertation_id = e.id
+        left join product_profession_type t on t.id = et.product_profession_type_id
+
+        <where>
+            e.online_progress >0 and e.online_progress !=2
+            <if test="parameter.id != null">
+                and e.product_id = #{parameter.id}
+            </if>
+            <if test="parameter.type_name != null and parameter.type_name != '' ">
+                and t.type_name like concat('%',#{parameter.type_name},'%')
+            </if>
+        </where>
+
+        )t1
+
+        group by t1.tid
+        )t2
+    </select>
+
+
+    <!--根据id查找申报主表-->
+    <select id="getExpertationById" parameterType="java.lang.Long" resultMap="expertationFullMap">
+        select
+--         dec_edu_exp.id as dec_edu_exp_id,
+--         dec_edu_exp.declaration_id as dec_edu_exp_declaration_id,
+--         dec_edu_exp.school_name as dec_edu_exp_school_name,
+--         dec_edu_exp.major as dec_edu_exp_major,
+--         dec_edu_exp.degree as dec_edu_exp_degree,
+--         dec_edu_exp.note as dec_edu_exp_note,
+--         dec_edu_exp.date_begin as dec_edu_exp_date_begin,
+--         dec_edu_exp.date_end as dec_edu_exp_date_end,
+--         dec_edu_exp.sort as dec_edu_exp_sort,
+--         dec_edu_exp.per_id as dec_edu_exp_per_id,
+--         dec_edu_exp.expertation_id as dec_edu_exp_expertation_id,
+
+--         dec_work_exp.id as dec_work_exp_id,
+--         dec_work_exp.declaration_id as dec_work_exp_declaration_id,
+--         dec_work_exp.org_name as dec_work_exp_org_name,
+--         dec_work_exp.position as dec_work_exp_position,
+--         dec_work_exp.note as dec_work_exp_note,
+--         dec_work_exp.date_begin as dec_work_exp_date_begin,
+--         dec_work_exp.date_end as dec_work_exp_date_end,
+--         dec_work_exp.sort as dec_work_exp_sort,
+--         dec_work_exp.per_id as dec_work_exp_per_id,
+--         dec_work_exp.expertation_id as dec_work_exp_expertation_id,
+
+--         dec_acade.id as dec_acade_id,
+--         dec_acade.declaration_id as dec_acade_declaration_id,
+--         dec_acade.org_name as dec_acade_org_name,
+--         dec_acade.rank as dec_acade_rank,
+--         dec_acade.position as dec_acade_position,
+--         dec_acade.note as dec_acade_note,
+--         dec_acade.sort as dec_acade_sort,
+--         dec_acade.per_id as dec_acade_per_id,
+--         dec_acade.expertation_id as dec_acade_expertation_id,
+
+--         dec_textbook_pmph.id as dec_textbook_pmph_id,
+--         dec_textbook_pmph.declaration_id as dec_textbook_pmph_declaration_id,
+--         dec_textbook_pmph.material_name as dec_textbook_pmph_material_name,
+--         dec_textbook_pmph.rank as dec_textbook_pmph_rank,
+--         dec_textbook_pmph.position as dec_textbook_pmph_position,
+--         dec_textbook_pmph.is_digital_editor as dec_textbook_pmph_is_digital_editor,
+--         dec_textbook_pmph.publish_date as dec_textbook_pmph_publish_date,
+--         dec_textbook_pmph.isbn as dec_textbook_pmph_isbn,
+--         dec_textbook_pmph.note as dec_textbook_pmph_note,
+--         dec_textbook_pmph.sort as dec_textbook_pmph_sort,
+--         dec_textbook_pmph.per_id as dec_textbook_pmph_per_id,
+--         dec_textbook_pmph.expertation_id as dec_textbook_pmph_expertation_id,
+
+--         dec_monograph.id as dec_monograph_id,
+--         dec_monograph.declaration_id as dec_monograph_declaration_id,
+--         dec_monograph.monograph_name as dec_monograph_monograph_name,
+--         dec_monograph.is_self_paid as dec_monograph_is_self_paid,
+--         dec_monograph.publisher as dec_monograph_publisher,
+--         dec_monograph.note as dec_monograph_note,
+--         dec_monograph.publish_date as dec_monograph_publish_date,
+--         dec_monograph.sort as dec_monograph_sort,
+--         dec_monograph.monograph_date as dec_monograph_monograph_date,
+--         dec_monograph.per_id as dec_monograph_per_id,
+--         dec_monograph.expertation_id as dec_monograph_expertation_id,
+
+--         dec_editor_book.id as dec_editor_book_id,
+--         dec_editor_book.expertation_id as dec_editor_book_expertation_id,
+--         dec_editor_book.material_name as dec_editor_book_material_name,
+--         dec_editor_book.publisher as dec_editor_book_publisher,
+--         dec_editor_book.publish_date as dec_editor_book_publish_date,
+--         dec_editor_book.note as dec_editor_book_note,
+--         dec_editor_book.sort as dec_editor_book_sort,
+--         dec_editor_book.per_id as dec_editor_book_per_id,
+
+
+        product_extension.extension_name as extension_name,
+        dec_extension.id as dec_extension_id,
+        product_extension.id as dec_extension_extension_id,
+        dec_extension.declaration_id as dec_extension_declaration_id,
+        dec_extension.content as dec_extension_content,
+        dec_extension.expertation_id as dec_extension_expertation_id,
+
+        pst.id as pst_id,
+        pst.parent_id as pst_parent_id,
+        pst.type_name as pst_type_name,
+
+        pct.product_type_id as pct_id,
+        pct.name_path as pct_type_name,
+
+
+        e.*
+        from
+        (select
+                e1.*, if(e1.org_id=0,'人民卫生出版社',o.org_name) declare_name,wu.username as username
+                 from
+                expertation e1 left join org o on e1.org_id = o.id
+                left join writer_user wu on wu.id = e1.user_id
+                where e1.id = #{id}) e
+
+        left join expertation_subject_type est on est.expertation_id = e.id
+            left join product_subject_type pst on est.product_subject_type_id = pst.id and pst.is_deleted = 0
+        left join expertation_content_type ect on ect.expertation_id = e.id
+            left join product_content_type_detail pct on ect.product_content_type_id = pct.product_type_id and pct.is_deleted = 0
+
+        -- left join dec_edu_exp dec_edu_exp on dec_edu_exp.expertation_id = e.id
+
+        -- left join dec_work_exp  on dec_work_exp.expertation_id = e.id
+
+        -- left join dec_acade  on dec_acade.expertation_id = e.id
+
+        -- left join dec_textbook_pmph  on dec_textbook_pmph.expertation_id = e.id
+
+        -- left join dec_monograph  on dec_monograph.expertation_id = e.id
+
+--         left join dec_editor_book on dec_editor_book.expertation_id = e.id
+
+
+        left join product_extension on product_extension.product_id = e.product_id AND product_extension.is_deleted = 0
+        left join  dec_extension on dec_extension.extension_id = product_extension.id and dec_extension.expertation_id = e.id
+    </select>
+
+    <select id="queryAmIAnAuditor" resultType="java.lang.Boolean">
+
+        select count(pa.id)>0  from
+        (select * from expertation where id = #{expertation_id})e
+                join product_auditor pa on pa.product_id = e.product_id and pa.auditor_id = #{user_id}
+
+
+    </select>
+
+    <!--查询审核人的id-->
+    <select id="queryAuditorArray" resultType="java.lang.String">
+      select GROUP_CONCAT(auditor_id) from product_auditor where product_id = (select product_id from expertation where id = #{expertation_id})  group by product_id
+    </select>
+
+    <!--查询审核人主任的id-->
+    <select id="queryDirector" resultType="java.lang.String">
+        SELECT GROUP_CONCAT(t.id)
+        FROM (SELECT pu.id,1 AS cs FROM pmph_user pu WHERE pu.is_director = 1 AND pu.department_id IN
+        (SELECT u.department_id FROM product_auditor pa INNER JOIN pmph_user u ON pa.auditor_id = u.id WHERE product_id = (select product_id from expertation where id = #{expertation_id})
+        )) t
+        GROUP BY
+        t.cs
+            </select>
+
+    <!--教育经历-->
+    <select id="queryDecEduExp" parameterType="java.lang.Long" resultType="DecEduExp">
+        select
+        id ,
+        declaration_id ,
+        school_name ,
+        major ,
+        degree ,
+        note ,
+        date_begin ,
+        date_end,
+        sort ,
+        per_id ,
+        expertation_id
+         from dec_edu_exp dec_edu_exp where expertation_id = #{id}
+    </select>
+
+
+    <!--工作经历-->
+    <select id="queryDecWorkExp" parameterType="java.lang.Long" resultType="DecWorkExp">
+        select
+         id ,
+        declaration_id ,
+        org_name ,
+       position ,
+       note ,
+       date_begin ,
+       date_end ,
+       sort ,
+       per_id ,
+       expertation_id
+        from dec_work_exp  where expertation_id = #{id}
+    </select>
+
+    <!--学术经历-->
+    <select id="queryDecAcade" parameterType="java.lang.Long" resultType="DecAcade">
+        select
+          id ,
+        declaration_id ,
+        org_name ,
+        rank ,
+        position ,
+        note ,
+        sort ,
+        per_id ,
+        expertation_id
+        from dec_acade  where expertation_id = #{id}
+    </select>
+
+    <!--人卫社教材-->
+    <select id="queryDecTextbookPmph" parameterType="java.lang.Long" resultType="DecTextbookPmph">
+        select
+        id ,
+        declaration_id ,
+        material_name ,
+        rank ,
+        position ,
+        is_digital_editor ,
+        publish_date ,
+        isbn ,
+        note ,
+        sort ,
+        per_id ,
+        expertation_id
+        from dec_textbook_pmph  where expertation_id = #{id}
+    </select>
+
+    <!--主编学术专著情况-->
+    <select id="queryDecMonograph" parameterType="java.lang.Long" resultType="DecMonograph">
+        select
+        id ,
+        declaration_id ,
+        monograph_name ,
+        is_self_paid ,
+        publisher ,
+        note ,
+        publish_date ,
+        sort ,
+        monograph_date ,
+        per_id ,
+        expertation_id
+        from dec_monograph  where expertation_id = #{id}
+    </select>
+
+    <!--主编或参编图书情况-->
+    <select id="queryDecEditorBook" parameterType="java.lang.Long" resultType="DecEditorBook">
+        select
+         id ,
+        expertation_id ,
+        material_name ,
+        publisher ,
+        publish_date ,
+        note ,
+        sort ,
+        per_id
+        from dec_editor_book  where expertation_id = #{id}
+    </select>
+
+    <!--文章发表情况-->
+    <select id="queryDecArticlePublished" parameterType="java.lang.Long" resultType="DecArticlePublished">
+        select
+        *
+        from dec_article_published  where expertation_id = #{id}
+    </select>
+
+    <!--本专业获奖情况-->
+    <select id="queryDecProfessionAward" parameterType="java.lang.Long" resultType="DecProfessionAward">
+        select
+        *
+        from dec_profession_award  where expertation_id = #{id}
+    </select>
+
+    <select id="queryProfession" parameterType="long" resultType="ProductProfessionType">
+        select t2.* from expertation_profession_type t1 INNER JOIN product_profession_type t2
+        on t1.product_profession_type_id = t2.id where t1.expertation_id =#{id}
+    </select>
+
+    <select id="getProductByProductType" parameterType="long" resultMap="resultMapProductVO">
+        select * from product where product_type = #{expert_type}
+    </select>
+
+    <resultMap id="resultMapProductVO" type="com.bc.pmpheep.back.vo.ProductVO">
+        <id column="id" property="id" ></id>
+        <result column="product_type" property="product_type"></result>
+        <result column="product_name" property="product_name"></result>
+        <result column="product_type" property="product_type"></result>
+        <result column="is_published" property="is_published"></result>
+        <result column="is_unit_advise_used" property="is_unit_advise_used"></result>
+        <result column="is_unit_advise_required" property="is_unit_advise_required"></result>
+        <result column="is_edu_exp_used" property="is_edu_exp_used"></result>
+        <result column="is_edu_exp_required" property="is_edu_exp_required"></result>
+        <result column="is_work_exp_used" property="is_work_exp_used"></result>
+        <result column="is_work_exp_required" property="is_work_exp_required"></result>
+        <result column="is_acade_used" property="is_acade_used"></result>
+        <result column="is_acade_required" property="is_acade_required"></result>
+        <result column="is_pmph_textbook_used" property="is_pmph_textbook_used"></result>
+        <result column="is_pmph_textbook_required" property="is_pmph_textbook_required"></result>
+        <result column="is_monograph_used" property="is_monograph_used"></result>
+        <result column="is_monograph_required" property="is_monograph_required"></result>
+        <result column="is_edit_book_used" property="is_edit_book_used"></result>
+        <result column="is_edit_book_required" property="is_edit_book_required"></result>
+
+        <result column="is_article_published_used" property="is_article_published_used"></result>
+        <result column="is_article_published_required" property="is_article_published_required"></result>
+        <result column="is_subject_type_used" property="is_subject_type_used"></result>
+        <result column="is_subject_type_required" property="is_subject_type_required"></result>
+        <result column="is_content_type_used" property="is_content_type_used"></result>
+        <result column="is_content_type_required" property="is_content_type_required"></result>
+        <result column="is_profession_type_used" property="is_profession_type_used"></result>
+        <result column="is_profession_type_required" property="is_profession_type_required"></result>
+        <result column="is_profession_award_used" property="is_profession_award_used"></result>
+        <result column="is_profession_award_required" property="is_profession_award_required"></result>
+
+
+
+    </resultMap>
+
+
+    <resultMap id="expertationFullMap" type="com.bc.pmpheep.back.vo.ExpertationVO" autoMapping="true">
+
+        <id property="id" column="id"></id>
+        <result property="product_id" column="product_id"></result>
+        <result property="expert_type" column="expert_type"></result>
+        <result property="user_id" column="user_id"></result>
+        <result property="realname" column="realname"></result>
+        <result property="sex" column="sex"></result>
+        <result property="birthday" column="birthday"></result>
+        <result property="experience" column="experience"></result>
+        <result property="org_name" column="org_name"></result>
+        <result property="org_id" column="org_id"></result>
+        <result property="position" column="position"></result>
+        <result property="title" column="title"></result>
+        <result property="address" column="address"></result>
+        <result property="postcode" column="postcode"></result>
+        <result property="handphone" column="handphone"></result>
+        <result property="email" column="email"></result>
+        <result property="idtype" column="idtype"></result>
+        <result property="idcard" column="idcard"></result>
+        <result property="telephone" column="telephone"></result>
+        <result property="fax" column="fax"></result>
+        <result property="is_dispensed" column="is_dispensed"></result>
+        <result property="expertise" column="expertise"></result>
+        <result property="online_progress" column="online_progress"></result>
+        <result property="auth_date" column="auth_date"></result>
+        <result property="return_cause" column="return_cause"></result>
+        <result property="is_deleted" column="is_deleted"></result>
+        <result property="gmt_create" column="gmt_create"></result>
+        <result property="gmt_update" column="gmt_update"></result>
+        <result property="commit_date" column="commit_date"></result>
+        <result property="remark" column="remark"></result>
+        <result property="sub_classification" column="sub_classification"></result>
+        <result property="cont_classification" column="cont_classification"></result>
+        <result property="is_staging" column="is_staging"></result>
+        <result property="unit_advise" column="unit_advise"></result>
+        <result property="degree" column="degree"></result>
+        <result property="declare_name" column="declare_name"></result>
+        <result property="syllabus_name" column="syllabus_name"></result>
+        <result property="username" column="username"></result>
+
+        <result property="education" column="education"></result>
+        <result property="banknumber" column="banknumber"></result>
+        <result property="bankaddress" column="bankaddress"></result>
+        <result property="unit_advise_online" column="unit_advise_online"></result>
+        <result property="finalResult" column="finalResult"></result>
+        <result property="pmphAudit" column="pmphAudit"></result>
+        <!--   <collection property="DecEduExpList" javaType="list" ofType="DecEduExp" >
+               <id property="id" column="dec_edu_exp_id"></id>
+               <result property="declarationId" column="dec_edu_exp_declaration_id"></result>
+               <result property="schoolName" column="dec_edu_exp_school_name"></result>
+               <result property="major" column="dec_edu_exp_major"></result>
+               <result property="degree" column="dec_edu_exp_degree"></result>
+               <result property="note" column="dec_edu_exp_note"></result>
+               <result property="dateBegin" column="dec_edu_exp_date_begin"></result>
+               <result property="dateEnd" column="dec_edu_exp_date_end"></result>
+               <result property="sort" column="dec_edu_exp_sort"></result>
+               <result property="perId" column="dec_edu_exp_per_id"></result>
+               <result property="expertationId" column="dec_edu_exp_expertation_id"></result>
+           </collection>-->
+        <!--  <collection property="DecWorkExpList" javaType="list" ofType="DecWorkExp">
+              <id property="id" column="dec_work_exp_id"></id>
+              <result property="declarationId" column="dec_work_exp_declaration_id"></result>
+              <result property="orgName" column="dec_work_exp_org_name"></result>
+              <result property="position" column="dec_work_exp_position"></result>
+              <result property="note" column="dec_work_exp_note"></result>
+              <result property="dateBegin" column="dec_work_exp_date_begin"></result>
+              <result property="dateEnd" column="dec_work_exp_date_end"></result>
+              <result property="sort" column="dec_work_exp_sort"></result>
+              <result property="perId" column="dec_work_exp_per_id"></result>
+              <result property="expertationId" column="dec_work_exp_expertation_id"></result>
+          </collection>-->
+        <!--  <collection property="DecAcadeList" javaType="list" ofType="DecAcade">
+              <id property="id" column="dec_acade_id"></id>
+              <result property="declarationId" column="dec_acade_declaration_id"></result>
+              <result property="orgName" column="dec_acade_org_name"></result>
+              <result property="rank" column="dec_acade_rank"></result>
+              <result property="position" column="dec_acade_position"></result>
+              <result property="note" column="dec_acade_note"></result>
+              <result property="sort" column="dec_acade_sort"></result>
+              <result property="perId" column="dec_acade_per_id"></result>
+              <result property="expertationId" column="dec_acade_expertation_id"></result>
+          </collection>-->
+        <!--<collection property="DecTextbookList" javaType="list" ofType="DecTextbook">
+            <id property="id" column="dec_textbook_pmph_id"></id>
+            <result property="declarationId" column="dec_textbook_pmph_declaration_id"></result>
+            <result property="materialName" column="dec_textbook_pmph_material_name"></result>
+            <result property="rank" column="dec_textbook_pmph_rank"></result>
+            <result property="position" column="dec_textbook_pmph_position"></result>
+            <result property="isDigitalEditor" column="dec_textbook_pmph_is_digital_editor"></result>
+            <result property="publishDate" column="dec_textbook_pmph_publish_date"></result>
+            <result property="isbn" column="dec_textbook_pmph_isbn"></result>
+            <result property="note" column="dec_textbook_pmph_note"></result>
+            <result property="sort" column="dec_textbook_pmph_sort"></result>
+            <result property="perId" column="dec_textbook_pmph_per_id"></result>
+            <result property="expertationId" column="dec_textbook_pmph_expertation_id"></result>
+        </collection>-->
+        <!--<collection property="DecMonographList" javaType="list" ofType="DecMonograph">
+            <id property="id" column="dec_monograph_id"></id>
+            <result property="declarationId" column="dec_monograph_declaration_id"></result>
+            <result property="monographName" column="dec_monograph_monograph_name"></result>
+            <result property="isSelfPaid" column="dec_monograph_is_self_paid"></result>
+            <result property="publisher" column="dec_monograph_publisher"></result>
+            <result property="note" column="dec_monograph_note"></result>
+            <result property="publishDate" column="dec_monograph_publish_date"></result>
+            <result property="sort" column="dec_monograph_sort"></result>
+            <result property="monographDate" column="dec_monograph_monograph_date"></result>
+            <result property="perId" column="dec_monograph_per_id"></result>
+            <result property="expertationId" column="dec_monograph_expertation_id"></result>
+        </collection>-->
+
+        <!--<collection property="DecNationalPlanList" javaType="list" ofType="DecNationalPlan">
+            <id property="id" column="dec_national_plan_id"></id>
+            <result property="declarationId" column="dec_national_plan_declaration_id"></result>
+            <result property="materialName" column="dec_national_plan_material_name"></result>
+            <result property="isbn" column="dec_national_plan_isbn"></result>
+            <result property="rank" column="dec_national_plan_rank"></result>
+            <result property="note" column="dec_national_plan_note"></result>
+            <result property="sort" column="dec_national_plan_sort"></result>
+            <result property="rankText" column="dec_national_plan_rank_text"></result>
+            <result property="perId" column="dec_national_plan_per_id"></result>
+            <result property="expertationId" column="dec_national_plan_expertation_id"></result>
+        </collection>-->
+
+        <!--<collection property="DecEditorBookList" javaType="list" ofType="DecEditorBook">-->
+        <!--<id property="id" column="dec_editor_book_id"></id>-->
+        <!--<result property="expertationId" column="dec_editor_book_expertation_id"></result>-->
+        <!--<result property="materialName" column="dec_editor_book_material_name"></result>-->
+        <!--<result property="publisher" column="dec_editor_book_publisher"></result>-->
+        <!--<result property="publishDate" column="dec_editor_book_publish_date"></result>-->
+        <!--<result property="note" column="dec_editor_book_note"></result>-->
+        <!--<result property="sort" column="dec_editor_book_sort"></result>-->
+        <!--<result property="perId" column="dec_editor_book_per_id"></result>-->
+        <!--</collection>-->
+
+        <collection property="DecExtensionList" javaType="list" ofType="DecExtension">
+            <id property="extension_name" column="extension_name"></id>
+
+            <result property="id" column="dec_extension_id"></result>
+            <result property="extensionId" column="dec_extension_extension_id"></result>
+            <result property="declarationId" column="dec_extension_declaration_id"></result>
+            <result property="content" column="dec_extension_content"></result>
+            <result property="expertationId" column="dec_extension_expertation_id"></result>
+
+        </collection>
+
+        <collection property="productSubjectTypeList" javaType="list" ofType="ProductType">
+            <id property="id" column="pst_id"></id>
+            <result property="parent_id" column="pst_parent_id"></result>
+            <result property="type_name" column="pst_type_name"></result>
+        </collection>
+
+        <collection property="productContentTypeList" javaType="list" ofType="ProductType">
+            <id property="id" column="pct_id"></id>
+            <result property="type_name" column="pct_type_name"></result>
+        </collection>
+
+    </resultMap>
+
+
+    <!--<select id="getProductSubjectTypeListByExpertationId" parameterType="java.lang.Long" resultType="com.bc.pmpheep.back.vo.ProductType">
+        select
+        t.id,
+        t.parent_id as parentId,
+        t.type_name as typeName
+        from
+        product_subject_type t inner join
+
+        (SELECT product_subject_type_id from expertation_subject_type where expertation_id = #{id}) t1
+
+        on t1.product_subject_type_id = t.id
+    </select>-->
+
+    <update id="updateOnlineProgress" parameterType="map">
+        update expertation
+        <set>
+            <if test="onlineProgress == 4|| onlineProgress == 5">
+                online_progress=#{onlineProgress},
+            </if>
+            <if test="onlineProgress == 2">
+                pmphAudit=2,
+            </if>
+            <if test="onlineProgress == 3">
+                pmphAudit=1,
+            </if>
+            <if test=" returnCause != null and returnCause !='' ">
+                return_cause=#{returnCause},
+            </if>
+        </set>
+        where
+        id=#{id} ;
+    </update>
+
+    <select id="showTabs" parameterType="long" resultType="map">
+        select is_subject_type_used,is_content_type_used,is_profession_type_used from product where product_type = #{productType}
+    </select>
+
+    <update id="changeStatus" parameterType="map">
+        <if test="status == 1 || status == 2 || status == 0">
+            update expertation set pmphAudit = ${status} where id = ${id}
+        </if>
+
+        <if test="status == 4 ">
+            update expertation set finalResult =1 where id = ${id}
+        </if>
+        <if test="status == 5 ">
+            update expertation set finalResult = 0 where id = ${id}
+        </if>
+    </update>
+
+
+</mapper>

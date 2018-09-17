@@ -37,6 +37,10 @@ public class DecPositionPublished implements Serializable {
     private Timestamp gmtCreate;
     // 修改时间
     private Timestamp gmtUpdate;
+    // 申报人id
+    private long      writerUserId;
+    // 书籍名称
+    private String    textbookName;
 
     public DecPositionPublished() {
 
@@ -178,5 +182,21 @@ public class DecPositionPublished implements Serializable {
                + ", chosenPosition=" + chosenPosition + ", rank=" + rank + ", syllabusId="
                + syllabusId + ", syllabusName=" + syllabusName + ", gmtCreate=" + gmtCreate
                + ", gmtUpdate=" + gmtUpdate + "]";
+    }
+
+    public long getWriterUserId() {
+        return writerUserId;
+    }
+
+    public void setWriterUserId(long writerUserId) {
+        this.writerUserId = writerUserId;
+    }
+
+    public String getTextbookName() {
+        return textbookName;
+    }
+
+    public void setTextbookName(String textbookName) {
+        this.textbookName = textbookName;
     }
 }

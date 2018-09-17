@@ -45,5 +45,14 @@ public class WxMessageController {
 
     }
 
+    @RequestMapping(value = "/read")
+    @ResponseBody
+    public ResponseBean getWxMessage(@RequestParam("id")Long id,
+                                     HttpServletRequest request){
+        int count = wxMessageService.haveRead(id);
+        return new ResponseBean(count);
+    }
+
+
 
 }

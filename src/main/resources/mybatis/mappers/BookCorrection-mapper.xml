@@ -226,12 +226,15 @@
 		( a.editor_reply = NULL or a.editor_reply = '')
 	-- 	or a.result = 0
 		) */
-		and a.reply_date is null
+		/*and a.reply_date is null*/
 		<if test="editorId != null">
 			and c.editor_id = #{editorId}
 		</if>
 		<if test="bookname != null and bookname != '' ">
-			and b.bookname like CONCAT('%',#{bookname},'%')
+			and (
+			b.bookname like CONCAT('%',#{bookname},'%')
+			or b.isbn like CONCAT('%',#{bookname},'%')
+			)
 		</if>
 			<if test="isOver !=null and isOver !='' " >
 				<if test="isOver == 1 "><!-- APP的已完成 -->
@@ -260,7 +263,8 @@
 		SELECT
 		b.bookname,
 		b.isbn,
-		wu.realname as feedBackName,
+		/*wu.realname as feedBackName,*/
+		wu.username as feedBackName,
 		bc.id,
 		bc.book_id,
 		bc.content,
@@ -364,6 +368,7 @@
 			DISTINCT
 			a.id,
 			b.bookname,
+			b.isbn,
 			b.author,
 			b.publish_date,
 			b.image_url ,
@@ -398,16 +403,19 @@
 		( a.editor_reply = NULL or a.editor_reply = '')
 		-- or a.result = 0
 		) */
-		and a.reply_date is null
+		/*and a.reply_date is null*/
 		<if test="editorId != null">
 			and c.editor_id = #{editorId}
 		</if>
 		<if test="bookname != null and bookname != '' ">
-			and b.bookname like CONCAT('%',#{bookname},'%')
+			and (
+			b.bookname like CONCAT('%',#{bookname},'%')
+			or b.isbn like CONCAT('%',#{bookname},'%')
+			)
 		</if>
 		<if test="isOver !=null and isOver !='' " >
 			<if test="isOver == 1 "><!-- APP的已完成 -->
-				and is_editor_replied
+				and is_editor_replied = 1
 				<if test="result   != null  ">
 					and a.result = #{result}
 				</if>
@@ -506,7 +514,10 @@
 		where
 		!a.is_deleted and b.id is not null
 		<if test="bookname != null and bookname != '' ">
-			and b.bookname like CONCAT('%',#{bookname},'%')
+			and (
+			b.bookname like CONCAT('%',#{bookname},'%')
+			or b.isbn like CONCAT('%',#{bookname},'%')
+			)
 		</if>
 		<if test="isEditorReplied != null ">
 			and a.is_editor_replied = #{isEditorReplied}
@@ -521,6 +532,7 @@
 		SELECT
 			a.id ,
 			b.bookname,
+			b.isbn,
 			e.dp_name ,
 			f.type_name ,
 			d.realname ,
@@ -559,7 +571,10 @@
 			!a.is_deleted and b.id is not
 			null
 		<if test="bookname != null and bookname != '' ">
-			and b.bookname like CONCAT('%',#{bookname},'%')
+			and (
+			b.bookname like CONCAT('%',#{bookname},'%')
+			or b.isbn like CONCAT('%',#{bookname},'%')
+			)
 		</if>
 		<if test="isEditorReplied != null ">
 			and a.is_editor_replied = #{isEditorReplied}

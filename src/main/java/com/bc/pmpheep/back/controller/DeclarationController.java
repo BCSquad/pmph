@@ -4,7 +4,13 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
+import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -75,6 +81,8 @@ public class DeclarationController {
     @RequestParam(value = "offlineProgress", required = false) Integer offlineProgress,
     @RequestParam(value = "haveFile", required = false) Boolean haveFile,
     @RequestParam(value = "isSelect", required = false) Boolean isSelect,
+    @RequestParam(value = "startCommitDate", required = false) String startCommitDate,
+    @RequestParam(value = "endCommitDate", required = false) String endCommitDate,
     @RequestParam(value = "tag" ,required = false) String tag,HttpServletRequest request) {
         return new ResponseBean(declarationService.pageDeclaration(pageNumber,
                                                                    pageSize,
@@ -89,7 +97,7 @@ public class DeclarationController {
                                                                    positionType,
                                                                    onlineProgress,
                                                                    offlineProgress,
-                                                                   haveFile,isSelect,tag,request));
+                                                                   haveFile,isSelect,startCommitDate,endCommitDate,tag,request));
     }
 
     /**
@@ -127,8 +135,14 @@ public class DeclarationController {
     @RequestMapping(value = "/list/declaration/onlineProgress", method = RequestMethod.GET)
     public ResponseBean onlineProgress(@RequestParam("id") Long id,
     @RequestParam("onlineProgress") Integer onlineProgress,
-    @RequestParam("returnCause") String returnCause) throws CheckedServiceException, IOException {
-        return new ResponseBean(declarationService.onlineProgress(id, onlineProgress, returnCause));
+    @RequestParam("returnCause") String returnCause,HttpSession session) throws CheckedServiceException, IOException {
+        if (ObjectUtil.isNull(session)||ObjectUtil.isNull((PmphUser) session.getAttribute(Const.SESSION_PMPH_USER))) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.SESSION,
+                    CheckedExceptionResult.USER_SESSION,
+                    "当前Session会话已过期，请重新登录!");
+        }
+        PmphUser pmphUser = (PmphUser) session.getAttribute(Const.SESSION_PMPH_USER);
+        return new ResponseBean(declarationService.onlineProgress(id, onlineProgress, returnCause,pmphUser));
     }
 
     /**

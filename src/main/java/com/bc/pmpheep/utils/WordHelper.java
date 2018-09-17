@@ -82,7 +82,7 @@ public class WordHelper {
 	 */
 	public void export(String materialName, String textbookPath, List<DeclarationEtcBO> list, String filter,
 			List<MaterialExtension> extensions,int... arrDecSequence) throws CheckedServiceException {
-        String decSequence = arrDecSequence.length>0?(arrDecSequence[0]+"."):"";
+		String decSequence = arrDecSequence.length>0?(arrDecSequence[0]+"."):"";
 		HashMap<String, XWPFDocument> map = fromDeclarationEtcBOList(materialName, list, filter, extensions,decSequence);
 		if (createPath(textbookPath)) {
 			if (!textbookPath.endsWith(File.separator)) {
@@ -229,7 +229,7 @@ public class WordHelper {
 		return map;
 	}
 
-	private String generateFileName(DeclarationEtcBO bo,String decSequence) throws CheckedServiceException {
+	private String generateFileName(DeclarationEtcBO bo ,String decSequese) throws CheckedServiceException {
 		String realname = bo.getRealname();
 		String textbookName = bo.getTextbookName().get(0);
 		String presetPosition = bo.getPresetPosition().get(0);
@@ -239,7 +239,7 @@ public class WordHelper {
 				realname = "未署名";
 			}
 			StringBuilder sb = new StringBuilder();
-			sb.append(decSequence);
+			sb.append(decSequese);
 			sb.append(textbookName);
 			sb.append("_");
 			sb.append(presetPosition);

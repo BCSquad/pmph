@@ -598,7 +598,18 @@
 		<if test="parameter.position != null ">
 			and a.position like concat('%',#{parameter.position},'%')
 		</if>
-		<!-- 职称 -->
+
+			<!-- 提交开始时间 -->
+		<if test="parameter.startCommitDate != null and parameter.startCommitDate != ''  ">
+			and a.commit_date &gt;= str_to_date(#{parameter.startCommitDate},'%Y-%m-%d %H:%i:%s')
+		</if>
+
+			<!-- 提交结束时间 -->
+		<if test="parameter.endCommitDate !=null and parameter.endCommitDate !='' ">
+			AND a.commit_date &lt;=  str_to_date(#{parameter.endCommitDate},'%Y-%m-%d %H:%i:%s')
+		</if>
+
+    <!-- 职称 -->
 		<if test="parameter.title != null ">
 			and a.title like concat('%',#{parameter.title},'%')
 		</if>
@@ -661,6 +672,7 @@
 		a.position,
 		a.title,
 		a.handphone,
+		a.commit_date,
 		a.email,
 		GROUP_CONCAT(
 		CONCAT(d.textbook_name,'-',
@@ -724,6 +736,16 @@
 			and (a.realname like concat('%',#{parameter.realname},'%')
 			or e.username
 			like concat('%',#{parameter.realname},'%') )
+		</if>
+
+		<!-- 提交开始时间 -->
+		<if test="parameter.startCommitDate != null and parameter.startCommitDate != ''  ">
+			and a.commit_date &gt;= str_to_date(#{parameter.startCommitDate},'%Y-%m-%d %H:%i:%s')
+		</if>
+
+		<!-- 提交结束时间 -->
+		<if test="parameter.endCommitDate !=null and parameter.endCommitDate !='' ">
+			AND a.commit_date &lt;=  str_to_date(#{parameter.endCommitDate},'%Y-%m-%d %H:%i:%s')
 		</if>
 		<!-- 职务 -->
 		<if test="parameter.position != null ">

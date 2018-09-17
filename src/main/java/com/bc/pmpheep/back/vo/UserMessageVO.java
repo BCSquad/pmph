@@ -69,6 +69,8 @@ public class UserMessageVO implements Serializable {
     // 是否被逻辑删除 只有接收者可以删除
     private Boolean    isDeleted;
    private List<Long> senderIds;
+    //接收者筛选类型
+    private Short receiverFilterType;
     
     
     public Long getId() {
@@ -199,5 +201,13 @@ public class UserMessageVO implements Serializable {
 
     public void setSenderType(int senderType) {
         this.senderType = senderType;
+    }
+
+    public Short getReceiverFilterType() {
+        return receiverFilterType;
+    }
+
+    public void setReceiverFilterType(Short receiverFilterType) {
+        this.receiverFilterType = receiverFilterType;
     }
 }

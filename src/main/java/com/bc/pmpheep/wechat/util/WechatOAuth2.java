@@ -43,7 +43,7 @@ public class WechatOAuth2 {
                       .replace("CODE", code)
                       .replace("AGENTID", AgentID + "");
         JSONObject jo = HttpRequestUtil.httpRequest(menuUrl, EnumMethod.GET.name(), null);
-        // System.out.println("jo=" + jo);
+         System.out.println("jo=" + jo);
         return jo;
     }
 

@@ -304,6 +304,67 @@ public class BookServiceImpl extends BaseService implements BookService {
 		return result;
 	}
 
+	@Override
+	public String AbuttingJoint(String[] vns, Integer type,String materialName) throws CheckedServiceException {
+		String result = "SUCCESS";
+		Const.AllSYNCHRONIZATION = 1;
+		int num = vns.length / 100;
+		for (int i = 0; i < vns.length; i++) {
+			Book oldBook = bookDao.getBookByBookVn(vns[i]);
+			JSONObject ot = new JSONObject();
+			if (type == 0) {// 商城发送修改的请求
+				if (ObjectUtil.isNull(oldBook)) {
+					continue;
+				}
+			}
+			try {
+				// System.out.println("第"+(i+1)+"条数据，本版号为"+vns[i]+" 共"+vns.length+"条");
+				ot = PostBusyAPI(vns[i]);
+				if (null != ot && "1".equals(ot.getJSONObject("RESP").getString("CODE"))) {
+					JSONArray array = ot.getJSONObject("RESP").getJSONObject("responseData").getJSONArray("results");
+					if (array.size() > 0) {
+						Book book = BusyResJSONToModel(array.getJSONObject(0), null);
+						String content = book.getContent();// 获取到图书详情将其存入到图书详情表中
+						if (ObjectUtil.isNull(oldBook)) {
+							book.setScore(10.0);
+							book.setType(1L);
+							bookDao.addBook(book);
+
+
+
+
+
+							BookDetail bookDetail = new BookDetail(book.getId(), content);
+							bookDetailDao.addBookDetail(bookDetail);
+						} else {
+							Book newBook = new Book(book.getBookname(), book.getIsbn(), book.getSn(), book.getAuthor(),
+									book.getPublisher(), book.getLang(), book.getRevision(), book.getType(),
+									book.getPublishDate(), book.getReader(), book.getPrice(), book.getScore(),
+									book.getBuyUrl(), book.getImageUrl(), book.getPdfUrl(), book.getClicks(),
+									book.getComments(), book.getLikes(), book.getBookmarks(), book.getIsStick(),
+									book.getSort(), book.getDeadlineStick(), book.getIsNew(), book.getSortNew(),
+									book.getDeadlineNew(), book.getIsPromote(), book.getSortPromote(),
+									book.getDeadlinePromote(), book.getIsKey(), book.getSortKey(), book.getSales(),
+									book.getIsOnSale(), book.getGmtCreate(), book.getGmtUpdate());
+							newBook.setId(oldBook.getId());
+							bookDao.updateBook(newBook);
+							BookDetail bookDetail = new BookDetail(oldBook.getId(), content);
+							bookDetailDao.updateBookDetailByBookId(bookDetail);
+						}
+					}
+					if ((i + 1) >= num * (Const.AllSYNCHRONIZATION + 1)) {
+						Const.AllSYNCHRONIZATION++;
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				result = "FAIL";
+			}
+		}
+
+		return result;
+	}
+
 	/**
 	 * 
 	 * 
@@ -358,6 +419,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 		sbPar.append("v=1.0&");
 		sbPar.append("versionNumber=" + URLEncoder.encode(vn, "UTF-8"));
 		String strRes = ContactMallUtil.getInfomation(uri, sbPar.toString());
+		System.out.println(strRes);
 		return JSONObject.fromObject(strRes);
 	}
 
@@ -383,8 +445,13 @@ public class BookServiceImpl extends BaseService implements BookService {
 				model.setSales(0L);
 				model.setGmtCreate(DateUtil.getCurrentTime());
 			}
+			Long sort = bookDao.getMaxSort();
 			model = model == null ? new Book() : model;
+
+			model.setIsNew(true);
+			model.setSortNew(sort.intValue()+1);
 		}
+
 		String revison = item.getString("edition");
 		if (null == revison || "".equals(revison)) {
 			revison = "0";
@@ -412,7 +479,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 		model.setBuyUrl(item.getString("webGdsDetailUrl"));
 		model.setVn(item.getString("versionNumber"));
 		model.setIsbn(isbn);
-		return model;
+ 		return model;
 	}
 
 	@Override

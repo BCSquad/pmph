@@ -47,6 +47,9 @@
 			<if test="materialId != null ">
 				material_id,
 			</if>
+			<if test="isProduct != null ">
+				is_product,
+			</if>
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
@@ -91,6 +94,9 @@
 			</if>
 			<if test="materialId != null ">
 				#{materialId},
+			</if>
+			<if test="isProduct != null ">
+				#{isProduct},
 			</if>
 		</trim>
 	</sql>
@@ -171,6 +177,9 @@
 			<if test="materialId != null ">
 				material_id = #{materialId},
 			</if>
+			<if test="isProduct != null ">
+				is_product = #{isProduct},
+			</if>
 		</set>
 		where id = #{id} ;
 	</update>
@@ -241,7 +250,8 @@ AND t.is_withdraw = 1;
 		msg_id,msg_type,title,
 		sender_id,sender_type,
 		receiver_id,receiver_type,
-		material_id
+		material_id,receiver_filter_type
+		,is_product
 		)
 		values
 		<foreach collection="list" item="UserMessage" index="index"
@@ -253,7 +263,9 @@ AND t.is_withdraw = 1;
 			#{UserMessage.senderType},
 			#{UserMessage.receiverId},
 			#{UserMessage.receiverType},
-			#{UserMessage.materialId}
+			#{UserMessage.materialId},
+			#{UserMessage.receiverFilterType},
+			#{UserMessage.isProduct}
 			)
 		</foreach>
 	</insert>
@@ -284,11 +296,20 @@ AND t.is_withdraw = 1;
 		case when
 		a.receiver_type =1
 		then
+		'人民卫生出版社' when a.receiver_type =2
+		then
+		c.workplace when a.receiver_type =3
+		then
+		'' end workplace, -- 工作单位
+
+		case when
+		a.receiver_type =1
+		then
 		'' when a.receiver_type =2
 		then
 		'' when a.receiver_type =3
 		then
-		d.username end orgusername, -- 机构账号
+		d.realname end orgusername, -- 管理员姓名
 		case when
 		a.receiver_type =1
 		then
@@ -362,6 +383,13 @@ AND t.is_withdraw = 1;
 			<if test="parameter.materialId != null">
 				and material_id = #{parameter.materialId}
 			</if>
+			<if test="parameter.receiverType != null and parameter.receiverType >0 ">
+				and receiver_type = #{parameter.receiverType}
+			</if>
+			<if test="parameter.isProduct != null  ">
+				and is_product = #{parameter.isProduct}
+			</if>
+
 		</if>
 		) t
 		where is_withdraw =0
@@ -387,6 +415,12 @@ AND t.is_withdraw = 1;
 			</if>
 			<if test="parameter.materialId != null">
 				and material_id = #{parameter.materialId}
+			</if>
+			<if test="parameter.receiverType != null and parameter.receiverType >0 ">
+				and receiver_type = #{parameter.receiverType}
+			</if>
+			<if test="parameter.isProduct != null  ">
+				and is_product = #{parameter.isProduct}
 			</if>
 		</if>
 		order by name
@@ -441,6 +475,9 @@ AND t.is_withdraw = 1;
 		<if test="parameter.title != null and parameter.title != ''">
 			and m.title like concat('%',#{parameter.title},'%')
 		</if>
+		<if test="parameter.receiverFilterType != null and parameter.receiverFilterType != ''">
+			and m.receiver_filter_type =#{parameter.receiverFilterType}
+		</if>
 		GROUP BY
 		m.msg_id,
 		m.sender_id,
@@ -458,6 +495,7 @@ AND t.is_withdraw = 1;
 		m.sender_id,
 		m.is_withdraw,
 		m.`sender_type`,
+		m.receiver_filter_type,
 		 (
 			    CASE
 			      WHEN m.`sender_type` = 0 ||m.`sender_type` = 1
@@ -495,6 +533,9 @@ AND t.is_withdraw = 1;
 		</if>
 		<if test="parameter.title != null and parameter.title != ''">
 			and m.title like concat('%',#{parameter.title},'%')
+		</if>
+		<if test="parameter.receiverFilterType != null and parameter.receiverFilterType != ''">
+			and m.receiver_filter_type =#{parameter.receiverFilterType}
 		</if>
 		GROUP BY
 		m.msg_id,
