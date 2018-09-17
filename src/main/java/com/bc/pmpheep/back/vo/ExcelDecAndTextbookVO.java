@@ -15,7 +15,7 @@ public class ExcelDecAndTextbookVO{
 	//遴选的职务
 	private Integer chosenPosition;
 	//书籍名称
-	@ExcelHeader(header = "书名")
+	@ExcelHeader(header = "书籍名称")
 	private String textbookName;
 	//显示职务
 	@ExcelHeader(header = "本书担任职务")
