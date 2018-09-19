@@ -132,6 +132,7 @@
         <result column="is_active" property="is_active"></result>
         <result column="gmt_set_active" property="gmt_set_active"></result>
         <result column="actualDeadline" property="actualDeadline"></result>
+        <result column="is_new" property="is_new"></result>
 
         <collection property="auditorList" javaType="java.util.List" ofType="com.bc.pmpheep.back.po.ProductAuditor">
             <id column="u_id" property="id"></id>
@@ -652,6 +653,7 @@
     <select id="queryList" resultMap="resultMapProductVO" parameterType="com.bc.pmpheep.back.plugin.PageParameter">
         select * from (SELECT p.*
         ,if( p.is_published = 1,new.gmt_set_active = p.gmt_set_active,is_new) as is_active
+        /*,p.is_published = 1 and is_new as is_active*/
         ,u.realname as founder
         ,d.dp_name as founderDepartment
         FROM
@@ -677,6 +679,9 @@
             <if test="parameter.product_type != null ">
                 and p.product_type = #{parameter.product_type}
             </if>
+            <if test="parameter.product_type_list_str != null and parameter.product_type_list_str != '' ">
+                and p.product_type in (${parameter.product_type_list_str})
+            </if>
 
 
             <if test="parameter.is_active">
@@ -700,6 +705,9 @@
 
             <if test="parameter.product_type != null ">
                 and product_type = #{parameter.product_type}
+            </if>
+            <if test="parameter.product_type_list_str != null and parameter.product_type_list_str != '' ">
+                and product_type in (${parameter.product_type_list_str})
             </if>
             <if test="parameter.is_active">
                 order by gmt_set_active and is_deleted = 0 and is_published = 1 and is_new = 1 DESC limit 1

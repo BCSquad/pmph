@@ -70,6 +70,9 @@ public class ProductVO {
     private List<ProductAttachment> productAttachmentList; //附件列表
     private List<ProductAttachment> producntImgList; //上传图片列表
     private Date actualDeadline; //报名截止时间
+    private Boolean is_new ;
+
+    private String product_type_list_str ; // 移动端同时查询多分类的查询条件 为product_type字符串，以，分隔
 
     public ProductVO() {
 
@@ -498,5 +501,21 @@ public class ProductVO {
 
     public void setActualDeadline(Date actualDeadline) {
         this.actualDeadline = actualDeadline;
+    }
+
+    public String getProduct_type_list_str() {
+        return product_type_list_str;
+    }
+
+    public void setProduct_type_list_str(String product_type_list_str) {
+        this.product_type_list_str = product_type_list_str;
+    }
+
+    public Boolean getIs_new() {
+        return is_new;
+    }
+
+    public void setIs_new(Boolean is_new) {
+        this.is_new = is_new;
     }
 }
