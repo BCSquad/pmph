@@ -14,6 +14,9 @@ public class ExcelDecAndTextbookVO{
 	private Long textbookId;
 	//遴选的职务
 	private Integer chosenPosition;
+	//书籍名称
+	@ExcelHeader(header = "书籍名称")
+	private String textbookName;
 	//显示职务
 	@ExcelHeader(header = "本书担任职务")
 	private String showChosenPosition;
@@ -64,8 +67,7 @@ public class ExcelDecAndTextbookVO{
 	//纸质表进度
 	@ExcelHeader(header = "纸质表审核")
     private String showOfflineProgress;
-    //书籍名称
-    private String textbookName;
+
     //教材名称
     private String materialName;
     //作家证件类型

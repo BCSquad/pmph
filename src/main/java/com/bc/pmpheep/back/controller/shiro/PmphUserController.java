@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.controller.shiro;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +10,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.FormParam;
 
+import com.bc.pmpheep.general.bean.ImageType;
+import com.bc.pmpheep.general.service.FileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +65,8 @@ public class PmphUserController {
 	PmphDepartmentService pmphDepartmentService;
 	@Autowired
 	MaterialService materialService;
+	@Autowired
+	FileService fileService;
 	
 	// 当前业务类型
 	private static final String BUSSINESS_TYPE = "社内用户";
@@ -93,6 +98,29 @@ public class PmphUserController {
 	@RequestMapping(value = "/updatePassword", method = RequestMethod.PUT)
 	public ResponseBean updatePassword(HttpServletRequest request,@RequestParam("oldPassword")String oldPassword,@RequestParam("newPassword")String newPassword){
 		return new ResponseBean(userService.updatePassword(request,oldPassword, newPassword));
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "uploadFile" , method = RequestMethod.POST)
+	public ResponseBean uploadFile(@RequestParam("file") MultipartFile file,@RequestParam("ids")Long ids , HttpServletRequest request) throws IOException {
+
+		InputStream stream = null;
+		String mid = null;
+		try {
+			stream = file.getInputStream();
+			mid = fileService.save(stream, file.getOriginalFilename(), ImageType.PMPH_USER_AVATAR, 0);
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw e;
+		}
+
+
+		PmphUser pmphUser = new PmphUser(ids);
+		pmphUser.setAvatar(mid);
+		userService.updateUser(pmphUser);
+
+
+		return new ResponseBean(mid);
 	}
 	
 	
