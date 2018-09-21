@@ -226,7 +226,7 @@
 		( a.editor_reply = NULL or a.editor_reply = '')
 	-- 	or a.result = 0
 		) */
-		/*and a.reply_date is null*/
+		and a.reply_date is null
 		<if test="editorId != null">
 			and c.editor_id = #{editorId}
 		</if>
@@ -403,7 +403,7 @@
 		( a.editor_reply = NULL or a.editor_reply = '')
 		-- or a.result = 0
 		) */
-		/*and a.reply_date is null*/
+		and a.reply_date is null
 		<if test="editorId != null">
 			and c.editor_id = #{editorId}
 		</if>
