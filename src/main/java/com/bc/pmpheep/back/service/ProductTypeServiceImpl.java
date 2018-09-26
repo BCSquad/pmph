@@ -174,13 +174,19 @@ public class ProductTypeServiceImpl implements ProductTypeService {
                     //cellProductType.setProduct_id(product_id);
                     cellProductType.setTypeType(typeType);
                     Cell cell = row.getCell(cellNum);
+                    Cell nextCell = row.getCell(cellNum + 1);
                     String cell_type_name = StringUtil.getCellValue(cell);
+                    String next_cell_type_name = StringUtil.getCellValue(nextCell);
                     if (StringUtil.isEmpty(cell_type_name)){
                         /*throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
                                 CheckedExceptionResult.NULL_PARAM, "Excel文件里序号为" + rowNum + "的分类名称为空");*/
                         break;
                     }else{
                         cellProductType.setType_name(cell_type_name);
+                    }
+
+                    if(StringUtil.isEmpty(next_cell_type_name)){
+                        cellProductType.setExcel_row_num((long)rowNum);
                     }
 
                     String parent_name_path = "";
@@ -190,6 +196,7 @@ public class ProductTypeServiceImpl implements ProductTypeService {
                     parent_name_path = parent_name_path.replaceAll("^/","");
                     String full_name_path = parent_name_path+"/"+cell_type_name;
                     full_name_path = full_name_path.replaceAll("^/","");
+
                     //若full_name_path不重复，则说明此实体类未添加过
                     if(productTypeMap.get(full_name_path)==null){
                         cellProductType.setFullNamePath(full_name_path);
@@ -200,7 +207,10 @@ public class ProductTypeServiceImpl implements ProductTypeService {
                         if(parent_productType!=null){
                             parent_productType.getChildType().add(cellProductType);
                         }
+                    }else if(StringUtil.isEmpty(next_cell_type_name)){
+                        productTypeMap.get(full_name_path).setExcel_row_num((long)rowNum);
                     }
+
                 }
             }
         }
@@ -273,13 +283,13 @@ public class ProductTypeServiceImpl implements ProductTypeService {
             }else{
                 //TODO 如果后续有新增其他分类...
             }
-
+            responseBean.setCode(ResponseBean.SUCCESS);
+            responseBean.setMsg("导入成功");
         }catch (Exception e){
             responseBean.setCode(ResponseBean.UNCHECKED_ERROR);
             responseBean.setMsg("导入数据库失败！");
         }
-        responseBean.setCode(ResponseBean.SUCCESS);
-        responseBean.setMsg("导入成功");
+
 
         return responseBean;
     }

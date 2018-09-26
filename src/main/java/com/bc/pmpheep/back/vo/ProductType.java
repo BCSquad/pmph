@@ -15,7 +15,7 @@ public class ProductType implements Serializable{
     private Long parent_id ;//备用字段，当前要求学科分类无层级关系
     private String type_name; //50长度 名称
     private Long product_id; //产品id
-
+    private Long excel_row_num; //在导入的excel表格中，作为行末分类的行号。同时也是前台排序的依据，顺序排列。
 
     private int typeType; // 1.学科分类 2.内容分类 3.专业分类
     private Timestamp gmt_create;
@@ -24,6 +24,7 @@ public class ProductType implements Serializable{
     private Long productType ; // 产品分类
     private List<ProductType> childType; //子分类列表
     private String fullNamePath; //从顶级分类名称到自身分类名称的全名称路径 分隔符为 '/'
+
 
     public ProductType() {
     }
@@ -117,4 +118,11 @@ public class ProductType implements Serializable{
     }
 
 
+    public Long getExcel_row_num() {
+        return excel_row_num;
+    }
+
+    public void setExcel_row_num(Long excel_row_num) {
+        this.excel_row_num = excel_row_num;
+    }
 }
