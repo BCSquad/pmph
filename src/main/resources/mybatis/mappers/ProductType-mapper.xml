@@ -21,6 +21,7 @@
                 and t.type_name like concat('%',#{parameter.type_name},'%')
             </if>
         </where>
+        ORDER by t.excel_row_num ASC
         limit #{start},#{pageSize}
     </select>
 
@@ -44,6 +45,7 @@
                 and t.type_name like concat('%',#{parameter.type_name},'%')
             </if>
         </where>
+        ORDER by t.excel_row_num ASC
         limit #{start},#{pageSize}
     </select>
 
@@ -75,6 +77,7 @@
                 and d.name_path like concat('%',#{parameter.type_name},'%')
             </if>
         </where>
+        ORDER by t.excel_row_num ASC
         limit #{start},#{pageSize}
     </select>
 
@@ -149,24 +152,32 @@
         insert into product_subject_type(
         type_name
         ,product_type
+        ,excel_row_num
         )
         VALUES
           <foreach collection="list" item="item" separator="," >
-              (#{item.type_name},#{item.productType})
+              (#{item.type_name},#{item.productType},#{item.excel_row_num})
           </foreach>
         on duplicate key update is_deleted = 0
+        <if test="item.excel_row_num != null ">
+          , excel_row_num=VALUES(excel_row_num)
+        </if>
     </insert>
 
     <insert id="insertProfessionTypeBatch" parameterType="com.bc.pmpheep.back.vo.ProductType" >
         insert into product_profession_type(
         type_name
         ,product_type
+        ,excel_row_num
         )
         VALUES
         <foreach collection="list" item="item" separator="," >
-            (#{item.type_name},#{item.productType})
+            (#{item.type_name},#{item.productType},#{item.excel_row_num})
         </foreach>
         on duplicate key update is_deleted = 0
+        <if test="item.excel_row_num != null ">
+          , excel_row_num=VALUES(excel_row_num)
+        </if>
     </insert>
 
     <insert id="insertContentType" parameterType="ProductType" keyProperty="id" keyColumn="id" useGeneratedKeys="true">
@@ -176,14 +187,24 @@
           type_name,
           parent_id,
           product_type
+          <if test="excel_row_num != null ">
+              ,excel_row_num
+          </if>
         )
         VALUES (
           (select product_type_id as id from product_content_type_detail where name_path = #{fullNamePath} and product_type = #{productType}),
           #{type_name},
           #{parent_id},
           #{productType}
+        <if test="excel_row_num != null ">
+            ,#{excel_row_num}
+        </if>
         )
         on duplicate key UPDATE is_deleted = 0
+        <if test="excel_row_num != null ">
+            , excel_row_num=VALUES(excel_row_num)
+        </if>
+
     </insert>
 
     <update id="callUpdateProductTypeDetail" parameterType="java.lang.Long">
