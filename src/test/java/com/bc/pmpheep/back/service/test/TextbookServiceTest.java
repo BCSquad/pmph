@@ -2,6 +2,8 @@ package com.bc.pmpheep.back.service.test;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Resource;
+
+import com.alibaba.fastjson.JSON;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -21,6 +23,15 @@ public class TextbookServiceTest extends BaseTest {
 	
 	@Resource
 	private TextbookService textbookService;
+
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testGetExcelDecAndTextbooks(){
+		Long[] ids = new Long[2];
+		ids[0] = 488L;
+		ids[1] = 489L;
+		System.out.println(JSON.toJSONString(textbookService.getExcelDecAndTextbooks(ids)));
+	}
 	
     @Test
     @Rollback(Const.ISROLLBACK)
