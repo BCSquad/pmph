@@ -72,6 +72,11 @@ public class BookVO implements Serializable {
 
 	private Boolean ischeckrwcommend;
 
+	/**
+	 * 封面图片地址
+	 */
+	private String imageUrl;
+
 	public Long getId() {
 		return id;
 	}
@@ -214,5 +219,13 @@ public class BookVO implements Serializable {
 
 	public void setIscheckrwcommend(Boolean ischeckrwcommend) {
 		this.ischeckrwcommend = ischeckrwcommend;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 }

@@ -39,6 +39,9 @@ public class ExcelDecAndTextbookVO{
 	//作家职称
 	@ExcelHeader(header = "职称")
 	private String title;
+	//出生年月
+	@ExcelHeader(header = "出生年月")
+	private String birthday;
 	//通讯地址
 	@ExcelHeader(header = "通讯地址")
 	private String address;
@@ -69,9 +72,7 @@ public class ExcelDecAndTextbookVO{
 	//纸质表进度
 	@ExcelHeader(header = "纸质表审核")
     private String showOfflineProgress;
-	//出生年月
-	@ExcelHeader(header = "出生年月")
-	private String birthday;
+
 
     //教材名称
     private String materialName;
