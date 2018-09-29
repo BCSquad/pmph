@@ -863,7 +863,7 @@ public class PmphUserServiceImpl implements PmphUserService {
                                                       Const.PAGE_NUMBER,
                                                       Const.PAGE_SIZE,
                                                       bookname,
-                                                      null,
+                                                      false,
                                                       null);
         map.put("bookCorrectionAudit", pageResultBookCorrectionAuditVO);
         // 图书评论审核
@@ -874,6 +874,15 @@ public class PmphUserServiceImpl implements PmphUserService {
         PageResult<BookUserCommentVO> pageResultBookUserCommentVO =
         bookUserCommentService.listBookUserCommentAdmin(pageParameter);
         map.put("bookUserComment", pageResultBookUserCommentVO);
+
+        //读书反馈
+        PageResult<BookFeedBack> pageResultBookFeedBackVO =
+        bookCorrectionService.bookFeedBaskList(request,
+                                                Const.PAGE_NUMBER,
+                                                Const.PAGE_SIZE,
+                                                false);
+        map.put("bookFeedBack", pageResultBookFeedBackVO);
+
         // 选题申报
         PageParameter<TopicDeclarationVO> pageParameter3 = new PageParameter<>();
         // 选题申报当前用户角色
