@@ -82,6 +82,39 @@ public class ProductTypeController {
         return responseBean;
     }
 
+
+    @RequestMapping("/clic/tree")
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "根据父级id获取下一级所有内容分类")
+    @ResponseBody
+    public ResponseBean getContentListTree(@RequestParam(value = "parentId",defaultValue = "0") Long parentId,@RequestParam short productType){
+         return new ResponseBean(productTypeService.getContentListTree(parentId,productType));
+
+    }
+
+    @RequestMapping("/clic/notLazytree")
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "根据父级id获取所有内容分类")
+    @ResponseBody
+    public ResponseBean getnotLazyContentListTree(@RequestParam(value = "parentId",defaultValue = "0") Long parentId,@RequestParam short productType,String type_name){
+        return new ResponseBean(productTypeService.listProductContentType(parentId,productType,"")); //模糊查询分类采用vue的js过滤 一次行将所有分类全部查出
+
+    }
+
+    /**
+     * 删除该分类以及下属分类
+     *
+     * @author Mryang
+     * @createDate 2017年9月26日 下午3:38:14
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/clic/delete", method = RequestMethod.DELETE)
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除分类")
+    @ResponseBody
+    public ResponseBean delete(Long id) {
+        return new ResponseBean(productTypeService.deleteProductContentTypeById(id));
+    }
+
+
     @RequestMapping("/{type}/delete")
     @ResponseBody
     public ResponseBean deleteType(HttpServletRequest request

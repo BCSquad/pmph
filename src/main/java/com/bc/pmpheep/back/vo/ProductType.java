@@ -24,6 +24,7 @@ public class ProductType implements Serializable{
     private Long productType ; // 产品分类
     private List<ProductType> childType; //子分类列表
     private String fullNamePath; //从顶级分类名称到自身分类名称的全名称路径 分隔符为 '/'
+    private Boolean isLeaf; // 是否叶子节点
 
 
     public ProductType() {
@@ -124,5 +125,13 @@ public class ProductType implements Serializable{
 
     public void setExcel_row_num(Long excel_row_num) {
         this.excel_row_num = excel_row_num;
+    }
+
+    public Boolean getIsLeaf() {
+        return isLeaf;
+    }
+
+    public void setlsLeaf(Boolean isLeaf) {
+        this.isLeaf = isLeaf;
     }
 }
