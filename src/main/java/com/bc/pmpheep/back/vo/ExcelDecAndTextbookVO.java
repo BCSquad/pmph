@@ -14,9 +14,15 @@ public class ExcelDecAndTextbookVO{
 	private Long textbookId;
 	//遴选的职务
 	private Integer chosenPosition;
+	@ExcelHeader(header = "书序")
+	private Integer sort;
 	//书籍名称
 	@ExcelHeader(header = "书籍名称")
 	private String textbookName;
+	@ExcelHeader(header = "版次")
+	private String textbookRound;
+	@ExcelHeader(header = "策划编辑")
+	private String editorName;
 	//显示职务
 	@ExcelHeader(header = "本书担任职务")
 	private String showChosenPosition;
@@ -291,5 +297,29 @@ public class ExcelDecAndTextbookVO{
 
 	public void setBirthday(String birthday) {
 		this.birthday = birthday;
+	}
+
+	public Integer getSort() {
+		return sort;
+	}
+
+	public void setSort(Integer sort) {
+		this.sort = sort;
+	}
+
+	public String getTextbookRound() {
+		return textbookRound;
+	}
+
+	public void setTextbookRound(String textbookRound) {
+		this.textbookRound = textbookRound;
+	}
+
+	public String getEditorName() {
+		return editorName;
+	}
+
+	public void setEditorName(String editorName) {
+		this.editorName = editorName;
 	}
 }
