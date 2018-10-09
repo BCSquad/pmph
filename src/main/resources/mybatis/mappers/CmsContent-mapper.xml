@@ -539,6 +539,9 @@
 							<if test="parameter.endAuDate !=null and parameter.endAuDate !='' ">
 								AND cc.`auth_date`  &lt;= str_to_date(#{parameter.endAuDate},'%Y-%m-%d %H:%i:%s')
 							</if>
+							<if test="parameter.isMaterialEntry !=null">
+								AND cc.`is_material_entry`  = ${parameter.isMaterialEntry}
+							</if>
 				</if>
 
 			)b
@@ -584,6 +587,10 @@
 							</if>
 							<if test="parameter.endAuDate !=null and parameter.endAuDate !='' ">
 								AND `auth_date`  &lt;= str_to_date(#{parameter.endAuDate},'%Y-%m-%d %H:%i:%s')
+							</if>
+
+							<if test="parameter.isMaterialEntry !=null">
+								AND `is_material_entry`  = ${parameter.isMaterialEntry}
 							</if>
 				</if>
 		</where>
