@@ -151,12 +151,12 @@ public class ProductServiceImpl implements ProductService {
                     "报名截止日期不为空");
         }
 
-        //if(productVO.getId()==null){ //新建 保存创建人
+        if(productVO.getId()==null){ //新建 保存创建人
             productVO.setFounder_id(pmphUser.getId());
-        //}
-       /* if(productVO.getIs_published()){ // 发布 保存发布人
+        }
+        if(productVO.getIs_published()){ // 发布 保存发布人
             productVO.setPublisher_id(pmphUser.getId());
-        }*/
+        }
 
         //校验
         validateProductVO(productVO);

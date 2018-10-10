@@ -39,10 +39,10 @@ public class CmsManualServiceImpl implements CmsManualService {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "附件id参数为空");
         }
-        if (StringUtil.isEmpty(cmsManual.getNote())) {
+        /*if (StringUtil.isEmpty(cmsManual.getNote())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "备注参数为空");
-        }
+        }*/
         if (ObjectUtil.isNull(cmsManual.getUserId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "上传者id参数为空");
