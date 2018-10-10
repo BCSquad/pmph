@@ -47,6 +47,11 @@
 
     </select>
 
+
+    <select id="getProductById" parameterType="long" resultMap="resultMapProductVO">
+        select * from product where id = #{id}
+    </select>
+
     <!--根据id查出临床决策产品-->
     <select id="queryProductById" parameterType="Long" resultMap="resultMapProductVO">
         select

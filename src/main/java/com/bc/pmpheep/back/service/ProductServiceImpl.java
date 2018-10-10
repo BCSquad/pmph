@@ -95,6 +95,12 @@ public class ProductServiceImpl implements ProductService {
         return productVO;
     }
 
+
+    @Override
+    public ProductVO getProductById(Long id) {
+        return productDao.getProductById(id);
+    }
+
     @Override
     public ProductVO getProductByType(Long product_type,Long id) {
 
