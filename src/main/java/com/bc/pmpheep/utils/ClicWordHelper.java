@@ -124,7 +124,7 @@ public class ClicWordHelper {
 			}
 			List<XWPFParagraph> xwpfParagraphs = document.getParagraphs();
 			List<XWPFTable> tables = document.getTables();
-			String filename = generateFileName(bo,(decSequese++)+".");
+			String filename = generateFileName(bo,(++decSequese)+".");
 			int i = 14;
 			XWPFTable old = tables.get(12);  //获取上一个table 是为了指定新增table的样式
 			//扩展项填充
@@ -664,12 +664,12 @@ public class ClicWordHelper {
 		if (CollectionUtil.isEmpty(productTypeList)) {
 			return table;
 		}
-		if (productTypeList.size() > 1) {
+		/*if (productTypeList.size() > 1) {
 			int height = table.getRow(1).getHeight();
 			for (int i = 1; i < productTypeList.size(); i++) {
 				table.createRow().setHeight(height);
 			}
-		}
+		}*/
 		List<XWPFTableRow> rows = table.getRows();
 
 		String typeName ="" ;
@@ -703,12 +703,12 @@ public class ClicWordHelper {
 		if (CollectionUtil.isEmpty(productProfessionTypeList)) {
 			return table;
 		}
-		if (productProfessionTypeList.size() > 1) {
+		/*if (productProfessionTypeList.size() > 1) {
 			int height = table.getRow(1).getHeight();
 			for (int i = 1; i < productProfessionTypeList.size(); i++) {
 				table.createRow().setHeight(height);
 			}
-		}
+		}*/
 		List<XWPFTableRow> rows = table.getRows();
 		String typeName ="" ;
 		for(ProductProfessionType productProfessionType:productProfessionTypeList) {
