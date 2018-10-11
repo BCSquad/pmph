@@ -176,4 +176,11 @@ public interface ProductDao {
      * @return
      */
     Boolean getIsActiveByProductId(Long id);
+
+    /**
+     * 根据id 获取产品对象
+     * @param id
+     * @return
+     */
+    ProductVO getProductById(Long id);
 }

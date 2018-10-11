@@ -24,6 +24,7 @@ public class DecAcade implements java.io.Serializable {
 	private String orgName;
 	//级别
 	private Integer rank;
+	private String rankName;
 	//职务
 	private String position;
 	//备注
@@ -136,5 +137,13 @@ public class DecAcade implements java.io.Serializable {
 
 	public void setExpertationId(String expertationId) {
 		this.expertationId = expertationId;
+	}
+
+	public String getRankName() {
+		return rankName;
+	}
+
+	public void setRankName(String rankName) {
+		this.rankName = rankName;
 	}
 }
