@@ -26,6 +26,8 @@ import com.bc.pmpheep.back.dao.ProductDao;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.service.*;
 import com.bc.pmpheep.back.vo.*;
+import com.bc.pmpheep.general.runnable.ClicSpringThread;
+import com.bc.pmpheep.utils.ClicWordHelper;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.shiro.session.Session;
 import org.slf4j.Logger;
@@ -95,6 +97,8 @@ public class FileDownLoadController {
 	DeclarationService declarationService;
 	@Resource
 	ExcelHelper excelHelper;
+	@Resource
+	ClicWordHelper clicWordHelper;
 	@Resource
 	WordHelper wordHelper;
 	@Resource
@@ -278,12 +282,12 @@ public class FileDownLoadController {
 			list.add(new BookFeedBack());
 		}
 		try {
-			workbook = excelHelper.fromBusinessObjectList(list, "读书反馈");
+			workbook = excelHelper.fromBusinessObjectList(list, "读者反馈");
 
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");
 		}
-		String fileName = returnFileName(request,"读书反馈.xls");
+		String fileName = returnFileName(request,"读者反馈.xls");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
@@ -537,7 +541,7 @@ public class FileDownLoadController {
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");
 		}
-		String fileName = returnFileName(request,"临床决策申报.xls");
+		String fileName = returnFileName(request,(expertationVO.getProduct_name()!=null?getExportName(expertationVO.getExpert_type()+""):"临床决策申报")+".xls");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
@@ -810,6 +814,22 @@ public class FileDownLoadController {
 		taskExecutor.execute(new SpringThread(zipHelper, wordHelper, materialService, textbookService,
 				declarationService,isSelect, materialId, textBookids, realname, position, title, orgName, unitName, positionType,
 				onlineProgress, offlineProgress, id, materialExtensionService));
+		return '"' + id + '"';
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "临床申报表批量导出word")
+	@RequestMapping(value = "/word/clic/declaration", method = RequestMethod.GET)
+	public String clicDeclarationWord(ExpertationVO expertationVO) {
+		String id = String.valueOf(System.currentTimeMillis()).concat(String.valueOf(RandomUtil.getRandomNum()));
+
+		//List<ExpertationVO> list = expertationDao.queryExpertation(pageParameter);
+		taskExecutor.execute(new ClicSpringThread(zipHelper, clicWordHelper,
+				expertationDao,expertationService, productService,expertationVO,id));
 		return '"' + id + '"';
 	}
 

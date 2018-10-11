@@ -366,7 +366,7 @@ FROM
 
 			p.user_id = #{id}
 		AND r.is_disabled IS FALSE
-		AND prp.permission_id in(2,3,7,15,20,23)
+		AND prp.permission_id in(2,3,7,15,20,23,43)
 		GROUP BY
 			r.role_name,
 			prp.permission_id

@@ -48,6 +48,7 @@ public class ExpertationVO implements Serializable {
     @ExcelHeader(header = "邮箱")
     private String	email	;	//	40	邮箱
     private short	idtype	;	//	3	证件类型
+    private String idTypeName;
     private String	idcard	;	//	40	证件号码
     private String	telephone	;	//	30	联系电话
     private String	fax	;	//	50	传真
@@ -80,6 +81,7 @@ public class ExpertationVO implements Serializable {
     private Boolean is_staging;
     private short degree;
     private short education; //学历 （数字代号）
+    private String educationName;
     private String banknumber; //银行卡号
     private String bankaddress;//银行地址（开户行）
     private String declare_name; //申报单位名称
@@ -131,6 +133,7 @@ public class ExpertationVO implements Serializable {
     private List<DecProfessionAward> DecProfessionAwardList; // 本专业获奖情况
     @ExcelHeader(header = "文章发表情况", usedPropertyName = "is_article_published_used",headerTotalLevel=2)
     private List<DecArticlePublished>  DecArticlePublishedList; // 文章发表情况
+
 
 
 
@@ -833,5 +836,21 @@ public class ExpertationVO implements Serializable {
 
     public void setFinalResultStr(String finalResultStr) {
         this.finalResultStr = finalResultStr;
+    }
+
+    public String getIdTypeName() {
+        return idTypeName;
+    }
+
+    public void setIdTypeName(String idTypeName) {
+        this.idTypeName = idTypeName;
+    }
+
+    public String getEducationName() {
+        return educationName;
+    }
+
+    public void setEducationName(String educationName) {
+        this.educationName = educationName;
     }
 }

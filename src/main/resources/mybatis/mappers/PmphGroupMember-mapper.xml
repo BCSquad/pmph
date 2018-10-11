@@ -63,7 +63,11 @@
 		)
 		values(
 		<include refid="value" />
-		) ;
+		)
+		ON DUPLICATE KEY UPDATE /*display_name = VALUES(display_name) ,*/
+		is_founder = case when is_founder > VALUES(is_founder) then is_founder else VALUES(is_founder) end ,
+		is_admin = case when is_admin > VALUES(is_admin) then is_admin else VALUES(is_admin) end
+		;
 	</insert>
 
 	<!-- 根据id删除一个 PmphGroupMember -->

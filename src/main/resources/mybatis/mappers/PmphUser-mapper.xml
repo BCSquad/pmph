@@ -473,6 +473,16 @@
 			and t1.is_writer = false and t1.group_id = #{parameter.groupId}
 			)
 		</if>
+		<if test="parameter.roleIds !=null and parameter.roleIds !='' ">
+			and EXISTS (
+			SELECT
+			id
+			FROM
+			pmph_user_role t1
+			WHERE
+			t1.user_id = u.id  and t1.role_id = #{parameter.roleIds}
+			)
+		</if>
 		) t
 	</select>
 
@@ -510,6 +520,20 @@
 			and t1.is_writer = false and t1.group_id = #{parameter.groupId}
 			)
 		</if>
+
+		<if test="parameter.roleIds !=null and parameter.roleIds !='' ">
+			and EXISTS (
+			SELECT
+			id
+			FROM
+			pmph_user_role t1
+			WHERE
+			t1.user_id = u.id  and t1.role_id = #{parameter.roleIds}
+			)
+		</if>
+
+
+
 		<if test="start !=null and pageNumber != null">
 			LIMIT #{start},#{pageSize}
 		</if>

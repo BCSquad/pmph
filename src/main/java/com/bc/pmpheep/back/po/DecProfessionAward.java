@@ -30,6 +30,7 @@ public class DecProfessionAward implements java.io.Serializable {
 	//级别（国家、省、市、单位）
 	private String rank;
 
+
 	// Constructors
 
 	/** default constructor */

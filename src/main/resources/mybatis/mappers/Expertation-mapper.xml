@@ -144,7 +144,7 @@
         <if test="parameter.finalResult !=null  ">
             AND e.`finalResult` = #{parameter.finalResult}
         </if>
-        <if test="(parameter.schoolStauts != null and parameter.schoolStauts != '') and (parameter.pmphStauts == null or parameter.pmphStauts == '')">
+        <if test="(parameter.schoolStauts != null and parameter.schoolStauts != '') "> <!-- =and (parameter.pmphStauts == null or parameter.pmphStauts == '')-->
             and e.org_id !=0
             <if test="parameter.schoolStauts == 0 ">  <!--提交给学校 学校待审核-->
                 and e.online_progress = 1
@@ -155,10 +155,10 @@
 
         </if>
 
-        <if test="(parameter.schoolStauts == null or parameter.schoolStauts == '') and (parameter.pmphStauts != null and parameter.pmphStauts != '')">
+        <if test="(parameter.pmphStauts != null and parameter.pmphStauts != '') "> <!-- and (parameter.schoolStauts == null or parameter.schoolStauts == '') -->
             -- and e.org_id =0
             <if test="parameter.pmphStauts == 0 ">  <!-- 出版社待审核-->
-                and ((e.pmphAudit=0 and e.org_id !=0 and e.online_progress = 1) or (e.org_id = 0 and e.pmphAudit=0))
+                and ((e.pmphAudit=0 and e.org_id !=0 and e.online_progress in (1,3) ) or (e.org_id = 0 and e.pmphAudit=0))
             </if>
             <if test="parameter.pmphStauts == 1  ">  <!--出版社审核通过-->
                 and e.pmphAudit= 1
@@ -220,7 +220,7 @@
         <if test="parameter.finalResult !=null  ">
             AND e.`finalResult` = #{parameter.finalResult}
         </if>
-        <if test="(parameter.schoolStauts != null and parameter.schoolStauts != '') and (parameter.pmphStauts == null or parameter.pmphStauts == '')">
+        <if test="(parameter.schoolStauts != null and parameter.schoolStauts != '') "> <!-- =and (parameter.pmphStauts == null or parameter.pmphStauts == '')-->
             and e.org_id !=0
             <if test="parameter.schoolStauts == 0 ">  <!--提交给学校 学校待审核-->
                 and e.online_progress = 1
@@ -231,10 +231,10 @@
 
         </if>
 
-        <if test="(parameter.schoolStauts == null or parameter.schoolStauts == '') and (parameter.pmphStauts != null and parameter.pmphStauts != '')">
+        <if test="(parameter.pmphStauts != null and parameter.pmphStauts != '') "> <!-- and (parameter.schoolStauts == null or parameter.schoolStauts == '') -->
             -- and e.org_id =0
             <if test="parameter.pmphStauts == 0 ">  <!-- 出版社待审核-->
-                and ((e.pmphAudit=0 and e.org_id !=0 and e.online_progress = 1) or (e.org_id = 0 and e.pmphAudit=0))
+                and ((e.pmphAudit=0 and e.org_id !=0 and e.online_progress in (1,3) ) or (e.org_id = 0 and e.pmphAudit=0))
             </if>
             <if test="parameter.pmphStauts == 1  ">  <!--出版社审核通过-->
                 and e.pmphAudit= 1

@@ -16,6 +16,10 @@ public class BookVO implements Serializable {
 	 */
 	private String bookname;
 	/**
+	 * 封面图片
+	 */
+	private String imageUrl;
+	/**
 	 * ISBN号
 	 */
 	private String isbn;
@@ -214,5 +218,13 @@ public class BookVO implements Serializable {
 
 	public void setIscheckrwcommend(Boolean ischeckrwcommend) {
 		this.ischeckrwcommend = ischeckrwcommend;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 }

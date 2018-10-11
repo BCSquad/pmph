@@ -741,13 +741,14 @@
 		t.textbook_name,t.textbook_round,t.sort,dp.chosen_position,wu.realname,wu.username,org.org_name unitName,
 			dc.org_name,dc.position,dp.rank,dc.title,dc.address,dc.email,
 			dc.handphone,dc.idtype,dc.idcard,dc.online_progress,dc.offline_progress,
-			m.material_name,dc.postcode
+			m.material_name,dc.postcode,dc.birthday,pu.realname as editorName
 		FROM `dec_position` dp 
 		LEFT JOIN `declaration` dc ON dp.`declaration_id` = dc.`id`
 		LEFT JOIN `org` org ON dc.`org_id`= org.`id`
 		LEFT JOIN `writer_user` wu ON wu.`id`= dc.`user_id`
 		LEFT JOIN `textbook` t ON t.`id`= dp.`textbook_id`
 		LEFT JOIN `material` m ON m.`id`= t.`material_id`
+		LEFT JOIN pmph_user pu ON pu.id = t.planning_editor
 		WHERE
 			dc.is_staging=false and dc.online_progress!=0 and dp.chosen_position !=0
 			and dp.`textbook_id` in

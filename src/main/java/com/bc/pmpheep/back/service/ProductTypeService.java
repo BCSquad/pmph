@@ -46,5 +46,27 @@ public interface ProductTypeService {
 
     Map<String,Object> getBtnStatus(Long productType) throws CheckedServiceException;
 
+    /**
+     * 获取内容分类的树
+     * @param parentId
+     * @param productType
+     * @return
+     */
+    ProductType getContentListTree(Long parentId,short productType);
+
+    /**
+     * 根据id 删除内容分类
+     * @param id
+     * @return
+     */
+    Integer deleteProductContentTypeById(Long id);
+
+    /**
+     * 非懒加载 构建所有的内容树
+     * @param parentId
+     * @param type_name
+     * @return
+     */
+    ProductType listProductContentType(Long parentId,short productTypeParam,String type_name);
 
 }
