@@ -140,7 +140,7 @@ public interface BookCorrectionDao {
 	List<BookFeedBack> bookFeedBackList(Map<String, Object> map);
 
 	/**
-	 * 获取某个具体读书反馈详情
+	 * 获取某个具体读者反馈详情
 	 * @param id
 	 * @return
 	 */

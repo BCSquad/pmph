@@ -282,12 +282,12 @@ public class FileDownLoadController {
 			list.add(new BookFeedBack());
 		}
 		try {
-			workbook = excelHelper.fromBusinessObjectList(list, "读书反馈");
+			workbook = excelHelper.fromBusinessObjectList(list, "读者反馈");
 
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");
 		}
-		String fileName = returnFileName(request,"读书反馈.xls");
+		String fileName = returnFileName(request,"读者反馈.xls");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);

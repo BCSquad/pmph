@@ -875,7 +875,7 @@ public class PmphUserServiceImpl implements PmphUserService {
         bookUserCommentService.listBookUserCommentAdmin(pageParameter);
         map.put("bookUserComment", pageResultBookUserCommentVO);
 
-        //读书反馈
+        //读者反馈
         PageResult<BookFeedBack> pageResultBookFeedBackVO =
         bookCorrectionService.bookFeedBaskList(request,
                                                 Const.PAGE_NUMBER,
