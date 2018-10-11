@@ -444,21 +444,23 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		String newTempNoticeFileIds = ",";
 		for (MaterialNoticeAttachment materialNoticeAttachment : materialNoticeAttachmentlist) {
 			if (null == materialNoticeAttachment.getId()) {
-				String tempFileId = materialNoticeAttachment.getAttachment();
+				/*String tempFileId = materialNoticeAttachment.getAttachment();
 				byte[] fileByte = (byte[]) request.getSession(false).getAttribute(tempFileId);
 				String fileName = (String) request.getSession(false).getAttribute("fileName_" + tempFileId);
 				materialNoticeAttachment.setAttachment(String.valueOf(new Date().getTime()));
-				materialNoticeAttachment.setAttachmentName(fileName);
+
+				materialNoticeAttachment.setAttachmentName(fileName);*/
+
 				materialNoticeAttachment.setDownload(0L);
 				materialNoticeAttachment.setMaterialExtraId(materialExtra.getId());
 				// 保存通知
 				materialNoticeAttachmentService.addMaterialNoticeAttachment(materialNoticeAttachment);
 				String noticeId;
 				// 保存通知文件
-				InputStream sbs = new ByteArrayInputStream(fileByte);
+				/*InputStream sbs = new ByteArrayInputStream(fileByte);
 				noticeId = fileService.save(sbs, fileName, FileType.MATERIAL_NOTICE_ATTACHMENT,
 						materialNoticeAttachment.getId());
-				materialNoticeAttachment.setAttachment(noticeId);
+				materialNoticeAttachment.setAttachment(noticeId);*/
 				// 更新通知
 				materialNoticeAttachmentService.updateMaterialNoticeAttachment(materialNoticeAttachment);
 				// 移除session的文件
