@@ -336,7 +336,7 @@
 		b.chosen_position in (2,3,4,5,6,7,10,11,12,13,14,15),
 		IF(g.allres like CONCAT('%,',b.textbook_id,'_',b.declaration_id,'_',b.preset_position,'_',b.chosen_position,'_',IFNULL(b.rank,0),',%')
 		or a.is_published or a.is_chief_published,
-		CONCAT('&lt;font color="red"&gt;',c.realname,'&lt;/font&gt;'), CONCAT('&lt;font color="black"&gt;',c.realname,'&lt;/font&gt;')),
+		CONCAT('&lt;font color="#2828ca" style="font-weight: 700;"&gt;',c.realname,'&lt;/font&gt;'), CONCAT('&lt;font color="black"&gt;',c.realname,'&lt;/font&gt;')),
 		null
 		) ORDER BY if(b.chosen_position>8,b.chosen_position-8,b.chosen_position) desc,b.rank asc) editorsAndAssociateEditors,
 		sum(IF(b.chosen_position in (2,3,4,5,6,7,10,11,12,13,14,15),1,0))
@@ -457,7 +457,7 @@
 		g.chosen_position &amp; 4 &gt;0,
 		IF(g.id
 		or a.is_published or a.is_chief_published,
-		CONCAT('&lt;font color="red"&gt;',g.realname,'&lt;/font&gt;'),NULL ),
+		CONCAT('&lt;font color="#2828ca" style="font-weight: 700;"&gt;',g.realname,'&lt;/font&gt;'),NULL ),
 		null
 		) ORDER BY if(g.chosen_position>8,g.chosen_position-8,g.chosen_position) desc,g.rank asc)),'待遴选')
 		,'&lt;/span &gt;'
@@ -469,7 +469,7 @@
 		g.chosen_position&amp;2 &gt;0,
 		IF(g.id
 		or a.is_published or a.is_chief_published,
-		CONCAT('&lt;font color="red"&gt;',g.realname,'&lt;/font&gt;'),NULL ),
+		CONCAT('&lt;font color="#2828ca" style="font-weight: 700;"&gt;',g.realname,'&lt;/font&gt;'),NULL ),
 		null
 		) ORDER BY if(g.chosen_position>8,g.chosen_position-8,g.chosen_position) desc,g.rank asc)),'待遴选')
 		,'&lt;/span&gt;'
@@ -505,7 +505,7 @@
 		g.chosen_position in (2,3,4,5,6,7,10,11,12,13,14,15),
 		IF(g.id
 		or a.is_published or a.is_chief_published,
-		CONCAT('&lt;font color="red"&gt;',g.realname,'&lt;/font&gt;'),NULL ),
+		CONCAT('&lt;font color="#2828ca" style="font-weight: 700;"&gt;',g.realname,'&lt;/font&gt;'),NULL ),
 		null
 		) ORDER BY if(g.chosen_position>8,g.chosen_position-8,g.chosen_position) desc,g.rank asc))
 		,
