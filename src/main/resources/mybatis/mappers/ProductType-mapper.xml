@@ -10,6 +10,7 @@
         <result property="typeType" column="typeType"></result>
         <result property="gmt_create" column="gmt_create"></result>
         <result property="gmt_update" column="gmt_update"></result>
+        <result property="isLeaf" column="isLeaf"></result>
     </resultMap>
 
     <select id="getSubjectTypeList" parameterType="PageParameter" resultMap="ProductTypeMap">
@@ -21,6 +22,7 @@
                 and t.type_name like concat('%',#{parameter.type_name},'%')
             </if>
         </where>
+        ORDER by t.excel_row_num ASC
         limit #{start},#{pageSize}
     </select>
 
@@ -44,6 +46,7 @@
                 and t.type_name like concat('%',#{parameter.type_name},'%')
             </if>
         </where>
+        ORDER by t.excel_row_num ASC
         limit #{start},#{pageSize}
     </select>
 
@@ -75,6 +78,7 @@
                 and d.name_path like concat('%',#{parameter.type_name},'%')
             </if>
         </where>
+        ORDER by t.excel_row_num ASC
         limit #{start},#{pageSize}
     </select>
 
@@ -149,41 +153,59 @@
         insert into product_subject_type(
         type_name
         ,product_type
+        ,excel_row_num
         )
         VALUES
           <foreach collection="list" item="item" separator="," >
-              (#{item.type_name},#{item.productType})
+              (#{item.type_name},#{item.productType},#{item.excel_row_num})
           </foreach>
         on duplicate key update is_deleted = 0
+        <if test="item.excel_row_num != null ">
+          , excel_row_num=VALUES(excel_row_num)
+        </if>
     </insert>
 
     <insert id="insertProfessionTypeBatch" parameterType="com.bc.pmpheep.back.vo.ProductType" >
         insert into product_profession_type(
         type_name
         ,product_type
+        ,excel_row_num
         )
         VALUES
         <foreach collection="list" item="item" separator="," >
-            (#{item.type_name},#{item.productType})
+            (#{item.type_name},#{item.productType},#{item.excel_row_num})
         </foreach>
         on duplicate key update is_deleted = 0
+        <if test="item.excel_row_num != null ">
+          , excel_row_num=VALUES(excel_row_num)
+        </if>
     </insert>
 
-    <insert id="insertContentType" parameterType="ProductType" keyProperty="id" keyColumn="id" useGeneratedKeys="true">
+    <insert id="insertContentType" parameterType="com.bc.pmpheep.back.vo.ProductType" keyProperty="id" keyColumn="id" useGeneratedKeys="true">
         insert INTO product_content_type
         (
           id,
           type_name,
           parent_id,
           product_type
+          <if test="excel_row_num != null ">
+              ,excel_row_num
+          </if>
         )
         VALUES (
           (select product_type_id as id from product_content_type_detail where name_path = #{fullNamePath} and product_type = #{productType}),
           #{type_name},
           #{parent_id},
           #{productType}
+        <if test="excel_row_num != null ">
+            ,#{excel_row_num}
+        </if>
         )
         on duplicate key UPDATE is_deleted = 0
+        <if test="excel_row_num != null ">
+            , excel_row_num=VALUES(excel_row_num)
+        </if>
+
     </insert>
 
     <update id="callUpdateProductTypeDetail" parameterType="java.lang.Long">
@@ -204,5 +226,62 @@
 -- (select if(id,true,false) content from product where product_type = 3) t3
 select  count(id)  subject from product where product_type = #{productType}
     </select>
+
+    <!--获取产品树信息 当前节点下的所有儿子节点的信息-->
+    <select id="getContentListTree" resultMap="ProductTypeMap" parameterType="map">
+        SELECT
+		p.*,
+		IF (
+		sum(IF(d.id IS NOT NULL, 1, 0)) > 0,
+		FALSE,
+		TRUE
+		) isLeaf
+		FROM
+		product_content_type p
+		LEFT JOIN product_content_type d ON -- 这个副表的作用只是为了判断是否叶子节点
+		d.parent_id = p.id
+		WHERE
+		p.is_deleted = 0 and
+		p.parent_id = #{parentId}
+		and p.product_type = #{productTypeParam}
+		<if test="type_name!=null and type_name != ''">
+            and p.type_name like concat('%',#{type_name},'%')
+        </if>
+		GROUP BY
+		p.id
+		 ORDER by p.excel_row_num ASC
+    </select>
+
+    <!--根据id 获取当前级节点数据信息-->
+    <select id="getProductConetentTypeVoById" resultMap="ProductTypeMap" parameterType="map">
+         SELECT
+		p.*,
+		IF (
+		sum(IF(d.id IS NOT NULL, 1, 0)) > 0,
+		FALSE,
+		TRUE
+		) isLeaf
+		FROM
+		product_content_type p
+		LEFT JOIN product_content_type d ON -- 这个副表的作用只是为了判断是否叶子节点
+		d.parent_id = p.id
+		WHERE
+		p.is_deleted = 0 and
+		p.id = #{parentId}
+		<if test="productTypeParam !=null">
+		and p.product_type = #{productTypeParam}
+        </if>
+		GROUP BY
+		p.id
+		 ORDER by p.excel_row_num ASC
+    </select>
+
+    <!--删除内容分类 采用逻辑删 如果id 为0代表删除所有分类-->
+    <update id="deleteProductContentTypeById" parameterType="long">
+        update product_content_type set is_deleted = 1
+        <where>
+            <if test="id != 0"> id =#{id}</if>
+        </where>
+    </update>
 
 </mapper>

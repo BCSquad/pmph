@@ -121,7 +121,7 @@ public interface BookCorrectionService {
 
 
 	/**
-	 * 获取读书反馈列表
+	 * 获取读者反馈列表
 	 * @param request
 	 * @param pageNumber
 	 * @param pageSize
@@ -131,7 +131,7 @@ public interface BookCorrectionService {
 	PageResult<BookFeedBack>  bookFeedBaskList(HttpServletRequest request, Integer pageNumber, Integer pageSize, Boolean result);
 
 	/**
-	 * 获取某个具体的读书反馈详情
+	 * 获取某个具体的读者反馈详情
 	 * @param id
 	 * @return
 	 */

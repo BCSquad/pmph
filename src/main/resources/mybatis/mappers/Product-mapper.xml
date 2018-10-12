@@ -47,6 +47,11 @@
 
     </select>
 
+
+    <select id="getProductById" parameterType="long" resultMap="resultMapProductVO">
+        select * from product where id = #{id}
+    </select>
+
     <!--根据id查出临床决策产品-->
     <select id="queryProductById" parameterType="Long" resultMap="resultMapProductVO">
         select
@@ -655,10 +660,12 @@
         ,if( p.is_published = 1,new.gmt_set_active = p.gmt_set_active,is_new) as is_active
         /*,p.is_published = 1 and is_new as is_active*/
         ,u.realname as founder
+        ,pu.realname as publisher
         ,d.dp_name as founderDepartment
         FROM
         product p
         left join pmph_user u on p.founder_id = u.id
+        left join pmph_user pu on p.publisher_id = pu.id
         left join pmph_department d on d.id = u.department_id
         left join (select id, gmt_set_active from product
         <where>

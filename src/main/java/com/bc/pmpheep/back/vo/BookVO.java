@@ -7,6 +7,8 @@ import org.apache.ibatis.type.Alias;
 @Alias("BookVO")
 public class BookVO implements Serializable {
 
+
+	private static final long serialVersionUID = -3810392387448168852L;
 	/**
 	 * 主键
 	 */
@@ -15,6 +17,10 @@ public class BookVO implements Serializable {
 	 * 图书名称
 	 */
 	private String bookname;
+	/**
+	 * 封面图片
+	 */
+	private String imageUrl;
 	/**
 	 * ISBN号
 	 */
@@ -214,5 +220,13 @@ public class BookVO implements Serializable {
 
 	public void setIscheckrwcommend(Boolean ischeckrwcommend) {
 		this.ischeckrwcommend = ischeckrwcommend;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 }

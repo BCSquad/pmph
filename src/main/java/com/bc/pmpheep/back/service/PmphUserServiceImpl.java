@@ -851,6 +851,7 @@ public class PmphUserServiceImpl implements PmphUserService {
         PageParameter<CmsContentVO> pageParameter1 = new PageParameter<>();
         CmsContentVO cmsContentVO = new CmsContentVO();
         cmsContentVO.setTitle(title);
+        cmsContentVO.setAuthStatus(new Short("0"));
         cmsContentVO.setCategoryId(Const.CMS_CATEGORY_ID_1);
         pageParameter1.setParameter(cmsContentVO);
         // 文章审核的结果
@@ -863,17 +864,27 @@ public class PmphUserServiceImpl implements PmphUserService {
                                                       Const.PAGE_NUMBER,
                                                       Const.PAGE_SIZE,
                                                       bookname,
-                                                      null,
+                                                      false,
                                                       null);
         map.put("bookCorrectionAudit", pageResultBookCorrectionAuditVO);
         // 图书评论审核
         PageParameter<BookUserCommentVO> pageParameter = new PageParameter<>();
         BookUserCommentVO bookUserCommentVO = new BookUserCommentVO();
         bookUserCommentVO.setName(name.replaceAll(" ", ""));// 去除空格
+        bookUserCommentVO.setIsAuth(0);
         pageParameter.setParameter(bookUserCommentVO);
         PageResult<BookUserCommentVO> pageResultBookUserCommentVO =
         bookUserCommentService.listBookUserCommentAdmin(pageParameter);
         map.put("bookUserComment", pageResultBookUserCommentVO);
+
+        //读者反馈
+        PageResult<BookFeedBack> pageResultBookFeedBackVO =
+        bookCorrectionService.bookFeedBaskList(request,
+                                                Const.PAGE_NUMBER,
+                                                Const.PAGE_SIZE,
+                                                false);
+        map.put("bookFeedBack", pageResultBookFeedBackVO);
+
         // 选题申报
         PageParameter<TopicDeclarationVO> pageParameter3 = new PageParameter<>();
         // 选题申报当前用户角色
