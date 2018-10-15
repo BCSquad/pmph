@@ -851,6 +851,7 @@ public class PmphUserServiceImpl implements PmphUserService {
         PageParameter<CmsContentVO> pageParameter1 = new PageParameter<>();
         CmsContentVO cmsContentVO = new CmsContentVO();
         cmsContentVO.setTitle(title);
+        cmsContentVO.setAuthStatus(new Short("0"));
         cmsContentVO.setCategoryId(Const.CMS_CATEGORY_ID_1);
         pageParameter1.setParameter(cmsContentVO);
         // 文章审核的结果
@@ -870,6 +871,7 @@ public class PmphUserServiceImpl implements PmphUserService {
         PageParameter<BookUserCommentVO> pageParameter = new PageParameter<>();
         BookUserCommentVO bookUserCommentVO = new BookUserCommentVO();
         bookUserCommentVO.setName(name.replaceAll(" ", ""));// 去除空格
+        bookUserCommentVO.setIsAuth(0); //是否通过审核 0=待审核/1=已通过/2=不通过
         pageParameter.setParameter(bookUserCommentVO);
         PageResult<BookUserCommentVO> pageResultBookUserCommentVO =
         bookUserCommentService.listBookUserCommentAdmin(pageParameter);

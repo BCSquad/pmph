@@ -536,12 +536,12 @@ public class FileDownLoadController {
 				list.add(new ExpertationVO());
 			}
 			//workbook = excelHelper.fromBusinessObjectList(list, expertationVO.getProduct_name()!=null?getExportName(expertationVO.getExpert_type()+""):"临床决策申报");
-			workbook = excelHelper.fromExpertationList(productVO,list, expertationVO.getProduct_name()!=null?getExportName(expertationVO.getExpert_type()+""):"临床决策申报");
+			workbook = excelHelper.fromExpertationList(productVO,list, expertationVO.getProduct_name()!=null?expertationVO.getProduct_name():getExportName(expertationVO.getExpert_type()+""));
 
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");
 		}
-		String fileName = returnFileName(request,(expertationVO.getProduct_name()!=null?getExportName(expertationVO.getExpert_type()+""):"临床决策申报")+".xls");
+		String fileName = returnFileName(request,(expertationVO.getProduct_name()!=null?expertationVO.getProduct_name():getExportName(expertationVO.getExpert_type()+""))+".xls");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);

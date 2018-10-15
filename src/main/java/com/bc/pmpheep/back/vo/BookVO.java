@@ -7,6 +7,8 @@ import org.apache.ibatis.type.Alias;
 @Alias("BookVO")
 public class BookVO implements Serializable {
 
+
+	private static final long serialVersionUID = -3810392387448168852L;
 	/**
 	 * 主键
 	 */
