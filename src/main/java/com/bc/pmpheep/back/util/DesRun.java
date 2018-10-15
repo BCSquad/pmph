@@ -141,7 +141,7 @@ public class DesRun {
     }
 
     public static void main(String[] args) {
-        DesRun desRun1 = new DesRun("88:52:94:A8:EE:B6:5D:83");
+        DesRun desRun1 = new DesRun("B1:40:2F:CF:BD:1D:92:05");
         // String a = new DesRun("15fdsafdsa", "admin" + "123" + "nyz526").enpsw;
         // System.out.println(a);
         // DesRun desRun = new DesRun(a);

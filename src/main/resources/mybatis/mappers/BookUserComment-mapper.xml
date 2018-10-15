@@ -279,6 +279,7 @@
 		c.is_deleted
 		=
 		FALSE
+		and c.is_long = false
 		<if test="parameter.name != null and parameter.name != ''">
 			and (b.bookname like concat("%",#{parameter.name},"%") or
 			b.isbn like concat("%",#{parameter.name},"%"))
@@ -303,6 +304,7 @@
 		c.writer_id
 		WHERE
 		c.is_deleted = FALSE
+		and c.is_long = false
 		<if test="parameter.name != null and parameter.name != ''">
 			and (b.bookname like concat("%",#{parameter.name},"%") or
 			b.isbn like concat("%",#{parameter.name},"%"))
