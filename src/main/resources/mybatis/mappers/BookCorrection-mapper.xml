@@ -318,7 +318,7 @@
 		pu.realname as authorname,
 		bc.author_reply,
 		bc.auth_date,
-		DATE_FORMAT(bc.gmt_create,'%Y-%m-%d %H:%I:%S') as gmt_create
+		DATE_FORMAT(bc.gmt_create,'%Y-%m-%d %H:%i:%s') as gmt_create
 		FROM
 		book AS b
 		Inner Join book_user_feedback AS bc ON

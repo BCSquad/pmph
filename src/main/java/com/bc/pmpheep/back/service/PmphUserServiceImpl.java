@@ -871,7 +871,7 @@ public class PmphUserServiceImpl implements PmphUserService {
         PageParameter<BookUserCommentVO> pageParameter = new PageParameter<>();
         BookUserCommentVO bookUserCommentVO = new BookUserCommentVO();
         bookUserCommentVO.setName(name.replaceAll(" ", ""));// 去除空格
-        bookUserCommentVO.setIsAuth(0);
+        bookUserCommentVO.setIsAuth(0); //是否通过审核 0=待审核/1=已通过/2=不通过
         pageParameter.setParameter(bookUserCommentVO);
         PageResult<BookUserCommentVO> pageResultBookUserCommentVO =
         bookUserCommentService.listBookUserCommentAdmin(pageParameter);

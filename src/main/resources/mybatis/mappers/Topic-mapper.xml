@@ -1335,7 +1335,8 @@
 		AND a.is_director_handling =TRUE
 		AND a.is_editor_handling = FALSE
 		AND b.is_director = TRUE
-		AND a.auth_progress in(1,2,3)
+		-- AND a.auth_progress in(1,2,3) 客户要求 只显示 待审核
+		AND a.auth_progress in(1)
 		ORDER BY a.submit_time DESC) t
 	</select>
 	<!-- 主任受理 -->
@@ -1348,7 +1349,8 @@
 		AND	a.is_director_handling = TRUE
 		AND	a.is_editor_handling = FALSE
 		AND b.is_director = TRUE
-		AND a.auth_progress in(1,2,3)
+		-- AND a.auth_progress in(1,2,3)  客户要求 只显示 待审核
+		AND a.auth_progress in(1)
 		ORDER BY a.submit_time DESC
 		LIMIT
 		#{start},#{pageSize}
@@ -1363,7 +1365,8 @@
 		WHERE u.id =#{userId}
 		AND t.is_opts_handling = TRUE
 		AND t.is_director_handling =FALSE
-		AND t.auth_progress in(1,2,3)
+		-- AND .auth_progress in(1,2,3)  客户要求 只显示 待审核
+		AND t.auth_progress in(1)
 		ORDER BY t.submit_time desc
 		LIMIT
 		#{start},#{pageSize}
@@ -1378,7 +1381,8 @@
 		WHERE u.id =#{userId}
 		AND t.is_opts_handling = TRUE
 		AND t.is_director_handling =FALSE
-		AND t.auth_progress in(1,2,3)
+		-- AND t.auth_progress in(1,2,3)
+		AND t.auth_progress in(1)
 		ORDER BY t.submit_time DESC
 	</select>
 	<!-- 编辑受理 -->
@@ -1391,7 +1395,8 @@
 		WHERE a.editor_id =#{userId}
 		AND a.is_editor_handling = TRUE
 		AND a.is_rejected_by_editor =FALSE 
-		AND a.auth_progress in(1,2,3)
+		-- AND a.auth_progress in(1,2,3)
+		AND a.auth_progress in(1)
 		ORDER BY a.submit_time DESC
 		LIMIT
 		#{start},#{pageSize}
@@ -1403,7 +1408,8 @@
 		WHERE a.editor_id =#{userId}
 		AND a.is_editor_handling = TRUE
 		AND	a.is_rejected_by_editor =FALSE 
-		AND a.auth_progress in(1,2,3)
+		-- AND a.auth_progress in(1,2,3)
+		AND a.auth_progress in(1)
 		ORDER BY a.submit_time DESC) t
 	</select>
 	
