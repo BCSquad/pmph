@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.MaterialSurveyQuestionDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="categoryId != null">
+				category_id,
+			</if>
+			<if test="title != null and title !=''">
+				title,
+			</if>
+			<if test="type != null and type !=''">
+				type,
+			</if>
+			<if test="sort != null">
+				sort,
+			</if>
+			<if test="direction != null and direction !=''">
+				direction,
+			</if>
+			<if test="isAnswer != null">
+				is_answer,
+			</if>
+			<if test="isDeleted != null">
+				is_deleted,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="categoryId != null">
+				#{categoryId},
+			</if>
+			<if test="title != null and title !=''">
+				#{title},
+			</if>
+			<if test="type != null and type !=''">
+				#{type},
+			</if>
+			<if test="sort != null">
+				#{sort},
+			</if>
+			<if test="direction != null and direction !=''">
+				#{direction},
+			</if>
+			<if test="isAnswer != null">
+				#{isAnswer},
+			</if>
+			<if test="isDeleted != null">
+				#{isDeleted},
+			</if>
+		</trim>
+	</sql>
+	<!-- 新增一个SurveyQuestion -->
+	<insert id="addSurveyQuestion" parameterType="SurveyQuestion">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into survey_question (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		);
+	</insert>
+	
+	<!-- 批量插入SurveyQuestion -->
+	<insert id="batchInsertSurveyQuestion" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
+        insert into survey_question (title,type,sort,direction)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            ( #{item.title},#{item.type},#{item.sort},#{item.direction})
+        </foreach>
+    </insert>
+	
+	<!-- 逻辑删除SurveyQuestion通过主键id -->
+	<update id="deleteSurveyQuestionById" parameterType="java.lang.Long">
+		update survey_question set is_deleted = true where id=#{id};
+	</update>
+	<!-- 更新一个 SurveyQuestion通过主键id -->
+	<update id="updateSurveyQuestion" parameterType="SurveyQuestion">
+		update survey_question
+		<set>
+			<if test="categoryId != null">
+				category_id=#{categoryId},
+			</if>
+			<if test="title != null and title !=''">
+				title=#{title},
+			</if>
+			<if test="type != null and type !=''">
+				type=#{type},
+			</if>
+			<if test="sort != null">
+				sort=#{sort},
+			</if>
+			<if test="direction != null and direction !=''">
+				direction=#{direction},
+			</if>
+			<if test="isAnswer != null">
+				is_answer=#{isAnswer},
+			</if>
+			<if test="isDeleted != null">
+				is_deleted=#{isDeleted},
+			</if>
+		</set>
+		where
+		id=#{id};
+	</update>
+	
+	<!-- 批量更新一个 SurveyQuestion-->
+	<update id="batchUpdateSurveyQuestion" parameterType="java.util.List">  
+          <foreach collection="list" item="item" index="index" open="" close="" separator=",">  
+				update survey_question
+				<set>
+					<if test="categoryId != null">
+						category_id=#{item.categoryId},
+					</if>
+					<if test="title != null and title !=''">
+						title=#{item.title},
+					</if>
+					<if test="type != null">
+						type=#{item.type},
+					</if>
+					<if test="sort != null">
+						sort=#{item.sort},
+					</if>
+					<if test="direction != null and direction !=''">
+						direction=#{item.direction},
+					</if>
+					<if test="isAnswer != null">
+						is_answer=#{item.isAnswer},
+					</if>
+					<if test="isDeleted != null">
+						is_deleted=#{item.isDeleted},
+					</if>
+				</set>
+                where id = ${item.id}  
+         </foreach>  
+    </update> 
+	
+	<!-- 查找SurveyQuestion通过主键id -->
+	<select id="getSurveyQuestionById" parameterType="java.lang.Long" resultType="SurveyQuestion">
+		select * from survey_question where id=#{id};
+	</select>
+	
+	<!-- 根据问题id/问题类型Id查询问题选项-->
+	<select id="getQuestionOptionByQuestionIdOrCategoryId" parameterType="java.util.Map" resultType="SurveyQuestionOptionCategoryVO">
+		SELECT 
+			sq.`id` questionId,
+			sq.`title`,
+			GROUP_CONCAT(sqo.`id`) optionIdString,
+			GROUP_CONCAT(sqo.`option_content`) optionContent 
+		FROM 
+			`survey_question` sq 
+		LEFT JOIN 
+			`survey_question_option` sqo 
+  		ON 
+  			sq.`id` = sqo.`question_id` 
+  		WHERE 
+  			sq.`is_deleted` = FALSE 
+  			<if test="questionId !=null ">
+				AND 
+					sq.`id` =#{questionId}
+			</if>
+			<if test="categoryId !=null ">
+				AND 
+					sq.`category_id` =#{categoryId}
+			</if>
+	</select>
+	
+	<!-- 问题表分页列表（同时查询分页数据和总条数） -->
+	<select id="listSurveyQuestion" parameterType="PageParameter" resultType="SurveyQuestionVO">
+		select sq.*,t.count 
+		from survey_question sq 
+		left join survey_question_category sqc on sqc.id=sq.category_id,
+		(select count(*) count from survey_question sq 
+		left join survey_question_category sqc on sqc.id=sq.category_id 
+		where sq.is_deleted = false 
+		<!-- 下面是动态条件 -->
+		<if test="parameter !=null ">
+			<!-- 题目 -->
+			<if test="parameter.title != null and parameter.title != ''">
+				and sq.title like concat('%',#{parameter.title},'%')
+			</if>
+			<!-- 问题类型 -->
+			<if test="parameter.type != null and parameter.type != ''">
+				and sq.type like concat('%',#{parameter.type},'%')
+			</if>
+			<!-- 问题类型 -->
+			<if test="parameter.sort != null and parameter.sort != ''">
+				and sq.sort like concat('%',#{parameter.sort},'%')
+			</if>
+		</if>
+		) t 
+		where sq.is_deleted = false 
+		<!-- 下面是动态条件 -->
+		<if test="parameter !=null ">
+			<!-- 题目 -->
+			<if test="parameter.title != null and parameter.title != ''">
+				and sq.title like concat('%',#{parameter.title},'%')
+			</if>
+			<!-- 问题类型 -->
+			<if test="parameter.type != null and parameter.type != ''">
+				and sq.type like concat('%',#{parameter.type},'%')
+			</if>
+			<!-- 问题类型 -->
+			<if test="parameter.sort != null and parameter.sort != ''">
+				and sq.sort like concat('%',#{parameter.sort},'%')
+			</if>
+		</if>
+		group by sq.title desc 
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+	
+	 <!-- 批量删SurveyQuestion通过id -->
+    <delete id="batchDeleteSurveyQuestionByQuestionIds" parameterType="java.util.List">
+       delete from survey_question where id in
+        <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+			#{id}
+		</foreach>
+    </delete>
+</mapper>

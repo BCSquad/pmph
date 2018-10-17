@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.MaterialSurveyTypeDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="surveyName != null and surveyName != ''">
+				survey_name,
+			</if>
+			<if test="sort != null">
+				sort,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="surveyName != null and surveyName != ''">
+				#{surveyName},
+			</if>
+			<if test="sort != null">
+				#{sort},
+			</if>
+		</trim>
+	</sql>
+	<!-- 新增一个SurveyType -->
+	<insert id="addSurveyType" parameterType="SurveyType">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into survey_type (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		);
+	</insert>
+	<!-- 删除SurveyType通过主键id -->
+	<delete id="deleteSurveyTypeById" parameterType="java.lang.Long">
+		delete from survey_type where id=#{id} ;
+	</delete>
+	<!-- 更新一个 SurveyType通过主键id -->
+	<update id="updateSurveyType" parameterType="SurveyType">
+		update survey_type
+		<set>
+			<if test="surveyName != null and surveyName != ''">
+				survey_name=#{surveyName},
+			</if>
+			<if test="sort != null">
+				sort=#{sort},
+			</if>
+		</set>
+		where
+		id=#{id};
+	</update>
+	<!-- 查找SurveyType通过主键id -->
+	<select id="getSurveyTypeById" parameterType="java.lang.Long" 
+	resultType="SurveyType">
+		select * from survey_type where id=#{id};
+	</select>
+	
+	<!-- 获取SurveyType集合 -->
+	<select id="listSurveyType"  resultType="SurveyType">
+		SELECT 
+			id,survey_name,sort
+		FROM 
+			survey_type 
+		ORDER BY 
+			sort ASC;
+	</select>
+	
+	<!-- 根据调查对象名称获取对象 -->
+	<select id="getSurveyTypeByName" parameterType="java.lang.String"  resultType="SurveyType">
+		SELECT 
+			st.*
+		FROM 
+			survey_type st
+		WHERE 
+			st.`survey_name`= #{surveyName}
+		ORDER BY 
+			sort ASC;
+	</select>
+	
+</mapper>

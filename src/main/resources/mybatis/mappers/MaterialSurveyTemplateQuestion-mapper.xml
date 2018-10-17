@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.MaterialSurveyTemplateQuestionDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="templateId != null">
+				template_id,
+			</if>
+			<if test="questionId != null">
+				question_id,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="templateId != null">
+				#{templateId},
+			</if>
+			<if test="questionId != null">
+				#{questionId},
+			</if>
+		</trim>
+	</sql>
+	<!-- 新增一个SurveyTemplateQuestion -->
+	<insert id="addSurveyTemplateQuestion" parameterType="SurveyTemplateQuestion">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into survey_template_question (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		);
+	</insert>
+	
+	<!-- 批量插入SurveyTemplateQuestion -->
+	<insert id="batchInsertSurveyTemplateQuestion" parameterType="java.util.List">
+        insert into survey_template_question (template_id,question_id)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.templateId},#{item.questionId})
+        </foreach>
+    </insert>
+    
+	<!-- 删除SurveyTemplateQuestion通过主键id -->
+	<delete id="deleteSurveyTemplateQuestionById" parameterType="java.lang.Long">
+		delete from survey_template_question where id=#{id};
+	</delete>
+	
+	<!-- 更新一个 SurveyTemplateQuestion通过主键id -->
+	<update id="updateSurveyTemplateQuestion" parameterType="SurveyTemplateQuestion">
+		update survey_template_question
+		<set>
+			<if test="templateId != null">
+				template_id=#{templateId},
+			</if>
+			<if test="questionId != null">
+				question_id=#{questionId},
+			</if>
+		</set>
+		where
+		id=#{id} ;
+	</update>
+	
+	<!-- 查找SurveyTemplateQuestion通过主键id -->
+	<select id="getSurveyTemplateQuestionById" parameterType="java.lang.Long" resultType="SurveyTemplateQuestion">
+		select * from survey_template_question where id=#{id};
+	</select>
+	
+	<!--查找SurveyTemplateQuestion通过templateId  -->
+	<select id="getSurveyTemplateQuestionByTemplateId" parameterType="java.lang.Long" resultType="SurveyTemplateQuestion">
+		select * from survey_template_question where template_id = #{templateId};
+	</select>
+	
+	<!-- 删除SurveyTemplateQuestion通过TemplateId -->
+	<delete id="deleteSurveyTemplateQuestionByTemplateId" parameterType="java.lang.Long">
+		delete from survey_template_question where template_id = #{templateId};
+	</delete>
+	
+</mapper>

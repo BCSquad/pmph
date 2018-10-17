@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.MaterialSurveyDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="title != null and title !=''">
+				title,
+			</if>
+			<if test="subhead != null and subhead !=''">
+				subhead,
+			</if>
+			<if test="intro != null and intro !=''">
+				intro,
+			</if>
+			<if test="templateId != null">
+				template_id,
+			</if>
+			<if test="typeId != null">
+				type_id,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="beginDate != null and beginDate !=''">
+				begin_date,
+			</if>
+			<if test="endDate != null and endDate !=''">
+				end_date,
+			</if>
+			<if test="sort != null">
+				sort,
+			</if>
+			<if test="isDeleted != null and isDeleted !=''">
+				is_deleted,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="title != null and title !=''">
+				#{title},
+			</if>
+			<if test="subhead != null and subhead !=''">
+				#{subhead},
+			</if>
+			<if test="intro != null and intro !=''">
+				#{intro},
+			</if>
+			<if test="templateId != null">
+				#{templateId},
+			</if>
+			<if test="typeId != null">
+				#{typeId},
+			</if>
+			<if test="userId != null">
+				#{userId},
+			</if>
+			<if test="beginDate != null">
+				#{beginDate},
+			</if>
+			<if test="endDate != null ">
+				#{endDate},
+			</if>
+			<if test="sort != null">
+				#{sort},
+			</if>
+			<if test="isDeleted != null">
+				#{isDeleted},
+			</if>
+			<if test="status != null">
+				#{status},
+			</if>
+		</trim>
+	</sql>
+	<!-- 新增一个Survey -->
+	<insert id="addSurvey" parameterType="Survey">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into survey (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		);
+	</insert>
+	<!-- 逻辑删除Survey通过主键id -->
+	<update id="deleteSurveyById" parameterType="java.lang.Long">
+		update survey set is_deleted = true where id=#{id};
+	</update>
+	<!-- 更新一个 SurveyQuestionnaire通过主键id -->
+	<update id="updateSurvey" parameterType="Survey">
+		update survey
+		<set>
+			<if test="title != null and title !=''">
+				title=#{title},
+			</if>
+			<if test="subhead != null and subhead !=''">
+				subhead=#{subhead},
+			</if>
+			<if test="intro != null and intro !=''">
+				intro=#{intro},
+			</if>
+			<if test="templateId != null">
+				template_id=#{templateId},
+			</if>
+			<if test="typeId != null">
+				type_id=#{typeId},
+			</if>
+			<if test="userId != null">
+				user_id=#{userId},
+			</if>
+			<if test="beginDate != null">
+				begin_date=#{beginDate},
+			</if>
+			<if test="endDate != null ">
+				end_date=#{endDate},
+			</if>
+			<if test="sort != null">
+				sort=#{sort},
+			</if>
+			<if test="isDeleted != null">
+				is_deleted=#{isDeleted},
+			</if>
+			<if test="status != null">
+				status=#{status},
+			</if>
+		</set>
+		where
+		id=#{id};
+	</update>
+	<!-- 查找Survey通过主键id -->
+	<select id="getSurveyById" parameterType="java.lang.Long" resultType="Survey">
+		select * from survey where id=#{id};
+	</select>
+	
+	<!-- 问卷表分页列表（同时查询分页数据和总条数） -->
+	<select id="listSurvey" parameterType="PageParameter" resultType="SurveyVO">
+		select 
+			s.*,stp.survey_name,
+			ppu.username,ppu.realname,t.count 
+		from 
+			survey s 
+		left join 
+			survey_type stp 
+		on 
+			stp.id=s.type_id 
+		left join 
+			pmph_user ppu 
+		on 
+			ppu.id=s.user_id,
+			(
+				select 
+					count(*) count 
+				from 
+					survey s 
+				left join 
+					survey_type stp 
+				on 
+					stp.id=s.type_id 
+				left join 
+					pmph_user ppu 
+				on 
+					ppu.id=s.user_id 
+				where 
+					s.is_deleted = false 
+				<!-- 下面是动态条件 -->
+				<if test="parameter !=null ">
+					<!-- 问卷标题 -->
+					<if test="parameter.title != null and parameter.title != ''">
+						and s.title like concat('%',#{parameter.title},'%')
+					</if>
+					<!-- 问卷创建日期 %H:%i:%s--> 
+					<if test="parameter.startTime !=null and parameter.startTime !='' ">
+						and 
+							s.`gmt_create` &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d %H:%i:%s') 
+							
+					</if>
+					<if test="parameter.endTime !=null and parameter.endTime !='' ">
+						and 
+							s.`gmt_create` &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d %H:%i:%s')
+					</if>
+				</if>
+				) t 
+		where s.is_deleted = false 
+		<!-- 下面是动态条件 -->
+		<if test="parameter !=null ">
+			<!-- 问卷标题 -->
+			<if test="parameter.title != null and parameter.title != ''">
+				and s.title like concat('%',#{parameter.title},'%')
+			</if>
+			<!-- 问卷创建日期 %H:%i:%s--> 
+					<if test="parameter.startTime !=null and parameter.startTime !='' ">
+						and 
+							s.`gmt_create` &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d %H:%i:%s') 
+							
+					</if>
+					<if test="parameter.endTime !=null and parameter.endTime !='' ">
+						and 
+							s.`gmt_create` &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d %H:%i:%s')
+					</if>
+		</if>
+		group by s.id desc
+		ORDER BY s.`gmt_create` DESC 
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+	
+	<!-- 查询问卷和问卷对应的类型 -->
+	<select id="getSurveyAndSurveyTypeById" parameterType="java.lang.Long" resultType="SurveyVO">
+		select 
+			s.*,
+			stp.survey_name,
+			ppu.username,
+			ppu.realname
+		from 
+			survey s 
+		left join 
+			survey_type stp 
+		on 
+			stp.id = s.type_id
+		left join 
+			pmph_user ppu 
+		on 
+			ppu.id=s.user_id
+		<where>
+			<if test="id !=null">
+				s.`id`= #{id}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据问卷ID查询问卷已发送对象 -->
+	<select id="listSendOrgBySurveyId" parameterType="PageParameter" resultType="OrgVO">
+		SELECT 
+			o.`id`,o.`org_name`, ou.`username`, ou.`handphone` ,t.`count`
+		FROM 
+			`survey_target` st 
+		JOIN 
+			`org` o 
+		ON 
+			st.`org_id` = o.`id` 
+		JOIN 
+			`org_user` ou 
+		ON 
+			o.`id`= ou.`org_id`,
+		(
+			SELECT 
+				count(*) `count`
+			FROM 
+				`survey_target` st 
+			JOIN 
+				`org` o 
+			ON 
+				st.`org_id` = o.`id` 
+			JOIN 
+				`org_user` ou 
+			ON 
+				o.`id`= ou.`org_id`
+			<where>
+				<if test="parameter !=null ">
+					<!-- 问卷ID -->
+					<if test="parameter.surveyId != null">
+						st.`survey_id`= #{parameter.surveyId}
+					</if>
+				</if>
+			</where>
+		)t 
+		<where>
+				<if test="parameter !=null ">
+					<!-- 问卷ID  -->
+					<if test="parameter.surveyId != null">
+						st.`survey_id`= #{parameter.surveyId}
+					</if>
+				</if>
+			</where>
+		ORDER BY
+			 o.`id`
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+	
+</mapper>
