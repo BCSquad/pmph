@@ -67,81 +67,82 @@ public class MigrationTest extends BaseTest {
     AddTestUser addTestUser;
 
     @Test
-    @Rollback(false)
+    @Rollback(true)
     public void testMigrationStageOne() {
-        migrationStageOne.start();
+       // migrationStageOne.start();
+        System.out.println("MigrationTest disabled");
     }
 
-    @Test
-    @Rollback(false)
+    /*@Test
+    @Rollback(true)
     public void testMigrationStageTwo() {
         migrationStageTwo.start();
     }
 
     @Test
-    @Rollback(false)
+    @Rollback(true)
     public void testMigrationStageThree() {
         migrationStageThree.start();
     }
 
     @Test
-    @Rollback(false)
+    @Rollback(true)
     public void testMigrationStageFour() {
         migrationStageFour.start();
     }
 
     @Test
-    @Rollback(false)
+    @Rollback(true)
     public void testMigrationStageFive() {
         migrationStageFive.start();
     }
 
     @Test
-    @Rollback(false)
+    @Rollback(true)
     public void testMigrationStageSix() {
         migrationStageSix.start();
     }
 
     @Test
-    @Rollback(false)
+    @Rollback(true)
     public void testMigrationStageSeven() {
         migrationStageSeven.start();
     }
 
     @Test
-    @Rollback(false)
+    @Rollback(true)
     public void testMigrationStageEight() {
         migrationStageEight.start();
     }
 
     @Test
-    @Rollback(false)
+    @Rollback(true)
     public void testMigrationStageNine() {
         migrationStageNine.start();
     }
 
     @Test
-    @Rollback(false)
+    @Rollback(true)
     public void testMigrationStageTen() {
         migrationStageTen.start();
     }
 
     @Test
-    @Rollback(false)
+    @Rollback(true)
     public void testMigrationPlus() {
         migrationPlus.start();
     }
 
     @Ignore
     @Test
-    @Rollback(false)
+    @Rollback(true)
     public void testAddTestUser() {
         addTestUser.addTestUser();
     }
 
     @Test
-    @Rollback(false)
+    @Rollback(true)
     public void addBook() {
         migrationBook.start();
-    }
+    }*/
 }

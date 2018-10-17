@@ -279,9 +279,13 @@
 		c.is_deleted
 		=
 		FALSE
+		and c.is_long = false
 		<if test="parameter.name != null and parameter.name != ''">
 			and (b.bookname like concat("%",#{parameter.name},"%") or
 			b.isbn like concat("%",#{parameter.name},"%"))
+		</if>
+		<if test="parameter.isAuth != null ">
+			and c.is_auth = #{parameter.isAuth}
 		</if>
 	</select>
 	<!-- 分页查询admin图书评论 -->
@@ -300,9 +304,13 @@
 		c.writer_id
 		WHERE
 		c.is_deleted = FALSE
+		and c.is_long = false
 		<if test="parameter.name != null and parameter.name != ''">
 			and (b.bookname like concat("%",#{parameter.name},"%") or
 			b.isbn like concat("%",#{parameter.name},"%"))
+		</if>
+		<if test="parameter.isAuth != null">
+			and c.is_auth = #{parameter.isAuth}
 		</if>
 		ORDER BY c.gmt_create DESC
 		LIMIT #{start},#{pageSize}

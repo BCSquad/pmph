@@ -21,8 +21,10 @@ public class DecTextbookPmph implements Serializable {
     private String materialName;
     // 教材级别
     private Integer rank;
+    private String rankName;
     // 编写职务
     private Integer position;
+    private String positionName;
     // 是否数字编委
     private Boolean isDigitalEditor;
     // 出版时间
@@ -151,5 +153,21 @@ public class DecTextbookPmph implements Serializable {
 
 	public void setPerId(String perId) {
 		this.perId = perId;
+	}
+
+	public String getRankName() {
+		return rankName;
+	}
+
+	public void setRankName(String rankName) {
+		this.rankName = rankName;
+	}
+
+	public String getPositionName() {
+		return positionName;
+	}
+
+	public void setPositionName(String positionName) {
+		this.positionName = positionName;
 	}
 }

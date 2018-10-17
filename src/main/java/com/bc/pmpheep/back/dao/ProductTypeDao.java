@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.dao;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.vo.ProductType;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -54,4 +55,25 @@ public interface ProductTypeDao {
 
 
     Map<String,Object> getBtnStatus(Long productType);
+
+    /**
+     * 获取产品树信息
+     * @param l
+     * @return
+     */
+    List<ProductType> getContentListTree(@Param("parentId") long parentId, @Param("productTypeParam")short productTypeParam, @Param("type_name")String type_name);
+
+    /**
+     * 根据id 获取当前级节点数据
+     * @param parentId
+     * @return
+     */
+    ProductType getProductConetentTypeVoById(@Param("parentId")Long parentId,@Param("productTypeParam")Short productTypeParam);
+
+    /**
+     * 根据id 删除内容分类
+     * @param id
+     * @return
+     */
+    Integer deleteProductContentTypeById(Long id);
 }

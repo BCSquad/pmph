@@ -67,7 +67,7 @@ public class BookCorrectionController {
 	}
 
 	/**
-	 * 读书反馈
+	 * 读者反馈
 	 * @param request
 	 * @param pageNumber
 	 * @param pageSize
@@ -75,7 +75,7 @@ public class BookCorrectionController {
 	 * @return
 	 */
 	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取读书反馈页面的分页数据")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取读者反馈页面的分页数据")
 	@RequestMapping(value = "/bookList", method = RequestMethod.GET)
 	public ResponseBean bookList(HttpServletRequest request,
 							 @RequestParam(value = "pageNumber", required = false)    Integer pageNumber,
@@ -102,12 +102,12 @@ public class BookCorrectionController {
 	}
 
 	/**
-	 * 读书反馈
+	 * 读者反馈
 	 * @param id
 	 * @return
 	 */
 	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取审核读书反馈详情")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取审核读者反馈详情")
 	@RequestMapping(value = "/bookFeekBackDetail", method = RequestMethod.GET)
 	public ResponseBean bookFeekBackDetail( @RequestParam(value = "id",  required = true)	Long id) {
 		return new ResponseBean(bookCorrectionService.getBookFeedBackDetailById(id));

@@ -10,6 +10,7 @@ import com.bc.pmpheep.back.service.ProductService;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.ExpertationVO;
 import com.bc.pmpheep.back.vo.MateriaHistorylVO;
 import com.bc.pmpheep.back.vo.ProductVO;
@@ -86,6 +87,7 @@ public class ProductController {
                              ,String product_name
                              ,Boolean is_published
                              ,Long product_type
+                             ,String product_type_list_str
                              ,Boolean is_active
             ,@RequestParam(value = "pageSize",defaultValue = "10") Integer pageSize
             ,@RequestParam(value = "pageNumber",defaultValue = "1") Integer pageNumber){
@@ -95,6 +97,7 @@ public class ProductController {
         productVO.setProduct_name(product_name);
         productVO.setIs_published(is_published);
         productVO.setProduct_type(product_type);
+        productVO.setProduct_type_list_str(StringUtil.notEmpty(product_type_list_str)?product_type_list_str:null);
         PageParameter<ProductVO> pageParameter = new PageParameter<ProductVO>(pageNumber, pageSize);
         pageParameter.setParameter(productVO);
         ResponseBean responseBean = productService.list(pageParameter);

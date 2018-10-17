@@ -2,8 +2,6 @@ package com.bc.pmpheep.back.vo;
 
 import com.bc.pmpheep.annotation.ExcelHeader;
 
-import java.sql.Date;
-
 /**
  *职位遴选页面导出名单
  *@author Mr
@@ -16,9 +14,15 @@ public class ExcelDecAndTextbookVO{
 	private Long textbookId;
 	//遴选的职务
 	private Integer chosenPosition;
+	@ExcelHeader(header = "书序")
+	private Integer sort;
 	//书籍名称
 	@ExcelHeader(header = "书籍名称")
 	private String textbookName;
+	@ExcelHeader(header = "版次")
+	private String textbookRound;
+	@ExcelHeader(header = "策划编辑")
+	private String editorName;
 	//显示职务
 	@ExcelHeader(header = "本书担任职务")
 	private String showChosenPosition;
@@ -39,9 +43,6 @@ public class ExcelDecAndTextbookVO{
 	//作家职称
 	@ExcelHeader(header = "职称")
 	private String title;
-	//出生年月
-	@ExcelHeader(header = "出生年月")
-	private String birthday;
 	//通讯地址
 	@ExcelHeader(header = "通讯地址")
 	private String address;
@@ -73,6 +74,10 @@ public class ExcelDecAndTextbookVO{
 	@ExcelHeader(header = "纸质表审核")
     private String showOfflineProgress;
 
+
+	//出生年月
+	@ExcelHeader(header = "出生年月")
+	private String birthday;
 
     //教材名称
     private String materialName;
@@ -294,5 +299,29 @@ public class ExcelDecAndTextbookVO{
 
 	public void setBirthday(String birthday) {
 		this.birthday = birthday;
+	}
+
+	public Integer getSort() {
+		return sort;
+	}
+
+	public void setSort(Integer sort) {
+		this.sort = sort;
+	}
+
+	public String getTextbookRound() {
+		return textbookRound;
+	}
+
+	public void setTextbookRound(String textbookRound) {
+		this.textbookRound = textbookRound;
+	}
+
+	public String getEditorName() {
+		return editorName;
+	}
+
+	public void setEditorName(String editorName) {
+		this.editorName = editorName;
 	}
 }

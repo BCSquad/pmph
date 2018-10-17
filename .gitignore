@@ -49,3 +49,6 @@ hs_err_pid*
 *.iws
 *.iml
 *.ipr
+/src/main/resources/spring/spring.properties
+/src/test/java/com/bc/pmpheep/test/A.java
+/src/.gitignore

@@ -4,12 +4,11 @@ import com.bc.pmpheep.back.dao.ProductTypeDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.po.Product;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
-import com.bc.pmpheep.back.vo.OrgAndOrgUserVO;
-import com.bc.pmpheep.back.vo.OrgVO;
-import com.bc.pmpheep.back.vo.ProductType;
+import com.bc.pmpheep.back.vo.*;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -174,13 +173,19 @@ public class ProductTypeServiceImpl implements ProductTypeService {
                     //cellProductType.setProduct_id(product_id);
                     cellProductType.setTypeType(typeType);
                     Cell cell = row.getCell(cellNum);
+                    Cell nextCell = row.getCell(cellNum + 1);
                     String cell_type_name = StringUtil.getCellValue(cell);
+                    String next_cell_type_name = StringUtil.getCellValue(nextCell);
                     if (StringUtil.isEmpty(cell_type_name)){
                         /*throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
                                 CheckedExceptionResult.NULL_PARAM, "Excel文件里序号为" + rowNum + "的分类名称为空");*/
                         break;
                     }else{
                         cellProductType.setType_name(cell_type_name);
+                    }
+
+                    if(StringUtil.isEmpty(next_cell_type_name)){
+                        cellProductType.setExcel_row_num((long)rowNum);
                     }
 
                     String parent_name_path = "";
@@ -190,6 +195,7 @@ public class ProductTypeServiceImpl implements ProductTypeService {
                     parent_name_path = parent_name_path.replaceAll("^/","");
                     String full_name_path = parent_name_path+"/"+cell_type_name;
                     full_name_path = full_name_path.replaceAll("^/","");
+
                     //若full_name_path不重复，则说明此实体类未添加过
                     if(productTypeMap.get(full_name_path)==null){
                         cellProductType.setFullNamePath(full_name_path);
@@ -200,7 +206,10 @@ public class ProductTypeServiceImpl implements ProductTypeService {
                         if(parent_productType!=null){
                             parent_productType.getChildType().add(cellProductType);
                         }
+                    }else if(StringUtil.isEmpty(next_cell_type_name)){
+                        productTypeMap.get(full_name_path).setExcel_row_num((long)rowNum);
                     }
+
                 }
             }
         }
@@ -273,13 +282,13 @@ public class ProductTypeServiceImpl implements ProductTypeService {
             }else{
                 //TODO 如果后续有新增其他分类...
             }
-
+            responseBean.setCode(ResponseBean.SUCCESS);
+            responseBean.setMsg("导入成功");
         }catch (Exception e){
             responseBean.setCode(ResponseBean.UNCHECKED_ERROR);
             responseBean.setMsg("导入数据库失败！");
         }
-        responseBean.setCode(ResponseBean.SUCCESS);
-        responseBean.setMsg("导入成功");
+
 
         return responseBean;
     }
@@ -289,4 +298,83 @@ public class ProductTypeServiceImpl implements ProductTypeService {
 
         return productTypeDao.getBtnStatus(productType);
     }
+
+    @Override
+    public ProductType getContentListTree(Long parentId,short productTypeParam) {
+        ProductType productTypeVo = new ProductType();
+        if(parentId<=0){ // 初始化，数据库并没有id为0 父级为-1的层级 此处生成此对象
+            productTypeVo.setId(0L);
+            productTypeVo.setParent_id(0L);
+            productTypeVo.setlsLeaf(false);
+            productTypeVo.setType_name("内容分类目录");
+            List<ProductType> pm = productTypeDao.getContentListTree(0L,productTypeParam,"");
+            productTypeVo.setChildType(pm);
+        }else{ //若有传入 则parentId为当前点击节点的id
+            productTypeVo =productTypeDao.getProductConetentTypeVoById(parentId,productTypeParam);
+            List<ProductType> cm = productTypeDao.getContentListTree(parentId,productTypeParam,"");
+            productTypeVo.setChildType(cm);
+        }
+        return productTypeVo;
+    }
+
+    /**
+     * 根据id 删除内容分类
+     * @param id
+     * @return
+     */
+    @Override
+    public Integer deleteProductContentTypeById(Long id) {
+        if (ObjectUtil.isNull(id)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.NULL_PARAM,
+                    "主键为空");
+        }
+        int experCount=0;
+        experCount = productTypeDao.getContentTypeExpertationCount(id);
+        //分类被引用 不能删除
+        if(experCount>0){
+            throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.ILLEGAL_PARAM,
+                    "该分类已被临床决策申报引用，无法删除！");
+        }
+        ProductType productTypeVo =productTypeDao.getProductConetentTypeVoById(id,null);
+        if(!productTypeVo.getIsLeaf()){
+            throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION, CheckedExceptionResult.ILLEGAL_PARAM,
+                    "该分类下还有子集分类，无法删除！");
+        }
+        return productTypeDao.deleteProductContentTypeById(id);
+    }
+
+    @Override
+    public ProductType listProductContentType(Long parentId,short productTypeParam, String type_name) {
+        ProductType productTypeVo  = new ProductType();
+        if(parentId<=0||parentId == null){
+            productTypeVo.setId(0L);
+            productTypeVo.setParent_id(0L);
+            productTypeVo.setlsLeaf(false);
+            productTypeVo.setType_name("内容分类目录");
+        }
+
+        recursionProductTypeVo(productTypeVo,new ArrayList<Long>(16),productTypeParam,type_name);
+        return productTypeVo;
+    }
+
+
+    /**
+     *
+     * 功能描述：使用递归的方法将部门转化为树状图 使用示范：
+     *
+     * @param productTypeVo
+     *            ids (为后面删除做准备) 父级部门
+     */
+    private void recursionProductTypeVo(ProductType productTypeVo, List<Long> ids,short productTypeParam,String type_name) {
+        List<ProductType> list = productTypeDao.getContentListTree(productTypeVo.getId(),productTypeParam,type_name);
+        if (null != list && list.size() > 0) {
+            productTypeVo.setChildType(list);
+            productTypeVo.setlsLeaf(false);
+            for (ProductType _productTypeVo : list) {
+                ids.add(_productTypeVo.getId());
+                recursionProductTypeVo(_productTypeVo, ids,productTypeParam,type_name);
+            }
+        }
+    }
+
 }
