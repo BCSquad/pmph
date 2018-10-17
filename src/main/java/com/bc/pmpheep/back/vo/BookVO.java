@@ -20,7 +20,7 @@ public class BookVO implements Serializable {
 	/**
 	 * 封面图片
 	 */
-	private String imageUrl;
+//	private String imageUrl;
 	/**
 	 * ISBN号
 	 */
