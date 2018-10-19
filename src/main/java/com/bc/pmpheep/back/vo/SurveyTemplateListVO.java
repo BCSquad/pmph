@@ -28,7 +28,7 @@ public class SurveyTemplateListVO implements java.io.Serializable {
     /**
      * 调查类型
      */
-    private Long              surveyName;
+    private String              surveyName;
     /**
      * 排序
      */
@@ -37,6 +37,15 @@ public class SurveyTemplateListVO implements java.io.Serializable {
      * 模板创建人
      */
     private Long              userId;
+    /**
+     * 问卷开始时间
+     */
+    private String            startTime;
+
+    /**
+     * 问卷结束时间
+     */
+    private String            endTime;
     /**
      * 是否被逻辑删除
      */
@@ -66,16 +75,62 @@ public class SurveyTemplateListVO implements java.io.Serializable {
      */
     private String            realname;
     /**
-     * 开始时间
+     * 问卷开始时间
      */
-    private String            startDate;
+    private Timestamp         beginDate;
     /**
-     * 结束时间
+     * 问卷结束时间
      */
-    private String            endDate;
+    private Timestamp         endDate;
+
+    private Boolean isActive ;
 
     /** default constructor */
     public SurveyTemplateListVO() {
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public Timestamp getBeginDate() {
+        return beginDate;
+    }
+
+    public void setBeginDate(Timestamp beginDate) {
+        this.beginDate = beginDate;
+    }
+
+    public Timestamp getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Timestamp endDate) {
+        this.endDate = endDate;
     }
 
     public Long getId() {
@@ -181,14 +236,14 @@ public class SurveyTemplateListVO implements java.io.Serializable {
     /**
      * @return the surveyName
      */
-    public Long getSurveyName() {
+    public String getSurveyName() {
         return surveyName;
     }
 
     /**
      * @param surveyName the surveyName to set
      */
-    public void setSurveyName(Long surveyName) {
+    public void setSurveyName(String surveyName) {
         this.surveyName = surveyName;
     }
 
@@ -206,33 +261,8 @@ public class SurveyTemplateListVO implements java.io.Serializable {
         this.realname = realname;
     }
 
-    /**
-     * @return the startDate
-     */
-    public String getStartDate() {
-        return startDate;
-    }
 
-    /**
-     * @param startDate the startDate to set
-     */
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
 
-    /**
-     * @return the endDate
-     */
-    public String getEndDate() {
-        return endDate;
-    }
-
-    /**
-     * @param endDate the endDate to set
-     */
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
-    }
 
     @Override
     public String toString() {
@@ -240,5 +270,13 @@ public class SurveyTemplateListVO implements java.io.Serializable {
                + sort + ", userId=" + userId + ", isDeleted=" + isDeleted + ", gmtCreate="
                + gmtCreate + ", gmtUpdate=" + gmtUpdate + ", count=" + count + ", status=" + status
                + "]";
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
     }
 }
