@@ -830,6 +830,7 @@ public class FileDownLoadController {
 		//List<ExpertationVO> list = expertationDao.queryExpertation(pageParameter);
 		taskExecutor.execute(new ClicSpringThread(zipHelper, clicWordHelper,
 				expertationDao,expertationService, productService,expertationVO,id));
+
 		return '"' + id + '"';
 	}
 
