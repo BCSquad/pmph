@@ -5,10 +5,7 @@ import com.bc.pmpheep.back.dao.ExpertationDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.*;
 import com.bc.pmpheep.back.service.*;
-import com.bc.pmpheep.back.util.CollectionUtil;
-import com.bc.pmpheep.back.util.Const;
-import com.bc.pmpheep.back.util.DateUtil;
-import com.bc.pmpheep.back.util.FileUtil;
+import com.bc.pmpheep.back.util.*;
 import com.bc.pmpheep.back.vo.ExpertationVO;
 import com.bc.pmpheep.back.vo.ProductVO;
 import com.bc.pmpheep.general.bean.ZipDownload;
@@ -101,62 +98,78 @@ public class ClicSpringThread implements Runnable {
 				ExpertationVO experationV= expertationService.getExpertationById(expertationVO.getId());
 				//对获取到的数据 进行数据转换
 				experationV.setSex("2".equals(experationV.getSex())?"女":"男");
-				switch (experationV.getIdtype()){
-					case 0:experationV.setIdTypeName("身份证");
-					case 1:experationV.setIdTypeName("护照");
-					case 2:experationV.setIdTypeName("军官证");
-					default:
-						experationV.setIdTypeName("");
-				}
-				switch (experationV.getEducation()){
-					case 0:experationV.setEducationName("专科");
-					case 1:experationV.setEducationName("本科");
-					case 2:experationV.setEducationName("硕士");
-					case 3:experationV.setEducationName("博士后");
-					case 4:experationV.setEducationName("博士");
-					default:
-						experationV.setIdTypeName("");
-				}
-				for(DecTextbookPmph decTextbookPmph:experationV.getDecTextbookPmphList()){
-					switch (decTextbookPmph.getRank()){
-						case 1:decTextbookPmph.setRankName("国家");
-						case 2:decTextbookPmph.setRankName("省部");
-						case 3:decTextbookPmph.setRankName("协编");
-						case 4:decTextbookPmph.setRankName("校本");
-						case 5:decTextbookPmph.setRankName("其他");
-						case 6:decTextbookPmph.setRankName("教育部规划");
-						case 7:decTextbookPmph.setRankName("卫计委规划");
-						case 8:decTextbookPmph.setRankName("区域规划");
-						case 9:decTextbookPmph.setRankName("创新教材");
+				if(!ObjectUtil.isNull(experationV.getIdtype())){
+					switch (experationV.getIdtype()){
+						case 0:experationV.setIdTypeName("身份证");
+						case 1:experationV.setIdTypeName("护照");
+						case 2:experationV.setIdTypeName("军官证");
 						default:
-							decTextbookPmph.setRankName("无");
-					}
-					switch (decTextbookPmph.getPosition()){
-						case 1:decTextbookPmph.setPositionName("主编");
-						case 2:decTextbookPmph.setPositionName("副主编");
-						case 3:decTextbookPmph.setPositionName("编委");
-						default:
-							decTextbookPmph.setPositionName("无");
+							experationV.setIdTypeName("");
 					}
 				}
-				for(DecProfessionAward decProfessionAward:experationV.getDecProfessionAwardList()){
-					switch (decProfessionAward.getRank()){
-						case "1":decProfessionAward.setRank("国家");
-						case "2":decProfessionAward.setRank("省部");
-						case "3":decProfessionAward.setRank("市级");
+				if(!ObjectUtil.isNull(experationV.getEducation())){
+					switch (experationV.getEducation()){
+						case 0:experationV.setEducationName("专科");
+						case 1:experationV.setEducationName("本科");
+						case 2:experationV.setEducationName("硕士");
+						case 3:experationV.setEducationName("博士后");
+						case 4:experationV.setEducationName("博士");
 						default:
-							decProfessionAward.setRank("无");
+							experationV.setIdTypeName("");
 					}
 				}
 
+				for(DecTextbookPmph decTextbookPmph:experationV.getDecTextbookPmphList()){
+					if(!ObjectUtil.isNull(decTextbookPmph.getRank())){
+						switch (decTextbookPmph.getRank()){
+							case 1:decTextbookPmph.setRankName("国家");
+							case 2:decTextbookPmph.setRankName("省部");
+							case 3:decTextbookPmph.setRankName("协编");
+							case 4:decTextbookPmph.setRankName("校本");
+							case 5:decTextbookPmph.setRankName("其他");
+							case 6:decTextbookPmph.setRankName("教育部规划");
+							case 7:decTextbookPmph.setRankName("卫计委规划");
+							case 8:decTextbookPmph.setRankName("区域规划");
+							case 9:decTextbookPmph.setRankName("创新教材");
+							default:
+								decTextbookPmph.setRankName("无");
+						}
+					}
+
+					if(!ObjectUtil.isNull(decTextbookPmph.getPosition())){
+						switch (decTextbookPmph.getPosition()){
+							case 1:decTextbookPmph.setPositionName("主编");
+							case 2:decTextbookPmph.setPositionName("副主编");
+							case 3:decTextbookPmph.setPositionName("编委");
+							default:
+								decTextbookPmph.setPositionName("无");
+						}
+					}
+
+				}
+				for(DecProfessionAward decProfessionAward:experationV.getDecProfessionAwardList()){
+					if(!StringUtil.isEmpty(decProfessionAward.getRank())){
+						switch (decProfessionAward.getRank()){
+							case "1":decProfessionAward.setRank("国家");
+							case "2":decProfessionAward.setRank("省部");
+							case "3":decProfessionAward.setRank("市级");
+							default:
+								decProfessionAward.setRank("无");
+						}
+					}
+
+				}
+
 				for(DecAcade decAcade:experationV.getDecAcadeList()){
-					switch (decAcade.getRank()){
-						case 1:decAcade.setRankName("国际");
-						case 2:decAcade.setRankName("国家");
-						case 3:decAcade.setRankName("省部");
-						case 4:decAcade.setRankName("市级");
-						default:
-							decAcade.setRankName("无");
+					if(!ObjectUtil.isNull(decAcade.getRank())){
+						switch (decAcade.getRank()){
+							case 1:decAcade.setRankName("国际");
+							case 2:decAcade.setRankName("国家");
+							case 3:decAcade.setRankName("省部");
+							case 4:decAcade.setRankName("市级");
+							default:
+								decAcade.setRankName("无");
+						}
 					}
 				}
 
