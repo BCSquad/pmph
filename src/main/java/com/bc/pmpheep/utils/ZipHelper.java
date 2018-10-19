@@ -116,7 +116,8 @@ public class ZipHelper {
 				if (file.isDirectory()) {
 					filename = file.getName();
 				} else {
-					filename = file.getName().substring(0, file.getName().lastIndexOf("."));
+					//filename = file.getName().substring(0, file.getName().lastIndexOf(".")>-1?file.getName().lastIndexOf("."):file.getName().length());
+					filename = file.getName().replaceAll("\\.[^\\.]*$","");
 				}
 				dest += filename + ".zip";
 			}
