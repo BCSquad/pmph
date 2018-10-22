@@ -100,25 +100,25 @@
 	
 	<!-- 根据模版Id查询下面的所有问题 -->
 	<select id="getSurveyTemplateQuestionByTemplateId" parameterType="java.lang.Long" resultType="SurveyQuestionOptionCategoryVO">
-		SELECT 
-			sq.`id`,sq.`title`,
-			sq.`type`, sq.`sort`,
+		SELECT
+		stq.`id`,stq.`title`,
+		stq.`type`, stq.`sort`,
 			GROUP_CONCAT(sqo.`id`) optionIdString,
 			GROUP_CONCAT(sqo.`option_content`) optionContent
 		FROM 
 			`material_survey_template` st
 		LEFT JOIN 
-			`survey_template_question` stq 
+			`material_survey_template_question` stq
 		ON 
-			st.`id` = stq.`template_id`
-		LEFT JOIN 
+			st.`id` = stq.`survey_id`
+		/*LEFT JOIN
 			`survey_question` sq 
 		ON 
-			sq.`id`= stq.`question_id`
+			sq.`id`= stq.`question_id`*/
 		LEFT JOIN 
-			`survey_question_option`sqo 
+			`material_survey_template_question_option`sqo
 		ON 
-			sqo.`question_id`= sq.`id`
+			sqo.`question_id`= stq.`id`
 		WHERE 
 			st.`is_deleted` =FALSE
 			<if test="templateId != null">

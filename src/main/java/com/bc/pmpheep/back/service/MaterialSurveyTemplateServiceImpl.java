@@ -191,6 +191,7 @@ public class MaterialSurveyTemplateServiceImpl implements MaterialSurveyTemplate
         }
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("survey", surveyService.getSurveyById(surveyId));
+        //SurveyTemplate s = surveyTemplateDao.getSurveyTemplateById(templateId);
         resultMap.put("qestionAndOption",
                       surveyTemplateDao.getSurveyTemplateQuestionByTemplateId(templateId));
         return resultMap;

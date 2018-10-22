@@ -56,7 +56,6 @@ public class MaterialSurveyTemplateController {
      * </pre>
      */
     @ResponseBody
-    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询教材调研模版列表")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ResponseBean list(SurveyTemplateListVO surveyTemplateListVO,
     @RequestParam("pageNumber") Integer pageNumber, @RequestParam("pageSize") Integer pageSize) {
