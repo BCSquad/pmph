@@ -54,10 +54,10 @@
                 #{cover},
             </if>
             <if test="gmtCreate!=null ">
-                #{gmt_create},
+                #{gmtCreate},
             </if>
-            <if test="gmtUpdate!=null ">
-                #{gmt_update},
+            <if test="gmtCreate!=null ">
+                #{gmtCreate},
             </if>
         </trim>
     </sql>
