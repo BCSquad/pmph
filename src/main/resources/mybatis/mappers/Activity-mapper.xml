@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.ActivityManagementDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="activityName != null ">
+				activity_Name,
+			</if>
+			<if test="activityDate != null">
+				activity_Date,
+			</if>
+			<if test="isSetTop != null">
+				is_Set_Top,
+			</if>
+			<if test="gmtSetTop != null ">
+				gmt_Set_Top,
+			</if>
+			<if test="status != null ">
+				status,
+			</if>
+			<if test="founderId != null ">
+				founder_Id,
+			</if>
+			<if test="gmtCreate != null">
+				gmt_Create,
+			</if>
+			<if test="gmtUpdate != null">
+				gmt_Update,
+			</if>
+			<if test="materialId != null">
+				material_Id,
+			</if>
+			<if test="infoExpressCmsId != null">
+				info_Express_Cms_Id,
+			</if>
+			<if test="activityDescCmsId != null">
+				activity_Desc_Cms_Id,
+			</if>
+			<if test="cover != null and cover != '' ">
+				cover,
+			</if>
+			<if test="isDelected != null ">
+				is_Delected,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+
+			<if test="activityName != null and activityName !=''">
+				#{activityName},
+			</if>
+			<if test="activityDate != null">
+				#{activityDate},
+			</if>
+			<if test="isSetTop != null">
+				#{isSetTop},
+			</if>
+			<if test="gmtSetTop != null ">
+				#{gmtSetTop},
+			</if>
+			<if test="status != null ">
+				#{status},
+			</if>
+			<if test="founderId != null ">
+				#{founderId},
+			</if>
+			<if test="gmtCreate != null">
+				#{gmtCreate},
+			</if>
+			<if test="gmtUpdate != null">
+				#{gmtUpdate},
+			</if>
+			<if test="materialId != null">
+				#{materialId},
+			</if>
+			<if test="infoExpressCmsId != null">
+				#{infoExpressCmsId},
+			</if>
+			<if test="activityDescCmsId != null">
+				#{activityDescCmsId},
+			</if>
+			<if test="cover != null and cover != '' ">
+				#{cover},
+			</if>
+			<if test="isDelected != null ">
+				#{isDelected},
+			</if>
+		</trim>
+	</sql>
+	<!-- 新增CmsContent -->
+	<insert id="addActivity" parameterType="Activity"
+			useGeneratedKeys="true" keyProperty="id">
+		insert into activity(
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		) ;
+	</insert>
+
+	<!-- 更新CmsContent -->
+	<update id="updateActivity" parameterType="Activity">
+		update activity
+		<set>
+			<if test="activityName != null and activityName !=''">
+				activity_Name=#{activityName},
+			</if>
+			<if test="activityDate != null">
+				activity_Date=#{activityDate},
+			</if>
+			<if test="isSetTop != null">
+				is_Set_Top=#{isSetTop},
+			</if>
+			<if test="gmtSetTop != null ">
+				gmt_Set_Top=#{gmtSetTop},
+			</if>
+			<if test="status != null ">
+				status=#{status},
+			</if>
+			<if test="founderId != null ">
+				founder_Id=#{founderId},
+			</if>
+			<if test="gmtCreate != null">
+				gmt_Create=#{gmtCreate},
+			</if>
+			<if test="gmtUpdate != null">
+				gmt_Update=#{gmtUpdate},
+			</if>
+			<if test="materialId != null">
+				material_Id=#{materialId},
+			</if>
+			<if test="infoExpressCmsId != null">
+				info_Express_Cms_Id=#{infoExpressCmsId},
+			</if>
+			<if test="activityDescCmsId != null">
+				activity_Desc_Cms_Id=#{activityDescCmsId},
+			</if>
+			<if test="cover != null and cover != '' ">
+				cover=#{cover},
+			</if>
+			<if test="isDelected != null ">
+				is_Delected=#{isDelected},
+			</if>
+		</set>
+		where
+		id=#{id};
+	</update>
+	<!-- 活动发布 -->
+	<update id="updateActivityStatusById" parameterType="Activity">
+		update
+				Activity set status = #{status} where id = #{id};
+	</update>
+	<!-- 逻辑删除 -->
+	<update id="deleteActivityById" parameterType="java.lang.Long">
+		update
+				Activity set is_deleted = #{is_deleted} where id = #{id};
+	</update>
+
+	<update id="updateActivitySetTopById" parameterType="Activity">
+		update
+				Activity set is_set_top = #{isSetTop} where id = #{id};
+	</update>
+	<!--CmsContentVO模糊查询获取列表 -->
+	<select id="listActivity" parameterType="PageParameter" resultType="ActivityVO">
+		SELECT * FROM
+		(
+		SELECT
+		ac.id,
+		ac.activity_name,
+		ac.activity_date,
+		ac.is_set_top,
+		ac.status,
+		pu.realname,
+		ac.gmt_Create
+		FROM
+		Activity ac
+		LEFT JOIN pmph_user pu
+		ON ac.founder_id = pu.id
+		WHERE ac.is_deleted=0
+		<if test="parameter.activityName != null and parameter.activityName !='' ">
+			and (ac.activity_name like concat('%',#{parameter.activityName},'%'))
+		</if>
+		<if test="parameter.isSetTop != null">
+			and ac.is_Set_Top=#{parameter.isSetTop}
+		</if>
+		<if test="parameter.status != null ">
+			and ac.status=#{parameter.status}
+		</if>
+
+		ORDER BY ac.is_set_top desc ,ac.gmt_set_top desc,ac.gmt_update desc,ac.gmt_create desc
+		)
+		a,
+		(
+		SELECT
+		COUNT(*) count
+		FROM
+		Activity ac
+		LEFT JOIN pmph_user pu
+		ON ac.founder_id = pu.id
+		WHERE ac.is_deleted=0
+		<if test="parameter.activityName != null and parameter.activityName !=''">
+			and (ac.activity_name like concat('%',#{parameter.activityName},'%'))
+		</if>
+		<if test="parameter.isSetTop != null">
+			and ac.is_Set_Top=#{parameter.isSetTop}
+		</if>
+		<if test="parameter.status != null ">
+			and ac.status=#{parameter.status}
+		</if>
+		)b
+
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+	<select id="getActivityById" parameterType="java.lang.Long" resultType="Activity">
+		SELECT * FROM activity
+		where id=#{id}
+	</select>
+
+</mapper>

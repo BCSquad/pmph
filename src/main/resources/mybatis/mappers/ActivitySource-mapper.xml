@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.ActivitySourceDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="sourceName != null and sourceName !=''" >
+				source_name,
+			</if>
+			<if test="uploaderId != null">
+				uploader_id,
+			</if>
+			<if test="gmtUpload != null">
+				gmt_upload,
+			</if>
+			<if test="isDeleted != null ">
+				is_deleted,
+			</if>
+			<if test="sort != null ">
+				sort,
+			</if>
+			<if test="fileId != null and fileId !='' ">
+				file_id,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="sourceName != null and sourceName !=''">
+				#{sourceName},
+			</if>
+			<if test="uploaderId != null">
+				#{uploaderId},
+			</if>
+			<if test="gmtUpload != null">
+				#{gmtUpload},
+			</if>
+			<if test="isDeleted != null ">
+				#{isDeleted},
+			</if>
+			<if test="sort != null ">
+				#{sort},
+			</if>
+			<if test="fileId != null and fileId !='' ">
+				#{fileId},
+			</if>
+
+		</trim>
+	</sql>
+	<!-- 新增CmsContent -->
+	<insert id="addSource" parameterType="ActivitySource"
+			useGeneratedKeys="true" keyProperty="id">
+		insert into activity_source(
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		) ;
+	</insert>
+	<update id="updateSource" parameterType="ActivitySource">
+		update activity_source
+		<set>
+			<if test="sourceName != null and sourceName !=''">
+				source_name=#{sourceName},
+			</if>
+			<if test="uploaderId != null">
+				uploader_id=#{uploaderId},
+			</if>
+			<if test="gmtUpload != null">
+				gmt_upload=#{gmtUpload},
+			</if>
+			<if test="isDeleted != null ">
+				is_deleted=#{isDeleted},
+			</if>
+			<if test="sort != null ">
+				sort=#{sort},
+			</if>
+			<if test="fileId != null ">
+				file_id=#{fileId},
+			</if>
+		</set>
+		where
+		id=#{id};
+	</update>
+
+	<update id="deleteSourceById" parameterType="java.lang.Long">
+		update
+				activity_source set is_deleted = 1 where id = #{id};
+	</update>
+
+
+	<!--CmsContentVO模糊查询获取列表 -->
+	<select id="listActivitySource" parameterType="PageParameter" resultType="ActivitySourceVO">
+		SELECT * FROM
+		(
+		select ac.*,pu.realname
+		from activity_source ac
+		LEFT JOIN pmph_user pu
+		ON ac.uploader_id = pu.id
+		where 1=1 and ac.is_deleted=0
+		<if test="parameter.sourceName != null and parameter.sourceName !='' ">
+			and (ac.source_name like concat('%',#{parameter.sourceName},'%'))
+		</if>
+		)
+		a,
+		(
+		select count(*) count
+		from activity_source ac
+		LEFT JOIN pmph_user pu
+		ON ac.uploader_id = pu.id
+		where 1=1 and ac.is_deleted=0
+		<if test="parameter.sourceName != null and parameter.sourceName !='' ">
+			and (ac.source_name like concat('%',#{parameter.sourceName},'%'))
+		</if>
+
+		)b
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+	<select id="getActivityById" parameterType="java.lang.Long" resultType="Activity">
+		SELECT * FROM activity
+		where id=#{id}
+	</select>
+
+
+	<insert id="addActivitySourceChain" parameterType="ActivitySourceChain"
+			useGeneratedKeys="true" keyProperty="id">
+		insert into activity_source_chain(activity_id,activity_source_id)values(
+			#{activityId},#{activitySourceId}
+		)
+
+	</insert>
+
+
+
+</mapper>
