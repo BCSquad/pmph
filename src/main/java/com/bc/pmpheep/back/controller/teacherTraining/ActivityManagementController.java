@@ -166,9 +166,12 @@ public class ActivityManagementController {
 	/*	String str=request.getParameter("state");
 		byte[] bytes=str.getBytes("ISO-8859-1");
 		String state=new String(bytes,"utf-8");*/
+	if(StringUtil.notEmpty(request.getParameter("materialName"))){
         String str = request.getParameter("materialName");
         byte[] bytes = str.getBytes("ISO-8859-1");
         materialName = new String(bytes, "utf-8");
+    }
+
         String sessionId = CookiesUtil.getSessionId(request);
         PageParameter<MaterialListVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
         MaterialListVO materialListVO = new MaterialListVO();
