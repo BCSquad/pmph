@@ -145,7 +145,7 @@ public class ActivityManagementController {
         String sessionId = CookiesUtil.getSessionId(request);
         Activity activity = parseActivity(request);
         String imgFile = request.getParameter("imgFile");
-        if(imgFile!=null){
+        if(StringUtil.notEmpty(imgFile)){
             if(!imgFile.equals(activity.getCover())){
                 activity.setCover(imgFile);
             }
