@@ -113,39 +113,15 @@
 			<if test="activityDate != null">
 				activity_Date=#{activityDate},
 			</if>
-			<if test="isSetTop != null">
 				is_Set_Top=#{isSetTop},
-			</if>
 			<if test="gmtSetTop != null ">
 				gmt_Set_Top=#{gmtSetTop},
 			</if>
-			<if test="status != null ">
 				status=#{status},
-			</if>
-			<if test="founderId != null ">
-				founder_Id=#{founderId},
-			</if>
-			<if test="gmtCreate != null">
-				gmt_Create=#{gmtCreate},
-			</if>
-			<if test="gmtUpdate != null">
 				gmt_Update=#{gmtUpdate},
-			</if>
-			<if test="materialId != null">
 				material_Id=#{materialId},
-			</if>
-			<if test="infoExpressCmsId != null">
 				info_Express_Cms_Id=#{infoExpressCmsId},
-			</if>
-			<if test="activityDescCmsId != null">
-				activity_Desc_Cms_Id=#{activityDescCmsId},
-			</if>
-			<if test="cover != null and cover != '' ">
-				cover=#{cover},
-			</if>
-			<if test="isDelected != null ">
-				is_Delected=#{isDelected},
-			</if>
+				cover=#{cover}
 		</set>
 		where
 		id=#{id};
