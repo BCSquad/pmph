@@ -143,26 +143,36 @@ public class ActivityManagementServiceImpl implements ActivityManagementService 
         }
         resultMap.put("content", content);
         // 根据MaterialId 获取教材信息
-        Material materialById = materialDao.getMaterialById(activityById.getMaterialId());
-        resultMap.put("material", materialById);
+
+        if(ObjectUtil.notNull(activityById.getMaterialId())){
+            Material materialById = materialDao.getMaterialById(activityById.getMaterialId());
+            resultMap.put("material", materialById);
+        }
+        if(ObjectUtil.notNull(activityById.getInfoExpressCmsId())){
+            CmsContent cmsContentById = cmsContentDao.getCmsContentById(activityById.getInfoExpressCmsId());
+            resultMap.put("infoExpress", cmsContentById);
+        }
+
+        if(StringUtil.notEmpty(activityById.getCover())){
+            String imgFileName = "默认封面.png";
+            String imgFilePath = RouteUtil.DEFAULT_USER_AVATAR;
+            // 文章封面图片
+            GridFSDBFile file = null;
+            if (activityById.getCover() != null) {
+                file = fileService.get(activityById.getCover());
+            }
+            if (ObjectUtil.notNull(file)) {
+                imgFileName = file.getFilename();
+            }
+            resultMap.put("imgFileName", imgFileName);
+            if (!"DEFAULT".equals(activityById.getCover())) {
+                imgFilePath = activityById.getCover();
+            }
+            resultMap.put("imgFilePath", imgFilePath);
+        }
         // 根据InfoExpressCmsId 获取快报列表
-        CmsContent cmsContentById = cmsContentDao.getCmsContentById(activityById.getInfoExpressCmsId());
-        resultMap.put("infoExpress", cmsContentById);
-        String imgFileName = "默认封面.png";
-        String imgFilePath = RouteUtil.DEFAULT_USER_AVATAR;
-        // 文章封面图片
-        GridFSDBFile file = null;
-        if (activityById.getCover() != null) {
-            file = fileService.get(activityById.getCover());
-        }
-        if (ObjectUtil.notNull(file)) {
-            imgFileName = file.getFilename();
-        }
-        resultMap.put("imgFileName", imgFileName);
-        if (!"DEFAULT".equals(activityById.getCover())) {
-            imgFilePath = activityById.getCover();
-        }
-        resultMap.put("imgFilePath", imgFilePath);
+
+
 
         return resultMap;
     }

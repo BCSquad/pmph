@@ -4,13 +4,70 @@
 <mapper namespace="com.bc.pmpheep.back.dao.ActivityVideoDao">
 
 
+
+    <sql id="key">
+        <!-- 去掉最后一个, -->
+        <trim suffixOverrides=",">
+            <if test="id != null ">
+                id,
+            </if>
+            <if test="title != null and title != ''  ">
+                title,
+            </if>
+            <if test="origPath != null and origPath !='' ">
+                orig_path,
+            </if>
+            <if test="origFileName != null and origFileName !=''">
+                orig_file_name,
+            </if>
+            <if test="origFileSize != null ">
+                orig_file_size,
+            </if>
+            <if test="path != null and path !=''">
+                path,
+            </if>
+            <if test="fileName != null and fileName !=''">
+                file_name,
+            </if>
+            <if test="fileSize != null ">
+                file_size,
+            </if>
+            <if test="sort != null ">
+                sort,
+            </if>
+            <if test="clicks != null ">
+                clicks,
+            </if>
+            <if test="userId != null ">
+                user_id,
+            </if>
+            <if test="isAuth != null ">
+                is_auth,
+            </if>
+            <if test="authUserId != null ">
+                auth_user_id,
+            </if>
+            <if test="authDate != null ">
+                auth_date,
+            </if>
+            <if test="cover != null and cover != '' ">
+                cover,
+            </if>
+            <if test="gmtCreate!=null ">
+                gmt_create,
+            </if>
+            <if test="gmtUpdate!=null ">
+                gmt_update,
+            </if>
+        </trim>
+    </sql>
+
     <sql id="value">
         <!-- 去掉最后一个, -->
         <trim suffixOverrides=",">
             <if test="id != null ">
                 #{id},
             </if>
-
             <if test="title != null and title != ''  ">
                 #{title},
             </if>
@@ -56,64 +113,8 @@
             <if test="gmtCreate!=null ">
                 #{gmtCreate},
             </if>
-            <if test="gmtCreate!=null ">
-                #{gmtCreate},
-            </if>
-        </trim>
-    </sql>
-    <sql id="key">
-        <!-- 去掉最后一个, -->
-        <trim suffixOverrides=",">
-            <if test="id != null ">
-                id,
-            </if>
-            <if test="title != null and title != ''  ">
-                title,
-            </if>
-            <if test="origPath != null and origPath !='' ">
-                orig_path,
-            </if>
-            <if test="origFileName != null and origFileName !=''">
-                orig_file_name,
-            </if>
-            <if test="origFileSize != null ">
-                orig_file_size,
-            </if>
-            <if test=" path != null and path !=''">
-                path,
-            </if>
-            <if test=" fileName != null and fileName !=''">
-                file_name,
-            </if>
-            <if test=" fileSize != null ">
-                file_size,
-            </if>
-            <if test=" sort != null ">
-                sort,
-            </if>
-            <if test=" clicks != null ">
-                clicks,
-            </if>
-            <if test=" userId != null ">
-                user_id,
-            </if>
-            <if test=" isAuth != null ">
-                is_auth,
-            </if>
-            <if test=" authUserId != null ">
-                auth_user_id,
-            </if>
-            <if test=" authDate != null ">
-                auth_date,
-            </if>
-            <if test=" cover != null and cover != '' ">
-                cover,
-            </if>
-            <if test="gmtCreate!=null ">
-                gmt_create,
-            </if>
             <if test="gmtUpdate!=null ">
-                gmt_update
+                #{gmtUpdate},
             </if>
         </trim>
     </sql>
