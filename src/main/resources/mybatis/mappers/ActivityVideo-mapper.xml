@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.ActivityVideoDao">
+
+
+    <sql id="value">
+        <!-- 去掉最后一个, -->
+        <trim suffixOverrides=",">
+            <if test="id != null ">
+                #{id},
+            </if>
+
+            <if test="title != null and title != ''  ">
+                #{title},
+            </if>
+            <if test="origPath != null and origPath !='' ">
+                #{origPath},
+            </if>
+            <if test="origFileName != null and origFileName !=''">
+                #{origFileName},
+            </if>
+            <if test="origFileSize != null ">
+                #{origFileSize},
+            </if>
+            <if test=" path != null and path !=''">
+                #{path},
+            </if>
+            <if test=" fileName != null and fileName !=''">
+                #{fileName},
+            </if>
+            <if test=" fileSize != null ">
+                #{fileSize},
+            </if>
+            <if test=" sort != null ">
+                #{sort},
+            </if>
+            <if test=" clicks != null ">
+                #{clicks},
+            </if>
+            <if test=" userId != null ">
+                #{userId},
+            </if>
+            <if test=" isAuth != null ">
+                #{isAuth},
+            </if>
+            <if test=" authUserId != null ">
+                #{authUserId},
+            </if>
+            <if test=" authDate != null ">
+                #{authDate},
+            </if>
+            <if test=" cover != null and cover != '' ">
+                #{cover},
+            </if>
+            <if test="gmtCreate!=null ">
+                #{gmt_create},
+            </if>
+            <if test="gmtUpdate!=null ">
+                #{gmt_update},
+            </if>
+        </trim>
+    </sql>
+    <sql id="key">
+        <!-- 去掉最后一个, -->
+        <trim suffixOverrides=",">
+            <if test="id != null ">
+                id,
+            </if>
+            <if test="title != null and title != ''  ">
+                title,
+            </if>
+            <if test="origPath != null and origPath !='' ">
+                orig_path,
+            </if>
+            <if test="origFileName != null and origFileName !=''">
+                orig_file_name,
+            </if>
+            <if test="origFileSize != null ">
+                orig_file_size,
+            </if>
+            <if test=" path != null and path !=''">
+                path,
+            </if>
+            <if test=" fileName != null and fileName !=''">
+                file_name,
+            </if>
+            <if test=" fileSize != null ">
+                file_size,
+            </if>
+            <if test=" sort != null ">
+                sort,
+            </if>
+            <if test=" clicks != null ">
+                clicks,
+            </if>
+            <if test=" userId != null ">
+                user_id,
+            </if>
+            <if test=" isAuth != null ">
+                is_auth,
+            </if>
+            <if test=" authUserId != null ">
+                auth_user_id,
+            </if>
+            <if test=" authDate != null ">
+                auth_date,
+            </if>
+            <if test=" cover != null and cover != '' ">
+                cover,
+            </if>
+            <if test="gmtCreate!=null ">
+                gmt_create,
+            </if>
+            <if test="gmtUpdate!=null ">
+                gmt_update
+            </if>
+        </trim>
+    </sql>
+
+    <insert id="addActivityVideo" parameterType="ActivityVideo">
+        <selectKey resultType="java.lang.Long" order="AFTER"
+                   keyProperty="id">
+            <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into activity_video (
+        <include refid="key"/>
+        ) values(
+        <include refid="value"/>
+        ) ;
+    </insert>
+
+    <!-- 动态更新 -->
+    <update id="updateActivityVideo">
+        update activity_video set
+        <!-- 去掉最后一个, -->
+        <trim suffixOverrides=",">
+            <if test="title != null and title != ''  ">
+                title =#{title},
+            </if>
+            <if test="origPath != null and origPath !='' ">
+                orig_path =#{origPath},
+            </if>
+            <if test="origFileName != null and origFileName !=''">
+                orig_file_name =#{origFileName},
+            </if>
+            <if test="origFileSize != null ">
+                orig_file_size =#{origFileSize},
+            </if>
+            <if test=" path != null and path !=''">
+                path =#{path},
+            </if>
+            <if test=" fileName != null and fileName !=''">
+                file_name =#{fileName},
+            </if>
+            <if test=" fileSize != null ">
+                file_size =#{fileSize},
+            </if>
+            <if test=" sort != null ">
+                sort =#{sort},
+            </if>
+            <if test=" clicks != null ">
+                clicks =#{clicks},
+            </if>
+            <if test=" userId != null ">
+                user_id =#{userId},
+            </if>
+            <if test=" isAuth != null ">
+                is_auth =#{isAuth},
+            </if>
+            <if test=" authUserId != null ">
+                auth_user_id =#{authUserId},
+            </if>
+            <if test=" authDate != null ">
+                auth_date =#{authDate},
+            </if>
+            <if test=" cover != null and cover != '' ">
+                cover =#{cover},
+            </if>
+            <if test="gmtUpdate!=null ">
+                gmt_update=#{gmt_update},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <select id="listActivityVideo" parameterType="PageParameter" resultType="ActivityVideoVO">
+        SELECT * FROM
+        (
+        select ac.*,pu.realname
+        from activity_video ac
+        LEFT JOIN pmph_user pu
+        ON ac.user_id = pu.id
+        where 1=1 and ac.is_deleted=0
+        <if test="parameter.title != null and parameter.title !='' ">
+            and (ac.title like concat('%',#{parameter.title},'%'))
+        </if>
+        )
+        a,
+        (
+        select count(*) count
+        from activity_video ac
+        LEFT JOIN pmph_user pu
+        ON ac.user_id = pu.id
+        where 1=1 and ac.is_deleted=0
+        <if test="parameter.title != null and parameter.title !='' ">
+            and (ac.title like concat('%',#{parameter.title},'%'))
+        </if>
+
+        )b
+        <if test="start !=null and pageNumber != null">
+            limit #{start},#{pageSize}
+        </if>
+    </select>
+    <insert id="addActivityVideochain">
+	insert into activity_video_chain(activity_id, activity_video_id) values (
+	#{activityId},#{activityVideoId}
+	)
+
+</insert>
+
+    <update id="deleteVideoById" parameterType="java.lang.Long">
+		update
+				activity_video set is_deleted = 1 where id = #{id};
+	</update>
+</mapper>

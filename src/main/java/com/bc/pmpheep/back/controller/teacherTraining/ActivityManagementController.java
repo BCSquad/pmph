@@ -1,0 +1,261 @@
+package com.bc.pmpheep.back.controller.teacherTraining;
+
+import com.bc.pmpheep.annotation.LogDetail;
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.po.Activity;
+import com.bc.pmpheep.back.po.CmsContent;
+import com.bc.pmpheep.back.po.Material;
+import com.bc.pmpheep.back.service.ActivityManagementService;
+import com.bc.pmpheep.back.service.CmsContentService;
+import com.bc.pmpheep.back.service.MaterialService;
+import com.bc.pmpheep.back.util.*;
+import com.bc.pmpheep.back.vo.*;
+import com.bc.pmpheep.controller.bean.ResponseBean;
+import com.bc.pmpheep.general.po.Content;
+import com.bc.pmpheep.general.service.ContentService;
+import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
+import com.bc.pmpheep.service.exception.CheckedExceptionResult;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
+import com.mchange.lang.LongUtils;
+import org.jsoup.helper.DataUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.sql.Timestamp;
+import java.util.Date;
+
+/**
+ * <pre>
+ * 功能描述：师资培训活动管理 控制器
+ * 使用示范：
+ *
+ *
+ * @author (作者) zz
+ *
+ * @since (该版本支持的JDK版本) ：JDK 1.6或以上
+ * @version (版本) 1.0
+ * @date (开发日期) 2018-10-18
+ *
+ * </pre>
+ */
+@Controller
+@RequestMapping(value = "/activity")
+@SuppressWarnings({"rawtypes", "unchecked"})
+public class ActivityManagementController {
+    @Autowired
+    ActivityManagementService activityManagementService;
+    @Autowired
+    MaterialService materialService;
+    @Autowired
+    CmsContentService cmsContentService;
+    @Autowired
+    ContentService contentService;
+    private static final String BUSSINESS_TYPE = "活动管理";
+
+
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "更新活动状态")
+    @RequestMapping(value = "/updateActivityStatus", method = RequestMethod.GET)
+    public void setActivityStatus(HttpServletRequest request) throws IOException {
+        Integer status = Integer.parseInt(request.getParameter("status"));
+        Long id = Long.parseLong(request.getParameter("id"));
+        String sessionId = CookiesUtil.getSessionId(request);
+        Activity activity = new Activity();
+        activity.setId(id);
+        activity.setStatus(status);
+        activity.setGmtUpdate(DateUtil.getCurrentTime());
+        activityManagementService.setActivityStatus(activity);
+    }
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "更新置顶")
+    @RequestMapping(value = "/updateSetTop", method = RequestMethod.GET)
+    public void setTop( HttpServletRequest request) throws IOException {
+        Boolean isSetTop = Boolean.parseBoolean(request.getParameter("isSetTop"));
+        Long id = Long.parseLong(request.getParameter("id"));
+        Activity activity = new Activity();
+        activity.setId(id);
+        activity.setIsSetTop(isSetTop);
+        activity.setGmtUpdate(DateUtil.getCurrentTime());
+        if(isSetTop){
+            activity.setGmtSetTop(DateUtil.getCurrentTime());
+        }else{
+            activity.setGmtSetTop(null);
+        }
+
+        String sessionId = CookiesUtil.getSessionId(request);
+
+        activityManagementService.setActivitySetTop(activity);
+    }
+
+
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询活动管理列表")
+    @RequestMapping(value = "/getActivityList", method = RequestMethod.GET)
+    public ResponseBean getActivityList(
+            @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
+            @RequestParam(name = "pageSize") Integer pageSize, ActivityVO activityVO,
+            HttpServletRequest request) throws UnsupportedEncodingException {
+      String activityName = activityVO.getActivityName();
+        if(activityName!=null){
+            String str  =activityName;
+            byte[] bytes = str.getBytes("ISO-8859-1");
+            activityVO.setActivityName(new String(bytes, "utf-8"));
+
+        }
+        PageParameter<ActivityVO> pageParameter =
+                new PageParameter<ActivityVO>(pageNumber, pageSize, activityVO);
+        String sessionId = CookiesUtil.getSessionId(request);
+        return new ResponseBean(activityManagementService.listActivity(pageParameter, sessionId));
+    }
+
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询活动详情")
+    @RequestMapping(value = "/getActivity/{id}/search", method = RequestMethod.GET)
+    public ResponseBean search(@PathVariable("id") Long id) {
+        return new ResponseBean(activityManagementService.getActivitDetailsyById(id));
+    }
+
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增活动")
+    @RequestMapping(value = "/newActivity", method = RequestMethod.POST)
+    public ResponseBean newActivity(HttpServletRequest request) {
+        String sessionId = CookiesUtil.getSessionId(request);
+        String imgFile = request.getParameter("imgFile");
+        String content=request.getParameter("content");
+        Activity activity = parseActivity(request);
+        if (StringUtil.notEmpty(imgFile)) {
+            activity.setCover(imgFile);
+        }
+        return new ResponseBean(activityManagementService.addActivity(activity, content,
+                sessionId,
+                request));
+    }
+
+
+
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改活动")
+    @RequestMapping(value = "/updateActivity", method = RequestMethod.PUT)
+    public ResponseBean updateActivity(HttpServletRequest request) {
+        String content = request.getParameter("content");
+        String sessionId = CookiesUtil.getSessionId(request);
+        Activity activity = parseActivity(request);
+        String imgFile = request.getParameter("imgFile");
+        if(imgFile!=null){
+            if(!imgFile.equals(activity.getCover())){
+                activity.setCover(imgFile);
+            }
+        }
+        return new ResponseBean(activityManagementService.updateActivity(activity, content,
+                sessionId,
+                request));
+
+    }
+
+
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询教材公告列表")
+    @RequestMapping(value = "/getMaterialist", method = RequestMethod.GET)
+    public ResponseBean list(HttpServletRequest request, Integer pageSize, Integer pageNumber, Boolean isMy,
+                             String state, String materialName, String contactUserName) throws UnsupportedEncodingException {
+        //state 中文乱码
+	/*	String str=request.getParameter("state");
+		byte[] bytes=str.getBytes("ISO-8859-1");
+		String state=new String(bytes,"utf-8");*/
+	if(StringUtil.notEmpty(request.getParameter("materialName"))){
+        String str = request.getParameter("materialName");
+        byte[] bytes = str.getBytes("ISO-8859-1");
+        materialName = new String(bytes, "utf-8");
+    }
+
+        String sessionId = CookiesUtil.getSessionId(request);
+        PageParameter<MaterialListVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
+        MaterialListVO materialListVO = new MaterialListVO();
+        materialListVO.setIsMy(isMy);
+        materialListVO.setState(state);
+        materialListVO.setContactUserName(contactUserName);
+        materialListVO.setMaterialName(materialName);
+        pageParameter.setParameter(materialListVO);
+
+        return new ResponseBean(materialService.listMaterials(pageParameter, sessionId));
+    }
+
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询信息快报列表")
+    @RequestMapping(value = "/getLetters", method = RequestMethod.GET)
+    public ResponseBean letters(
+            @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
+            @RequestParam(name = "pageSize") Integer pageSize, CmsContentVO cmsContentVO,
+            HttpServletRequest request) {
+        cmsContentVO.setCategoryId(Const.CMS_CATEGORY_ID_2);
+        String title = cmsContentVO.getTitle();
+        String userName = cmsContentVO.getUsername();
+        if (StringUtil.notEmpty(title)) {
+            cmsContentVO.setTitle(StringUtil.toAllCheck(title));
+        }
+        if (StringUtil.notEmpty(userName)) {
+            cmsContentVO.setUsername(StringUtil.toAllCheck(userName));
+        }
+        PageParameter<CmsContentVO> pageParameter =
+                new PageParameter<CmsContentVO>(pageNumber, pageSize, cmsContentVO);
+        String sessionId = CookiesUtil.getSessionId(request);
+        return new ResponseBean(cmsContentService.listCmsContent(pageParameter, sessionId));
+    }
+
+     public Activity parseActivity(HttpServletRequest request) {
+        Activity activity = new Activity();
+        String id = request.getParameter("id");
+        String gmtSetTop = request.getParameter("gmtSetTop");
+        String gmtUpdate = request.getParameter("gmtUpdate");
+        String activityDate = request.getParameter("activityDate");
+        String activityName = request.getParameter("activityName");
+        String cover = request.getParameter("cover");
+        String infoExpressCmsId = request.getParameter("infoExpressCmsId");
+         String activityDescCmsId = request.getParameter("activityDescCmsId");
+        String isSetTop = request.getParameter("isSetTop");
+        String materialId = request.getParameter("materialId");
+        String status = request.getParameter("status");
+
+         if (StringUtil.notEmpty(gmtSetTop)&& ObjectUtil.notNull(gmtSetTop)){
+             activity.setGmtSetTop(new Timestamp(Long.parseLong(gmtSetTop)));
+         }
+         if (StringUtil.notEmpty(activityDate)&& ObjectUtil.notNull(activityDate)){
+             activity.setActivityDate(new Timestamp(Long.parseLong(activityDate)));
+         }
+         if (StringUtil.notEmpty(gmtUpdate)&& ObjectUtil.notNull(gmtUpdate)){
+             activity.setGmtUpdate(new Timestamp(Long.parseLong(gmtUpdate)));
+         }
+        if (StringUtil.notEmpty(id)&&ObjectUtil.notNull(id)){
+            activity.setId(Long.parseLong(id));
+        }
+
+        if (StringUtil.notEmpty(activityName)) {
+            activity.setActivityName(activityName);
+        }
+        if (StringUtil.notEmpty(cover)) {
+            activity.setCover(cover);
+        }
+        if (StringUtil.notEmpty(infoExpressCmsId)&& ObjectUtil.notNull(infoExpressCmsId)) {
+            activity.setInfoExpressCmsId(Long.parseLong(infoExpressCmsId));
+        }
+         if (StringUtil.notEmpty(activityDescCmsId)) {
+             activity.setActivityDescCmsId(activityDescCmsId);
+         }
+        if (StringUtil.notEmpty(isSetTop)&& ObjectUtil.notNull(isSetTop)) {
+            activity.setIsSetTop(Boolean.parseBoolean(isSetTop));
+        }
+        if (StringUtil.notEmpty(materialId)) {
+            activity.setMaterialId(materialId);
+        }
+        if (StringUtil.notEmpty(status)&& ObjectUtil.notNull(status)) {
+            activity.setStatus(Integer.parseInt(status));
+        }
+        return activity;
+    }
+
+
+}
