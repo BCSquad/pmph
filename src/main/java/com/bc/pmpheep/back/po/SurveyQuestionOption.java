@@ -47,6 +47,8 @@ public class SurveyQuestionOption implements java.io.Serializable {
      */
     private String            remark;
 
+    private Boolean           isDeleted ;
+
     // Constructors
 
     /** default constructor */
@@ -109,4 +111,19 @@ public class SurveyQuestionOption implements java.io.Serializable {
                + optionContent + ", isOther=" + isOther + ", remark=" + remark + "]";
     }
 
+    public Boolean getOther() {
+        return isOther;
+    }
+
+    public void setOther(Boolean other) {
+        isOther = other;
+    }
+
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
 }

@@ -241,6 +241,8 @@ public class ExpertationServiceImpl implements ExpertationService{
     @Override
     public ExpertationVO getExpertationById(Long id) {
 
+        //TODO 需要一次性把数据拿到再在service拼接，当前以下方法请求次数过多，速度慢，有超时隐患
+
         ExpertationVO expertationVO = expertationDao.getExpertationById(id);
 
         expertationVO.setDecAcadeList(expertationDao.queryDecAcade(id));

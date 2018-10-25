@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.MaterialSurveyTemplateDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id != null ">
+				id	,
+			</if>
+			<if test="templateName != null ">
+				template_name	,
+			</if>
+			<if test="sort != null ">
+				sort	,
+			</if>
+			<if test="userId != null ">
+				user_id	,
+			</if>
+			<if test="isDeleted != null ">
+				is_deleted	,
+			</if>
+			<if test="isActive != null ">
+				is_active	,
+			</if>
+			<if test="gmtCreate != null ">
+				gmt_create	,
+			</if>
+			<if test="gmtUpdate != null ">
+				gmt_update	,
+			</if>
+			<if test="intro != null ">
+				intro	,
+			</if>
+			<if test="typeId != null ">
+				type_id	,
+			</if>
+			<if test="preVersionMaterialId != null ">
+				pre_version_material_id	,
+			</if>
+			<if test="preVersionMaterialName != null ">
+				pre_version_material_name	,
+			</if>
+			<if test="preVersionMaterialRound != null ">
+				pre_version_material_round	,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id != null ">
+				#{id}	,
+			</if>
+			<if test="templateName != null ">
+				#{templateName}	,
+			</if>
+			<if test="sort != null ">
+				#{sort}	,
+			</if>
+			<if test="userId != null ">
+				#{userId}	,
+			</if>
+			<if test="isDeleted != null ">
+				#{isDeleted}	,
+			</if>
+			<if test="isActive != null ">
+				#{isActive}	,
+			</if>
+			<if test="gmtCreate != null ">
+				#{gmtCreate}	,
+			</if>
+			<if test="gmtUpdate != null ">
+				#{gmtUpdate}	,
+			</if>
+			<if test="intro != null ">
+				#{intro}	,
+			</if>
+			<if test="typeId != null ">
+				#{typeId}	,
+			</if>
+			<if test="preVersionMaterialId != null ">
+				#{preVersionMaterialId}	,
+			</if>
+			<if test="preVersionMaterialName != null ">
+				#{preVersionMaterialName}	,
+			</if>
+			<if test="preVersionMaterialRound != null ">
+				#{preVersionMaterialRound}	,
+			</if>
+		</trim>
+	</sql>
+	<sql id="updates">
+		<trim suffixOverrides=",">
+			<if test="templateName != null ">
+				template_name	=	#{templateName}	,
+			</if>
+			<if test="sort != null ">
+				sort	=	#{sort}	,
+			</if>
+			<if test="userId != null ">
+				user_id	=	#{userId}	,
+			</if>
+			<if test="isDeleted != null ">
+				is_deleted	=	#{isDeleted}	,
+			</if>
+			<if test="isActive != null ">
+				is_active	=	#{isActive}	,
+			</if>
+			<if test="gmtCreate != null ">
+				gmt_create	=	#{gmtCreate}	,
+			</if>
+			<if test="gmtUpdate != null ">
+				gmt_update	=	#{gmtUpdate}	,
+			</if>
+			<if test="intro != null ">
+				intro	=	#{intro}	,
+			</if>
+			<if test="typeId != null ">
+				type_id	=	#{typeId}	,
+			</if>
+			<if test="preVersionMaterialId != null ">
+				pre_version_material_id	=	#{preVersionMaterialId}	,
+			</if>
+			<if test="preVersionMaterialName != null ">
+				pre_version_material_name	=	#{preVersionMaterialName}	,
+			</if>
+			<if test="preVersionMaterialRound != null ">
+				pre_version_material_round	=	#{preVersionMaterialRound}	,
+			</if>
+		</trim>
+	</sql>
+	<!-- 新增一个SurveyTemplate -->
+	<insert id="addSurveyTemplate" parameterType="MaterialSurveyTemplate" keyProperty="id" useGeneratedKeys="true">
+		<!--<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> &lt;!&ndash; order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER &ndash;&gt;
+			SELECT LAST_INSERT_ID()
+		</selectKey>-->
+		insert into material_survey_template (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		)
+		on duplicate key update
+		<include refid="updates" />
+
+	</insert>
+	<!-- 逻辑删除SurveyTemplate通过主键id -->
+	<update id="deleteSurveyTemplateById" parameterType="java.lang.Long">
+		update material_survey_template set is_deleted = true where id=#{id};
+	</update>
+	<!-- 更新一个 SurveyTemplate通过主键id -->
+	<update id="updateSurveyTemplate" parameterType="SurveyTemplate">
+		update material_survey_template
+		<set>
+			<if test="templateName != null and templateName != ''">
+				template_name=#{templateName},
+			</if>
+			<if test="intro != null and intro != ''">
+				intro = #{intro},
+			</if>
+			<if test="typeId != null">
+				type_id = #{typeId},
+			</if>
+			<if test="sort != null">
+				sort=#{sort},
+			</if>
+			<if test="userId != null">
+				user_id=#{userId},
+			</if>
+			<if test="isDeleted != null">
+				is_deleted=#{isDeleted},
+			</if>
+		</set>
+		where
+		id=#{id} ;
+	</update>
+	<!-- 查找SurveyTemplate通过主键id -->
+	<select id="getSurveyTemplateById" parameterType="java.lang.Long" 
+	resultType="SurveyTemplate">
+		select * from material_survey_template where id=#{id};
+	</select>
+	
+	<!-- 根据模版Id查询下面的所有问题 -->
+	<select id="getSurveyTemplateQuestionByTemplateId" parameterType="java.lang.Long" resultType="SurveyQuestionOptionCategoryVO">
+		SELECT
+		stq.`id`,stq.`title`,
+		stq.`type`, stq.`sort`,
+			GROUP_CONCAT(sqo.`id`) optionIdString,
+			GROUP_CONCAT(sqo.`option_content`) optionContent
+		FROM 
+			/*`material_survey_template` st
+		LEFT JOIN */
+			`material_survey_template_question` stq
+		/*ON
+			st.`id` = stq.`survey_id`*/
+		/*LEFT JOIN
+			`survey_question` sq 
+		ON 
+			sq.`id`= stq.`question_id`*/
+		LEFT JOIN 
+			`material_survey_template_question_option`sqo
+		ON 
+			sqo.`question_id`= stq.`id` and sqo.is_deleted = 0
+		<where>
+
+			<if test="templateId != null">
+				and stq.`survey_id`=#{templateId}
+			</if>
+		</where>
+		  GROUP BY 
+		  	stq.`id`
+	</select>
+	
+	<!-- 根据模版id获取问卷表标题和简介 -->
+	<select id="getSurveyTemplateGetVOById" parameterType="java.lang.Long" 
+	resultType="SurveyTemplateGetVO">
+		select s.title,s.subhead,s.intro from material_survey_template st
+		left join survey s on s.template_id = st.id 
+		where id = #{id};
+	</select>
+	
+	<!-- 模版表分页列表（同时查询分页数据和总条数） -->
+	<select id="listSurveyTemplateList" parameterType="PageParameter" resultType="SurveyTemplateListVO">
+		select 
+			stl.*,ppu.username,stp.survey_name,
+			ppu.realname,t.count 
+		from 
+			material_survey_template stl
+		left join
+			material_survey_type stp
+			on
+			stp.id=stl.type_id
+		left join 
+			pmph_user ppu on ppu.id=stl.user_id,
+		(
+			select 
+				count(*) count 
+			from 
+				material_survey_template stl
+			left join 
+				pmph_user ppu on ppu.id=stl.user_id 
+			where 
+				stl.is_deleted = false 
+		<!-- 下面是动态条件 -->
+		<if test="parameter !=null ">
+			<!-- 模版名称 -->
+			<if test="parameter.templateName != null and parameter.templateName != ''">
+				and stl.template_name like concat('%',#{parameter.templateName},'%')
+			</if>
+			<!-- 问卷创建日期 %H:%i:%s-->
+			<if test="parameter.startTime !=null and parameter.startTime !='' ">
+				and
+				stl.`gmt_create` &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d %H:%i:%s')
+
+			</if>
+			<if test="parameter.endTime !=null and parameter.endTime !='' ">
+				and
+				stl.`gmt_create` &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!-- 模板创建人(0=系统) -->
+			<if test="parameter.userId != null">
+				and s.user_id = #{parameter.userId}
+			</if>
+			<if test="parameter.username !=null and parameter.username!=''">
+				and (
+					ppu.username like concat('%',#{parameter.username},'%')
+				or
+					ppu.realname like concat('%',#{parameter.username},'%') )
+			</if>
+		</if>
+		) t 
+		where stl.is_deleted = false 
+		<!-- 下面是动态条件 -->
+		<if test="parameter !=null ">
+			<!-- 模版名称 -->
+			<if test="parameter.templateName != null and parameter.templateName != ''">
+				and stl.template_name like concat('%',#{parameter.templateName},'%')
+			</if>
+			<!-- 问卷创建日期 %H:%i:%s-->
+			<if test="parameter.startTime !=null and parameter.startTime !='' ">
+				and
+				stl.`gmt_create` &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d %H:%i:%s')
+
+			</if>
+			<if test="parameter.endTime !=null and parameter.endTime !='' ">
+				and
+				stl.`gmt_create` &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!-- 模板创建人(0=系统) -->
+			<if test="parameter.userId != null">
+				and s.user_id = #{parameter.userId}
+			</if>
+			<if test="parameter.username !=null and parameter.username!=''">
+				and (
+					ppu.username like concat('%',#{parameter.username},'%')
+				or
+					ppu.realname like concat('%',#{parameter.username},'%') )
+			</if>
+		</if>
+		group by stl.template_name desc 
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+	
+</mapper>

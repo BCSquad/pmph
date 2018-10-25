@@ -90,6 +90,7 @@
         ,e.position
         ,e.title
         ,e.email
+        ,e.address
         ,e.handphone
         ,e.org_id
         ,e.online_progress

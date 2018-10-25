@@ -41,6 +41,7 @@ public class ExpertationVO implements Serializable {
     private String	position	;	//	36	职务
     @ExcelHeader(header = "职称")
     private String	title	;	//	30	职称
+    @ExcelHeader(header = "联系地址")
     private String	address	;	//	50	联系地址
     private String	postcode	;	//	20	邮编
     @ExcelHeader(header = "手机")
