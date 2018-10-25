@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.dao;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.po.MaterialSurveyTemplate;
 import com.bc.pmpheep.back.po.SurveyTemplate;
 import com.bc.pmpheep.back.vo.SurveyQuestionOptionCategoryVO;
 import com.bc.pmpheep.back.vo.SurveyTemplateGetVO;
@@ -27,7 +28,7 @@ public interface MaterialSurveyTemplateDao {
      * @param SurveyTemplate 实体对象
      * @return 影响行数
      */
-    Integer addSurveyTemplate(SurveyTemplate surveyTemplate) throws CheckedServiceException;
+    Integer addSurveyTemplate(MaterialSurveyTemplate surveyTemplate) throws CheckedServiceException;
 
     /**
      * 逻辑删除SurveyTemplate通过主键id

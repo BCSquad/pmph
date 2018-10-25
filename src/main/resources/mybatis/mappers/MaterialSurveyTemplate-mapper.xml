@@ -5,23 +5,44 @@
 	<sql id="key">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="templateName != null and templateName != ''">
-				template_name,
+			<if test="id != null ">
+				id	,
 			</if>
-			<if test="intro != null and intro != ''">
-				intro,
+			<if test="templateName != null ">
+				template_name	,
 			</if>
-			<if test="typeId != null">
-				type_id,
+			<if test="sort != null ">
+				sort	,
 			</if>
-			<if test="sort != null">
-				sort,
+			<if test="userId != null ">
+				user_id	,
 			</if>
-			<if test="userId != null">
-				user_id,
+			<if test="isDeleted != null ">
+				is_deleted	,
 			</if>
-			<if test="isDeleted != null">
-				is_deleted,
+			<if test="isActive != null ">
+				is_active	,
+			</if>
+			<if test="gmtCreate != null ">
+				gmt_create	,
+			</if>
+			<if test="gmtUpdate != null ">
+				gmt_update	,
+			</if>
+			<if test="intro != null ">
+				intro	,
+			</if>
+			<if test="typeId != null ">
+				type_id	,
+			</if>
+			<if test="preVersionMaterialId != null ">
+				pre_version_material_id	,
+			</if>
+			<if test="preVersionMaterialName != null ">
+				pre_version_material_name	,
+			</if>
+			<if test="preVersionMaterialRound != null ">
+				pre_version_material_round	,
 			</if>
 		</trim>
 	</sql>
@@ -29,38 +50,102 @@
 	<sql id="value">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="templateName != null and templateName != ''">
-				#{templateName},
+			<if test="id != null ">
+				#{id}	,
 			</if>
-			<if test="intro != null and intro != ''">
-				#{intro},
+			<if test="templateName != null ">
+				#{templateName}	,
 			</if>
-			<if test="typeId != null">
-				#{typeId},
+			<if test="sort != null ">
+				#{sort}	,
 			</if>
-			<if test="sort != null">
-				#{sort},
+			<if test="userId != null ">
+				#{userId}	,
 			</if>
-			<if test="userId != null">
-				#{userId},
+			<if test="isDeleted != null ">
+				#{isDeleted}	,
 			</if>
-			<if test="isDeleted != null">
-				#{isDeleted},
+			<if test="isActive != null ">
+				#{isActive}	,
+			</if>
+			<if test="gmtCreate != null ">
+				#{gmtCreate}	,
+			</if>
+			<if test="gmtUpdate != null ">
+				#{gmtUpdate}	,
+			</if>
+			<if test="intro != null ">
+				#{intro}	,
+			</if>
+			<if test="typeId != null ">
+				#{typeId}	,
+			</if>
+			<if test="preVersionMaterialId != null ">
+				#{preVersionMaterialId}	,
+			</if>
+			<if test="preVersionMaterialName != null ">
+				#{preVersionMaterialName}	,
+			</if>
+			<if test="preVersionMaterialRound != null ">
+				#{preVersionMaterialRound}	,
+			</if>
+		</trim>
+	</sql>
+	<sql id="updates">
+		<trim suffixOverrides=",">
+			<if test="templateName != null ">
+				template_name	=	#{templateName}	,
+			</if>
+			<if test="sort != null ">
+				sort	=	#{sort}	,
+			</if>
+			<if test="userId != null ">
+				user_id	=	#{userId}	,
+			</if>
+			<if test="isDeleted != null ">
+				is_deleted	=	#{isDeleted}	,
+			</if>
+			<if test="isActive != null ">
+				is_active	=	#{isActive}	,
+			</if>
+			<if test="gmtCreate != null ">
+				gmt_create	=	#{gmtCreate}	,
+			</if>
+			<if test="gmtUpdate != null ">
+				gmt_update	=	#{gmtUpdate}	,
+			</if>
+			<if test="intro != null ">
+				intro	=	#{intro}	,
+			</if>
+			<if test="typeId != null ">
+				type_id	=	#{typeId}	,
+			</if>
+			<if test="preVersionMaterialId != null ">
+				pre_version_material_id	=	#{preVersionMaterialId}	,
+			</if>
+			<if test="preVersionMaterialName != null ">
+				pre_version_material_name	=	#{preVersionMaterialName}	,
+			</if>
+			<if test="preVersionMaterialRound != null ">
+				pre_version_material_round	=	#{preVersionMaterialRound}	,
 			</if>
 		</trim>
 	</sql>
 	<!-- 新增一个SurveyTemplate -->
-	<insert id="addSurveyTemplate" parameterType="SurveyTemplate">
-		<selectKey resultType="java.lang.Long" order="AFTER"
-			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+	<insert id="addSurveyTemplate" parameterType="MaterialSurveyTemplate" keyProperty="id" useGeneratedKeys="true">
+		<!--<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> &lt;!&ndash; order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER &ndash;&gt;
 			SELECT LAST_INSERT_ID()
-		</selectKey>
+		</selectKey>-->
 		insert into material_survey_template (
 		<include refid="key" />
 		)
 		values(
 		<include refid="value" />
-		);
+		)
+		on duplicate key update
+		<include refid="updates" />
+
 	</insert>
 	<!-- 逻辑删除SurveyTemplate通过主键id -->
 	<update id="deleteSurveyTemplateById" parameterType="java.lang.Long">
@@ -106,11 +191,11 @@
 			GROUP_CONCAT(sqo.`id`) optionIdString,
 			GROUP_CONCAT(sqo.`option_content`) optionContent
 		FROM 
-			`material_survey_template` st
-		LEFT JOIN 
+			/*`material_survey_template` st
+		LEFT JOIN */
 			`material_survey_template_question` stq
-		ON 
-			st.`id` = stq.`survey_id`
+		/*ON
+			st.`id` = stq.`survey_id`*/
 		/*LEFT JOIN
 			`survey_question` sq 
 		ON 
@@ -118,15 +203,15 @@
 		LEFT JOIN 
 			`material_survey_template_question_option`sqo
 		ON 
-			sqo.`question_id`= stq.`id`
-		WHERE 
-			st.`is_deleted` =FALSE
+			sqo.`question_id`= stq.`id` and sqo.is_deleted = 0
+		<where>
+
 			<if test="templateId != null">
-				AND 
-					st.`id`=#{templateId}
+				and stq.`survey_id`=#{templateId}
 			</if>
+		</where>
 		  GROUP BY 
-		  	stq.`question_id`
+		  	stq.`id`
 	</select>
 	
 	<!-- 根据模版id获取问卷表标题和简介 -->

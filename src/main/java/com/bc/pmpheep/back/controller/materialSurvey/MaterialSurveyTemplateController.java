@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.controller.materialSurvey;
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Material;
+import com.bc.pmpheep.back.po.MaterialSurveyTemplate;
 import com.bc.pmpheep.back.service.MaterialSurveyTemplateService;
 import com.bc.pmpheep.back.service.SurveyTemplateService;
 import com.bc.pmpheep.back.util.CookiesUtil;
@@ -82,7 +83,7 @@ public class MaterialSurveyTemplateController {
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增教材调研模版")
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public ResponseBean create(@RequestParam("questionAnswerJosn") String questionAnswerJosn,
-    SurveyTemplateVO surveyTemplateVO, HttpServletRequest request) {
+                               MaterialSurveyTemplate surveyTemplateVO, HttpServletRequest request) {
         String sessionId = CookiesUtil.getSessionId(request);
         return new ResponseBean(surveyTemplateService.addSurveyTemplateVO(questionAnswerJosn,
                                                                           surveyTemplateVO,
@@ -102,11 +103,10 @@ public class MaterialSurveyTemplateController {
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询模版下的所有问题")
     @RequestMapping(value = "/question/look", method = RequestMethod.GET)
-    public ResponseBean look(@RequestParam("surveyId") Long surveyId,
+    public ResponseBean look(/*@RequestParam("surveyId") Long surveyId,*/
     @RequestParam("templateId") Long templateId) {
         return new ResponseBean(
-                                surveyTemplateService.getSurveyTemplateQuestionByTemplateId(surveyId,
-                                                                                            templateId));
+                                surveyTemplateService.getSurveyTemplateQuestionByTemplateId(templateId));
     }
 
     /**

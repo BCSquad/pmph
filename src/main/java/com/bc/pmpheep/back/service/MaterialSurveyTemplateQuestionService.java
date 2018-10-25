@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.service;
 
+import com.bc.pmpheep.back.po.SurveyQuestion;
 import com.bc.pmpheep.back.po.SurveyTemplateQuestion;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -28,10 +29,10 @@ public interface MaterialSurveyTemplateQuestionService {
      * 
      * @author:tyc
      * @date:2017年12月22日下午16:55:11
-     * @param SurveyTemplateQuestion 实体对象
+     * @param surveyTemplateQuestion 实体对象
      * @return 影响行数
      */
-    SurveyTemplateQuestion addSurveyTemplateQuestion(SurveyTemplateQuestion surveyTemplateQuestion)
+    SurveyQuestion addSurveyTemplateQuestion(SurveyQuestion surveyTemplateQuestion)
     throws CheckedServiceException;
 
     /**
@@ -44,7 +45,7 @@ public interface MaterialSurveyTemplateQuestionService {
      * @return 影响行数
      * </pre>
      */
-    Integer batchInsertSurveyTemplateQuestion(List<SurveyTemplateQuestion> surveyTemplateQuestions)
+    Integer batchInsertSurveyTemplateQuestion(List<SurveyQuestion> surveyTemplateQuestions)
     throws CheckedServiceException;
 
     /**
@@ -52,7 +53,6 @@ public interface MaterialSurveyTemplateQuestionService {
      * 
      * @author:tyc
      * @date:2017年12月22日下午16:57:53
-     * @param SurveyTemplateQuestion
      * @return 影响行数
      */
     Integer deleteSurveyTemplateQuestionById(Long id) throws CheckedServiceException;
@@ -62,10 +62,9 @@ public interface MaterialSurveyTemplateQuestionService {
      * 
      * @author:tyc
      * @date:2017年12月22日下午17:00:23
-     * @param SurveyTemplateQuestion
      * @return 影响行数
      */
-    Integer updateSurveyTemplateQuestion(SurveyTemplateQuestion surveyTemplateQuestion)
+    Integer updateSurveyTemplateQuestion(SurveyQuestion surveyTemplateQuestion)
     throws CheckedServiceException;
 
     /**
@@ -73,10 +72,9 @@ public interface MaterialSurveyTemplateQuestionService {
      * 
      * @author:tyc
      * @date:2017年12月22日下午17:05:08
-     * @param SurveyTemplateQuestion
      * @return 影响行数
      */
-    SurveyTemplateQuestion getSurveyTemplateQuestionById(Long id) throws CheckedServiceException;
+    SurveyQuestion getSurveyTemplateQuestionById(Long id) throws CheckedServiceException;
 
     /**
      * 
@@ -88,7 +86,7 @@ public interface MaterialSurveyTemplateQuestionService {
      * @return SurveyTemplateQuestion 对象集合
      * </pre>
      */
-    List<SurveyTemplateQuestion> getSurveyTemplateQuestionByTemplateId(Long templateId)
+    List<SurveyQuestion> getSurveyTemplateQuestionByTemplateId(Long templateId)
     throws CheckedServiceException;
 
     /**

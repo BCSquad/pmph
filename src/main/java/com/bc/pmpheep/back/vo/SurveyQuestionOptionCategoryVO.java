@@ -26,6 +26,8 @@ import org.apache.ibatis.type.Alias;
 public class SurveyQuestionOptionCategoryVO implements Serializable {
     //
     private static final long serialVersionUID = -8571933838375288824L;
+
+    private Long id ;
     /**
      * 分类名称
      */
@@ -307,4 +309,35 @@ public class SurveyQuestionOptionCategoryVO implements Serializable {
 				+ ", isOther=" + isOther + ", remark=" + remark + "]";
 	}
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Boolean getAnswer() {
+        return isAnswer;
+    }
+
+    public void setAnswer(Boolean answer) {
+        isAnswer = answer;
+    }
+
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public Boolean getOther() {
+        return isOther;
+    }
+
+    public void setOther(Boolean other) {
+        isOther = other;
+    }
 }

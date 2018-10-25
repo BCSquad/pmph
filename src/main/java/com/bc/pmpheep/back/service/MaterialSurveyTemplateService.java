@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.service;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
+import com.bc.pmpheep.back.po.MaterialSurveyTemplate;
 import com.bc.pmpheep.back.po.SurveyTemplate;
 import com.bc.pmpheep.back.vo.SurveyTemplateListVO;
 import com.bc.pmpheep.back.vo.SurveyTemplateVO;
@@ -35,7 +36,7 @@ public interface MaterialSurveyTemplateService {
      * @param SurveyTemplate 实体对象
      * @return 影响行数
      */
-    SurveyTemplate addSurveyTemplate(SurveyTemplate surveyTemplate) throws CheckedServiceException;
+    MaterialSurveyTemplate addSurveyTemplate(MaterialSurveyTemplate surveyTemplate) throws CheckedServiceException;
 
     /**
      * 逻辑删除SurveyTemplate通过主键id
@@ -75,8 +76,8 @@ public interface MaterialSurveyTemplateService {
      * @param SurveyTemplateVO
      * @return 影响行数
      */
-    SurveyTemplate addSurveyTemplateVO(String questionAnswerJosn,
-                                       SurveyTemplateVO surveyTemplateVO, String sessionId) throws CheckedServiceException;
+    MaterialSurveyTemplate addSurveyTemplateVO(String questionAnswerJosn,
+                                       MaterialSurveyTemplate surveyTemplateVO, String sessionId) throws CheckedServiceException;
 
     /**
      *
@@ -89,7 +90,7 @@ public interface MaterialSurveyTemplateService {
      * @throws CheckedServiceException
      * </pre>
      */
-    Map<String, Object> getSurveyTemplateQuestionByTemplateId(Long surveyId, Long templateId)
+    Map<String, Object> getSurveyTemplateQuestionByTemplateId(Long templateId)
     throws CheckedServiceException;
 
     /**

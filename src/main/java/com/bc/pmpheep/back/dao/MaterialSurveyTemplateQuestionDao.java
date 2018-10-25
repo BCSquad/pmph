@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.dao;
 
-import com.bc.pmpheep.back.po.SurveyTemplateQuestion;
+import com.bc.pmpheep.back.po.SurveyQuestion;
+import com.bc.pmpheep.back.po.SurveyQuestion;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,10 +19,10 @@ public interface MaterialSurveyTemplateQuestionDao {
      * 
      * @author:tyc
      * @date:2017年12月20日下午17:08:22
-     * @param SurveyTemplateQuestion 实体对象
+     * @param surveyQuestion 实体对象
      * @return 影响行数
      */
-    Integer addSurveyTemplateQuestion(SurveyTemplateQuestion surveyTemplateQuestion);
+    Integer addSurveyTemplateQuestion(SurveyQuestion surveyQuestion);
 
     /**
      * 
@@ -33,14 +34,13 @@ public interface MaterialSurveyTemplateQuestionDao {
      * @return 影响行数
      * </pre>
      */
-    Integer batchInsertSurveyTemplateQuestion(List<SurveyTemplateQuestion> surveyTemplateQuestions);
+    Integer batchInsertSurveyTemplateQuestion(List<SurveyQuestion> surveyTemplateQuestions);
 
     /**
      * 删除SurveyTemplateQuestion通过主键id
      * 
      * @author:tyc
      * @date:2017年12月20日下午17:08:22
-     * @param SurveyTemplateQuestion
      * @return 影响行数
      */
     Integer deleteSurveyTemplateQuestionById(Long id);
@@ -50,20 +50,19 @@ public interface MaterialSurveyTemplateQuestionDao {
      * 
      * @author:tyc
      * @date:2017年12月20日下午17:08:22
-     * @param SurveyTemplateQuestion
+     * @param SurveyQuestion
      * @return 影响行数
      */
-    Integer updateSurveyTemplateQuestion(SurveyTemplateQuestion surveyTemplateQuestion);
+    Integer updateSurveyTemplateQuestion(SurveyQuestion SurveyQuestion);
 
     /**
      * 查找SurveyTemplateQuestion通过主键id
      * 
      * @author:tyc
      * @date:2017年12月20日下午17:08:22
-     * @param SurveyTemplateQuestion
      * @return 影响行数
      */
-    SurveyTemplateQuestion getSurveyTemplateQuestionById(Long id);
+    SurveyQuestion getSurveyTemplateQuestionById(Long id);
 
     /**
      * 
@@ -72,10 +71,10 @@ public interface MaterialSurveyTemplateQuestionDao {
      * 使用示范：
      *
      * @param templateId 模版ID
-     * @return SurveyTemplateQuestion 对象集合
+     * @return SurveyQuestion 对象集合
      * </pre>
      */
-    List<SurveyTemplateQuestion> getSurveyTemplateQuestionByTemplateId(Long templateId);
+    List<SurveyQuestion> getSurveyTemplateQuestionByTemplateId(Long templateId);
 
     /**
      * 

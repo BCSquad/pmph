@@ -1,60 +1,92 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.bc.pmpheep.back.dao.MaterialSurveyQuestionOptionDao">
+<mapper namespace="com.bc.pmpheep.back.dao.MaterialSurveyTemplateQuestionOptionDao">
 	<sql id="key">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="questionId != null">
-				question_id,
+			<if test="id != null ">
+				id	,
 			</if>
-			<if test="optionContent != null and optionContent !=''">
-				option_content,
+			<if test="questionId != null ">
+				question_id	,
 			</if>
-			<if test="isOther != null">
-				is_other,
+			<if test="optionContent != null ">
+				option_content	,
 			</if>
-			<if test="remark != null and remark !=''">
-				remark,
+			<if test="isOther != null ">
+				is_other	,
 			</if>
+			<if test="remark != null ">
+				remark	,
+			</if>
+
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
 	<sql id="value">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="questionId != null">
-				#{questionId},
+			<if test="id != null ">
+				#{id}	,
 			</if>
-			<if test="optionContent != null and optionContent !=''">
-				#{optionContent},
+			<if test="questionId != null ">
+				#{questionId}	,
 			</if>
-			<if test="isOther != null">
-				#{isOther},
+			<if test="optionContent != null ">
+				#{optionContent}	,
 			</if>
-			<if test="remark != null and remark !=''">
-				#{remark},
+			<if test="isOther != null ">
+				#{isOther}	,
+			</if>
+			<if test="remark != null ">
+				#{remark}	,
+			</if>
+		</trim>
+	</sql>
+	<sql id="duplicate_key_update">
+		<trim suffixOverrides=",">
+			<if test="id != null ">
+				id	=	values(id)	,
+			</if>
+			<if test="questionId != null ">
+				question_id	=	values(question_id)	,
+			</if>
+			<if test="optionContent != null ">
+				option_content	=	values(option_content)	,
+			</if>
+			<if test="isOther != null ">
+				is_other	=	values(is_other)	,
+			</if>
+			<if test="remark != null ">
+				remark	=	values(remark)	,
+			</if>
+			<if test="isDeleted != null ">
+				is_deleted	=	values(is_deleted)	,
 			</if>
 		</trim>
 	</sql>
 	
 	<!-- 新增一个SurveyQuestionOption -->
-	<insert id="addSurveyQuestionOption" parameterType="SurveyQuestionOption">
-		<selectKey resultType="java.lang.Long" order="AFTER"
-			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+	<insert id="addSurveyQuestionOption" parameterType="SurveyQuestionOption" keyProperty="id" useGeneratedKeys="true">
+		<!--<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> &lt;!&ndash; order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER &ndash;&gt;
 			SELECT LAST_INSERT_ID()
-		</selectKey>
-		insert into material_survey_question_option (
+		</selectKey>-->
+		insert into material_survey_template_question_option (
 		<include refid="key" />
 		)
 		values(
 		<include refid="value" />
-		) ;
+		)
+		on duplicate key update
+		<include refid="duplicate_key_update" />
+		;
 	</insert>
 	
 	<!-- 批量插入 -->
 	<insert id="batchInsertSurveyQuestionOption" parameterType="java.util.List">
-        insert into material_survey_question_option (question_id,option_content,is_other,remark)
+        insert into material_survey_template_question_option (question_id,option_content,is_other,remark)
         values
         <foreach collection="list" item="item" index="index" separator=",">
             (#{item.questionId}, #{item.optionContent},#{item.isOther},#{item.remark})
@@ -63,12 +95,12 @@
 	
 	<!-- 删除SurveyQuestionOption通过主键id -->
 	<delete id="deleteSurveyQuestionOptionById" parameterType="java.lang.Long">
-		delete from material_survey_question_option where id=#{id};
+		delete from material_survey_template_question_option where id=#{id};
 	</delete>
 	
 	<!-- 更新一个 SurveyOptions通过主键id -->
 	<update id="updateSurveyQuestionOption" parameterType="SurveyQuestionOption">
-		update material_survey_question_option
+		update material_survey_template_question_option
 		<set>
 			<if test="questionId != null">
 				question_id=#{questionId},
@@ -90,7 +122,7 @@
 	<!-- 批量更新一个 SurveyOptions-->
 	<update id="batchUpdateSurveyOption" parameterType="java.util.List">  
           <foreach collection="list" item="item" index="index" open="" close="" separator=";">  
-                update material_survey_question_option
+                update material_survey_template_question_option
 				<set>
 					<if test="questionId != null">
 						question_id=#{item.questionId},
@@ -111,17 +143,17 @@
 	
 	<!-- 查找SurveyQuestionOption通过主键id -->
 	<select id="getSurveyQuestionOptionById" parameterType="java.lang.Long" resultType="SurveyQuestionOption">
-		select * from material_survey_question_option where id=#{id};
+		select * from material_survey_template_question_option where id=#{id};
 	</select>
 	
 	<!-- 删除SurveyQuestionOption通过问题id -->
 	<delete id="deleteSurveyQuestionOptionByQuestionId" parameterType="java.lang.Long">
-		delete from material_survey_question_option where question_id=#{questionId};
+		delete from material_survey_template_question_option where question_id=#{questionId};
 	</delete>
 	
 	 <!-- 批量删SurveyQuestionOption通过问题id -->
     <delete id="batchDeleteSurveyQuestionOptionByQuestionIds" parameterType="java.util.List">
-       delete from material_survey_question_option where question_id in
+       delete from material_survey_template_question_option where question_id in
         <foreach collection="list" item="questionId" index="index" open="(" close=")" separator=",">
 			#{questionId}
 		</foreach>

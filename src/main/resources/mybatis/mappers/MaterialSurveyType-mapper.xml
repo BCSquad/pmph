@@ -31,7 +31,7 @@
 			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
 			SELECT LAST_INSERT_ID()
 		</selectKey>
-		insert into survey_type (
+		insert into material_survey_type (
 		<include refid="key" />
 		)
 		values(
@@ -40,11 +40,11 @@
 	</insert>
 	<!-- 删除SurveyType通过主键id -->
 	<delete id="deleteSurveyTypeById" parameterType="java.lang.Long">
-		delete from survey_type where id=#{id} ;
+		delete from material_survey_type where id=#{id} ;
 	</delete>
 	<!-- 更新一个 SurveyType通过主键id -->
 	<update id="updateSurveyType" parameterType="SurveyType">
-		update survey_type
+		update material_survey_type
 		<set>
 			<if test="surveyName != null and surveyName != ''">
 				survey_name=#{surveyName},
@@ -59,7 +59,7 @@
 	<!-- 查找SurveyType通过主键id -->
 	<select id="getSurveyTypeById" parameterType="java.lang.Long" 
 	resultType="SurveyType">
-		select * from survey_type where id=#{id};
+		select * from material_survey_type where id=#{id};
 	</select>
 	
 	<!-- 获取SurveyType集合 -->
@@ -67,7 +67,7 @@
 		SELECT 
 			id,survey_name,sort
 		FROM 
-			survey_type 
+			material_survey_type
 		ORDER BY 
 			sort ASC;
 	</select>
@@ -77,7 +77,7 @@
 		SELECT 
 			st.*
 		FROM 
-			survey_type st
+			material_survey_type st
 		WHERE 
 			st.`survey_name`= #{surveyName}
 		ORDER BY 

@@ -35,6 +35,11 @@ public class SurveyQuestion implements java.io.Serializable {
      * 主键
      */
     private Long              id;
+
+    /**
+     * 调研表id
+     */
+    private Long              surveyId;
     /**
      * 问题分类id
      */
@@ -280,4 +285,29 @@ public class SurveyQuestion implements java.io.Serializable {
                + ", gmtUpdate=" + gmtUpdate + "]";
     }
 
+
+
+    public Boolean getAnswer() {
+        return isAnswer;
+    }
+
+    public void setAnswer(Boolean answer) {
+        isAnswer = answer;
+    }
+
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public Long getSurveyId() {
+        return surveyId;
+    }
+
+    public void setSurveyId(Long surveyId) {
+        this.surveyId = surveyId;
+    }
 }

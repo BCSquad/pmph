@@ -188,11 +188,11 @@ public class MaterialSurveyServiceImpl implements MaterialSurveyService {
                                                                       typeId));// 更新模版表
 
         // 查询模版下的所有问题
-        List<SurveyTemplateQuestion> lists =
+        List<SurveyQuestion> lists =
         surveyTemplateQuestionService.getSurveyTemplateQuestionByTemplateId(templateId);
         List<Long> questionIdList = new ArrayList<Long>(lists.size());
-        for (SurveyTemplateQuestion surveyTemplateQuestion : lists) {
-            questionIdList.add(surveyTemplateQuestion.getQuestionId());
+        for (SurveyQuestion surveyTemplateQuestion : lists) {
+            questionIdList.add(surveyTemplateQuestion.getId());
         }
         // 删除模版问题中间表下模版对应的所有问题
         surveyTemplateQuestionService.deleteSurveyTemplateQuestionByTemplateId(templateId);
@@ -203,11 +203,11 @@ public class MaterialSurveyServiceImpl implements MaterialSurveyService {
         // 重新添加问题
         List<Long> newIds = this.addQuestionAndOption(SurveyQuestionListVO);
         // 模版问题中间表
-        List<SurveyTemplateQuestion> surveyTemplateQuestions =
-        new ArrayList<SurveyTemplateQuestion>(newIds.size());
-        for (Long questionId : newIds) {
-            surveyTemplateQuestions.add(new SurveyTemplateQuestion(templateId, questionId));
-        }
+        List<SurveyQuestion> surveyTemplateQuestions =
+        new ArrayList<SurveyQuestion>(newIds.size());
+        /*for (Long questionId : newIds) {
+            surveyTemplateQuestions.add(new SurveyQuestion(templateId, questionId));
+        }*/
         // 重新添加模版问题中间表
         count =
         surveyTemplateQuestionService.batchInsertSurveyTemplateQuestion(surveyTemplateQuestions);
