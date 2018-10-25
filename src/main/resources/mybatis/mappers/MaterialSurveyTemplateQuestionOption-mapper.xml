@@ -20,7 +20,9 @@
 			<if test="remark != null ">
 				remark	,
 			</if>
-
+			<if test="isDeleted != null ">
+				is_deleted	,
+			</if>
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
@@ -41,6 +43,9 @@
 			</if>
 			<if test="remark != null ">
 				#{remark}	,
+			</if>
+			<if test="isDeleted != null ">
+				#{isDeleted}	,
 			</if>
 		</trim>
 	</sql>
