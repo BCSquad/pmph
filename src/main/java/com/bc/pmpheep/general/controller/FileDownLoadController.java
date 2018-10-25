@@ -550,6 +550,7 @@ public class FileDownLoadController {
 			out.flush();
 			out.close();
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.warn("文件下载时出现IO异常： {}", e.getMessage());
 			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
 					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");

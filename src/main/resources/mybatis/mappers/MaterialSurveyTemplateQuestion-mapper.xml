@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.MaterialSurveyTemplateQuestionDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id != null ">
+				id	,
+			</if>
+			<if test="surveyId != null ">
+				survey_id	,
+			</if>
+			<if test="categoryId != null ">
+				category_id	,
+			</if>
+			<if test="title != null ">
+				title	,
+			</if>
+			<if test="type != null ">
+				type	,
+			</if>
+			<if test="sort != null ">
+				sort	,
+			</if>
+			<if test="direction != null ">
+				direction	,
+			</if>
+			<if test="isAnswer != null ">
+				is_answer	,
+			</if>
+			<if test="isDeleted != null ">
+				is_deleted	,
+			</if>
+			<if test="gmtCreate != null ">
+				gmt_create	,
+			</if>
+			<if test="gmtUpdate != null ">
+				gmt_update	,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id != null ">
+				#{id}	,
+			</if>
+			<if test="surveyId != null ">
+				#{surveyId}	,
+			</if>
+			<if test="categoryId != null ">
+				#{categoryId}	,
+			</if>
+			<if test="title != null ">
+				#{title}	,
+			</if>
+			<if test="type != null ">
+				#{type}	,
+			</if>
+			<if test="sort != null ">
+				#{sort}	,
+			</if>
+			<if test="direction != null ">
+				#{direction}	,
+			</if>
+			<if test="isAnswer != null ">
+				#{isAnswer}	,
+			</if>
+			<if test="isDeleted != null ">
+				#{isDeleted}	,
+			</if>
+			<if test="gmtCreate != null ">
+				#{gmtCreate}	,
+			</if>
+			<if test="gmtUpdate != null ">
+				#{gmtUpdate}	,
+			</if>
+		</trim>
+	</sql>
+	<sql id="updates">
+		<trim suffixOverrides=",">
+			<if test="id != null ">
+				id	=	#{id}	,
+			</if>
+			<if test="surveyId != null ">
+				survey_id	=	#{surveyId}	,
+			</if>
+			<if test="categoryId != null ">
+				category_id	=	#{categoryId}	,
+			</if>
+			<if test="title != null ">
+				title	=	#{title}	,
+			</if>
+			<if test="type != null ">
+				type	=	#{type}	,
+			</if>
+			<if test="sort != null ">
+				sort	=	#{sort}	,
+			</if>
+			<if test="direction != null ">
+				direction	=	#{direction}	,
+			</if>
+			<if test="isAnswer != null ">
+				is_answer	=	#{isAnswer}	,
+			</if>
+			<if test="isDeleted != null ">
+				is_deleted	=	#{isDeleted}	,
+			</if>
+			<if test="gmtCreate != null ">
+				gmt_create	=	#{gmtCreate}	,
+			</if>
+			<if test="gmtUpdate != null ">
+				gmt_update	=	#{gmtUpdate}	,
+			</if>
+		</trim>
+	</sql>
+	<sql id="duplicate_key_update">
+		<trim suffixOverrides=",">
+			<if test="surveyId != null ">
+				survey_id	=	values(survey_id)	,
+			</if>
+			<if test="categoryId != null ">
+				category_id	=	values(category_id)	,
+			</if>
+			<if test="title != null ">
+				title	=	values(title)	,
+			</if>
+			<if test="type != null ">
+				type	=	values(type)	,
+			</if>
+			<if test="sort != null ">
+				sort	=	values(sort)	,
+			</if>
+			<if test="direction != null ">
+				direction	=	values(direction)	,
+			</if>
+			<if test="isAnswer != null ">
+				is_answer	=	values(is_answer)	,
+			</if>
+			<if test="isDeleted != null ">
+				is_deleted	=	values(is_deleted)	,
+			</if>
+			<if test="gmtCreate != null ">
+				gmt_create	=	values(gmt_create)	,
+			</if>
+			<if test="gmtUpdate != null ">
+				gmt_update	=	values(gmt_update)	,
+			</if>
+		</trim>
+	</sql>
+	<!-- 新增一个SurveyTemplateQuestion -->
+	<insert id="addSurveyTemplateQuestion" parameterType="SurveyQuestion" keyProperty="id" useGeneratedKeys="true">
+		<!--<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> &lt;!&ndash; order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER &ndash;&gt;
+			SELECT LAST_INSERT_ID()
+		</selectKey>-->
+		insert into material_survey_template_question (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		)
+		on duplicate key update
+		<include refid="duplicate_key_update" />
+		;
+	</insert>
+	
+	<!-- 批量插入SurveyTemplateQuestion -->
+	<insert id="batchInsertSurveyTemplateQuestion" parameterType="java.util.List">
+        insert into material_survey_template_question (
+		<include refid="key" />
+		)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+			<include refid="value" />
+			)
+        </foreach>
+		on duplicate key update
+			<include refid="duplicate_key_update" />
+    </insert>
+    
+	<!-- 删除SurveyTemplateQuestion通过主键id -->
+	<delete id="deleteSurveyTemplateQuestionById" parameterType="java.lang.Long">
+		delete from material_survey_template_question where id=#{id};
+	</delete>
+	
+	<!-- 更新一个 SurveyTemplateQuestion通过主键id -->
+	<update id="updateSurveyTemplateQuestion" parameterType="SurveyQuestion">
+		update material_survey_template_question
+		<set>
+			<include refid="updates" />
+		</set>
+		where
+		id=#{id} ;
+	</update>
+	
+	<!-- 查找SurveyTemplateQuestion通过主键id -->
+	<select id="getSurveyTemplateQuestionById" parameterType="java.lang.Long" resultType="SurveyQuestion">
+		select * from material_survey_template_question where id=#{id};
+	</select>
+	
+	<!--查找SurveyTemplateQuestion通过templateId  -->
+	<select id="getSurveyTemplateQuestionByTemplateId" parameterType="java.lang.Long" resultType="SurveyQuestion">
+		select * from material_survey_template_question where survey_id = #{templateId};
+	</select>
+	
+	<!-- 删除SurveyTemplateQuestion通过TemplateId -->
+	<delete id="deleteSurveyTemplateQuestionByTemplateId" parameterType="java.lang.Long">
+		delete from material_survey_template_question where survey_id = #{templateId};
+	</delete>
+	
+</mapper>

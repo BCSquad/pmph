@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.MaterialSurveyQuestionAnswerDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="surveyId != null">
+				survey_id,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="questionId != null">
+				question_id,
+			</if>
+			<if test="optionId != null">
+				option_id,
+			</if>
+			<if test="optionContent != null and optionContent !=''">
+				option_content,
+			</if>
+			<if test="attachment != null and attachment !=''">
+				attachment,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="surveyId != null">
+				#{surveyId},
+			</if>
+			<if test="userId != null">
+				#{userId},
+			</if>
+			<if test="questionId != null">
+				#{questionId},
+			</if>
+			<if test="optionId != null">
+				#{optionId},
+			</if>
+			<if test="optionContent != null and optionContent !=''">
+				#{optionContent},
+			</if>
+			<if test="attachment != null and attachment !=''">
+				#{attachment},
+			</if>
+		</trim>
+	</sql>
+	<!-- 新增一个SurveyQuestionAnswer -->
+	<insert id="addSurveyQuestionAnswer" parameterType="SurveyQuestionAnswer">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into survey_question_answer (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		);
+	</insert>
+	
+	<!-- 批量新增SurveyQuestionAnswer -->
+	<insert id="batchAddSurveyQuestionAnswer" parameterType="java.util.List">
+		insert into survey_question_answer (user_id,question_id,option_id,option_content,attachment)
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+            (#{item.userId}, #{item.questionId},#{item.optionId},#{item.optionContent},#{item.attachment})
+        </foreach>
+	</insert>
+	
+	<!-- 删除SurveyQuestionAnswer通过主键id -->
+	<delete id="deleteSurveyQuestionAnswerById" parameterType="java.lang.Long">
+		delete from survey_question_answer where id=#{id};
+	</delete>
+	<!-- 更新一个 SurveyQuestionAnswer通过主键id -->
+	<update id="updateSurveyQuestionAnswer" parameterType="SurveyQuestionAnswer">
+		update survey_question_answer
+		<set>
+			<if test="id != null">
+				id=#{id},
+			</if>
+			<if test="surveyId != null">
+				survey_id = #{surveyId},
+			</if>
+			<if test="userId != null">
+				user_id=#{userId},
+			</if>
+			<if test="questionId != null">
+				question_id=#{questionId},
+			</if>
+			<if test="optionId != null">
+				option_id=#{optionId},
+			</if>
+			<if test="optionContent != null and optionContent !=''">
+				option_content=#{optionContent},
+			</if>
+			<if test="attachment != null and attachment !=''">
+				attachment=#{attachment},
+			</if>
+		</set>
+		where
+		id=#{id};
+	</update>
+	<!-- 查找SurveyQuestionAnswer通过主键id -->
+	<select id="getSurveyQuestionAnswerById" parameterType="java.lang.Long" resultType="SurveyQuestionAnswer">
+		select * from survey_question_answer where id=#{id};
+	</select>
+	
+	<!-- 问卷回收列表 -->
+	<select id="listSurveyRecovery" parameterType="PageParameter" resultType="SurveyRecoveryVO">
+		SELECT
+		s.`title`,
+		wu.`realname`,
+		org.`org_name`,
+		sqa.`gmt_create`,
+		sqa.`survey_id`,
+		sqa.`user_id`,
+		t.`count`
+		FROM
+		`survey_question_answer` sqa
+		JOIN `survey` s ON sqa.`survey_id` = s.`id` and s.is_deleted = 0
+		JOIN `writer_user` wu ON sqa.`user_id` = wu.`id`
+		JOIN `org` org ON wu.`org_id` = org.`id`,
+		(
+		SELECT
+		count(a.`count`) `count`
+		FROM
+		(
+		SELECT
+		count(*) `count`
+		FROM
+		`survey_question_answer` sqa
+		JOIN `survey` s ON sqa.`survey_id` = s.`id`
+		JOIN `writer_user` wu ON sqa.`user_id` = wu.`id`
+		JOIN `org` org ON wu.`org_id` = org.`id`
+	    		<where>
+	    			<if test="parameter.title != null and parameter.title != ''">
+							s.`title` like concat('%',#{parameter.title},'%')
+					</if>
+					<if test="parameter.userName !=null and parameter.userName!=''">
+						and 
+							wu.`realname` like concat('%',#{parameter.userName},'%')
+					</if>
+	    		</where>
+	    		GROUP BY s.`title`,wu.`realname`
+    		)a)t
+  		<where>
+	    	<if test="parameter.title != null and parameter.title != ''">
+				s.`title` like concat('%',#{parameter.title},'%')
+			</if>
+			<if test="parameter.userName !=null and parameter.userName!=''">
+				and 
+					wu.`realname` like concat('%',#{parameter.userName},'%')
+			</if>
+	    </where>
+		GROUP BY 
+			s.`title`,wu.`realname`
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+	
+	<!-- 问卷回收列表详情 -->
+	<select id="listSurveyQuestionAnswerBySurveyId" parameterType="java.util.Map" resultType="SurveyQuestionAnswerListVO">
+		SELECT 
+			sq.`title`,
+			sqa.`question_id`,
+  			sqa.`survey_id`,
+		   	GROUP_CONCAT(sqa.`option_id`) option_id,
+		   	GROUP_CONCAT(sqo.`option_content`) oneOrManyOptionContent,
+		   	sqa.`option_content` noteOptionContent 
+		FROM
+		 	`survey_question_answer` sqa
+		JOIN 
+			`survey_question` sq 
+		ON 
+			sqa.`question_id` = sq.`id` 
+		LEFT JOIN 
+			`survey_question_option` sqo
+		ON 
+			sqa.`option_id`= sqo.`id`
+		<where>
+			<if test="surveyId != null">
+				sqa.`survey_id` = #{surveyId}
+			</if>
+			<if test="userId != null">
+				AND
+					sqa.`user_id`= #{userId}
+			</if>
+		</where>
+		GROUP BY 
+			sq.`title`
+		ORDER BY 
+			sq.`id` ASC 
+	</select>
+	
+	<!-- 问卷结果统计列表 -->
+	<select id="listSurveyQuestionAnswer" parameterType="PageParameter" resultType="SurveyQuestionAnswerCountsVO">
+		SELECT 
+		    s.`id` surveyId,
+		    s.`title` surveyTitle,
+		    s.`begin_date` startDate,
+		    s.`end_date`,
+		    st.`survey_name`,
+		    s.`intro`,
+		    COUNT(DISTINCT sqa.`user_id`) surveyUsers,
+		    pu.`realname`,
+		    t.count
+		 FROM
+		   `survey_target` sta
+		 JOIN 
+		    `survey_question_answer` sqa 
+		 ON 
+		 	 sta.`survey_id` = sqa.`survey_id`
+		 JOIN 
+		 	`survey` s 
+		 ON 
+		 	 sqa.`survey_id` = s.`id` and s.is_deleted = 0
+		 JOIN 
+		 	`survey_type` st 
+		 ON 
+		 	 s.`type_id` = st.`id`
+		 JOIN 
+		 	 `pmph_user` pu ON pu.`id`= sta.`user_id`,
+		 (
+		 	SELECT 
+			  COUNT(DISTINCT sqa.`user_id`) `count`
+			FROM
+			  `survey_target` sta 
+			  JOIN `survey_question_answer` sqa 
+			    ON sta.`survey_id` = sqa.`survey_id` 
+			  JOIN `survey` s 
+			    ON sqa.`survey_id` = s.`id` 
+			  JOIN `survey_type` st 
+			    ON s.`type_id` = st.`id` 
+			  JOIN `pmph_user` pu 
+			    ON pu.`id` = sta.`user_id`
+			  <where>
+				  	<if test="parameter.surveyTitle != null and parameter.surveyTitle != ''">
+						s.`title` like concat('%',#{parameter.surveyTitle},'%')
+					</if>
+			  </where>
+		 )t
+		 <where>
+			  	<if test="parameter.surveyTitle != null and parameter.surveyTitle != ''">
+						s.`title` like concat('%',#{parameter.surveyTitle},'%')
+				</if>
+		 </where>
+		 GROUP BY 
+		 	  sqa.`survey_id`
+		 <if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+	
+	<!-- 问卷结果统计详情 -->
+	<select id="getSurveyQuestionAnswerCounts" parameterType="SurveyQuestionAnswerCountsVO" resultType="SurveyQuestionAnswerCountsVO">
+		SELECT 
+		  c.id questionId,
+		  c.title,
+		  c.type questionType,
+		  GROUP_CONCAT(c.option_id)optionId,
+		  GROUP_CONCAT(c.option_content)optionContent,
+		  GROUP_CONCAT(c.counts) optionCount,
+		  SUM(c.counts) questionSum
+		FROM
+		  (SELECT 
+		    a.id,
+		    a.title,
+		    a.type,
+		    a.option_id,
+		    a.option_content,
+		    COUNT(b.optId) counts 
+		  FROM(
+		  	SELECT 
+		    	sq.`id`,
+		      	sq.`title`,
+		      	sq.`type`,
+		      	sqo.`id` option_id,
+		      	sqo.`option_content` 
+		    FROM
+		      	`survey_question` sq 
+		    JOIN 
+		    	`survey_question_option` sqo 
+		    ON 
+		    	sq.`id` = sqo.`question_id`
+		    JOIN 
+		    	`survey_template_question` stq 
+        	ON 
+        		sq.`id` = stq.`question_id` 
+      		JOIN 
+      			`survey` s 
+        	ON 
+        		stq.`template_id` = s.`template_id` 
+        		<where>
+        			<if test="surveyId !=null ">
+        				s.`id`=#{surveyId}
+        			</if>
+        		</where>
+		    ORDER BY 
+		    	sq.id ASC
+		   ) a 
+    		LEFT JOIN (
+    			SELECT 
+			        sqa.`question_id`,
+			        sqa.`option_id` optId,
+			        sqa.`option_content` optCont 
+			    FROM
+        			`survey_question_answer` sqa
+        	) b 
+	      	ON 
+	      		a.id = b.question_id 
+	      	AND 
+	      		a.option_id = b.optId 
+	  		GROUP BY 
+	  			a.option_content
+	  		ORDER BY 
+	  			a.id ASC,
+	    		a.option_id ASC
+	    ) c 
+		GROUP BY 
+			c.title
+	</select>
+	
+	<!-- 填空题统计 -->
+	<select id="listFillQuestionCounts" parameterType="java.lang.Long" resultType="SurveyQuestionFillVO">
+		SELECT 
+		  sq.`id` questionId,
+		  sqa.`survey_id`,
+		  sq.`title` questionName,
+		  sq.`type`questionType,
+		  COUNT(sqa.`user_id`) count
+		FROM
+		  `survey_question_answer` sqa 
+		JOIN 
+			`survey_question` sq 
+		ON 
+			sqa.`question_id` = sq.`id` 
+		<where>
+			sq.`type` IN (4,5) 
+			<if test="surveyId != null">
+				AND 
+					sqa.`survey_id` = #{surveyId}
+			</if>
+		</where>
+		GROUP BY 
+			sq.`title`
+		ORDER BY 
+			sq.`sort` 
+	</select>
+	
+	<!-- 填空题详情 -->
+	<select id="listFillQuestion" parameterType="PageParameter" resultType="SurveyQuestionFillVO">
+		SELECT 
+		  	sq.`title` questionName,
+		  	sqa.`option_content`,
+		  	DATE_FORMAT(sqa.`gmt_create`, '%Y-%c-%d %h:%i:%s') gmt_create,
+		  	wu.`realname`,
+		  	t.count
+		FROM
+		  	`survey_question_answer` sqa 
+		JOIN 
+			`survey_question` sq 
+		ON 
+			sqa.`question_id` = sq.`id` 
+		JOIN 
+			`writer_user` wu
+		ON 
+			sqa.`user_id` = wu.`id`,
+		(
+			SELECT 
+			  	count(*) count
+			FROM
+			  	`survey_question_answer` sqa 
+			JOIN 
+				`survey_question` sq 
+			ON 
+				sqa.`question_id` = sq.`id` 
+			JOIN 
+				`writer_user` wu
+			ON 
+				sqa.`user_id` = wu.`id`
+			<where>
+				sq.`type` IN (4, 5) 
+			<if test="parameter.surveyId !=null ">
+				AND
+					sqa.`survey_id`=#{parameter.surveyId}
+			</if>
+			<if test="parameter.questionId !=null ">
+				AND
+					sqa.`question_id`=#{parameter.questionId}
+			</if>
+		</where>
+		)t
+		<where>
+			sq.`type` IN (4, 5) 
+			<if test="parameter.surveyId !=null ">
+				AND
+					sqa.`survey_id`=#{parameter.surveyId}
+			</if>
+			<if test="parameter.questionId !=null ">
+				AND
+					sqa.`question_id`=#{parameter.questionId}
+			</if>
+		</where>
+		ORDER BY sq.`sort` 
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+	
+	<!-- 根据问题ID查询问卷已回答人 -->
+	<select id="getUserIdBySurveyId" parameterType="java.lang.Long" resultType="java.lang.Long">
+		select t.`user_id` from `survey_question_answer` t where t.`survey_id`=#{surveyId} GROUP BY t.`user_id`;
+	</select>
+	
+</mapper>
