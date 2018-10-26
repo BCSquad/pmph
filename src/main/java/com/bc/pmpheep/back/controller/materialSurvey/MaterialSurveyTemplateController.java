@@ -73,8 +73,6 @@ public class MaterialSurveyTemplateController {
      * 功能描述：教材调研模版添加
      * 使用示范：
      *
-     * @param surveyId 教材调研表Id
-     * @param orgIds 学校集合
      * @param request
      * @return 影响行数
      * </pre>
@@ -83,9 +81,13 @@ public class MaterialSurveyTemplateController {
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增教材调研模版")
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public ResponseBean create(@RequestParam("questionAnswerJosn") String questionAnswerJosn,
+                               @RequestParam("del_question")String del_question,
+                               @RequestParam("del_question_option")String del_question_option,
                                MaterialSurveyTemplate surveyTemplateVO, HttpServletRequest request) {
         String sessionId = CookiesUtil.getSessionId(request);
         return new ResponseBean(surveyTemplateService.addSurveyTemplateVO(questionAnswerJosn,
+                                                                        del_question,
+                                                                        del_question_option,
                                                                           surveyTemplateVO,
                                                                           sessionId));
     }

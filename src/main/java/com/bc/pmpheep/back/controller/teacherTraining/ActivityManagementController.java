@@ -57,6 +57,12 @@ public class ActivityManagementController {
     private static final String BUSSINESS_TYPE = "活动管理";
 
 
+    /**
+     * 功能描述:更新活动的状态
+     *
+     * @param request
+     * @throws IOException
+     */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "更新活动状态")
     @RequestMapping(value = "/updateActivityStatus", method = RequestMethod.GET)
@@ -70,28 +76,43 @@ public class ActivityManagementController {
         activity.setGmtUpdate(DateUtil.getCurrentTime());
         activityManagementService.setActivityStatus(activity);
     }
+
+    /**
+     * 功能描述:置顶活动,取消置顶
+     *
+     * @param request
+     * @author ZZ
+     */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "更新置顶")
     @RequestMapping(value = "/updateSetTop", method = RequestMethod.GET)
-    public void setTop( HttpServletRequest request) throws IOException {
+    public void setTop(HttpServletRequest request) {
         Boolean isSetTop = Boolean.parseBoolean(request.getParameter("isSetTop"));
         Long id = Long.parseLong(request.getParameter("id"));
         Activity activity = new Activity();
         activity.setId(id);
         activity.setIsSetTop(isSetTop);
         activity.setGmtUpdate(DateUtil.getCurrentTime());
-        if(isSetTop){
+        if (isSetTop) {
             activity.setGmtSetTop(DateUtil.getCurrentTime());
-        }else{
+        } else {
             activity.setGmtSetTop(null);
         }
-
-        String sessionId = CookiesUtil.getSessionId(request);
-
         activityManagementService.setActivitySetTop(activity);
     }
 
 
+    /**
+     * 功能描述:查询活动列表
+     *
+     * @param pageNumber
+     * @param pageSize
+     * @param activityVO
+     * @param request
+     * @return
+     * @throws UnsupportedEncodingException
+     * @author ZZ
+     */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询活动管理列表")
     @RequestMapping(value = "/getActivityList", method = RequestMethod.GET)
@@ -99,9 +120,9 @@ public class ActivityManagementController {
             @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
             @RequestParam(name = "pageSize") Integer pageSize, ActivityVO activityVO,
             HttpServletRequest request) throws UnsupportedEncodingException {
-      String activityName = activityVO.getActivityName();
-        if(activityName!=null){
-            String str  =activityName;
+        String activityName = activityVO.getActivityName();
+        if (activityName != null) {
+            String str = activityName;
             byte[] bytes = str.getBytes("ISO-8859-1");
             activityVO.setActivityName(new String(bytes, "utf-8"));
 
@@ -112,6 +133,13 @@ public class ActivityManagementController {
         return new ResponseBean(activityManagementService.listActivity(pageParameter, sessionId));
     }
 
+    /**
+     * 功能描述:根据id查询活动的内容
+     *
+     * @param id
+     * @return
+     * @author ZZ
+     */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询活动详情")
     @RequestMapping(value = "/getActivity/{id}/search", method = RequestMethod.GET)
@@ -125,7 +153,7 @@ public class ActivityManagementController {
     public ResponseBean newActivity(HttpServletRequest request) {
         String sessionId = CookiesUtil.getSessionId(request);
         String imgFile = request.getParameter("imgFile");
-        String content=request.getParameter("content");
+        String content = request.getParameter("content");
         Activity activity = parseActivity(request);
         if (StringUtil.notEmpty(imgFile)) {
             activity.setCover(imgFile);
@@ -135,8 +163,12 @@ public class ActivityManagementController {
                 request));
     }
 
-
-
+    /**
+     * 功能描述: 更新活动信息
+     *
+     * @param request
+     * @return
+     */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改活动")
     @RequestMapping(value = "/updateActivity", method = RequestMethod.PUT)
@@ -145,8 +177,8 @@ public class ActivityManagementController {
         String sessionId = CookiesUtil.getSessionId(request);
         Activity activity = parseActivity(request);
         String imgFile = request.getParameter("imgFile");
-        if(StringUtil.notEmpty(imgFile)){
-            if(!imgFile.equals(activity.getCover())){
+        if (StringUtil.notEmpty(imgFile)) {
+            if (!imgFile.equals(activity.getCover())) {
                 activity.setCover(imgFile);
             }
         }
@@ -156,22 +188,28 @@ public class ActivityManagementController {
 
     }
 
-
+    /**
+     * 功能描述 :查询教材列表
+     * @param request
+     * @param pageSize
+     * @param pageNumber
+     * @param isMy
+     * @param state
+     * @param materialName
+     * @param contactUserName
+     * @return
+     * @throws UnsupportedEncodingException
+     */
     @ResponseBody
-    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询教材公告列表")
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询教材列表")
     @RequestMapping(value = "/getMaterialist", method = RequestMethod.GET)
     public ResponseBean list(HttpServletRequest request, Integer pageSize, Integer pageNumber, Boolean isMy,
                              String state, String materialName, String contactUserName) throws UnsupportedEncodingException {
-        //state 中文乱码
-	/*	String str=request.getParameter("state");
-		byte[] bytes=str.getBytes("ISO-8859-1");
-		String state=new String(bytes,"utf-8");*/
-	if(StringUtil.notEmpty(request.getParameter("materialName"))){
-        String str = request.getParameter("materialName");
-        byte[] bytes = str.getBytes("ISO-8859-1");
-        materialName = new String(bytes, "utf-8");
-    }
-
+        if (StringUtil.notEmpty(request.getParameter("materialName"))) {
+            String str = request.getParameter("materialName");
+            byte[] bytes = str.getBytes("ISO-8859-1");
+            materialName = new String(bytes, "utf-8");
+        }
         String sessionId = CookiesUtil.getSessionId(request);
         PageParameter<MaterialListVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
         MaterialListVO materialListVO = new MaterialListVO();
@@ -184,6 +222,14 @@ public class ActivityManagementController {
         return new ResponseBean(materialService.listMaterials(pageParameter, sessionId));
     }
 
+    /**
+     * 功能描述:查询信息快报列表
+     * @param pageNumber
+     * @param pageSize
+     * @param cmsContentVO
+     * @param request
+     * @return
+     */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询信息快报列表")
     @RequestMapping(value = "/getLetters", method = RequestMethod.GET)
@@ -206,7 +252,13 @@ public class ActivityManagementController {
         return new ResponseBean(cmsContentService.listCmsContent(pageParameter, sessionId));
     }
 
-     public Activity parseActivity(HttpServletRequest request) {
+
+    /**
+     * 功能描述:解析活动对象
+     * @param request
+     * @return
+     */
+    public Activity parseActivity(HttpServletRequest request) {
         Activity activity = new Activity();
         String id = request.getParameter("id");
         String gmtSetTop = request.getParameter("gmtSetTop");
@@ -215,21 +267,20 @@ public class ActivityManagementController {
         String activityName = request.getParameter("activityName");
         String cover = request.getParameter("cover");
         String infoExpressCmsId = request.getParameter("infoExpressCmsId");
-         String activityDescCmsId = request.getParameter("activityDescCmsId");
+        String activityDescCmsId = request.getParameter("activityDescCmsId");
         String isSetTop = request.getParameter("isSetTop");
         String materialId = request.getParameter("materialId");
         String status = request.getParameter("status");
-
-         if (StringUtil.notEmpty(gmtSetTop)&& ObjectUtil.notNull(gmtSetTop)){
-             activity.setGmtSetTop(new Timestamp(Long.parseLong(gmtSetTop)));
-         }
-         if (StringUtil.notEmpty(activityDate)&& ObjectUtil.notNull(activityDate)){
-             activity.setActivityDate(new Timestamp(Long.parseLong(activityDate)));
-         }
-         if (StringUtil.notEmpty(gmtUpdate)&& ObjectUtil.notNull(gmtUpdate)){
-             activity.setGmtUpdate(new Timestamp(Long.parseLong(gmtUpdate)));
-         }
-        if (StringUtil.notEmpty(id)&&ObjectUtil.notNull(id)){
+        if (StringUtil.notEmpty(gmtSetTop) && ObjectUtil.notNull(gmtSetTop)) {
+            activity.setGmtSetTop(new Timestamp(Long.parseLong(gmtSetTop)));
+        }
+        if (StringUtil.notEmpty(activityDate) && ObjectUtil.notNull(activityDate)) {
+            activity.setActivityDate(new Timestamp(Long.parseLong(activityDate)));
+        }
+        if (StringUtil.notEmpty(gmtUpdate) && ObjectUtil.notNull(gmtUpdate)) {
+            activity.setGmtUpdate(new Timestamp(Long.parseLong(gmtUpdate)));
+        }
+        if (StringUtil.notEmpty(id) && ObjectUtil.notNull(id)) {
             activity.setId(Long.parseLong(id));
         }
 
@@ -239,19 +290,19 @@ public class ActivityManagementController {
         if (StringUtil.notEmpty(cover)) {
             activity.setCover(cover);
         }
-        if (StringUtil.notEmpty(infoExpressCmsId)&& ObjectUtil.notNull(infoExpressCmsId)) {
+        if (StringUtil.notEmpty(infoExpressCmsId) && ObjectUtil.notNull(infoExpressCmsId)) {
             activity.setInfoExpressCmsId(Long.parseLong(infoExpressCmsId));
         }
-         if (StringUtil.notEmpty(activityDescCmsId)) {
-             activity.setActivityDescCmsId(activityDescCmsId);
-         }
-        if (StringUtil.notEmpty(isSetTop)&& ObjectUtil.notNull(isSetTop)) {
+        if (StringUtil.notEmpty(activityDescCmsId)) {
+            activity.setActivityDescCmsId(activityDescCmsId);
+        }
+        if (StringUtil.notEmpty(isSetTop) && ObjectUtil.notNull(isSetTop)) {
             activity.setIsSetTop(Boolean.parseBoolean(isSetTop));
         }
         if (StringUtil.notEmpty(materialId)) {
             activity.setMaterialId(materialId);
         }
-        if (StringUtil.notEmpty(status)&& ObjectUtil.notNull(status)) {
+        if (StringUtil.notEmpty(status) && ObjectUtil.notNull(status)) {
             activity.setStatus(Integer.parseInt(status));
         }
         return activity;

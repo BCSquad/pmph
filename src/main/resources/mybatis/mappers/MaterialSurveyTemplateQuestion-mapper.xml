@@ -82,37 +82,37 @@
 	<sql id="updates">
 		<trim suffixOverrides=",">
 			<if test="id != null ">
-				id	=	#{id}	,
+				id	=	values(id)	,
 			</if>
 			<if test="surveyId != null ">
-				survey_id	=	#{surveyId}	,
+				survey_id	=	values(survey_id)	,
 			</if>
 			<if test="categoryId != null ">
-				category_id	=	#{categoryId}	,
+				category_id	=	values(category_id)	,
 			</if>
 			<if test="title != null ">
-				title	=	#{title}	,
+				title	=	values(title)	,
 			</if>
 			<if test="type != null ">
-				type	=	#{type}	,
+				type	=	values(type)	,
 			</if>
 			<if test="sort != null ">
-				sort	=	#{sort}	,
+				sort	=	values(sort)	,
 			</if>
 			<if test="direction != null ">
-				direction	=	#{direction}	,
+				direction	=	values(direction)	,
 			</if>
 			<if test="isAnswer != null ">
-				is_answer	=	#{isAnswer}	,
+				is_answer	=	values(is_answer)	,
 			</if>
 			<if test="isDeleted != null ">
-				is_deleted	=	#{isDeleted}	,
+				is_deleted	=	values(is_deleted)	,
 			</if>
 			<if test="gmtCreate != null ">
-				gmt_create	=	#{gmtCreate}	,
+				gmt_create	=	values(gmt_create)	,
 			</if>
 			<if test="gmtUpdate != null ">
-				gmt_update	=	#{gmtUpdate}	,
+				gmt_update	=	values(gmt_update)	,
 			</if>
 		</trim>
 	</sql>
@@ -170,16 +170,17 @@
 	<!-- 批量插入SurveyTemplateQuestion -->
 	<insert id="batchInsertSurveyTemplateQuestion" parameterType="java.util.List">
         insert into material_survey_template_question (
-		<include refid="key" />
+		id,title,type,direction,sort,is_deleted,survey_id
 		)
         values
         <foreach collection="list" item="item" index="index" separator=",">
             (
-			<include refid="value" />
+			#{item.id},#{item.title},#{item.type},#{item.direction},#{item.sort},#{item.isDeleted},#{item.surveyId}
 			)
         </foreach>
 		on duplicate key update
-			<include refid="duplicate_key_update" />
+			title = VALUES(title),type = VALUES(type),direction=VALUES(direction),sort=VALUES(sort)
+			,is_deleted=VALUES(is_deleted)
     </insert>
     
 	<!-- 删除SurveyTemplateQuestion通过主键id -->
