@@ -188,6 +188,7 @@
 		SELECT
 		stq.`id`,stq.`title`,
 		stq.`type`, stq.`sort`,
+		stq.direction,
 			GROUP_CONCAT(sqo.`id`) optionIdString,
 			GROUP_CONCAT(sqo.`option_content`) optionContent
 		FROM 

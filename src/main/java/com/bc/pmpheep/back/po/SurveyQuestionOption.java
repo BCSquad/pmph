@@ -105,11 +105,11 @@ public class SurveyQuestionOption implements java.io.Serializable {
         this.remark = remark;
     }
 
-    @Override
+    /*@Override
     public String toString() {
         return "SurveyQuestionOption [id=" + id + ", questionId=" + questionId + ", optionContent="
                + optionContent + ", isOther=" + isOther + ", remark=" + remark + "]";
-    }
+    }*/
 
     public Boolean getOther() {
         return isOther;
@@ -125,5 +125,25 @@ public class SurveyQuestionOption implements java.io.Serializable {
 
     public void setDeleted(Boolean deleted) {
         isDeleted = deleted;
+    }
+
+    public Boolean getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    @Override
+    public String toString() {
+        return "SurveyQuestionOption{" +
+                "id=" + id +
+                ", questionId=" + questionId +
+                ", optionContent='" + optionContent + '\'' +
+                ", isOther=" + isOther +
+                ", remark='" + remark + '\'' +
+                ", isDeleted=" + isDeleted +
+                '}';
     }
 }
