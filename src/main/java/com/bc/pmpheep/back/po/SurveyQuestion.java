@@ -136,6 +136,16 @@ public class SurveyQuestion implements java.io.Serializable {
         this.isAnswer = isAnswer;
     }
 
+    public SurveyQuestion(Long id,String title, Boolean isDeleted,Short type ,String direction,Integer sort,Long surveyId){
+        this.id = id;
+        this.isDeleted = isDeleted;
+        this.title = title;
+        this.type = type;
+        this.direction = direction;
+        this.sort = sort;
+        this.surveyId = surveyId;
+    }
+
     // Property accessors
     /**
      * @return the id
