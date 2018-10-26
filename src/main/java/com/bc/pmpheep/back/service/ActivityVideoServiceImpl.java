@@ -44,27 +44,7 @@ public class ActivityVideoServiceImpl implements ActivityVideoService {
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
         // if(cmsContentDao.getCmsContentByAuthorId(pageParameter.getParameter().getAuthorId()).size()>0){
         // 包含数据总条数的数据集
-
-
         List<ActivityVideoVO> sourcesList = activityVideoDao.listActivityVideo(pageParameter);
-        for (ActivityVideoVO activityVideo : sourcesList) {
-            CmsExtra cmsExtra = cmsExtraService.getCmsExtraByAttachment(activityVideo.getCover());
-            String imgFileName = "默认封面.png";
-            String imgFilePath = RouteUtil.DEFAULT_USER_AVATAR;
-
-            GridFSDBFile file = fileService.get(activityVideo.getCover());
-            if (ObjectUtil.notNull(file)) {
-                imgFileName = file.getFilename();
-            }
-            if (ObjectUtil.notNull(cmsExtra))
-                if(cmsExtra.getAttachment()!=null) {
-                    imgFilePath =cmsExtra.getAttachment() ;
-                }
-                if (StringUtil.notEmpty(imgFilePath)) {
-                    activityVideo.setImgUrl(imgFilePath);
-                }
-            }
-
             if (CollectionUtil.isNotEmpty(sourcesList)) {
                 Integer count = sourcesList.get(0).getCount();
                 pageResult.setTotal(count);
