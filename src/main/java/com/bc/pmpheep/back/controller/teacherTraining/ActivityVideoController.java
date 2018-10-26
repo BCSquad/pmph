@@ -32,6 +32,20 @@ public class ActivityVideoController {
     ActivityVideoService activityVideoService;
 
 
+    /**
+     * 功能描述: 保存活动视频信息
+     * @param request
+     * @param title
+     * @param origPath
+     * @param origFileName
+     * @param origFileSize
+     * @param path
+     * @param fileName
+     * @param fileSize
+     * @param cover
+     * @return
+     * @throws IOException
+     */
     @ResponseBody
     @RequestMapping(value = "/addActivityVideo", method = RequestMethod.POST)
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "保存微视频信息")
@@ -56,11 +70,27 @@ public class ActivityVideoController {
     }
 
 
+    /**
+     * 功能描述: 获取活动频列表
+     * @param activityVideoVO
+     * @param pageNumber
+     * @param pageSize
+     * @param request
+     * @return
+     * @throws IOException
+     */
         @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取视频列表")
     @RequestMapping(value = "/getVideoList", method = RequestMethod.GET)
     public ResponseBean getSourceList(ActivityVideoVO activityVideoVO,@RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
                                       @RequestParam(name = "pageSize") Integer pageSize, HttpServletRequest request) throws IOException {
+
+            if(StringUtil.notEmpty(activityVideoVO.getTitle())){
+                String title = activityVideoVO.getTitle();
+                byte[] bytes = title.getBytes("ISO-8859-1");
+                activityVideoVO.setTitle(new String(bytes, "utf-8"));
+
+            }
         String sessionId = CookiesUtil.getSessionId(request);
 
         PageParameter<ActivityVideoVO> pageParameter =
@@ -70,9 +100,13 @@ public class ActivityVideoController {
 
     }
 
-
+    /**
+     * 功能描述: 活动与视频关联
+     * @return
+     * @throws IOException
+     */
     @ResponseBody
-    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增资源关联")
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "活动与视频关联")
     @RequestMapping(value = "/addActivitySourceChain", method = RequestMethod.GET)
     public ResponseBean<Integer> addActivitySourceChain(HttpServletRequest request) throws IOException {
         String videos = request.getParameter("videos");
@@ -85,9 +119,13 @@ public class ActivityVideoController {
     }
 
 
-
+    /**
+     * 功能描述:删除活动视频
+     * @param id
+     * @return
+     */
     @ResponseBody
-    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量删除内容评论")
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除活动视频")
     @RequestMapping(value = "/deleteVideoById/{id}/del", method = RequestMethod.GET)
     public ResponseBean delete(@PathVariable("id") Long id) {
         return new ResponseBean(activityVideoService.deleteVideoByIds(id));

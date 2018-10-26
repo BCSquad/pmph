@@ -161,14 +161,15 @@
 		<if test="parameter.activityName != null and parameter.activityName !='' ">
 			and (ac.activity_name like concat('%',#{parameter.activityName},'%'))
 		</if>
-		<if test="parameter.isSetTop != null">
-			and ac.is_Set_Top=#{parameter.isSetTop}
-		</if>
 		<if test="parameter.status != null ">
 			and ac.status=#{parameter.status}
 		</if>
+		ORDER BY
+        <if test="parameter.isSetTop != null">
+          ac.is_set_top desc,ac.gmt_set_top desc,
+        </if>
+        ac.gmt_update desc,ac.gmt_create desc
 
-		ORDER BY ac.is_set_top desc ,ac.gmt_set_top desc,ac.gmt_update desc,ac.gmt_create desc
 		)
 		a,
 		(
@@ -189,7 +190,6 @@
 			and ac.status=#{parameter.status}
 		</if>
 		)b
-
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>

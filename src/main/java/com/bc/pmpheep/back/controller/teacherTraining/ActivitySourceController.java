@@ -29,6 +29,15 @@ public class ActivitySourceController {
     ActivitySourceService activitySourceService;
     private static final String BUSSINESS_TYPE = "新增资源";
 
+    /**
+     * 功能描述: 新增活动资源
+     * @param activitySource
+     * @param files
+     * @param sourceName
+     * @param request
+     * @return
+     * @throws IOException
+     */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增资源")
     @RequestMapping(value = "/newSource", method = RequestMethod.POST)
@@ -41,13 +50,27 @@ public class ActivitySourceController {
     }
 
 
+    /**
+     * 功能描述: 新增活动资源: 获取活动资源列表
+     * @param ActivitySourceVO
+     * @param pageNumber
+     * @param pageSize
+     * @param request
+     * @return
+     * @throws IOException
+     */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取资源列表")
     @RequestMapping(value = "/getSourceList", method = RequestMethod.GET)
     public ResponseBean getSourceList(ActivitySourceVO ActivitySourceVO, @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
                                       @RequestParam(name = "pageSize") Integer pageSize, HttpServletRequest request) throws IOException {
         String sessionId = CookiesUtil.getSessionId(request);
+        if(StringUtil.notEmpty(ActivitySourceVO.getSourceName())){
+            String title = ActivitySourceVO.getSourceName();
+            byte[] bytes = title.getBytes("ISO-8859-1");
+            ActivitySourceVO.setSourceName(new String(bytes, "utf-8"));
 
+        }
 
         PageParameter<ActivitySourceVO> pageParameter =
                 new PageParameter<ActivitySourceVO>(pageNumber, pageSize, ActivitySourceVO);
@@ -56,6 +79,12 @@ public class ActivitySourceController {
 
     }
 
+    /**
+     * 功能描述: 活动资源与活动关联
+     * @param request
+     * @return
+     * @throws IOException
+     */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增资源关联")
     @RequestMapping(value = "/addActivitySourceChain", method = RequestMethod.GET)
@@ -70,8 +99,13 @@ public class ActivitySourceController {
     }
 
 
+    /**
+     * 功能描述: 根据id删除活动资源
+     * @param id
+     * @return
+     */
     @ResponseBody
-    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量删除内容评论")
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除活动资源")
     @RequestMapping(value = "/deleteSourceById//{id}/del", method = RequestMethod.GET)
     public ResponseBean delete(@PathVariable("id") Long id) {
         return new ResponseBean(activitySourceService.deleteSourceByIds(id));

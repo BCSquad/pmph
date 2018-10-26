@@ -100,7 +100,6 @@ public class ActivityManagementServiceImpl implements ActivityManagementService 
         return activity;
     }
 
-    @Override
     public Activity addActivity(Activity activity) {
         if (ObjectUtil.isNull(activity)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
