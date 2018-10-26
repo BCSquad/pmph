@@ -206,7 +206,7 @@
 		ON 
 			sqo.`question_id`= stq.`id` and sqo.is_deleted = 0
 		<where>
-
+			  stq.is_deleted = 0
 			<if test="templateId != null">
 				and stq.`survey_id`=#{templateId}
 			</if>

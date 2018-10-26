@@ -26,16 +26,6 @@ public class ActivityVideoVO implements Serializable {
     private String realname;
     private Integer count;
     private Long file_size;
-    private String imgUrl;
-
-    public String getImgUrl() {
-        return imgUrl;
-    }
-
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
-    }
-
     public Long getId() {
         return id;
     }
