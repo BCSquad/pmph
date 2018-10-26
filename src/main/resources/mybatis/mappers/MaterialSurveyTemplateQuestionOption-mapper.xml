@@ -71,6 +71,29 @@
 			</if>
 		</trim>
 	</sql>
+	<sql id="batch_key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+				id	,
+				question_id	,
+				option_content	,
+				is_deleted	,
+		</trim>
+	</sql>
+	<sql id="batch_value">
+		<trim suffixOverrides=",">
+				#{item.id}	,
+				#{item.questionId}	,
+				#{item.optionContent}	,
+				#{item.isDeleted}	,
+		</trim>
+	</sql>
+	<sql id="batch_duplicate_key_update">
+		<trim suffixOverrides=",">
+				option_content	=	values(option_content)	,
+				is_deleted	=	values(is_deleted)	,
+		</trim>
+	</sql>
 	
 	<!-- 新增一个SurveyQuestionOption -->
 	<insert id="addSurveyQuestionOption" parameterType="SurveyQuestionOption" keyProperty="id" useGeneratedKeys="true">
@@ -91,11 +114,16 @@
 	
 	<!-- 批量插入 -->
 	<insert id="batchInsertSurveyQuestionOption" parameterType="java.util.List">
-        insert into material_survey_template_question_option (question_id,option_content,is_other,remark)
+        insert into material_survey_template_question_option (
+		<include refid="batch_key" />
+		)
         values
         <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.questionId}, #{item.optionContent},#{item.isOther},#{item.remark})
+            (<include refid="batch_value" />)
         </foreach>
+		on duplicate key update
+		<include refid="batch_duplicate_key_update" />
+		;
     </insert>
 	
 	<!-- 删除SurveyQuestionOption通过主键id -->

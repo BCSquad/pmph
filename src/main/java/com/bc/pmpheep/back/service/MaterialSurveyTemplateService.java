@@ -33,7 +33,6 @@ public interface MaterialSurveyTemplateService {
      *
      * @author:tyc
      * @date:2017年12月22日下午17:51:22
-     * @param SurveyTemplate 实体对象
      * @return 影响行数
      */
     MaterialSurveyTemplate addSurveyTemplate(MaterialSurveyTemplate surveyTemplate) throws CheckedServiceException;
@@ -43,7 +42,6 @@ public interface MaterialSurveyTemplateService {
      *
      * @author:tyc
      * @date:2017年12月22日下午17:53:06
-     * @param SurveyTemplate
      * @return 影响行数
      */
     Integer deleteSurveyTemplateById(Long id) throws CheckedServiceException;
@@ -53,7 +51,6 @@ public interface MaterialSurveyTemplateService {
      *
      * @author:tyc
      * @date:2017年12月22日下午17:57:43
-     * @param SurveyTemplate
      * @return 影响行数
      */
     Integer updateSurveyTemplate(SurveyTemplate surveyTemplate) throws CheckedServiceException;
@@ -63,7 +60,6 @@ public interface MaterialSurveyTemplateService {
      *
      * @author:tyc
      * @date:2017年12月22日下午17:59:13
-     * @param SurveyTemplate
      * @return 影响行数
      */
     SurveyTemplate getSurveyTemplateById(Long id) throws CheckedServiceException;
@@ -73,11 +69,11 @@ public interface MaterialSurveyTemplateService {
      *
      * @author:tyc
      * @date:2017年12月24日下午14:23:07
-     * @param SurveyTemplateVO
      * @return 影响行数
      */
-    MaterialSurveyTemplate addSurveyTemplateVO(String questionAnswerJosn,
-                                       MaterialSurveyTemplate surveyTemplateVO, String sessionId) throws CheckedServiceException;
+    MaterialSurveyTemplate addSurveyTemplateVO(String questionAnswerJosn,String del_question,
+                                               String del_question_option,
+                                               MaterialSurveyTemplate surveyTemplateVO, String sessionId) throws CheckedServiceException;
 
     /**
      *

@@ -110,7 +110,8 @@ public class MaterialSurveyTemplateServiceImpl implements MaterialSurveyTemplate
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    public MaterialSurveyTemplate addSurveyTemplateVO(String questionAnswerJosn,
+    public MaterialSurveyTemplate addSurveyTemplateVO(String questionAnswerJosn,String del_question,
+                                                      String del_question_option,
                                               MaterialSurveyTemplate surveyTemplateVO, String sessionId) throws CheckedServiceException {
         PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
         if (ObjectUtil.isNull(pmphUser)) {
@@ -127,9 +128,15 @@ public class MaterialSurveyTemplateServiceImpl implements MaterialSurveyTemplate
         }
         // json字符串转List对象集合
         List<SurveyQuestionListVO> surveyQuestionListVO;
+        List<SurveyQuestionListVO> delQuestionList;
+        List<SurveyQuestionOption> delQuestionOption;
         try {
             surveyQuestionListVO =
             new JsonUtil().getArrayListObjectFromStr(SurveyQuestionListVO.class, questionAnswerJosn);
+            delQuestionList =
+                    new JsonUtil().getArrayListObjectFromStr(SurveyQuestionListVO.class, del_question);
+            delQuestionOption =
+                    new JsonUtil().getArrayListObjectFromStr(SurveyQuestionOption.class, del_question_option);
         } catch (Exception e) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.VO_CONVERSION_FAILED,
@@ -172,7 +179,7 @@ public class MaterialSurveyTemplateServiceImpl implements MaterialSurveyTemplate
                                               CheckedExceptionResult.NULL_PARAM, "新增调研表失败");
         }*/
         // 添加问题及问题选项
-        List<Long> newIds = addQuestionAndOption(surveyQuestionListVO,templateId);
+        List<Long> newIds = addQuestionAndOption(surveyQuestionListVO,delQuestionList,delQuestionOption,templateId);
         // 模版问题中间表
         /*List<SurveyTemplateQuestion> surveyTemplateQuestions =
         new ArrayList<SurveyTemplateQuestion>(newIds.size());
@@ -231,8 +238,34 @@ public class MaterialSurveyTemplateServiceImpl implements MaterialSurveyTemplate
      * @return
      * </pre>
      */
-    private List<Long> addQuestionAndOption(List<SurveyQuestionListVO> surveyQuestionListVO,Long templateId) {
+    private List<Long> addQuestionAndOption(List<SurveyQuestionListVO> surveyQuestionListVO,
+                                            List<SurveyQuestionListVO> delQuestionList,
+                                            List<SurveyQuestionOption> delQuestionOption,Long templateId) {
         List<Long> questionIds = new ArrayList<Long>(surveyQuestionListVO.size());
+
+        if(!CollectionUtil.isEmpty(delQuestionList)){
+            List<SurveyQuestion> delQuestionSurveyList = new ArrayList<SurveyQuestion>(delQuestionList.size());
+            for (SurveyQuestionListVO delQuestion:delQuestionList) {
+                delQuestionSurveyList.add(new SurveyQuestion(delQuestion.getId(),
+                        delQuestion.getTitle(),
+                        delQuestion.getDeleted(),
+                        delQuestion.getType(),
+                        delQuestion.getDirection(),
+                        delQuestion.getSort()!=null?delQuestion.getSort():999,
+                        templateId
+                        ));
+            }
+            surveyQuestionService.batchInsertSurveyTemplateQuestion(delQuestionSurveyList);
+        }
+
+        if(!CollectionUtil.isEmpty(delQuestionOption)){
+            for (SurveyQuestionOption delOption : delQuestionOption) {
+                delOption.setDeleted(true);
+                delOption.setQuestionId(0L);
+            }
+            surveyQuestionOptionService.batchInsertSurveyQuestionOption(delQuestionOption);
+        }
+
         for (SurveyQuestionListVO surveyQuestionLists : surveyQuestionListVO) { // 遍历获取问题的集合
             SurveyQuestion surveyQuestion =
             new SurveyQuestion(surveyQuestionLists.getId(),surveyQuestionLists.getCategoryId(),surveyQuestionLists.getTitle(), surveyQuestionLists.getType(),
@@ -251,10 +284,11 @@ public class MaterialSurveyTemplateServiceImpl implements MaterialSurveyTemplate
                 List<SurveyQuestionOption> surveyQuestionOptionList =
                 surveyQuestionLists.getSurveyQuestionOptionList(); // 获取问题选项list
                 for (SurveyQuestionOption surveyQuestionOptions : surveyQuestionOptionList) { // 遍历问题选项
-
                     surveyQuestionOptions.setQuestionId(newId);
-                    surveyQuestionOptionService.addSurveyQuestionOption(surveyQuestionOptions); // 再保存问题选项
+                    surveyQuestionOptions.setDeleted(false);
+                    //surveyQuestionOptionService.addSurveyQuestionOption(surveyQuestionOptions); // 再保存问题选项
                 }
+                surveyQuestionOptionService.batchInsertSurveyQuestionOption(surveyQuestionOptionList);
             }
         }
         return questionIds;

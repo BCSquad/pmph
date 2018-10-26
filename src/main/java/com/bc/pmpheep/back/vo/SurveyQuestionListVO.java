@@ -43,6 +43,8 @@ public class SurveyQuestionListVO {
      * 问题是否必答
      */
     private Boolean                    isAnswer;
+
+    private Boolean                    isDeleted;
     /**
      * 问题选项集合
      */
@@ -142,10 +144,48 @@ public class SurveyQuestionListVO {
         this.surveyQuestionOptionList = surveyQuestionOptionList;
     }
 
-    @Override
+    /*@Override
     public String toString() {
         return "SurveyQuestionListVO [id=" + id + ", categoryId=" + categoryId + ", title=" + title
                + ", type=" + type + ", sort=" + sort + ", direction=" + direction + ", isAnswer="
                + isAnswer + ", surveyQuestionOptionList=" + surveyQuestionOptionList + "]";
+    }*/
+
+    public Boolean getAnswer() {
+        return isAnswer;
+    }
+
+    public void setAnswer(Boolean answer) {
+        isAnswer = answer;
+    }
+
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
+    public Boolean getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    @Override
+    public String toString() {
+        return "SurveyQuestionListVO[" +
+                "id=" + id +
+                ", categoryId=" + categoryId +
+                ", title='" + title + '\'' +
+                ", type=" + type +
+                ", sort=" + sort +
+                ", direction='" + direction + '\'' +
+                ", isAnswer=" + isAnswer +
+                ", isDeleted=" + isDeleted +
+                ", surveyQuestionOptionList=" + surveyQuestionOptionList +
+                ']';
     }
 }
