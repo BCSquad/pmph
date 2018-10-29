@@ -118,6 +118,25 @@
             </if>
         </trim>
     </sql>
+    <select id="getMaxSort" resultType="java.lang.Integer">
+        select "max"(sort) from activity_video
+    </select>
+
+    <select id="getSortById" resultType="ActivityVideo" parameterType="java.lang.Integer">
+        select * from activity_video where id=#{id}
+    </select>
+    <update id="updateVideoSort" parameterType="ActivityVideo" >
+        update activity_video set
+        <trim suffixOverrides=",">
+            <if test="sort != null  ">
+                sort =#{sort},
+            </if>
+            <if test="gmtUpdate != null ">
+                gmt_update =#{gmtUpdate},
+            </if>
+        </trim>
+        where id=#{id}
+    </update>
 
     <insert id="addActivityVideo" parameterType="ActivityVideo">
         <selectKey resultType="java.lang.Long" order="AFTER"

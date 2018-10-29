@@ -59,6 +59,7 @@ public class ActivityVideoController {
                     CheckedExceptionResult.USER_SESSION, "尚未登录或session已过期"));
         }
         ActivityVideo activityVideo = new ActivityVideo();
+
         activityVideo.setTitle(title);
         activityVideo.setOrigPath(origPath);
         activityVideo.setOrigFileName(origFileName);
