@@ -51,6 +51,7 @@ public class ActivitySourceServiceImpl implements ActivitySourceService {
                             CheckedExceptionResult.FILE_UPLOAD_FAILED,
                             "文件上传失败!");
                 }
+                activitySource.setSort(activitySourceDao.getMaxSort()+1);
                 activitySource.setFileId(gridFSFileId);
                 // 保存对应数据
                 activitySourceDao.updateSource(activitySource);
@@ -105,6 +106,11 @@ public class ActivitySourceServiceImpl implements ActivitySourceService {
 
         }
         return activitySourceDao.deleteSourceById(id);
+    }
+
+    @Override
+    public Integer updateSort(String upId, String downId) {
+        return null;
     }
 
     public  void addActivitySourcechin(ActivitySourceChain activitySourceChain){

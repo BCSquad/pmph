@@ -67,6 +67,7 @@ public class ActivityVideoServiceImpl implements ActivityVideoService {
                     || ObjectUtil.isNull(activityVideo.getFileSize()) || ObjectUtil.isNull(activityVideo.getOrigFileSize())) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_VEDIO, CheckedExceptionResult.NULL_PARAM, "参数为空");
             }
+            activityVideo.setSort(activityVideoDao.getMaxSort()+1);
             activityVideo.setUserId(pmphUser.getId());
             activityVideo.setIsAuth(true);
             activityVideo.setAuthUserId(pmphUser.getId());

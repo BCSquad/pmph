@@ -48,6 +48,19 @@ public class ActivitySourceController {
                 request));
 
     }
+    /**
+     * 功能描述: 根据id删除活动资源
+     * @param id
+     * @return
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除活动资源")
+    @RequestMapping(value = "/updateSort", method = RequestMethod.GET)
+    public ResponseBean updateSort(@PathVariable("id") Long id) {
+        return new ResponseBean(activitySourceService.deleteSourceByIds(id));
+    }
+
+
 
 
     /**

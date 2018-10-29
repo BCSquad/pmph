@@ -16,4 +16,5 @@ public interface ActivitySourceDao {
     List<ActivitySourceVO> listActivitySource(PageParameter<ActivitySourceVO> pageParameter);
     void addActivitySourceChain(ActivitySourceChain activitySourceChain);
     Integer deleteSourceById(Long id);
+    Integer getMaxSort();
 }
