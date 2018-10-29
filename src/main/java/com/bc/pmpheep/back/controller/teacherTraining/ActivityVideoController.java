@@ -84,7 +84,6 @@ public class ActivityVideoController {
     @RequestMapping(value = "/getVideoList", method = RequestMethod.GET)
     public ResponseBean getSourceList(ActivityVideoVO activityVideoVO,@RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
                                       @RequestParam(name = "pageSize") Integer pageSize, HttpServletRequest request) throws IOException {
-
             if(StringUtil.notEmpty(activityVideoVO.getTitle())){
                 String title = activityVideoVO.getTitle();
                 byte[] bytes = title.getBytes("ISO-8859-1");
