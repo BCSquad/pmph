@@ -16,4 +16,5 @@ public interface ActivityVideoDao {
     Integer updateActivityVideo(ActivityVideo ActivityVideo);
     Integer addActivityVideochain(ActivityVideoChain activityVideoChain);
     Integer deleteVideoById(Long id);
+    Integer getMaxSort();
 }

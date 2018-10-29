@@ -199,7 +199,7 @@ public class MaterialSurveyTemplateServiceImpl implements MaterialSurveyTemplate
                                               CheckedExceptionResult.NULL_PARAM, "模版ID为空");
         }
         Map<String, Object> resultMap = new HashMap<String, Object>();
-        SurveyTemplateService.getSurveyTemplateById(templateId);
+        //SurveyTemplateService.getSurveyTemplateById(templateId);
         resultMap.put("survey", SurveyTemplateService.getSurveyTemplateById(templateId));
         //SurveyTemplate s = surveyTemplateDao.getSurveyTemplateById(templateId);
         resultMap.put("qestionAndOption",

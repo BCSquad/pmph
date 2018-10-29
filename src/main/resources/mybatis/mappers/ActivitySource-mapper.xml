@@ -50,6 +50,28 @@
 
 		</trim>
 	</sql>
+
+	<select id="getMaxSort" resultType="java.lang.Integer">
+         select MAX(sort) from activity_source
+    </select>
+
+	<select id="getSortById" resultType="ActivityVideo" parameterType="java.lang.Integer">
+        select * from activity_video where id=#{id}
+    </select>
+	<update id="updateSourceSort" parameterType="ActivitySource">
+		update activity_video set
+		<trim suffixOverrides=",">
+			<if test="sort != null  ">
+				sort =#{sort},
+			</if>
+			<if test="gmtUpdate != null ">
+				gmt_update =#{gmtUpdate},
+			</if>
+		</trim>
+		where id=#{id}
+	</update>
+
+
 	<!-- 新增CmsContent -->
 	<insert id="addSource" parameterType="ActivitySource"
 			useGeneratedKeys="true" keyProperty="id">

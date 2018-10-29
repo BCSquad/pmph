@@ -65,6 +65,14 @@ public class SurveyTemplate implements java.io.Serializable {
      */
     private Long              typeId;
 
+    private Boolean isActive;
+
+    private Long preVersionMaterialId;
+    private String preVersionMaterialName;
+    private String preVersionMaterialRound;
+
+
+
     // Constructors
 
     /** default constructor */
@@ -239,11 +247,70 @@ public class SurveyTemplate implements java.io.Serializable {
         this.typeId = typeId;
     }
 
-    @Override
+
+
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public Long getPreVersionMaterialId() {
+        return preVersionMaterialId;
+    }
+
+    public void setPreVersionMaterialId(Long preVersionMaterialId) {
+        this.preVersionMaterialId = preVersionMaterialId;
+    }
+
+    public String getPreVersionMaterialName() {
+        return preVersionMaterialName;
+    }
+
+    public void setPreVersionMaterialName(String preVersionMaterialName) {
+        this.preVersionMaterialName = preVersionMaterialName;
+    }
+
+    public String getPreVersionMaterialRound() {
+        return preVersionMaterialRound;
+    }
+
+    public void setPreVersionMaterialRound(String preVersionMaterialRound) {
+        this.preVersionMaterialRound = preVersionMaterialRound;
+    }
+
+    /*@Override
     public String toString() {
         return "SurveyTemplate [id=" + id + ", templateName=" + templateName + ", sort=" + sort
                + ", userId=" + userId + ", isDeleted=" + isDeleted + ", gmtCreate=" + gmtCreate
                + ", gmtUpdate=" + gmtUpdate + "]";
+    }*/
+
+    @Override
+    public String toString() {
+        return "SurveyTemplate[" +
+                "id=" + id +
+                ", templateName='" + templateName + '\'' +
+                ", sort=" + sort +
+                ", userId=" + userId +
+                ", isDeleted=" + isDeleted +
+                ", gmtCreate=" + gmtCreate +
+                ", gmtUpdate=" + gmtUpdate +
+                ", intro='" + intro + '\'' +
+                ", typeId=" + typeId +
+                ", preVersionMaterialId=" + preVersionMaterialId +
+                ", preVersionMaterialName='" + preVersionMaterialName + '\'' +
+                ", preVersionMaterialRound='" + preVersionMaterialRound + '\'' +
+                ']';
     }
 
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
+    }
 }

@@ -120,12 +120,10 @@ public class ActivityManagementController {
             @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
             @RequestParam(name = "pageSize") Integer pageSize, ActivityVO activityVO,
             HttpServletRequest request) throws UnsupportedEncodingException {
-        String activityName = activityVO.getActivityName();
-        if (activityName != null) {
-            String str = activityName;
+        if (StringUtil.notEmpty(activityVO.getActivityName())) {
+            String str = activityVO.getActivityName();
             byte[] bytes = str.getBytes("ISO-8859-1");
             activityVO.setActivityName(new String(bytes, "utf-8"));
-
         }
         PageParameter<ActivityVO> pageParameter =
                 new PageParameter<ActivityVO>(pageNumber, pageSize, activityVO);
