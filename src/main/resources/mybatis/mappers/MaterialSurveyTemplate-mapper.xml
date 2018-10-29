@@ -155,24 +155,7 @@
 	<update id="updateSurveyTemplate" parameterType="SurveyTemplate">
 		update material_survey_template
 		<set>
-			<if test="templateName != null and templateName != ''">
-				template_name=#{templateName},
-			</if>
-			<if test="intro != null and intro != ''">
-				intro = #{intro},
-			</if>
-			<if test="typeId != null">
-				type_id = #{typeId},
-			</if>
-			<if test="sort != null">
-				sort=#{sort},
-			</if>
-			<if test="userId != null">
-				user_id=#{userId},
-			</if>
-			<if test="isDeleted != null">
-				is_deleted=#{isDeleted},
-			</if>
+			<include refid="updates" />
 		</set>
 		where
 		id=#{id} ;
