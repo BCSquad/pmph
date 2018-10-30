@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -272,5 +274,25 @@ public class MaterialSurveyServiceImpl implements MaterialSurveyService {
             pageResult.setRows(orgList);
         }
         return pageResult;
+    }
+
+    @Override
+    public SurveyVO addSurvey(String questionAnswerJosn, String del_question, String del_question_option, SurveyVO surveyVO, String sessionId) {
+        return null;
+    }
+
+    @Override
+    public Map<String, Object> getSurveyAndQuestionById(Long id) {
+        if (ObjectUtil.isNull(id)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                    CheckedExceptionResult.NULL_PARAM, "调研表ID为空");
+        }
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+
+        resultMap.put("survey", surveyDao.getSurveyById(id));
+
+        resultMap.put("qestionAndOption",
+                surveyDao.getSurveyQuestionBySurveyId(id));
+        return resultMap;
     }
 }

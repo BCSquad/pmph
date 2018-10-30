@@ -2,10 +2,14 @@ package com.bc.pmpheep.back.service;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
+import com.bc.pmpheep.back.po.Material;
+import com.bc.pmpheep.back.po.MaterialSurveyTemplate;
 import com.bc.pmpheep.back.po.Survey;
 import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.back.vo.SurveyVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
+
+import java.util.Map;
 
 /**
  * 
@@ -30,7 +34,7 @@ public interface MaterialSurveyService {
      * 
      * @author:tyc
      * @date:2017年12月22日下午15:51:35
-     * @param Survey 实体对象
+     * @param survey 实体对象
      * @return 影响行数
      */
     Survey addSurvey(Survey survey) throws CheckedServiceException;
@@ -54,7 +58,6 @@ public interface MaterialSurveyService {
      * 
      * @author:tyc
      * @date:2017年12月22日下午16:00:11
-     * @param Survey
      * @return 影响行数
      */
     Integer updateSurvey(Survey survey) throws CheckedServiceException;
@@ -65,12 +68,11 @@ public interface MaterialSurveyService {
      * 功能描述：修改问卷信息
      * 使用示范：
      *
-     * @param answerJosn 问题Json字符串
-     * @param templateId 模版Id
-     * @param title 问卷名称
-     * @param typeId 调查对象
-     * @param intro 问卷概述
-     * @return 影响行数
+     *  answerJosn 问题Json字符串
+     *  templateId 模版Id
+     *  title 问卷名称
+     *  typeId 调查对象
+     *  intro 问卷概述
      * @throws CheckedServiceException
      * </pre>
      */
@@ -82,7 +84,6 @@ public interface MaterialSurveyService {
      * 
      * @author:tyc
      * @date:2017年12月22日下午16:07:54
-     * @param Survey
      * @return 影响行数
      */
     Survey getSurveyById(Long id) throws CheckedServiceException;
@@ -103,7 +104,6 @@ public interface MaterialSurveyService {
      * 
      * @author:tyc
      * @date:2017年12月20日下午16:55:35
-     * @param Survey
      * @return 影响行数
      */
     Integer deleteSurveyById(Long id) throws CheckedServiceException;
@@ -126,11 +126,31 @@ public interface MaterialSurveyService {
      * 功能描述：根据问卷ID查询问卷已发送对象
      * 使用示范：
      *
-     * @param surveyId 问卷id
+     *  surveyId 问卷id
      * @return
      * @throws CheckedServiceException
      * </pre>
      */
     PageResult<OrgVO> listSendOrgBySurveyId(PageParameter<OrgVO> pageParameter)
     throws CheckedServiceException;
+
+    /**
+     * 更新调研表
+     * @param questionAnswerJosn
+     * @param del_question
+     * @param del_question_option
+     * @param surveyVO
+     * @param sessionId
+     * @return
+     */
+    SurveyVO addSurvey(String questionAnswerJosn, String del_question, String del_question_option, SurveyVO surveyVO, String sessionId);
+
+    /**
+     * 获取调研表详情
+     * @param id
+     * @return
+     */
+    Map<String,Object> getSurveyAndQuestionById(Long id);
+
+
 }

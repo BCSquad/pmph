@@ -172,22 +172,10 @@ public class MaterialSurveyTemplateServiceImpl implements MaterialSurveyTemplate
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "新增模版失败");
         }
-        /*Survey survey =
-        surveyService.addSurvey(new Survey(templateName, intro, templateId, typeId, userId));// 添加调研表表
-        if (ObjectUtil.isNull(survey.getId())) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
-                                              CheckedExceptionResult.NULL_PARAM, "新增调研表失败");
-        }*/
+
         // 添加问题及问题选项
         List<Long> newIds = addQuestionAndOption(surveyQuestionListVO,delQuestionList,delQuestionOption,templateId);
-        // 模版问题中间表
-        /*List<SurveyTemplateQuestion> surveyTemplateQuestions =
-        new ArrayList<SurveyTemplateQuestion>(newIds.size());
-        for (Long questionId : newIds) {
-            surveyTemplateQuestions.add(new SurveyTemplateQuestion(templateId, questionId));
-        }
-        surveyTemplateQuestionDao.batchInsertSurveyTemplateQuestion(surveyTemplateQuestions); // 添加模版问题中间表
-        System.out.println(surveyTemplate.toString());*/
+
         return surveyTemplate;
     }
 
@@ -199,9 +187,9 @@ public class MaterialSurveyTemplateServiceImpl implements MaterialSurveyTemplate
                                               CheckedExceptionResult.NULL_PARAM, "模版ID为空");
         }
         Map<String, Object> resultMap = new HashMap<String, Object>();
-        //SurveyTemplateService.getSurveyTemplateById(templateId);
+
         resultMap.put("survey", SurveyTemplateService.getSurveyTemplateById(templateId));
-        //SurveyTemplate s = surveyTemplateDao.getSurveyTemplateById(templateId);
+
         resultMap.put("qestionAndOption",
                       surveyTemplateDao.getSurveyTemplateQuestionByTemplateId(templateId));
         return resultMap;
