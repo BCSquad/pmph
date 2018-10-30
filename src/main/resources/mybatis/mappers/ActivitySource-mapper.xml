@@ -64,6 +64,29 @@
 		where id=#{id}
 	</update>
 
+
+	<select id="getUpSortById"  resultType="ActivitySource" parameterType="java.lang.Integer">
+		SELECT * FROM
+		(
+		select *
+		from activity_source ac
+		where ac.sort  &lt; #{sort} and is_deleted=0
+		order by sort desc
+		)a
+		limit 0,1
+	</select>
+	<select id="getDownSortById"  resultType="ActivitySource" parameterType="java.lang.Integer">
+		SELECT * FROM
+		(
+		select *
+		from activity_source ac
+		where ac.sort &gt; #{sort} and is_deleted=0
+		order by sort asc
+		)a
+		limit 0,1
+	</select>
+
+
 	<!-- 新增CmsContent -->
 	<insert id="addSource" parameterType="ActivitySource"
 			useGeneratedKeys="true" keyProperty="id">
@@ -118,7 +141,7 @@
 		<if test="parameter.sourceName != null and parameter.sourceName !='' ">
 			and (ac.source_name like concat('%',#{parameter.sourceName},'%'))
 		</if>
-		order by ac.sort ,ac.gmt_Upload desc
+		order by ac.sort asc
 		)
 		a,
 		(

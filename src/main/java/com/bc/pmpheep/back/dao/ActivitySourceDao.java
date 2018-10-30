@@ -20,4 +20,6 @@ public interface ActivitySourceDao {
     Integer getMaxSort();
     ActivitySource getSortById(Integer id);
     Integer updateSourceSort(ActivitySource ActivitySource);
+    ActivitySource getUpSortById(Integer id);
+    ActivitySource getDownSortById(Integer id);
 }

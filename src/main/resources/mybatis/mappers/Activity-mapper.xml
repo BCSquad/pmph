@@ -139,7 +139,11 @@
 
 	<update id="updateActivitySetTopById" parameterType="Activity">
 		update
-				Activity set is_set_top = #{isSetTop} where id = #{id};
+				Activity set is_set_top = #{isSetTop}
+		<if test="gmtSetTop != null ">
+			,gmt_set_top=#{gmtSetTop}
+		</if>
+		where id = #{id};
 	</update>
 	<!--CmsContentVO模糊查询获取列表 -->
 	<select id="listActivity" parameterType="PageParameter" resultType="ActivityVO">

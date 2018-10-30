@@ -20,4 +20,6 @@ public interface ActivityVideoDao {
     Integer getMaxSort();
     ActivityVideo getSortById(Integer id);
     Integer updateVideoSort(ActivityVideo activityVideo);
+    ActivityVideo getUpSortById(Integer id);
+    ActivityVideo getDownSortById(Integer id);
 }
