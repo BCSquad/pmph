@@ -4,13 +4,18 @@ import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.MaterialSurveyTemplate;
+import com.bc.pmpheep.back.po.SurveyTemplate;
 import com.bc.pmpheep.back.service.MaterialSurveyTemplateService;
 import com.bc.pmpheep.back.service.SurveyTemplateService;
 import com.bc.pmpheep.back.util.CookiesUtil;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.SurveyTemplateListVO;
 import com.bc.pmpheep.back.vo.SurveyTemplateVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
+import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
+import com.bc.pmpheep.service.exception.CheckedExceptionResult;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -126,5 +131,17 @@ public class MaterialSurveyTemplateController {
     @RequestMapping(value = "/{templateId}/remove", method = RequestMethod.DELETE)
     public ResponseBean remove(@PathVariable("templateId") Long templateId) {
         return new ResponseBean(surveyTemplateService.deleteSurveyTemplateById(templateId));
+    }
+
+    @ResponseBody
+    @RequestMapping("/{templateId}/switchActive")
+    public ResponseBean switchActive(SurveyTemplate updateTemplate){
+        SurveyTemplate jFilterBean = new SurveyTemplate();
+        if (ObjectUtil.isNull(updateTemplate)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                    CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        jFilterBean.setActive(updateTemplate.getActive());
+        return new ResponseBean(surveyTemplateService.updateSurveyTemplate(updateTemplate));
     }
 }
