@@ -7,6 +7,7 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.*;
 import com.bc.pmpheep.back.util.*;
+import com.bc.pmpheep.back.vo.ActivityInfoExpressVO;
 import com.bc.pmpheep.back.vo.ActivityVO;
 import com.bc.pmpheep.general.po.Content;
 import com.bc.pmpheep.general.service.ContentService;
@@ -206,4 +207,26 @@ public class ActivityManagementServiceImpl implements ActivityManagementService 
     public void setActivitySetTop(Activity activity) {
         activityManagementDao.updateActivitySetTopById(activity);
     }
+
+    @Override
+    public PageResult<ActivityInfoExpressVO> listCmsContent(PageParameter<ActivityInfoExpressVO> pageParameter, String sessionId) {
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+        if (ObjectUtil.isNull(pmphUser) || ObjectUtil.isNull(pmphUser.getId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                    CheckedExceptionResult.NULL_PARAM, "用户为空");
+        }
+        PageResult<ActivityInfoExpressVO> pageResult = new PageResult<ActivityInfoExpressVO>();
+        // 将页面大小和页面页码拷贝
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+        List<ActivityInfoExpressVO> activityInfoExpressVOS = activityManagementDao.listCmsContent(pageParameter);
+        if (CollectionUtil.isNotEmpty(activityInfoExpressVOS)) {
+            Integer count = activityInfoExpressVOS.get(0).getCount();
+            pageResult.setTotal(count);
+            pageResult.setRows(activityInfoExpressVOS);
+        }
+        // }
+        return pageResult;
+    }
+
+
 }

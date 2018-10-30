@@ -45,4 +45,6 @@ public interface ActivityVideoService {
      * @return
      */
     Integer deleteVideoByIds(Long id);
+
+    Integer updateSort(Integer id,PageParameter<ActivityVideoVO> pageParameter,String type);
 }

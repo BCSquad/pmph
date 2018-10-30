@@ -44,11 +44,11 @@ public class ActivityVideoServiceImpl implements ActivityVideoService {
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
         // if(cmsContentDao.getCmsContentByAuthorId(pageParameter.getParameter().getAuthorId()).size()>0){
         // 包含数据总条数的数据集
-        List<ActivityVideoVO> sourcesList = activityVideoDao.listActivityVideo(pageParameter);
-            if (CollectionUtil.isNotEmpty(sourcesList)) {
-                Integer count = sourcesList.get(0).getCount();
+        List<ActivityVideoVO> videoList = activityVideoDao.listActivityVideo(pageParameter);
+            if (CollectionUtil.isNotEmpty(videoList)) {
+                Integer count = videoList.get(0).getCount();
                 pageResult.setTotal(count);
-                pageResult.setRows(sourcesList);
+                pageResult.setRows(videoList);
             }
             // }
             return pageResult;
@@ -103,12 +103,51 @@ public class ActivityVideoServiceImpl implements ActivityVideoService {
             if (ObjectUtil.isNull(id)) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                         CheckedExceptionResult.NULL_PARAM, "参数为空");
-
             }
             return activityVideoDao.deleteVideoById(id);
         }
 
-        void addActivityVideoChain (ActivityVideoChain activityVideoChain){
+    @Override
+    public Integer updateSort(Integer id, PageParameter<ActivityVideoVO> pageParameter, String type) {
+        ActivityVideo sortByid = activityVideoDao.getSortById(id);
+        List<ActivityVideoVO> videoList = activityVideoDao.listActivityVideo(pageParameter);
+        for (int i = 0; i <= videoList.size(); i++) {
+            if (videoList.get(i).getId() == sortByid.getId()) {
+                if ("up".equals(type)) {
+                    ActivityVideo videoById = activityVideoDao.getSortById(videoList.get(i - 1).getId().intValue());
+                    Integer down = videoById.getSort();
+                    Integer up = sortByid.getSort();
+                    sortByid.setSort(null);
+                    videoById.setSort(null);
+                    activityVideoDao.updateVideoSort(sortByid);
+                    activityVideoDao.updateVideoSort(videoById);
+                    sortByid.setSort(down);
+                    videoById.setSort(up);
+                    activityVideoDao.updateVideoSort(sortByid);
+                    Integer integer = activityVideoDao.updateVideoSort(videoById);
+                    return integer;
+                }
+                if ("down".equals(type)) {
+                    ActivityVideo videoById = activityVideoDao.getSortById(videoList.get(i + 1).getId().intValue());
+                    Integer up = videoById.getSort();
+                    Integer down = sortByid.getSort();
+                    sortByid.setSort(null);
+                    videoById.setSort(null);
+                    activityVideoDao.updateVideoSort(sortByid);
+                    activityVideoDao.updateVideoSort(videoById);
+                    sortByid.setSort(up);
+                    videoById.setSort(down);
+                    activityVideoDao.updateVideoSort(sortByid);
+                    Integer integer = activityVideoDao.updateVideoSort(videoById);
+                    return integer;
+                }
+            }
+        }
+
+        return 0;
+    }
+
+    void addActivityVideoChain (ActivityVideoChain activityVideoChain){
             activityVideoDao.addActivityVideochain(activityVideoChain);
         }
 
