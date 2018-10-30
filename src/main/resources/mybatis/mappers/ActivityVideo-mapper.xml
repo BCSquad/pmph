@@ -119,7 +119,7 @@
         </trim>
     </sql>
     <select id="getMaxSort" resultType="java.lang.Integer">
-        select "max"(sort) from activity_video
+        select max(sort) from activity_video
     </select>
 
     <select id="getSortById" resultType="ActivityVideo" parameterType="java.lang.Integer">
@@ -127,14 +127,7 @@
     </select>
     <update id="updateVideoSort" parameterType="ActivityVideo" >
         update activity_video set
-        <trim suffixOverrides=",">
-            <if test="sort != null  ">
-                sort =#{sort},
-            </if>
-            <if test="gmtUpdate != null ">
-                gmt_update =#{gmtUpdate},
-            </if>
-        </trim>
+                sort =#{sort}
         where id=#{id}
     </update>
 
@@ -216,6 +209,7 @@
         <if test="parameter.title != null and parameter.title !='' ">
             and (ac.title like concat('%',#{parameter.title},'%'))
         </if>
+        order by ac.sort,ac.gmt_create
         )
         a,
         (

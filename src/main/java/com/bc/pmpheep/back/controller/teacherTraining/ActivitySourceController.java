@@ -49,15 +49,26 @@ public class ActivitySourceController {
 
     }
     /**
-     * 功能描述: 根据id删除活动资源
-     * @param id
-     * @return
+     * 功能描述: 根据id排序移动
+     *
      */
     @ResponseBody
-    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除活动资源")
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "排序移动")
     @RequestMapping(value = "/updateSort", method = RequestMethod.GET)
-    public ResponseBean updateSort(@PathVariable("id") Long id) {
-        return new ResponseBean(activitySourceService.deleteSourceByIds(id));
+    public ResponseBean updateSort(ActivitySourceVO ActivitySourceVO, @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
+                                   @RequestParam(name = "pageSize") Integer pageSize, HttpServletRequest request) {
+        Integer id=null;
+        String type =null;
+        if(StringUtil.notEmpty(request.getParameter("id"))){
+            id=Integer.parseInt(request.getParameter("id"));
+        }
+        if(StringUtil.notEmpty(request.getParameter("type"))){
+            type = request.getParameter("type");
+
+        }
+        PageParameter<ActivitySourceVO> pageParameter =
+                new PageParameter<ActivitySourceVO>(pageNumber, pageSize, ActivitySourceVO);
+        return new ResponseBean(activitySourceService.updateSort(id,pageParameter, type));
     }
 
 
@@ -78,12 +89,12 @@ public class ActivitySourceController {
     public ResponseBean getSourceList(ActivitySourceVO ActivitySourceVO, @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
                                       @RequestParam(name = "pageSize") Integer pageSize, HttpServletRequest request) throws IOException {
         String sessionId = CookiesUtil.getSessionId(request);
-        if(StringUtil.notEmpty(ActivitySourceVO.getSourceName())){
+      /*  if(StringUtil.notEmpty(ActivitySourceVO.getSourceName())){
             String title = ActivitySourceVO.getSourceName();
             byte[] bytes = title.getBytes("ISO-8859-1");
             ActivitySourceVO.setSourceName(new String(bytes, "utf-8"));
 
-        }
+        }*/
 
         PageParameter<ActivitySourceVO> pageParameter =
                 new PageParameter<ActivitySourceVO>(pageNumber, pageSize, ActivitySourceVO);

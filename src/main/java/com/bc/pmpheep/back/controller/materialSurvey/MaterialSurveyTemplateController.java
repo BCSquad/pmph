@@ -134,14 +134,12 @@ public class MaterialSurveyTemplateController {
     }
 
     @ResponseBody
-    @RequestMapping("/{templateId}/switchActive")
-    public ResponseBean switchActive(SurveyTemplate updateTemplate){
-        SurveyTemplate jFilterBean = new SurveyTemplate();
-        if (ObjectUtil.isNull(updateTemplate)) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
-                    CheckedExceptionResult.NULL_PARAM, "参数为空");
-        }
-        jFilterBean.setActive(updateTemplate.getActive());
+    @RequestMapping(value = "/switchActive",method = RequestMethod.GET)
+    public ResponseBean switchActive(@RequestParam(value = "templateId" ,required =true) Long templateId
+            ,@RequestParam(value = "isActive",defaultValue = "true")Boolean isActive){
+        SurveyTemplate updateTemplate = new SurveyTemplate();
+        updateTemplate.setId(templateId);
+        updateTemplate.setActive(isActive);
         return new ResponseBean(surveyTemplateService.updateSurveyTemplate(updateTemplate));
     }
 }

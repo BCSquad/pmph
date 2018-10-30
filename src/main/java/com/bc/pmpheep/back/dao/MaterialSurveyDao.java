@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.dao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Survey;
 import com.bc.pmpheep.back.vo.OrgVO;
+import com.bc.pmpheep.back.vo.SurveyQuestionOptionCategoryVO;
 import com.bc.pmpheep.back.vo.SurveyVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -22,7 +23,7 @@ public interface MaterialSurveyDao {
      * 
      * @author:tyc
      * @date:2017年12月20日下午16:55:35
-     * @param Survey 实体对象
+     * @param survey 实体对象
      * @return 影响行数
      */
     Integer addSurvey(Survey survey);
@@ -32,7 +33,7 @@ public interface MaterialSurveyDao {
      * 
      * @author:tyc
      * @date:2017年12月20日下午16:55:35
-     * @param Survey
+     * Survey
      * @return 影响行数
      */
     Integer deleteSurveyById(Long id);
@@ -42,7 +43,7 @@ public interface MaterialSurveyDao {
      * 
      * @author:tyc
      * @date:2017年12月20日下午16:55:35
-     * @param Survey
+     *  Survey
      * @return 影响行数
      */
     Integer updateSurvey(Survey survey);
@@ -52,7 +53,7 @@ public interface MaterialSurveyDao {
      * 
      * @author:tyc
      * @date:2017年12月20日下午16:55:35
-     * @param Survey
+     *  Survey
      * @return 影响行数
      */
     Survey getSurveyById(Long id);
@@ -85,9 +86,16 @@ public interface MaterialSurveyDao {
      * 功能描述：根据问卷ID查询问卷已发送对象
      * 使用示范：
      *
-     * @param surveyId 问卷id
+     *  surveyId 问卷id
      * @return
      * </pre>
      */
     List<OrgVO> listSendOrgBySurveyId(PageParameter<OrgVO> pageParameter);
+
+    /**
+     * 查询问题和选项
+     * @param id
+     * @return
+     */
+    SurveyQuestionOptionCategoryVO getSurveyQuestionBySurveyId(@Param("id")Long id);
 }

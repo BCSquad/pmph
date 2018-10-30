@@ -85,12 +85,12 @@ public class ActivityVideoController {
     @RequestMapping(value = "/getVideoList", method = RequestMethod.GET)
     public ResponseBean getSourceList(ActivityVideoVO activityVideoVO,@RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
                                       @RequestParam(name = "pageSize") Integer pageSize, HttpServletRequest request) throws IOException {
-            if(StringUtil.notEmpty(activityVideoVO.getTitle())){
+           /* if(StringUtil.notEmpty(activityVideoVO.getTitle())){
                 String title = activityVideoVO.getTitle();
                 byte[] bytes = title.getBytes("ISO-8859-1");
                 activityVideoVO.setTitle(new String(bytes, "utf-8"));
 
-            }
+            }*/
         String sessionId = CookiesUtil.getSessionId(request);
 
         PageParameter<ActivityVideoVO> pageParameter =
@@ -131,5 +131,27 @@ public class ActivityVideoController {
         return new ResponseBean(activityVideoService.deleteVideoByIds(id));
     }
 
+    /**
+     * 功能描述:根据id移动排序
+     * @param id
+     * @return
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "排序移动")
+    @RequestMapping(value = "/updateSort", method = RequestMethod.GET)
+    public ResponseBean updateSort(ActivityVideoVO activityVideoVO, @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
+                                   @RequestParam(name = "pageSize") Integer pageSize, HttpServletRequest request) {
+        Integer id=null;
+        String type =null;
+        if(StringUtil.notEmpty(request.getParameter("id"))){
+            id=Integer.parseInt(request.getParameter("id"));
+        }
+        if(StringUtil.notEmpty(request.getParameter("type"))){
+            type = request.getParameter("type");
 
+        }
+        PageParameter<ActivityVideoVO> pageParameter =
+                new PageParameter<ActivityVideoVO>(pageNumber, pageSize, activityVideoVO);
+        return new ResponseBean(activityVideoService.updateSort(id,pageParameter, type));
+    }
 }

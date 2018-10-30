@@ -55,22 +55,14 @@
          select MAX(sort) from activity_source
     </select>
 
-	<select id="getSortById" resultType="ActivityVideo" parameterType="java.lang.Integer">
-        select * from activity_video where id=#{id}
+	<select id="getSortById" resultType="ActivitySource" parameterType="java.lang.Integer">
+        select * from activity_source where id=#{id}
     </select>
 	<update id="updateSourceSort" parameterType="ActivitySource">
-		update activity_video set
-		<trim suffixOverrides=",">
-			<if test="sort != null  ">
-				sort =#{sort},
-			</if>
-			<if test="gmtUpdate != null ">
-				gmt_update =#{gmtUpdate},
-			</if>
-		</trim>
+		update activity_source set
+				sort =#{sort}
 		where id=#{id}
 	</update>
-
 
 	<!-- 新增CmsContent -->
 	<insert id="addSource" parameterType="ActivitySource"
@@ -126,6 +118,7 @@
 		<if test="parameter.sourceName != null and parameter.sourceName !='' ">
 			and (ac.source_name like concat('%',#{parameter.sourceName},'%'))
 		</if>
+		order by ac.sort ,ac.gmt_Upload desc
 		)
 		a,
 		(

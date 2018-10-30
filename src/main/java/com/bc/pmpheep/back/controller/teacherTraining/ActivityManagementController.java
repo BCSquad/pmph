@@ -120,11 +120,11 @@ public class ActivityManagementController {
             @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
             @RequestParam(name = "pageSize") Integer pageSize, ActivityVO activityVO,
             HttpServletRequest request) throws UnsupportedEncodingException {
-        if (StringUtil.notEmpty(activityVO.getActivityName())) {
+       /* if (StringUtil.notEmpty(activityVO.getActivityName())) {
             String str = activityVO.getActivityName();
             byte[] bytes = str.getBytes("ISO-8859-1");
             activityVO.setActivityName(new String(bytes, "utf-8"));
-        }
+        }*/
         PageParameter<ActivityVO> pageParameter =
                 new PageParameter<ActivityVO>(pageNumber, pageSize, activityVO);
         String sessionId = CookiesUtil.getSessionId(request);
@@ -203,11 +203,11 @@ public class ActivityManagementController {
     @RequestMapping(value = "/getMaterialist", method = RequestMethod.GET)
     public ResponseBean list(HttpServletRequest request, Integer pageSize, Integer pageNumber, Boolean isMy,
                              String state, String materialName, String contactUserName) throws UnsupportedEncodingException {
-        if (StringUtil.notEmpty(request.getParameter("materialName"))) {
+        /*if (StringUtil.notEmpty(request.getParameter("materialName"))) {
             String str = request.getParameter("materialName");
             byte[] bytes = str.getBytes("ISO-8859-1");
             materialName = new String(bytes, "utf-8");
-        }
+        }*/
         String sessionId = CookiesUtil.getSessionId(request);
         PageParameter<MaterialListVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
         MaterialListVO materialListVO = new MaterialListVO();
@@ -233,21 +233,17 @@ public class ActivityManagementController {
     @RequestMapping(value = "/getLetters", method = RequestMethod.GET)
     public ResponseBean letters(
             @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
-            @RequestParam(name = "pageSize") Integer pageSize, CmsContentVO cmsContentVO,
+            @RequestParam(name = "pageSize") Integer pageSize, ActivityInfoExpressVO activityInfoExpressVO,
             HttpServletRequest request) {
-        cmsContentVO.setCategoryId(Const.CMS_CATEGORY_ID_2);
-        String title = cmsContentVO.getTitle();
-        String userName = cmsContentVO.getUsername();
+        String title = activityInfoExpressVO.getTitle();
         if (StringUtil.notEmpty(title)) {
-            cmsContentVO.setTitle(StringUtil.toAllCheck(title));
+            activityInfoExpressVO.setTitle(StringUtil.toAllCheck(title));
         }
-        if (StringUtil.notEmpty(userName)) {
-            cmsContentVO.setUsername(StringUtil.toAllCheck(userName));
-        }
-        PageParameter<CmsContentVO> pageParameter =
-                new PageParameter<CmsContentVO>(pageNumber, pageSize, cmsContentVO);
+        PageParameter<ActivityInfoExpressVO> pageParameter =
+                new PageParameter<ActivityInfoExpressVO>(pageNumber, pageSize, activityInfoExpressVO);
         String sessionId = CookiesUtil.getSessionId(request);
-        return new ResponseBean(cmsContentService.listCmsContent(pageParameter, sessionId));
+
+        return new ResponseBean(activityManagementService.listCmsContent(pageParameter, sessionId));
     }
 
 
