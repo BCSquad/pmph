@@ -168,8 +168,7 @@
         <if test="parameter.isSetTop != null">
           ac.is_set_top desc,ac.gmt_set_top desc,
         </if>
-        ac.gmt_update desc,ac.gmt_create desc
-
+        ac.gmt_create desc
 		)
 		a,
 		(
@@ -180,7 +179,7 @@
 		LEFT JOIN pmph_user pu
 		ON ac.founder_id = pu.id
 		WHERE ac.is_deleted=0
-		<if test="parameter.activityName != null and parameter.activityName !=''">
+		<if test="parameter.activityName != null and parameter.activityName !='' ">
 			and (ac.activity_name like concat('%',#{parameter.activityName},'%'))
 		</if>
 		<if test="parameter.isSetTop != null">
@@ -198,5 +197,43 @@
 		SELECT * FROM activity
 		where id=#{id}
 	</select>
+	<select id="listCmsContent" parameterType="PageParameter" resultType="ActivityInfoExpressVO">
+		SELECT * FROM
+		(
+		SELECT
+		ac.id,
+		ac.title,
+		ac.gmt_create,
+		ac.material_id,
+		m.material_name
+		FROM
+		cms_content ac
+		LEFT JOIN material m on ac.material_id=m.id
+		WHERE ac.is_deleted=0
+		and ac.category_id=2
+		<if test="parameter.title != null and parameter.title !='' ">
+			and (ac.title like concat('%',#{parameter.title},'%'))
+		</if>
+		ORDER BY
+		ac.gmt_create desc
+		)
+		a,
+		(
+		SELECT
+	   count(*) count
+		FROM
+		cms_content ac
+		LEFT JOIN material m on ac.material_id=m.id
+		WHERE ac.is_deleted=0
+		and ac.category_id=2
+		<if test="parameter.title != null and parameter.title !='' ">
+			and (ac.title like concat('%',#{parameter.title},'%'))
+		</if>
+		)b
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+
 
 </mapper>

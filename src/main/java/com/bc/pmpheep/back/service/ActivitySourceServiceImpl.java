@@ -51,7 +51,7 @@ public class ActivitySourceServiceImpl implements ActivitySourceService {
                             CheckedExceptionResult.FILE_UPLOAD_FAILED,
                             "文件上传失败!");
                 }
-                activitySource.setSort(activitySourceDao.getMaxSort()+1);
+                activitySource.setSort(activitySourceDao.getMaxSort() + 1);
                 activitySource.setFileId(gridFSFileId);
                 // 保存对应数据
                 activitySourceDao.updateSource(activitySource);
@@ -109,13 +109,48 @@ public class ActivitySourceServiceImpl implements ActivitySourceService {
     }
 
     @Override
-    public Integer updateSort(String upId, String downId) {
-        return null;
+    public Integer updateSort(Integer id, PageParameter<ActivitySourceVO> pageParameter, String type) {
+        ActivitySource sortById = activitySourceDao.getSortById(id);
+        List<ActivitySourceVO> sourcesList = activitySourceDao.listActivitySource(pageParameter);
+        for (int i = 0; i <= sourcesList.size(); i++) {
+            if (sourcesList.get(i).getId() == sortById.getId()) {
+                if ("up".equals(type)) {
+                    ActivitySource souceById = activitySourceDao.getSortById(sourcesList.get(i - 1).getId().intValue());
+                    Integer down = souceById.getSort();
+                    Integer up = sortById.getSort();
+                    sortById.setSort(null);
+                    souceById.setSort(null);
+                    activitySourceDao.updateSourceSort(sortById);
+                    activitySourceDao.updateSourceSort(souceById);
+                    sortById.setSort(down);
+                    souceById.setSort(up);
+                    activitySourceDao.updateSourceSort(sortById);
+                    Integer integer = activitySourceDao.updateSourceSort(souceById);
+                    return integer;
+                }
+                if ("down".equals(type)) {
+                    ActivitySource souceById = activitySourceDao.getSortById(sourcesList.get(i + 1).getId().intValue());
+                    Integer up = souceById.getSort();
+                    Integer down = sortById.getSort();
+                    sortById.setSort(null);
+                    souceById.setSort(null);
+                    activitySourceDao.updateSourceSort(sortById);
+                    activitySourceDao.updateSourceSort(souceById);
+                    sortById.setSort(up);
+                    souceById.setSort(down);
+                    activitySourceDao.updateSourceSort(sortById);
+                    Integer integer = activitySourceDao.updateSourceSort(souceById);
+                    return integer;
+                }
+            }
+        }
+
+        return 0;
     }
 
-    public  void addActivitySourcechin(ActivitySourceChain activitySourceChain){
+    public void addActivitySourcechin(ActivitySourceChain activitySourceChain) {
         activitySourceDao.addActivitySourceChain(activitySourceChain);
-      }
+    }
 
     public ActivitySource addSource(ActivitySource activitySource) {
         activitySourceDao.addSource(activitySource);

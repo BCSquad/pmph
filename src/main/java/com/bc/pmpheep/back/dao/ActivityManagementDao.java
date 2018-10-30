@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.dao;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Activity;
+import com.bc.pmpheep.back.vo.ActivityInfoExpressVO;
 import com.bc.pmpheep.back.vo.ActivityVO;
 import org.springframework.stereotype.Repository;
 
@@ -15,4 +16,6 @@ public interface ActivityManagementDao {
     Integer updateActivity(Activity activity);
     void updateActivityStatusById(Activity activity);
     void updateActivitySetTopById(Activity activity);
+    List<ActivityInfoExpressVO> listCmsContent(PageParameter<ActivityInfoExpressVO> pageParameter);
+
 }

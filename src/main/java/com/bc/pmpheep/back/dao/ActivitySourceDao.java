@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.dao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.ActivitySource;
 import com.bc.pmpheep.back.po.ActivitySourceChain;
+import com.bc.pmpheep.back.po.ActivityVideo;
 import com.bc.pmpheep.back.vo.ActivitySourceVO;
 import com.bc.pmpheep.back.vo.ActivityVO;
 import org.springframework.stereotype.Repository;
@@ -17,4 +18,6 @@ public interface ActivitySourceDao {
     void addActivitySourceChain(ActivitySourceChain activitySourceChain);
     Integer deleteSourceById(Long id);
     Integer getMaxSort();
+    ActivitySource getSortById(Integer id);
+    Integer updateSourceSort(ActivitySource ActivitySource);
 }

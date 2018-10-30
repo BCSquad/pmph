@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.service;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Activity;
+import com.bc.pmpheep.back.vo.ActivityInfoExpressVO;
 import com.bc.pmpheep.back.vo.ActivityVO;
 import com.bc.pmpheep.back.vo.CmsContentVO;
 import org.springframework.stereotype.Service;
@@ -59,4 +60,7 @@ public interface ActivityManagementService {
      * @param activity
      */
     void setActivitySetTop(Activity activity);
+
+
+    PageResult<ActivityInfoExpressVO> listCmsContent(PageParameter<ActivityInfoExpressVO> pageParameter, String sessionId);
 }

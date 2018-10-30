@@ -45,5 +45,5 @@ public interface ActivitySourceService {
 
     Integer deleteSourceByIds(Long id);
 
-    Integer updateSort(String upId,String downId);
+    Integer updateSort(Integer id,PageParameter<ActivitySourceVO> pageParameter,String type);
 }
