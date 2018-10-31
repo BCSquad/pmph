@@ -228,5 +228,10 @@ public class ActivityManagementServiceImpl implements ActivityManagementService 
         return pageResult;
     }
 
+    @Override
+    public Integer checkedActivityByName(String activityName){
+        return activityManagementDao.checkedActivityByName(activityName);
+    }
+
 
 }

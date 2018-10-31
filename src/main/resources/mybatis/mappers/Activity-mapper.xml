@@ -170,9 +170,12 @@
 		</if>
 		ORDER BY
         <if test="parameter.isSetTop != null">
-          ac.is_set_top desc,ac.gmt_set_top desc,
+          ac.is_set_top desc,
         </if>
         ac.gmt_create desc
+		<if test="parameter.isSetTop != null">
+			,ac.gmt_set_top desc
+		</if>
 		)
 		a,
 		(
@@ -185,9 +188,6 @@
 		WHERE ac.is_deleted=0
 		<if test="parameter.activityName != null and parameter.activityName !='' ">
 			and (ac.activity_name like concat('%',#{parameter.activityName},'%'))
-		</if>
-		<if test="parameter.isSetTop != null">
-			and ac.is_Set_Top=#{parameter.isSetTop}
 		</if>
 		<if test="parameter.status != null ">
 			and ac.status=#{parameter.status}
@@ -237,6 +237,10 @@
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
+	</select>
+
+	<select id="checkedActivityByName"  parameterType="java.lang.String"  resultType="java.lang.Integer">
+		select count(*) from activity where activity_name=#{activityName}
 	</select>
 
 

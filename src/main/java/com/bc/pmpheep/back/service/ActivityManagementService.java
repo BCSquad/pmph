@@ -63,4 +63,6 @@ public interface ActivityManagementService {
 
 
     PageResult<ActivityInfoExpressVO> listCmsContent(PageParameter<ActivityInfoExpressVO> pageParameter, String sessionId);
+
+    public Integer checkedActivityByName(String activityName);
 }
