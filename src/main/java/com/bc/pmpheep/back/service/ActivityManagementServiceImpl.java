@@ -67,6 +67,7 @@ public class ActivityManagementServiceImpl implements ActivityManagementService 
     public Activity addActivity(Activity activity, String content, String sessionId, HttpServletRequest request) {
         // 获取当前登陆用户
         PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+
         if (ObjectUtil.isNull(pmphUser) || ObjectUtil.isNull(pmphUser.getId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                     CheckedExceptionResult.NULL_PARAM, "用户为空");
