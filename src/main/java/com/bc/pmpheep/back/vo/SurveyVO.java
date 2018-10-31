@@ -46,12 +46,12 @@ public class SurveyVO implements java.io.Serializable {
      */
     private Long              userId;
     /**
-     * 问卷开始时间
+     * 问卷开始时间(query)
      */
     private String            startTime;
 
     /**
-     * 问卷结束时间
+     * 问卷结束时间(query)
      */
     private String            endTime;
     /**
@@ -98,6 +98,14 @@ public class SurveyVO implements java.io.Serializable {
      * 问卷结束时间
      */
     private Timestamp         endDate;
+
+    private Long materialId;
+
+    private Long preVersionMaterialId ;
+
+    private String preVersionMaterialName ;
+
+    private Integer preVersionMaterialRound ;
 
     /** default constructor */
     public SurveyVO() {
@@ -307,4 +315,73 @@ public class SurveyVO implements java.io.Serializable {
         this.templateName = templateName;
     }
 
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public Long getPreVersionMaterialId() {
+        return preVersionMaterialId;
+    }
+
+    public void setPreVersionMaterialId(Long preVersionMaterialId) {
+        this.preVersionMaterialId = preVersionMaterialId;
+    }
+
+    public String getPreVersionMaterialName() {
+        return preVersionMaterialName;
+    }
+
+    public void setPreVersionMaterialName(String preVersionMaterialName) {
+        this.preVersionMaterialName = preVersionMaterialName;
+    }
+
+    public Integer getPreVersionMaterialRound() {
+        return preVersionMaterialRound;
+    }
+
+    public void setPreVersionMaterialRound(Integer preVersionMaterialRound) {
+        this.preVersionMaterialRound = preVersionMaterialRound;
+    }
+
+    @Override
+    public String toString() {
+        return "SurveyVO{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", templateName='" + templateName + '\'' +
+                ", subhead='" + subhead + '\'' +
+                ", intro='" + intro + '\'' +
+                ", templateId=" + templateId +
+                ", typeId=" + typeId +
+                ", userId=" + userId +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", sort=" + sort +
+                ", isDeleted=" + isDeleted +
+                ", gmtCreate=" + gmtCreate +
+                ", gmtUpdate=" + gmtUpdate +
+                ", count=" + count +
+                ", status=" + status +
+                ", surveyName='" + surveyName + '\'' +
+                ", username='" + username + '\'' +
+                ", realname='" + realname + '\'' +
+                ", beginDate=" + beginDate +
+                ", endDate=" + endDate +
+                ", preVersionMaterialId=" + preVersionMaterialId +
+                ", preVersionMaterialName='" + preVersionMaterialName + '\'' +
+                ", preVersionMaterialRound=" + preVersionMaterialRound +
+                '}';
+    }
+
+    public Long getMaterialId() {
+        return materialId;
+    }
+
+    public void setMaterialId(Long materialId) {
+        this.materialId = materialId;
+    }
 }

@@ -174,16 +174,8 @@
 		stq.direction,
 			GROUP_CONCAT(sqo.`id`) optionIdString,
 			GROUP_CONCAT(sqo.`option_content`) optionContent
-		FROM 
-			/*`material_survey_template` st
-		LEFT JOIN */
+		FROM
 			`material_survey_template_question` stq
-		/*ON
-			st.`id` = stq.`survey_id`*/
-		/*LEFT JOIN
-			`survey_question` sq 
-		ON 
-			sq.`id`= stq.`question_id`*/
 		LEFT JOIN 
 			`material_survey_template_question_option`sqo
 		ON 

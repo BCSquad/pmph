@@ -28,7 +28,7 @@ public class SurveyTemplateListVO implements java.io.Serializable {
     /**
      * 调查类型
      */
-    private String              surveyName;
+    private String            surveyName;
     /**
      * 排序
      */
