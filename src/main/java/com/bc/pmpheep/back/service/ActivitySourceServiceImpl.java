@@ -139,42 +139,16 @@ public class ActivitySourceServiceImpl implements ActivitySourceService {
             Integer integer = activitySourceDao.updateSourceSort(downSortById);
             return integer;
         }
-
-       /* List<ActivitySourceVO> sourcesList = activitySourceDao.listActivitySource(pageParameter);
-        for (int i = 0; i <= sourcesList.size(); i++) {
-            if (sourcesList.get(i).getId() == sortById.getId()) {
-                if ("up".equals(type)) {
-                    ActivitySource souceById = activitySourceDao.getSortById(sourcesList.get(i - 1).getId().intValue());
-                    Integer down = souceById.getSort();
-                    Integer up = sortById.getSort();
-                    sortById.setSort(null);
-                    souceById.setSort(null);
-                    activitySourceDao.updateSourceSort(sortById);
-                    activitySourceDao.updateSourceSort(souceById);
-                    sortById.setSort(down);
-                    souceById.setSort(up);
-                    activitySourceDao.updateSourceSort(sortById);
-                    Integer integer = activitySourceDao.updateSourceSort(souceById);
-                    return integer;
-                }
-                if ("down".equals(type)) {
-                    ActivitySource souceById = activitySourceDao.getSortById(sourcesList.get(i + 1).getId().intValue());
-                    Integer up = souceById.getSort();
-                    Integer down = sortById.getSort();
-                    sortById.setSort(null);
-                    souceById.setSort(null);
-                    activitySourceDao.updateSourceSort(sortById);
-                    activitySourceDao.updateSourceSort(souceById);
-                    sortById.setSort(up);
-                    souceById.setSort(down);
-                    activitySourceDao.updateSourceSort(sortById);
-                    Integer integer = activitySourceDao.updateSourceSort(souceById);
-                    return integer;
-                }
-            }
-        }
-*/
         return 0;
+    }
+
+    @Override
+    public List<ActivitySourceChain> getSourceChain(Long id) {
+        if (ObjectUtil.isNull(id)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                    CheckedExceptionResult.NULL_PARAM, "id为空");
+        }
+        return activitySourceDao.getSourceChain(id);
     }
 
     public void addActivitySourcechin(ActivitySourceChain activitySourceChain) {

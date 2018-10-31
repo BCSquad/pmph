@@ -259,15 +259,7 @@ public class ActivityManagementController {
     public ResponseBean delete(HttpServletRequest request) {
         int flag=0;
         String activityName = request.getParameter("activityName");
-        if (StringUtil.notEmpty(request.getParameter("activityName"))) {
-            Integer integer = activityManagementService.checkedActivityByName(activityName);
-            if(integer<1){
-                flag=1;
-            }
-        }
-        ResponseBean responseBean = new ResponseBean();
-        responseBean.setCode(flag);
-        return new ResponseBean(responseBean);
+        return new ResponseBean(activityManagementService.checkedActivityByName(activityName));
     }
 
 

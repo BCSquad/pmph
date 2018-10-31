@@ -135,5 +135,18 @@ public class ActivitySourceController {
         return new ResponseBean(activitySourceService.deleteSourceByIds(id));
     }
 
+    /**
+     * 功能描述: 根据id删除活动资源
+     * @param id
+     * @return
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除活动资源")
+    @RequestMapping(value = "/getSourceChain", method = RequestMethod.GET)
+    public ResponseBean getSourceChain(HttpServletRequest request) {
+        String id = request.getParameter("id");
+        return new ResponseBean(activitySourceService.getSourceChain(Long.parseLong(id)));
+    }
+
 
 }

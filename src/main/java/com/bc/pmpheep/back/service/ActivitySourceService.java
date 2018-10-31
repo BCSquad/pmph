@@ -9,6 +9,7 @@ import com.bc.pmpheep.back.vo.ActivityVO;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
 
 public interface ActivitySourceService {
     /**
@@ -46,4 +47,6 @@ public interface ActivitySourceService {
     Integer deleteSourceByIds(Long id);
 
     Integer updateSort(Integer id,PageParameter<ActivitySourceVO> pageParameter,String type);
+
+    List<ActivitySourceChain> getSourceChain(Long id);
 }

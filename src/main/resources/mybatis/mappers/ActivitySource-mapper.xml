@@ -174,5 +174,10 @@
 	</insert>
 
 
-
+	<select id="getSourceChain" parameterType="java.lang.Long" resultType="ActivitySourceChain">
+		select * from  activity_source_chain ac where  ac.activity_id=#{id}
+	</select>
+	<delete id="delsourceChin" parameterType="java.lang.Long">
+		delete DELETE FROM activity_source_chain WHERE activity_id = ##{id}
+	</delete>
 </mapper>

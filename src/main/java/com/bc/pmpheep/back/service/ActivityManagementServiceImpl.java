@@ -230,6 +230,11 @@ public class ActivityManagementServiceImpl implements ActivityManagementService 
 
     @Override
     public Integer checkedActivityByName(String activityName){
+
+        if (ObjectUtil.isNull(activityName)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                    CheckedExceptionResult.NULL_PARAM, "activityName为空");
+        }
         return activityManagementDao.checkedActivityByName(activityName);
     }
 
