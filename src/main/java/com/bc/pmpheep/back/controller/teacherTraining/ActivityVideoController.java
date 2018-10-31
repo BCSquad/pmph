@@ -59,7 +59,12 @@ public class ActivityVideoController {
                     CheckedExceptionResult.USER_SESSION, "尚未登录或session已过期"));
         }
         ActivityVideo activityVideo = new ActivityVideo();
-
+        Integer integer = activityVideoService.checkedName(title);
+        if(integer>0){
+            ResponseBean responseBean = new ResponseBean();
+            responseBean.setCode(2);
+            return new ResponseBean(responseBean);
+        }
         activityVideo.setTitle(title);
         activityVideo.setOrigPath(origPath);
         activityVideo.setOrigFileName(origFileName);

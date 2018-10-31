@@ -180,4 +180,8 @@
 	<delete id="delsourceChin" parameterType="java.lang.Long">
 		 DELETE FROM activity_source_chain WHERE activity_id = #{id}
 	</delete>
+
+	<select id="checkedName" parameterType="java.lang.String"  resultType="java.lang.Integer">
+		select count(*) from activity_source where source_name=#{sourceName}
+	</select>
 </mapper>

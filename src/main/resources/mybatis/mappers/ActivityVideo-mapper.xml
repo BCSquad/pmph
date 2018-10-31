@@ -264,4 +264,7 @@
     <delete id="delVideoChain" parameterType="java.lang.Long">
 		 DELETE FROM activity_video_chain WHERE activity_id = #{id}
 	</delete>
+    <select id="checkedName" parameterType="java.lang.String"  resultType="java.lang.Integer">
+		select count(*) from activity_video where title=#{title}
+	</select>
 </mapper>

@@ -24,5 +24,5 @@ public interface ActivitySourceDao {
     ActivitySource getDownSortById(Integer id);
     List<ActivitySourceChain> getSourceChain(Long id);
     Integer delsourceChin(Long id);
-
+    Integer checkedName(String title);
 }

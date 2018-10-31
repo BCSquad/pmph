@@ -109,7 +109,16 @@ public class ActivityVideoServiceImpl implements ActivityVideoService {
         return activityVideoDao.getVideoChain(id);
     }
 
-        @Override
+    @Override
+    public Integer checkedName(String title) {
+        if (ObjectUtil.isNull(title)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                    CheckedExceptionResult.NULL_PARAM, "title为空");
+        }
+        return activityVideoDao.checkedName(title);
+    }
+
+    @Override
         public Integer deleteVideoByIds (Long id){
             if (ObjectUtil.isNull(id)) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.CMS,

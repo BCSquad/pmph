@@ -153,6 +153,15 @@ public class ActivitySourceServiceImpl implements ActivitySourceService {
         return activitySourceDao.getSourceChain(id);
     }
 
+    @Override
+    public Integer checkedName(String sourceName) {
+        if (ObjectUtil.isNull(sourceName)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                    CheckedExceptionResult.NULL_PARAM, "sourceName为空");
+        }
+        return activitySourceDao.checkedName(sourceName);
+    }
+
     public void addActivitySourcechin(ActivitySourceChain activitySourceChain) {
         activitySourceDao.addActivitySourceChain(activitySourceChain);
     }
@@ -161,4 +170,5 @@ public class ActivitySourceServiceImpl implements ActivitySourceService {
         activitySourceDao.addSource(activitySource);
         return activitySource;
     }
+
 }

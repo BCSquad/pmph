@@ -42,6 +42,13 @@ public class ActivitySourceController {
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增资源")
     @RequestMapping(value = "/newSource", method = RequestMethod.POST)
     public ResponseBean newSource(ActivitySource activitySource, @RequestParam("file") String[] files, @RequestParam("sourceName") String sourceName, HttpServletRequest request) throws IOException {
+
+        Integer integer = activitySourceService.checkedName(sourceName);
+        if(integer>0){
+            ResponseBean responseBean = new ResponseBean();
+            responseBean.setCode(2);
+            return new ResponseBean(responseBean);
+        }
         String sessionId = CookiesUtil.getSessionId(request);
         return new ResponseBean(activitySourceService.addSource(files, activitySource,
                 sessionId,

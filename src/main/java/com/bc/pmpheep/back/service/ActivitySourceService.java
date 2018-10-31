@@ -49,4 +49,6 @@ public interface ActivitySourceService {
     Integer updateSort(Integer id,PageParameter<ActivitySourceVO> pageParameter,String type);
 
     List<ActivitySourceChain> getSourceChain(Long id);
+
+    public Integer checkedName(String sourceName);
 }

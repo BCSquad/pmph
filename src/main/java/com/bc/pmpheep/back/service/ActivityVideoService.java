@@ -51,4 +51,5 @@ public interface ActivityVideoService {
     Integer updateSort(Integer id,PageParameter<ActivityVideoVO> pageParameter,String type);
 
     public List<ActivityVideoChain> getVideoChain(Long id);
+    public Integer checkedName(String title);
 }

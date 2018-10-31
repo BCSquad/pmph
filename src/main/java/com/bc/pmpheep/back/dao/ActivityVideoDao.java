@@ -25,4 +25,5 @@ public interface ActivityVideoDao {
     ActivityVideo getDownSortById(Integer id);
     List<ActivityVideoChain> getVideoChain(Long id);
     Integer delVideoChain(Long id);
+    Integer checkedName(String activityName);
 }
