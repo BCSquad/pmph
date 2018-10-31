@@ -6,6 +6,7 @@ import com.bc.pmpheep.back.vo.ActivityInfoExpressVO;
 import com.bc.pmpheep.back.vo.ActivityVO;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 
 @Repository
@@ -17,5 +18,5 @@ public interface ActivityManagementDao {
     void updateActivityStatusById(Activity activity);
     void updateActivitySetTopById(Activity activity);
     List<ActivityInfoExpressVO> listCmsContent(PageParameter<ActivityInfoExpressVO> pageParameter);
-
+    Integer checkedActivityByName(String activityName);
 }

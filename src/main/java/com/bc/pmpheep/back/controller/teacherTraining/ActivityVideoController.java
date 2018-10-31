@@ -112,10 +112,7 @@ public class ActivityVideoController {
         String videos = request.getParameter("videos");
         String  activityId = request.getParameter("activityId");
         String[] ids = StringUtil.StrList(videos);
-        activityVideoService.addActivityVideoChain(activityId,ids);
-        ResponseBean responseBean = new ResponseBean();
-        responseBean.setCode(1);
-        return responseBean;
+        return new ResponseBean(activityVideoService.addActivityVideoChain(activityId,ids));
     }
 
 
@@ -154,4 +151,19 @@ public class ActivityVideoController {
                 new PageParameter<ActivityVideoVO>(pageNumber, pageSize, activityVideoVO);
         return new ResponseBean(activityVideoService.updateSort(id,pageParameter, type));
     }
+
+
+    /**
+     * 功能描述: 根据id删除活动资源
+     * @param id
+     * @return
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除活动资源")
+    @RequestMapping(value = "/getVideoChain", method = RequestMethod.GET)
+    public ResponseBean getVideoChain(HttpServletRequest request) {
+        String id = request.getParameter("id");
+        return new ResponseBean(activityVideoService.getVideoChain(Long.parseLong(id)));
+    }
+
 }

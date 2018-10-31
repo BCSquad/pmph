@@ -187,6 +187,7 @@ public class ActivityManagementController {
 
     /**
      * 功能描述 :查询教材列表
+     *
      * @param request
      * @param pageSize
      * @param pageNumber
@@ -221,6 +222,7 @@ public class ActivityManagementController {
 
     /**
      * 功能描述:查询信息快报列表
+     *
      * @param pageNumber
      * @param pageSize
      * @param cmsContentVO
@@ -245,9 +247,25 @@ public class ActivityManagementController {
         return new ResponseBean(activityManagementService.listCmsContent(pageParameter, sessionId));
     }
 
+    /**
+     * 功能描述:删除活动视频
+     *
+     * @param id
+     * @return
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "检查活动名称")
+    @RequestMapping(value = "/checkedName", method = RequestMethod.GET)
+    public ResponseBean delete(HttpServletRequest request) {
+        int flag=0;
+        String activityName = request.getParameter("activityName");
+        return new ResponseBean(activityManagementService.checkedActivityByName(activityName));
+    }
+
 
     /**
      * 功能描述:解析活动对象
+     *
      * @param request
      * @return
      */
