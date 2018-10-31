@@ -289,7 +289,7 @@ public class MaterialSurveyServiceImpl implements MaterialSurveyService {
             surveyTemplateVO.setPreVersionMaterialId(surveyVO.getPreVersionMaterialId());
             surveyTemplateVO.setPreVersionMaterialRound(surveyVO.getPreVersionMaterialRound());
             //去掉json字符串中的id属性，考虑了前逗号，后逗号，后]，后}
-            String questionAnswerJosn_temp = questionAnswerJosn.replaceAll(",?\\s*?\"?id\"?\\s*?:.*?(?=[,\\]\\}])\\s*?,?","");
+            String questionAnswerJosn_temp = questionAnswerJosn.replaceAll(",?\\s*?\"id\"\\s*?:.*?(?=[,\\]\\}])\\s*?,?","");
             surveyTemplateService.addSurveyTemplateVO(questionAnswerJosn_temp,"[]","[]",surveyTemplateVO,sessionId);
         }
 

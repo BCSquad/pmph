@@ -107,6 +107,11 @@ public class SurveyVO implements java.io.Serializable {
 
     private Integer preVersionMaterialRound ;
 
+    /**
+     * 是否教材相关 仅做查询条件
+     */
+    private Boolean materialRelative ;
+
     /** default constructor */
     public SurveyVO() {
     }
@@ -383,5 +388,13 @@ public class SurveyVO implements java.io.Serializable {
 
     public void setMaterialId(Long materialId) {
         this.materialId = materialId;
+    }
+
+    public Boolean getMaterialRelative() {
+        return materialRelative;
+    }
+
+    public void setMaterialRelative(Boolean materialRelative) {
+        this.materialRelative = materialRelative;
     }
 }

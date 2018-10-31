@@ -83,10 +83,31 @@ public class SurveyTemplateListVO implements java.io.Serializable {
      */
     private Timestamp         endDate;
 
-    private Boolean isActive ;
+    private Boolean            isActive ;
 
     /** default constructor */
     public SurveyTemplateListVO() {
+    }
+
+    public SurveyTemplateListVO(Long id, String templateName, String intro, String surveyName, Integer sort, Long userId, String startTime, String endTime, Boolean isDeleted, Timestamp gmtCreate, Timestamp gmtUpdate, Integer count, Integer status, String username, String realname, Timestamp beginDate, Timestamp endDate, Boolean isActive) {
+        this.id = id;
+        this.templateName = templateName;
+        this.intro = intro;
+        this.surveyName = surveyName;
+        this.sort = sort;
+        this.userId = userId;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.isDeleted = isDeleted;
+        this.gmtCreate = gmtCreate;
+        this.gmtUpdate = gmtUpdate;
+        this.count = count;
+        this.status = status;
+        this.username = username;
+        this.realname = realname;
+        this.beginDate = beginDate;
+        this.endDate = endDate;
+        this.isActive = isActive;
     }
 
     public static long getSerialVersionUID() {
@@ -272,11 +293,20 @@ public class SurveyTemplateListVO implements java.io.Serializable {
                + "]";
     }
 
+
     public Boolean getActive() {
         return isActive;
     }
 
     public void setActive(Boolean active) {
+        isActive = active;
+    }
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean active) {
         isActive = active;
     }
 }
