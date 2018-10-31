@@ -22,4 +22,7 @@ public interface ActivitySourceDao {
     Integer updateSourceSort(ActivitySource ActivitySource);
     ActivitySource getUpSortById(Integer id);
     ActivitySource getDownSortById(Integer id);
+    List<ActivitySourceChain> getSourceChain(Long id);
+    Integer delsourceChin(Long id);
+
 }

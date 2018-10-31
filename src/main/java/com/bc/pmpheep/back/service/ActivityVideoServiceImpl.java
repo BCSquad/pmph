@@ -83,7 +83,9 @@ public class ActivityVideoServiceImpl implements ActivityVideoService {
 
         @Override
         public Integer addActivityVideoChain (String activityId, String[]ids){
+
             try {
+                activityVideoDao.delVideoChain(Long.parseLong(activityId));
                 for (String id : ids) {
                     ActivityVideoChain activitySourceChain = new ActivityVideoChain();
                     activitySourceChain.setActivityId(Long.parseLong(activityId));
@@ -97,6 +99,15 @@ public class ActivityVideoServiceImpl implements ActivityVideoService {
             }
 
         }
+
+    @Override
+    public List<ActivityVideoChain> getVideoChain(Long id) {
+        if (ObjectUtil.isNull(id)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                    CheckedExceptionResult.NULL_PARAM, "id为空");
+        }
+        return activityVideoDao.getVideoChain(id);
+    }
 
         @Override
         public Integer deleteVideoByIds (Long id){
