@@ -125,6 +125,25 @@
     <select id="getSortById" resultType="ActivityVideo" parameterType="java.lang.Integer">
         select * from activity_video where id=#{id}
     </select>
+
+    <select id="getUpSortById"  resultType="ActivityVideo" parameterType="java.lang.Integer">
+        SELECT
+        *
+        FROM
+        ( SELECT * FROM activity_video ac WHERE ac.sort &lt; #{sort} AND is_deleted = 0 ORDER BY sort DESC ) a
+        LIMIT 0,
+        1
+    </select>
+    <select id="getDownSortById"  resultType="ActivityVideo" parameterType="java.lang.Integer">
+		 SELECT
+        *
+        FROM
+        ( SELECT * FROM activity_video ac WHERE ac.sort &gt; #{sort} AND is_deleted = 0 ORDER BY sort asc ) a
+        LIMIT 0,
+        1
+	</select>
+
+
     <update id="updateVideoSort" parameterType="ActivityVideo" >
         update activity_video set
                 sort =#{sort}
@@ -209,7 +228,7 @@
         <if test="parameter.title != null and parameter.title !='' ">
             and (ac.title like concat('%',#{parameter.title},'%'))
         </if>
-        order by ac.sort,ac.gmt_create
+        order by ac.sort asc
         )
         a,
         (

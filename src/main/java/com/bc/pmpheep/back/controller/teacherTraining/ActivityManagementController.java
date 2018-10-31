@@ -92,7 +92,6 @@ public class ActivityManagementController {
         Activity activity = new Activity();
         activity.setId(id);
         activity.setIsSetTop(isSetTop);
-        activity.setGmtUpdate(DateUtil.getCurrentTime());
         if (isSetTop) {
             activity.setGmtSetTop(DateUtil.getCurrentTime());
         } else {
