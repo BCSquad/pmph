@@ -26,7 +26,7 @@ public interface MaterialSurveyDao {
      * @param survey 实体对象
      * @return 影响行数
      */
-    Integer addSurvey(Survey survey);
+    Integer addSurvey(SurveyVO survey);
 
     /**
      * 逻辑删除Survey通过主键id
@@ -97,5 +97,5 @@ public interface MaterialSurveyDao {
      * @param id
      * @return
      */
-    SurveyQuestionOptionCategoryVO getSurveyQuestionBySurveyId(@Param("id")Long id);
+    List<SurveyQuestionOptionCategoryVO> getSurveyQuestionBySurveyId(@Param("id")Long id);
 }

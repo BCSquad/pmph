@@ -187,12 +187,12 @@ public class MaterialSurveyQuestionServiceImpl implements MaterialSurveyQuestion
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
-        List<Long> newIds = surveyQuestionDao.batchInsertSurveyQuestion(surveyQuestions);
-        if (CollectionUtil.isEmpty(newIds)) {
+        surveyQuestionDao.batchInsertSurveyQuestion(surveyQuestions);
+        /*if (CollectionUtil.isEmpty(newIds)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "问题批量新增失败");
-        }
-        return newIds;
+        }*/
+        return null;
     }
 
     @Override

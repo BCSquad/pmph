@@ -111,7 +111,36 @@ public class ActivitySourceServiceImpl implements ActivitySourceService {
     @Override
     public Integer updateSort(Integer id, PageParameter<ActivitySourceVO> pageParameter, String type) {
         ActivitySource sortById = activitySourceDao.getSortById(id);
-        List<ActivitySourceVO> sourcesList = activitySourceDao.listActivitySource(pageParameter);
+        if ("up".equals(type)) {
+            ActivitySource upSortById = activitySourceDao.getUpSortById(sortById.getSort());
+            Integer down = upSortById.getSort();
+            Integer up = sortById.getSort();
+            sortById.setSort(null);
+            upSortById.setSort(null);
+            activitySourceDao.updateSourceSort(sortById);
+            activitySourceDao.updateSourceSort(upSortById);
+            sortById.setSort(down);
+            upSortById.setSort(up);
+            activitySourceDao.updateSourceSort(sortById);
+            Integer integer = activitySourceDao.updateSourceSort(upSortById);
+            return integer;
+        }
+        if ("down".equals(type)) {
+            ActivitySource downSortById = activitySourceDao.getDownSortById(sortById.getSort());
+            Integer up = downSortById.getSort();
+            Integer down = sortById.getSort();
+            sortById.setSort(null);
+            downSortById.setSort(null);
+            activitySourceDao.updateSourceSort(sortById);
+            activitySourceDao.updateSourceSort(downSortById);
+            sortById.setSort(up);
+            downSortById.setSort(down);
+            activitySourceDao.updateSourceSort(sortById);
+            Integer integer = activitySourceDao.updateSourceSort(downSortById);
+            return integer;
+        }
+
+       /* List<ActivitySourceVO> sourcesList = activitySourceDao.listActivitySource(pageParameter);
         for (int i = 0; i <= sourcesList.size(); i++) {
             if (sourcesList.get(i).getId() == sortById.getId()) {
                 if ("up".equals(type)) {
@@ -144,7 +173,7 @@ public class ActivitySourceServiceImpl implements ActivitySourceService {
                 }
             }
         }
-
+*/
         return 0;
     }
 

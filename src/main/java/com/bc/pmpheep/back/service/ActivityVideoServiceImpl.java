@@ -110,7 +110,39 @@ public class ActivityVideoServiceImpl implements ActivityVideoService {
     @Override
     public Integer updateSort(Integer id, PageParameter<ActivityVideoVO> pageParameter, String type) {
         ActivityVideo sortByid = activityVideoDao.getSortById(id);
-        List<ActivityVideoVO> videoList = activityVideoDao.listActivityVideo(pageParameter);
+
+        if ("up".equals(type)) {
+            ActivityVideo upSortById = activityVideoDao.getUpSortById(sortByid.getSort());
+            Integer down = upSortById.getSort();
+            Integer up = sortByid.getSort();
+            sortByid.setSort(null);
+            upSortById.setSort(null);
+            activityVideoDao.updateVideoSort(sortByid);
+            activityVideoDao.updateVideoSort(upSortById);
+            sortByid.setSort(down);
+            upSortById.setSort(up);
+            activityVideoDao.updateVideoSort(sortByid);
+            Integer integer = activityVideoDao.updateVideoSort(upSortById);
+            return integer;
+        }
+        if ("down".equals(type)) {
+            ActivityVideo downSortById = activityVideoDao.getDownSortById(sortByid.getSort());
+            Integer up = downSortById.getSort();
+            Integer down = sortByid.getSort();
+            sortByid.setSort(null);
+            downSortById.setSort(null);
+            activityVideoDao.updateVideoSort(sortByid);
+            activityVideoDao.updateVideoSort(downSortById);
+            sortByid.setSort(up);
+            downSortById.setSort(down);
+            activityVideoDao.updateVideoSort(sortByid);
+            Integer integer = activityVideoDao.updateVideoSort(downSortById);
+             return integer;
+        }
+
+
+
+        /*List<ActivityVideoVO> videoList = activityVideoDao.listActivityVideo(pageParameter);
         for (int i = 0; i <= videoList.size(); i++) {
             if (videoList.get(i).getId() == sortByid.getId()) {
                 if ("up".equals(type)) {
@@ -142,7 +174,7 @@ public class ActivityVideoServiceImpl implements ActivityVideoService {
                     return integer;
                 }
             }
-        }
+        }*/
 
         return 0;
     }

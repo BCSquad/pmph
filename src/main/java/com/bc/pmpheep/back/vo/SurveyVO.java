@@ -99,6 +99,8 @@ public class SurveyVO implements java.io.Serializable {
      */
     private Timestamp         endDate;
 
+    private Long materialId;
+
     private Long preVersionMaterialId ;
 
     private String preVersionMaterialName ;
@@ -373,5 +375,13 @@ public class SurveyVO implements java.io.Serializable {
                 ", preVersionMaterialName='" + preVersionMaterialName + '\'' +
                 ", preVersionMaterialRound=" + preVersionMaterialRound +
                 '}';
+    }
+
+    public Long getMaterialId() {
+        return materialId;
+    }
+
+    public void setMaterialId(Long materialId) {
+        this.materialId = materialId;
     }
 }

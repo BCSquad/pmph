@@ -5,26 +5,38 @@
 	<sql id="key">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="categoryId != null">
-				category_id,
+			<if test="id != null ">
+				id	,
 			</if>
-			<if test="title != null and title !=''">
-				title,
+			<if test="surveyId != null ">
+				survey_id	,
 			</if>
-			<if test="type != null and type !=''">
-				type,
+			<if test="categoryId != null ">
+				category_id	,
 			</if>
-			<if test="sort != null">
-				sort,
+			<if test="title != null ">
+				title	,
 			</if>
-			<if test="direction != null and direction !=''">
-				direction,
+			<if test="type != null ">
+				type	,
 			</if>
-			<if test="isAnswer != null">
-				is_answer,
+			<if test="sort != null ">
+				sort	,
 			</if>
-			<if test="isDeleted != null">
-				is_deleted,
+			<if test="direction != null ">
+				direction	,
+			</if>
+			<if test="isAnswer != null ">
+				is_answer	,
+			</if>
+			<if test="isDeleted != null ">
+				is_deleted	,
+			</if>
+			<if test="gmtCreate != null ">
+				gmt_create	,
+			</if>
+			<if test="gmtUpdate != null ">
+				gmt_update	,
 			</if>
 		</trim>
 	</sql>
@@ -32,50 +44,142 @@
 	<sql id="value">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="categoryId != null">
-				#{categoryId},
+			<if test="id != null ">
+				#{id}	,
 			</if>
-			<if test="title != null and title !=''">
-				#{title},
+			<if test="surveyId != null ">
+				#{surveyId}	,
 			</if>
-			<if test="type != null and type !=''">
-				#{type},
+			<if test="categoryId != null ">
+				#{categoryId}	,
 			</if>
-			<if test="sort != null">
-				#{sort},
+			<if test="title != null ">
+				#{title}	,
 			</if>
-			<if test="direction != null and direction !=''">
-				#{direction},
+			<if test="type != null ">
+				#{type}	,
 			</if>
-			<if test="isAnswer != null">
-				#{isAnswer},
+			<if test="sort != null ">
+				#{sort}	,
 			</if>
-			<if test="isDeleted != null">
-				#{isDeleted},
+			<if test="direction != null ">
+				#{direction}	,
+			</if>
+			<if test="isAnswer != null ">
+				#{isAnswer}	,
+			</if>
+			<if test="isDeleted != null ">
+				#{isDeleted}	,
+			</if>
+			<if test="gmtCreate != null ">
+				#{gmtCreate}	,
+			</if>
+			<if test="gmtUpdate != null ">
+				#{gmtUpdate}	,
+			</if>
+		</trim>
+	</sql>
+	<sql id="updates">
+		<trim suffixOverrides=",">
+			<if test="id != null ">
+				id	=	values(id)	,
+			</if>
+			<if test="surveyId != null ">
+				survey_id	=	values(survey_id)	,
+			</if>
+			<if test="categoryId != null ">
+				category_id	=	values(category_id)	,
+			</if>
+			<if test="title != null ">
+				title	=	values(title)	,
+			</if>
+			<if test="type != null ">
+				type	=	values(type)	,
+			</if>
+			<if test="sort != null ">
+				sort	=	values(sort)	,
+			</if>
+			<if test="direction != null ">
+				direction	=	values(direction)	,
+			</if>
+			<if test="isAnswer != null ">
+				is_answer	=	values(is_answer)	,
+			</if>
+			<if test="isDeleted != null ">
+				is_deleted	=	values(is_deleted)	,
+			</if>
+			<if test="gmtCreate != null ">
+				gmt_create	=	values(gmt_create)	,
+			</if>
+			<if test="gmtUpdate != null ">
+				gmt_update	=	values(gmt_update)	,
+			</if>
+		</trim>
+	</sql>
+	<sql id="duplicate_key_update">
+		<trim suffixOverrides=",">
+			<if test="surveyId != null ">
+				survey_id	=	values(survey_id)	,
+			</if>
+			<if test="categoryId != null ">
+				category_id	=	values(category_id)	,
+			</if>
+			<if test="title != null ">
+				title	=	values(title)	,
+			</if>
+			<if test="type != null ">
+				type	=	values(type)	,
+			</if>
+			<if test="sort != null ">
+				sort	=	values(sort)	,
+			</if>
+			<if test="direction != null ">
+				direction	=	values(direction)	,
+			</if>
+			<if test="isAnswer != null ">
+				is_answer	=	values(is_answer)	,
+			</if>
+			<if test="isDeleted != null ">
+				is_deleted	=	values(is_deleted)	,
+			</if>
+			<if test="gmtCreate != null ">
+				gmt_create	=	values(gmt_create)	,
+			</if>
+			<if test="gmtUpdate != null ">
+				gmt_update	=	values(gmt_update)	,
 			</if>
 		</trim>
 	</sql>
 	<!-- 新增一个SurveyQuestion -->
-	<insert id="addSurveyQuestion" parameterType="SurveyQuestion">
-		<selectKey resultType="java.lang.Long" order="AFTER"
-			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+	<insert id="addSurveyQuestion" parameterType="SurveyQuestion" keyProperty="id" useGeneratedKeys="true">
+		<!--<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> &lt;!&ndash; order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER &ndash;&gt;
 			SELECT LAST_INSERT_ID()
-		</selectKey>
+		</selectKey>-->
 		insert into material_survey_question (
 		<include refid="key" />
 		)
 		values(
 		<include refid="value" />
-		);
+		)
+		on duplicate key update
+		<include refid="duplicate_key_update" />
 	</insert>
 	
 	<!-- 批量插入SurveyQuestion -->
 	<insert id="batchInsertSurveyQuestion" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
-        insert into material_survey_question (title,type,sort,direction)
-        values
-        <foreach collection="list" item="item" index="index" separator=",">
-            ( #{item.title},#{item.type},#{item.sort},#{item.direction})
-        </foreach>
+		insert into material_survey_question (
+		id,title,type,direction,sort,is_deleted,survey_id
+		)
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			#{item.id},#{item.title},#{item.type},#{item.direction},#{item.sort},#{item.isDeleted},#{item.surveyId}
+			)
+		</foreach>
+		on duplicate key update
+		title = VALUES(title),type = VALUES(type),direction=VALUES(direction),sort=VALUES(sort)
+		,is_deleted=VALUES(is_deleted)
     </insert>
 	
 	<!-- 逻辑删除SurveyQuestion通过主键id -->
