@@ -226,6 +226,9 @@
 			<if test="parameter.templateName != null and parameter.templateName != ''">
 				and stl.template_name like concat('%',#{parameter.templateName},'%')
 			</if>
+			<if test="parameter.isActive != null">
+				and stl.is_active = #{parameter.isActive}
+			</if>
 			<!-- 问卷创建日期 %H:%i:%s-->
 			<if test="parameter.startTime !=null and parameter.startTime !='' ">
 				and
@@ -254,6 +257,9 @@
 			<!-- 模版名称 -->
 			<if test="parameter.templateName != null and parameter.templateName != ''">
 				and stl.template_name like concat('%',#{parameter.templateName},'%')
+			</if>
+			<if test="parameter.isActive != null">
+				and stl.is_active = #{parameter.isActive}
 			</if>
 			<!-- 问卷创建日期 %H:%i:%s-->
 			<if test="parameter.startTime !=null and parameter.startTime !='' ">
