@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.controller.materialSurvey;
 
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.po.Survey;
 import com.bc.pmpheep.back.po.SurveyTemplate;
 import com.bc.pmpheep.back.service.MaterialSurveyService;
 import com.bc.pmpheep.back.util.CookiesUtil;
@@ -88,7 +89,7 @@ public class MaterialSurveyController {
                 del_question,
                 del_question_option,
                 surveyVO,
-                sessionId));
+                sessionId,tempReCreat));
     }
 
     /**
@@ -111,13 +112,13 @@ public class MaterialSurveyController {
     }
 
 
-    /*@ResponseBody
+    @ResponseBody
     @RequestMapping(value = "/switchActive",method = RequestMethod.GET)
-    public ResponseBean switchActive(@RequestParam(value = "templateId" ,required =true) Long templateId
-            ,@RequestParam(value = "isActive",defaultValue = "true")Boolean isActive){
-        SurveyTemplate updateTemplate = new SurveyTemplate();
-        updateTemplate.setId(templateId);
-        updateTemplate.setActive(isActive);
-        return new ResponseBean(surveyService.updateSurvey(updateTemplate));
-    }*/
+    public ResponseBean switchActive(@RequestParam(value = "id" ,required =true) Long id
+            ,@RequestParam(value = "status",defaultValue = "1")Short status){
+        Survey updateSurvey = new Survey();
+        updateSurvey.setId(id);
+        updateSurvey.setStatus(status);
+        return new ResponseBean(surveyService.updateSurvey(updateSurvey));
+    }
 }

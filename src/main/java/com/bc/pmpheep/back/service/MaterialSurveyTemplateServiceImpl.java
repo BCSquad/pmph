@@ -152,11 +152,7 @@ public class MaterialSurveyTemplateServiceImpl implements MaterialSurveyTemplate
                                               CheckedExceptionResult.NULL_PARAM, "调研表标题不能超过50个字符");
         }
         String intro = surveyTemplateVO.getIntro();// 调研表概述
-        if (templateName.length() > 200) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
-                                              CheckedExceptionResult.NULL_PARAM, "调研表概述不能超过200个字符");
-        }
-        if (templateName.length() > 200) {
+        if (intro.length() > 200) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "调研表概述不能超过200个字符");
         }

@@ -22,7 +22,7 @@ public interface MaterialSurveyQuestionDao {
      *
      * @author:tyc
      * @date:2017年12月20日下午16:47:44
-     * @param SurveyQuestion 实体对象
+     *  SurveyQuestion 实体对象
      * @return 影响行数
      */
     Integer addSurveyQuestion(SurveyQuestion surveyQuestion);
@@ -37,14 +37,14 @@ public interface MaterialSurveyQuestionDao {
      * @return 影响行数
      * </pre>
      */
-    List<Long> batchInsertSurveyQuestion(List<SurveyQuestion> surveyQuestions);
+    Integer batchInsertSurveyQuestion(List<SurveyQuestion> surveyQuestions);
 
     /**
      * 逻辑删除SurveyQuestion通过主键id
      *
      * @author:tyc
      * @date:2017年12月20日下午16:47:44
-     * @param SurveyQuestion
+     *  SurveyQuestion
      * @return 影响行数
      */
     Integer deleteSurveyQuestionById(Long id);
@@ -54,7 +54,7 @@ public interface MaterialSurveyQuestionDao {
      *
      * @author:tyc
      * @date:2017年12月20日下午16:47:44
-     * @param SurveyQuestion
+     * SurveyQuestion
      * @return 影响行数
      */
     Integer updateSurveyQuestion(SurveyQuestion surveyQuestion);
@@ -65,7 +65,7 @@ public interface MaterialSurveyQuestionDao {
      * 功能描述：批量更新
      * 使用示范：
      *
-     * @param SurveyQuestion  SurveyQuestion 集合
+     * SurveyQuestion  SurveyQuestion 集合
      * @return 影响行数
      * </pre>
      */
@@ -76,7 +76,7 @@ public interface MaterialSurveyQuestionDao {
      *
      * @author:tyc
      * @date:2017年12月20日下午16:47:44
-     * @param SurveyQuestion
+     *  SurveyQuestion
      * @return 影响行数
      */
     SurveyQuestion getSurveyQuestionById(Long id);

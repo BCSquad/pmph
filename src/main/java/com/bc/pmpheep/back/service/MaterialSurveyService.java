@@ -37,7 +37,7 @@ public interface MaterialSurveyService {
      * @param survey 实体对象
      * @return 影响行数
      */
-    Survey addSurvey(Survey survey) throws CheckedServiceException;
+    SurveyVO addSurvey(SurveyVO survey) throws CheckedServiceException;
 
     /**
      * 
@@ -51,7 +51,7 @@ public interface MaterialSurveyService {
      * @throws CheckedServiceException
      * </pre>
      */
-    Survey addSurvey(Survey survey, String sessionId) throws CheckedServiceException;
+    SurveyVO addSurvey(SurveyVO survey, String sessionId) throws CheckedServiceException;
 
     /**
      * 更新一个 Survey通过主键id
@@ -143,7 +143,7 @@ public interface MaterialSurveyService {
      * @param sessionId
      * @return
      */
-    SurveyVO addSurvey(String questionAnswerJosn, String del_question, String del_question_option, SurveyVO surveyVO, String sessionId);
+    SurveyVO addSurvey(String questionAnswerJosn, String del_question, String del_question_option, SurveyVO surveyVO, String sessionId,Boolean tempReCreat);
 
     /**
      * 获取调研表详情

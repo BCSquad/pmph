@@ -84,6 +84,11 @@ public class Survey implements java.io.Serializable {
      */
     private Timestamp         gmtUpdate;
 
+    private Long materialId;
+    private Long preVersionMaterialId;
+    private String preVersionMaterialName ;
+    private Long preVersionMaterialRound ;
+
     // Constructors
 
     /** default constructor */
@@ -364,4 +369,43 @@ public class Survey implements java.io.Serializable {
                + ", gmtUpdate=" + gmtUpdate + "]";
     }
 
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public Long getPreVersionMaterialId() {
+        return preVersionMaterialId;
+    }
+
+    public void setPreVersionMaterialId(Long preVersionMaterialId) {
+        this.preVersionMaterialId = preVersionMaterialId;
+    }
+
+    public String getPreVersionMaterialName() {
+        return preVersionMaterialName;
+    }
+
+    public void setPreVersionMaterialName(String preVersionMaterialName) {
+        this.preVersionMaterialName = preVersionMaterialName;
+    }
+
+    public Long getPreVersionMaterialRound() {
+        return preVersionMaterialRound;
+    }
+
+    public void setPreVersionMaterialRound(Long preVersionMaterialRound) {
+        this.preVersionMaterialRound = preVersionMaterialRound;
+    }
+
+    public Long getMaterialId() {
+        return materialId;
+    }
+
+    public void setMaterialId(Long materialId) {
+        this.materialId = materialId;
+    }
 }
