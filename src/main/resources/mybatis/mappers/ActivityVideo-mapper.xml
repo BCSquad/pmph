@@ -257,4 +257,11 @@
 		update
 				activity_video set is_deleted = 1 where id = #{id};
 	</update>
+
+    <select id="getVideoChain" parameterType="java.lang.Long" resultType="ActivityVideoChain">
+		select * from  activity_video_chain ac where  ac.activity_id=#{id}
+	</select>
+    <delete id="delVideoChain" parameterType="java.lang.Long">
+		 DELETE FROM activity_video_chain WHERE activity_id = #{id}
+	</delete>
 </mapper>

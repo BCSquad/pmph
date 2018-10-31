@@ -89,12 +89,14 @@ public class ActivitySourceServiceImpl implements ActivitySourceService {
 
     @Override
     public void addActivitySourceChain(String activityId, String[] sourceIds) {
-        for (String sourceId : sourceIds) {
-            ActivitySourceChain activitySourceChain = new ActivitySourceChain();
-            activitySourceChain.setActivityId(Long.parseLong(activityId));
-            activitySourceChain.setActivitySourceId(Long.parseLong(sourceId));
-            addActivitySourcechin(activitySourceChain);
-        }
+            activitySourceDao.delsourceChin(Long.parseLong(activityId));
+
+            for (String sourceId : sourceIds) {
+                ActivitySourceChain activitySourceChain = new ActivitySourceChain();
+                activitySourceChain.setActivityId(Long.parseLong(activityId));
+                activitySourceChain.setActivitySourceId(Long.parseLong(sourceId));
+                addActivitySourcechin(activitySourceChain);
+            }
 
     }
 

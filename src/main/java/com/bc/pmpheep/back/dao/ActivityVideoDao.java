@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.dao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.ActivitySource;
+import com.bc.pmpheep.back.po.ActivitySourceChain;
 import com.bc.pmpheep.back.po.ActivityVideo;
 import com.bc.pmpheep.back.po.ActivityVideoChain;
 import com.bc.pmpheep.back.vo.ActivityVideoVO;
@@ -22,4 +23,6 @@ public interface ActivityVideoDao {
     Integer updateVideoSort(ActivityVideo activityVideo);
     ActivityVideo getUpSortById(Integer id);
     ActivityVideo getDownSortById(Integer id);
+    List<ActivityVideoChain> getVideoChain(Long id);
+    Integer delVideoChain(Long id);
 }

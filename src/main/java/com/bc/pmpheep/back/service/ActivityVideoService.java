@@ -3,12 +3,14 @@ package com.bc.pmpheep.back.service;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.ActivityVideo;
+import com.bc.pmpheep.back.po.ActivityVideoChain;
 import com.bc.pmpheep.back.vo.ActivitySourceVO;
 import com.bc.pmpheep.back.vo.ActivityVideoVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface ActivityVideoService {
 
@@ -47,4 +49,6 @@ public interface ActivityVideoService {
     Integer deleteVideoByIds(Long id);
 
     Integer updateSort(Integer id,PageParameter<ActivityVideoVO> pageParameter,String type);
+
+    public List<ActivityVideoChain> getVideoChain(Long id);
 }
