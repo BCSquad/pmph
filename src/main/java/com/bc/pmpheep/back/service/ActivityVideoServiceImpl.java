@@ -88,7 +88,9 @@ public class ActivityVideoServiceImpl implements ActivityVideoService {
         public Integer addActivityVideoChain (String activityId, String[]ids){
 
             try {
-                activityVideoDao.delVideoChain(Long.parseLong(activityId));
+                if(StringUtil.notEmpty(activityId)){
+                    activityVideoDao.delVideoChain(Long.parseLong(activityId));
+                }
                 for (String id : ids) {
                     ActivityVideoChain activitySourceChain = new ActivityVideoChain();
                     activitySourceChain.setActivityId(Long.parseLong(activityId));

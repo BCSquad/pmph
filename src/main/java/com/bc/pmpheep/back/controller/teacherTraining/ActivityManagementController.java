@@ -181,6 +181,15 @@ public class ActivityManagementController {
         String content = request.getParameter("content");
         String sessionId = CookiesUtil.getSessionId(request);
         Activity activity = parseActivity(request);
+
+        Integer integer = activityManagementService.checkedActivityByName(activity.getActivityName());
+        if(integer>0){
+            ResponseBean responseBean = new ResponseBean();
+            responseBean.setCode(2);
+            return new ResponseBean(responseBean);
+        }
+
+
         String imgFile = request.getParameter("imgFile");
         if (StringUtil.notEmpty(imgFile)) {
             if (!imgFile.equals(activity.getCover())) {
