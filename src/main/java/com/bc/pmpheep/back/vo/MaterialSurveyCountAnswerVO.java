@@ -15,6 +15,7 @@ public class MaterialSurveyCountAnswerVO implements Serializable {
     private String realname;
     private Long orgId;
     private String orgName;
+    private Long userId;
     private Integer userType;
     private String userTypeName;
     private Timestamp SubmitTime;
@@ -85,5 +86,13 @@ public class MaterialSurveyCountAnswerVO implements Serializable {
 
     public void setCount(Integer count) {
         this.count = count;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }
