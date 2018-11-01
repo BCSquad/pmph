@@ -19,4 +19,5 @@ public interface ActivityManagementDao {
     void updateActivitySetTopById(Activity activity);
     List<ActivityInfoExpressVO> listCmsContent(PageParameter<ActivityInfoExpressVO> pageParameter);
     Integer checkedActivityByName(String activityName);
+    List<Activity> getActivityByName(String activityName);
 }

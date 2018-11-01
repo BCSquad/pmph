@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <pre>
@@ -171,8 +172,7 @@ public class ActivityManagementController {
     /**
      * 功能描述: 更新活动信息
      *
-     * @param request
-     * @return
+     *
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改活动")
@@ -181,15 +181,16 @@ public class ActivityManagementController {
         String content = request.getParameter("content");
         String sessionId = CookiesUtil.getSessionId(request);
         Activity activity = parseActivity(request);
-
-        Integer integer = activityManagementService.checkedActivityByName(activity.getActivityName());
-        if(integer>0){
-            ResponseBean responseBean = new ResponseBean();
-            responseBean.setCode(2);
-            return new ResponseBean(responseBean);
+        List<Activity> activityByNames = activityManagementService.getActivityByName(activity.getActivityName());
+        if(activityByNames.size()>0){
+            for(Activity ac:activityByNames){
+                if(ac.getId()!=activity.getId()){
+                    ResponseBean responseBean = new ResponseBean();
+                    responseBean.setCode(2);
+                    return new ResponseBean(responseBean);
+                }
+            }
         }
-
-
         String imgFile = request.getParameter("imgFile");
         if (StringUtil.notEmpty(imgFile)) {
             if (!imgFile.equals(activity.getCover())) {
@@ -205,15 +206,6 @@ public class ActivityManagementController {
     /**
      * 功能描述 :查询教材列表
      *
-     * @param request
-     * @param pageSize
-     * @param pageNumber
-     * @param isMy
-     * @param state
-     * @param materialName
-     * @param contactUserName
-     * @return
-     * @throws UnsupportedEncodingException
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询教材列表")
@@ -240,11 +232,7 @@ public class ActivityManagementController {
     /**
      * 功能描述:查询信息快报列表
      *
-     * @param pageNumber
-     * @param pageSize
-     * @param cmsContentVO
-     * @param request
-     * @return
+     *
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询信息快报列表")
@@ -268,7 +256,6 @@ public class ActivityManagementController {
      * 功能描述:删除活动视频
      *
      * @param id
-     * @return
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "检查活动名称")
@@ -284,7 +271,7 @@ public class ActivityManagementController {
      * 功能描述:解析活动对象
      *
      * @param request
-     * @return
+     *
      */
     public Activity parseActivity(HttpServletRequest request) {
         Activity activity = new Activity();

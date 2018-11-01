@@ -9,6 +9,7 @@ import com.bc.pmpheep.back.vo.CmsContentVO;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 
 
@@ -65,4 +66,6 @@ public interface ActivityManagementService {
     PageResult<ActivityInfoExpressVO> listCmsContent(PageParameter<ActivityInfoExpressVO> pageParameter, String sessionId);
 
     public Integer checkedActivityByName(String activityName);
+
+    List<Activity> getActivityByName(String activityName);
 }

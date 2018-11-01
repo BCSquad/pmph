@@ -164,43 +164,6 @@ public class ActivityVideoServiceImpl implements ActivityVideoService {
             Integer integer = activityVideoDao.updateVideoSort(downSortById);
              return integer;
         }
-
-
-
-        /*List<ActivityVideoVO> videoList = activityVideoDao.listActivityVideo(pageParameter);
-        for (int i = 0; i <= videoList.size(); i++) {
-            if (videoList.get(i).getId() == sortByid.getId()) {
-                if ("up".equals(type)) {
-                    ActivityVideo videoById = activityVideoDao.getSortById(videoList.get(i - 1).getId().intValue());
-                    Integer down = videoById.getSort();
-                    Integer up = sortByid.getSort();
-                    sortByid.setSort(null);
-                    videoById.setSort(null);
-                    activityVideoDao.updateVideoSort(sortByid);
-                    activityVideoDao.updateVideoSort(videoById);
-                    sortByid.setSort(down);
-                    videoById.setSort(up);
-                    activityVideoDao.updateVideoSort(sortByid);
-                    Integer integer = activityVideoDao.updateVideoSort(videoById);
-                    return integer;
-                }
-                if ("down".equals(type)) {
-                    ActivityVideo videoById = activityVideoDao.getSortById(videoList.get(i + 1).getId().intValue());
-                    Integer up = videoById.getSort();
-                    Integer down = sortByid.getSort();
-                    sortByid.setSort(null);
-                    videoById.setSort(null);
-                    activityVideoDao.updateVideoSort(sortByid);
-                    activityVideoDao.updateVideoSort(videoById);
-                    sortByid.setSort(up);
-                    videoById.setSort(down);
-                    activityVideoDao.updateVideoSort(sortByid);
-                    Integer integer = activityVideoDao.updateVideoSort(videoById);
-                    return integer;
-                }
-            }
-        }*/
-
         return 0;
     }
 
