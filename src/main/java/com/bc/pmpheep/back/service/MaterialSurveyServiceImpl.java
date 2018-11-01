@@ -5,6 +5,7 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.*;
 import com.bc.pmpheep.back.util.*;
+import com.bc.pmpheep.back.vo.MaterialSurveyCountAnswerVO;
 import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.back.vo.SurveyQuestionListVO;
 import com.bc.pmpheep.back.vo.SurveyVO;
@@ -441,5 +442,29 @@ public class MaterialSurveyServiceImpl implements MaterialSurveyService {
         resultMap.put("qestionAndOption",
                 surveyDao.getSurveyQuestionBySurveyId(id));
         return resultMap;
+    }
+
+    @Override
+    public PageResult<MaterialSurveyCountAnswerVO> toAnswerList(PageParameter<MaterialSurveyCountAnswerVO> pageParameter) {
+
+        if(ObjectUtil.isNull(pageParameter.getParameter())){
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,CheckedExceptionResult.NULL_PARAM,"参数为空");
+        }
+        if(ObjectUtil.isNull(pageParameter.getParameter().getSurveyId())){
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,CheckedExceptionResult.NULL_PARAM,"调研表ID为空");
+        }
+
+        PageResult<MaterialSurveyCountAnswerVO> pageResult = new PageResult<MaterialSurveyCountAnswerVO>();
+        // 将页面大小和页面页码拷贝
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+
+        List<MaterialSurveyCountAnswerVO> result = surveyDao.toAnswerList(pageParameter);
+        Integer count = surveyDao.toAnswerListCount(pageParameter);
+        if(CollectionUtil.isNotEmpty(result)){
+            pageResult.setRows(result);
+            pageResult.setTotal(result.get(0).getCount());
+        }
+
+        return pageResult;
     }
 }

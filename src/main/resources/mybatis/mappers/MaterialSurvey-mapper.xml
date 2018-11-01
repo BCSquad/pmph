@@ -415,5 +415,38 @@
 		GROUP BY
 		stq.`id`
 	</select>
+
+	<!--查询调研表结果列表-->
+	<select id="toAnswerList" parameterType="PageParameter" resultType="MaterialSurveyCountAnswerVO">
+
+		select t.survey_id
+		,case t.user_type when 1 then '作家用户' else '机构用户' end as user_type
+		,u.realname
+		,o.org_name
+		,t.SubmitTime
+		from
+		(
+			select survey_id,user_id,user_type,max(gmt_create)as finalTime from material_survey_question_answer
+			where survey_id = #{parameter.surveyId}
+			group by user_id,user_type
+		)t
+		inner join
+		(
+			select id as user_id ,realname, 1 as user_type , org_id from writer_user
+			union
+			select id as user_id ,realname, 2 as user_type , org_id from org_user
+		)u
+		on t.user_id = u.user_id and t.user_type = u.user_type
+		left join
+		org o on u.org_id = o.id
+
+		where u.realname like '%t%' and o.id = '1'
+
+	</select>
+
+	<!--查询调研表结果列表 总数-->
+	<select id="toAnswerListCount" parameterType="PageParameter" resultType="int">
+
+	</select>
 	
 </mapper>
