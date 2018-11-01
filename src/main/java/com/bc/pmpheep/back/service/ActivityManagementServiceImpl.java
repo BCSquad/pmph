@@ -239,7 +239,10 @@ public class ActivityManagementServiceImpl implements ActivityManagementService 
         return activityManagementDao.checkedActivityByName(activityName);
     }
 
-
+    @Override
+    public List<Activity> getActivityByName(String activityName) {
+        return activityManagementDao.getActivityByName(activityName);
+    }
 
 
 }
