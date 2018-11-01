@@ -31,7 +31,7 @@ public interface ActivityVideoService {
      * @throws IOException
      */
 
-    Integer addActivityVideo(String sessionId, ActivityVideo activityVideo, MultipartFile cover) throws IOException;
+    Integer addActivityVideo(Long activityId,String sessionId, ActivityVideo activityVideo, MultipartFile cover) throws IOException;
 
     /**
      * 活动与活动视频关联
@@ -51,4 +51,9 @@ public interface ActivityVideoService {
     Integer updateSort(Integer id,PageParameter<ActivityVideoVO> pageParameter,String type);
 
     public List<ActivityVideoChain> getVideoChain(Long id);
+    public Integer checkedName(String title);
+
+    public PageResult<ActivityVideoVO> getChainList(PageParameter<ActivityVideoVO> pageParameter, String sessionId);
+
+    Integer delChainVideoByid(Long activityId,Long activityVideoId);
 }

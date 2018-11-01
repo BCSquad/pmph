@@ -10,6 +10,9 @@ import java.util.Date;
 public class ActivityVideoVO implements Serializable {
 
     //活动资源id
+    private Long activityId;
+
+
     private Long id;
     //资源名称
     private String cover;
@@ -26,6 +29,15 @@ public class ActivityVideoVO implements Serializable {
     private String realname;
     private Integer count;
     private Long file_size;
+
+    public Long getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(Long activityId) {
+        this.activityId = activityId;
+    }
+
     public Long getId() {
         return id;
     }
