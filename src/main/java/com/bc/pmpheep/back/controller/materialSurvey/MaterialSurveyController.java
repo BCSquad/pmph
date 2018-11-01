@@ -2,11 +2,13 @@ package com.bc.pmpheep.back.controller.materialSurvey;
 
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Survey;
 import com.bc.pmpheep.back.po.SurveyTemplate;
 import com.bc.pmpheep.back.service.MaterialSurveyService;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.MaterialSurveyCountAnswerVO;
 import com.bc.pmpheep.back.vo.SurveyVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -120,5 +124,18 @@ public class MaterialSurveyController {
         updateSurvey.setId(id);
         updateSurvey.setStatus(status);
         return new ResponseBean(surveyService.updateSurvey(updateSurvey));
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/toAnswerList",method = RequestMethod.GET)
+    public ResponseBean toAnswerList(MaterialSurveyCountAnswerVO materialSurveyCountAnswerVO,
+                                     @RequestParam(value = "pageNumber",defaultValue = "1") Integer pageNumber,
+                                     @RequestParam(value = "pageSize",defaultValue = "10") Integer pageSize
+    ){
+
+        PageParameter<MaterialSurveyCountAnswerVO> pageParameter =new PageParameter<>(pageNumber, pageSize);
+        pageParameter.setParameter(materialSurveyCountAnswerVO);
+        PageResult<MaterialSurveyCountAnswerVO> pageResult = surveyService.toAnswerList(pageParameter);
+        return new ResponseBean(pageResult);
     }
 }

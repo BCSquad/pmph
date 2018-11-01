@@ -5,6 +5,7 @@ import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.MaterialSurveyTemplate;
 import com.bc.pmpheep.back.po.Survey;
+import com.bc.pmpheep.back.vo.MaterialSurveyCountAnswerVO;
 import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.back.vo.SurveyVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -152,5 +153,10 @@ public interface MaterialSurveyService {
      */
     Map<String,Object> getSurveyAndQuestionById(Long id);
 
-
+    /**
+     * 查询调研表结果列表
+     * @param pageParameter
+     * @return
+     */
+    PageResult<MaterialSurveyCountAnswerVO> toAnswerList(PageParameter<MaterialSurveyCountAnswerVO> pageParameter);
 }

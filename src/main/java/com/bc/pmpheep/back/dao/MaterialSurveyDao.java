@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.dao;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Survey;
+import com.bc.pmpheep.back.vo.MaterialSurveyCountAnswerVO;
 import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.back.vo.SurveyQuestionOptionCategoryVO;
 import com.bc.pmpheep.back.vo.SurveyVO;
@@ -98,4 +99,13 @@ public interface MaterialSurveyDao {
      * @return
      */
     List<SurveyQuestionOptionCategoryVO> getSurveyQuestionBySurveyId(@Param("id")Long id);
+
+    /**
+     * 查询调研表结果列表
+     * @param pageParameter
+     * @return
+     */
+    List<MaterialSurveyCountAnswerVO> toAnswerList(PageParameter<MaterialSurveyCountAnswerVO> pageParameter);
+
+    Integer toAnswerListCount(PageParameter<MaterialSurveyCountAnswerVO> pageParameter);
 }

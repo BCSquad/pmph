@@ -242,6 +242,8 @@
 	<select id="checkedActivityByName"  parameterType="java.lang.String"  resultType="java.lang.Integer">
 		select count(*) from activity where activity_name=#{activityName}
 	</select>
-
+	<select id="getActivityByName"  parameterType="java.lang.String"  resultType="Activity">
+		select * from activity where activity_name=#{activityName}
+	</select>
 
 </mapper>
