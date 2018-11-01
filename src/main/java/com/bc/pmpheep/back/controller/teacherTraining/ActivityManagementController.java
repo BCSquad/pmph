@@ -148,10 +148,18 @@ public class ActivityManagementController {
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增活动")
     @RequestMapping(value = "/newActivity", method = RequestMethod.POST)
     public ResponseBean newActivity(HttpServletRequest request) {
+
+
         String sessionId = CookiesUtil.getSessionId(request);
         String imgFile = request.getParameter("imgFile");
         String content = request.getParameter("content");
         Activity activity = parseActivity(request);
+        Integer integer = activityManagementService.checkedActivityByName(activity.getActivityName());
+        if(integer>0){
+            ResponseBean responseBean = new ResponseBean();
+            responseBean.setCode(2);
+            return new ResponseBean(responseBean);
+        }
         if (StringUtil.notEmpty(imgFile)) {
             activity.setCover(imgFile);
         }

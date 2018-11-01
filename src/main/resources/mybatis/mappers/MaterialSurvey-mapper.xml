@@ -259,6 +259,17 @@
 					<if test="parameter.title != null and parameter.title != ''">
 						and s.title like concat('%',#{parameter.title},'%')
 					</if>
+					<if test="parameter.materialRelative != null">
+						<if test="parameter.materialRelative == true ">
+							<if test="parameter.materialId != null" >
+								and s.material_id = #{parameter.materialId}
+							</if>
+						</if>
+						<if test="parameter.materialRelative == false ">
+							and s.material_id is null
+						</if>
+					</if>
+
 					<!-- 问卷创建日期 %H:%i:%s--> 
 					<if test="parameter.startTime !=null and parameter.startTime !='' ">
 						and 
@@ -277,6 +288,16 @@
 			<!-- 问卷标题 -->
 			<if test="parameter.title != null and parameter.title != ''">
 				and s.title like concat('%',#{parameter.title},'%')
+			</if>
+			<if test="parameter.materialRelative != null">
+				<if test="parameter.materialRelative == true ">
+					<if test="parameter.materialId != null" >
+						and s.material_id = #{parameter.materialId}
+					</if>
+				</if>
+				<if test="parameter.materialRelative == false ">
+					and s.material_id is null
+				</if>
 			</if>
 			<!-- 问卷创建日期 %H:%i:%s--> 
 					<if test="parameter.startTime !=null and parameter.startTime !='' ">

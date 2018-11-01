@@ -37,4 +37,12 @@ public class ActivityVideoChain implements Serializable {
     public void setActivityVideoId(Long activityVideoId) {
         this.activityVideoId = activityVideoId;
     }
+
+    public ActivityVideoChain(Long activityId, Long activityVideoId) {
+        this.activityId = activityId;
+        this.activityVideoId = activityVideoId;
+    }
+
+    public ActivityVideoChain() {
+    }
 }
