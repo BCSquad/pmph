@@ -21,7 +21,7 @@ public interface ActivitySourceService {
      * @return
      * @throws IOException
      */
-    ActivitySource addSource(String[] files, ActivitySource activitySource,String sessionId, HttpServletRequest request) throws IOException;
+    ActivitySource addSource(Long activityId,String[] files, ActivitySource activitySource,String sessionId, HttpServletRequest request) throws IOException;
 
     /**
      * 获取文件资源列表
@@ -51,4 +51,7 @@ public interface ActivitySourceService {
     List<ActivitySourceChain> getSourceChain(Long id);
 
     public Integer checkedName(String sourceName);
+
+    public PageResult<ActivitySourceVO> getChainList(PageParameter<ActivitySourceVO> pageParameter, String sessionId);
+    public Integer delChainSourceById(Long activityId,Long activitySourceId);
 }

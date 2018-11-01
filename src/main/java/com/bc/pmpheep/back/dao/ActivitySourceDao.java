@@ -9,6 +9,7 @@ import com.bc.pmpheep.back.vo.ActivityVO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface ActivitySourceDao {
@@ -17,6 +18,7 @@ public interface ActivitySourceDao {
     List<ActivitySourceVO> listActivitySource(PageParameter<ActivitySourceVO> pageParameter);
     void addActivitySourceChain(ActivitySourceChain activitySourceChain);
     Integer deleteSourceById(Long id);
+    Integer delChainBySourceId(Map<String,Long> map);
     Integer getMaxSort();
     ActivitySource getSortById(Integer id);
     Integer updateSourceSort(ActivitySource ActivitySource);
@@ -25,4 +27,5 @@ public interface ActivitySourceDao {
     List<ActivitySourceChain> getSourceChain(Long id);
     Integer delsourceChin(Long id);
     Integer checkedName(String title);
+    List<ActivitySourceVO> getChainList(PageParameter<ActivitySourceVO> pageParameter);
 }

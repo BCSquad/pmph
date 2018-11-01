@@ -267,4 +267,46 @@
     <select id="checkedName" parameterType="java.lang.String"  resultType="java.lang.Integer">
 		select count(*) from activity_video where title=#{title}
 	</select>
+
+
+    <select id="getChainList"  parameterType="PageParameter"  resultType="ActivityVideoVO">
+        SELECT * FROM
+        (
+        select ac.*,pu.realname
+        from
+        activity_video_chain a
+        left join activity_video ac on a.activity_video_id=ac.id
+        LEFT JOIN pmph_user pu
+        ON ac.user_id = pu.id
+        where 1=1 and ac.is_deleted=0
+        and a.activity_id=#{parameter.activityId}
+        <if test="parameter.title != null and parameter.title !='' ">
+            and (ac.title like concat('%',#{parameter.title},'%'))
+        </if>
+        order by ac.sort asc
+        )
+        a,
+        (
+        select count(*) count
+        from
+        activity_video_chain a
+        left join activity_video ac on a.activity_video_id=ac.id
+        LEFT JOIN pmph_user pu
+        ON ac.user_id = pu.id
+        where 1=1 and ac.is_deleted=0
+        <if test="parameter.activityId != null  ">
+            and a.activity_id=#{parameter.activityId}
+        </if>
+        <if test="parameter.title != null and parameter.title !='' ">
+            and (ac.title like concat('%',#{parameter.title},'%'))
+        </if>
+        )b
+        <if test="start !=null and pageNumber != null">
+            limit #{start},#{pageSize}
+        </if>
+    </select>
+
+    <delete id="delChainByVideoId" parameterType="map">
+        delete from activity_video_chain  where activity_id=#{activityId} and activity_video_id =#{activityVideoId}
+    </delete>
 </mapper>

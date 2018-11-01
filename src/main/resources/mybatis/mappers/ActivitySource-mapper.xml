@@ -184,4 +184,50 @@
 	<select id="checkedName" parameterType="java.lang.String"  resultType="java.lang.Integer">
 		select count(*) from activity_source where source_name=#{sourceName}
 	</select>
+
+
+	<select id="getChainList"  parameterType="PageParameter"  resultType="ActivitySourceVO">
+		SELECT * FROM
+		(
+		select ac.*,pu.realname
+		from
+		activity_source_chain a
+		left join activity_source ac on a.activity_source_id=ac.id
+		LEFT JOIN pmph_user pu
+		ON ac.uploader_id = pu.id
+		where 1=1 and ac.is_deleted=0
+		<if test="parameter.activityId != null  ">
+			and a.activity_id=#{parameter.activityId}
+		</if>
+		<if test="parameter.sourceName != null and parameter.sourceName !='' ">
+			and (ac.source_name like concat('%',#{parameter.sourceName},'%'))
+		</if>
+		order by ac.sort asc
+		)
+		a,
+		(
+		select count(*) count
+		from
+		activity_source_chain a
+		left join activity_source ac on a.activity_source_id=ac.id
+		LEFT JOIN pmph_user pu
+		ON ac.uploader_id = pu.id
+		where 1=1 and ac.is_deleted=0
+		<if test="parameter.activityId != null  ">
+			and a.activity_id=#{parameter.activityId}
+		</if>
+		<if test="parameter.sourceName != null and parameter.sourceName !='' ">
+			and (ac.source_name like concat('%',#{parameter.sourceName},'%'))
+		</if>
+		)b
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+
+
+	<delete id="delChainBySourceId" parameterType="map">
+        delete from activity_source_chain where activity_id=#{activityId} and activity_source_id =#{activitySourceId}
+    </delete>
+
 </mapper>

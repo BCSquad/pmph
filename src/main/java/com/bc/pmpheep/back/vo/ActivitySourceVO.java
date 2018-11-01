@@ -8,6 +8,10 @@ import java.util.Date;
 @Alias("ActivitySourceVO")
 public class ActivitySourceVO implements Serializable {
 
+
+    private Long activityId;
+
+
     //活动资源id
     private Long id;
     //资源名称
@@ -24,6 +28,14 @@ public class ActivitySourceVO implements Serializable {
     private String fileId;
     private String realname;
     private Integer   count;
+
+    public Long getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(Long activityId) {
+        this.activityId = activityId;
+    }
 
     public String getRealname() {
         return realname;

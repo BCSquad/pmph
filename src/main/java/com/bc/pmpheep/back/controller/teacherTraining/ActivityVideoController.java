@@ -49,7 +49,7 @@ public class ActivityVideoController {
     @ResponseBody
     @RequestMapping(value = "/addActivityVideo", method = RequestMethod.POST)
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "保存微视频信息")
-    public ResponseBean<Integer> addActivityVideo(HttpServletRequest request,
+    public ResponseBean<Integer> addActivityVideo(HttpServletRequest request,Long activityId,
                                               String title, String origPath, String origFileName, Long origFileSize,
                                               String path, String fileName, Long fileSize,
                                               @RequestParam("cover") MultipartFile cover) throws IOException {
@@ -72,7 +72,7 @@ public class ActivityVideoController {
         activityVideo.setPath(path);
         activityVideo.setFileName(fileName);
         activityVideo.setFileSize(fileSize);
-        return new ResponseBean(activityVideoService.addActivityVideo(sessionId, activityVideo, cover));
+        return new ResponseBean(activityVideoService.addActivityVideo(activityId,sessionId, activityVideo, cover));
     }
 
 
@@ -169,6 +169,41 @@ public class ActivityVideoController {
     public ResponseBean getVideoChain(HttpServletRequest request) {
         String id = request.getParameter("id");
         return new ResponseBean(activityVideoService.getVideoChain(Long.parseLong(id)));
+    }
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取资源列表")
+    @RequestMapping(value = "/getChainList", method = RequestMethod.GET)
+    public ResponseBean getChainList(ActivityVideoVO ActivitySourceVO, @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
+                                     @RequestParam(name = "pageSize") Integer pageSize, HttpServletRequest request) throws IOException {
+        String sessionId = CookiesUtil.getSessionId(request);
+        PageParameter<ActivityVideoVO> pageParameter =
+                new PageParameter<ActivityVideoVO>(pageNumber, pageSize, ActivitySourceVO);
+        return new ResponseBean(activityVideoService.getChainList(pageParameter,
+                sessionId));
+
+    }
+
+    /**
+     * 功能描述: 根据id删除活动资源
+     * @param id
+     * @return
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除活动资源")
+    @RequestMapping(value = "/delChainVideoByid", method = RequestMethod.GET)
+    public ResponseBean delChainSourceByid(HttpServletRequest request) {
+
+        Long activityId=null;
+        Long activityVideoId=null;
+        if(StringUtil.notEmpty(   request.getParameter("activityId"))){
+            activityId=Long.parseLong(request.getParameter("activityId"));
+        }
+
+        if(StringUtil.notEmpty( request.getParameter("activityVideoId"))){
+            activityVideoId=Long.parseLong(request.getParameter("activityVideoId"));
+        }
+
+        return new ResponseBean(activityVideoService.delChainVideoByid(activityId,activityVideoId));
     }
 
 }

@@ -41,7 +41,7 @@ public class ActivitySourceController {
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增资源")
     @RequestMapping(value = "/newSource", method = RequestMethod.POST)
-    public ResponseBean newSource(ActivitySource activitySource, @RequestParam("file") String[] files, @RequestParam("sourceName") String sourceName, HttpServletRequest request) throws IOException {
+    public ResponseBean newSource(ActivitySource activitySource, @RequestParam("file") String[] files, @RequestParam("sourceName") String sourceName, @RequestParam("activityId") Long activityId,HttpServletRequest request) throws IOException {
 
         Integer integer = activitySourceService.checkedName(sourceName);
         if(integer>0){
@@ -50,7 +50,7 @@ public class ActivitySourceController {
             return new ResponseBean(responseBean);
         }
         String sessionId = CookiesUtil.getSessionId(request);
-        return new ResponseBean(activitySourceService.addSource(files, activitySource,
+        return new ResponseBean(activitySourceService.addSource(activityId,files, activitySource,
                 sessionId,
                 request));
 
@@ -156,4 +156,46 @@ public class ActivitySourceController {
     }
 
 
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取资源列表")
+    @RequestMapping(value = "/getChainList", method = RequestMethod.GET)
+    public ResponseBean getChainList(ActivitySourceVO ActivitySourceVO, @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
+                                      @RequestParam(name = "pageSize") Integer pageSize, HttpServletRequest request) throws IOException {
+        String sessionId = CookiesUtil.getSessionId(request);
+      /*  if(StringUtil.notEmpty(ActivitySourceVO.getSourceName())){
+            String title = ActivitySourceVO.getSourceName();
+            byte[] bytes = title.getBytes("ISO-8859-1");
+            ActivitySourceVO.setSourceName(new String(bytes, "utf-8"));
+
+        }*/
+
+        PageParameter<ActivitySourceVO> pageParameter =
+                new PageParameter<ActivitySourceVO>(pageNumber, pageSize, ActivitySourceVO);
+        return new ResponseBean(activitySourceService.getChainList(pageParameter,
+                sessionId));
+
+    }
+
+    /**
+     * 功能描述: 根据id删除活动资源
+     * @param id
+     * @return
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除活动资源")
+    @RequestMapping(value = "/delChainSourceByid", method = RequestMethod.GET)
+    public ResponseBean delChainSourceByid(HttpServletRequest request) {
+
+        Long activityId=null;
+        Long activitySourceId=null;
+        if(StringUtil.notEmpty(   request.getParameter("activityId"))){
+            activityId=Long.parseLong(request.getParameter("activityId"));
+        }
+
+        if(StringUtil.notEmpty( request.getParameter("activitySourceId"))){
+            activitySourceId=Long.parseLong(request.getParameter("activitySourceId"));
+            }
+
+        return new ResponseBean(activitySourceService.delChainSourceById(activityId,activitySourceId));
+    }
 }

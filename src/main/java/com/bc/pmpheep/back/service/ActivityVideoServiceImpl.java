@@ -21,7 +21,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.awt.print.PrinterException;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ActivityVideoServiceImpl implements ActivityVideoService {
@@ -55,7 +57,7 @@ public class ActivityVideoServiceImpl implements ActivityVideoService {
         }
 
         @Override
-        public Integer addActivityVideo (String sessionId, ActivityVideo activityVideo, MultipartFile cover) throws
+        public Integer addActivityVideo (Long activityId,String sessionId, ActivityVideo activityVideo, MultipartFile cover) throws
         IOException {
             PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
             if (ObjectUtil.isNull(pmphUser)) {
@@ -75,6 +77,7 @@ public class ActivityVideoServiceImpl implements ActivityVideoService {
             activityVideo.setCover("DEFAULT");//暂设为默认值
             activityVideo.setGmtCreate(DateUtil.getCurrentTime());
             activityVideoDao.addActivityVideo(activityVideo);
+            activityVideoDao.addActivityVideochain(new ActivityVideoChain(activityId,activityVideo.getId()));
             /* 保存封面 */
             String coverId = fileService.save(cover, FileType.BOOKVEDIO_CONER, activityVideo.getId());
             activityVideo.setCover(coverId);
@@ -203,4 +206,41 @@ public class ActivityVideoServiceImpl implements ActivityVideoService {
             activityVideoDao.addActivityVideochain(activityVideoChain);
         }
 
+
+    @Override
+    public PageResult<ActivityVideoVO> getChainList(PageParameter<ActivityVideoVO> pageParameter, String sessionId) {
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+        if (ObjectUtil.isNull(pmphUser) || ObjectUtil.isNull(pmphUser.getId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                    CheckedExceptionResult.NULL_PARAM, "用户为空");
+        }
+        PageResult<ActivityVideoVO> pageResult = new PageResult<ActivityVideoVO>();
+        // 将页面大小和页面页码拷贝
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+        // if(cmsContentDao.getCmsContentByAuthorId(pageParameter.getParameter().getAuthorId()).size()>0){
+        // 包含数据总条数的数据集
+        List<ActivityVideoVO> sourcesList = activityVideoDao.getChainList(pageParameter);
+        if (CollectionUtil.isNotEmpty(sourcesList)) {
+            Integer count = sourcesList.get(0).getCount();
+            pageResult.setTotal(count);
+            pageResult.setRows(sourcesList);
+        }
+        // }
+        return pageResult;
     }
+
+    @Override
+    public Integer delChainVideoByid(Long activityId, Long activityVideoId) {
+
+        if (ObjectUtil.isNull(activityId) || ObjectUtil.isNull(activityVideoId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                    CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        Map<String,Long > paramsMap=new  HashMap<String,Long>();
+        paramsMap.put("activityId",activityId);
+        paramsMap.put("activityVideoId",activityVideoId);
+        return activityVideoDao.delChainByVideoId(paramsMap);
+    }
+
+
+}
