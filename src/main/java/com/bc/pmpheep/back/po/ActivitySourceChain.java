@@ -13,6 +13,15 @@ public class ActivitySourceChain implements Serializable {
     private Long activityId;
     //资源id
     private Long activitySourceId;
+    private Long sort;
+
+    public Long getSort() {
+        return sort;
+    }
+
+    public void setSort(Long sort) {
+        this.sort = sort;
+    }
 
     public Long getId() {
         return id;

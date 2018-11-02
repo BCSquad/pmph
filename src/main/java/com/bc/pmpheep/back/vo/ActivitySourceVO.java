@@ -11,7 +11,6 @@ public class ActivitySourceVO implements Serializable {
 
     private Long activityId;
 
-
     //活动资源id
     private Long id;
     //资源名称

@@ -10,6 +10,7 @@ import com.bc.pmpheep.back.vo.ActivityVO;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public interface ActivitySourceService {
     /**
@@ -54,4 +55,8 @@ public interface ActivitySourceService {
 
     public PageResult<ActivitySourceVO> getChainList(PageParameter<ActivitySourceVO> pageParameter, String sessionId);
     public Integer delChainSourceById(Long activityId,Long activitySourceId);
+
+    public Integer updateChainSort(ActivitySourceChain activitySourceChain);
+    public  ActivitySourceChain getUpChainById(Map<String,Long> map);
+    public  ActivitySourceChain getDownChainnById(Map<String,Long> map);
 }

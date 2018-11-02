@@ -30,4 +30,10 @@ public interface ActivityVideoDao {
     Integer delVideoChain(Long id);
     Integer checkedName(String activityName);
     List<ActivityVideoVO> getChainList(PageParameter<ActivityVideoVO> pageParameter);
+    Long getChainSortMax(long activityId);
+    Integer updateChainSort(ActivityVideoChain activityVideoChain);
+    ActivityVideoChain getUpChianById(Map<String,Long> map);
+    ActivityVideoChain getDownChainById(Map<String,Long> map);
+    List<ActivityVideoChain> getVideoListByActivityId(Long activityId);
+    Long getVideoChainSortMax(Long activityId);
 }

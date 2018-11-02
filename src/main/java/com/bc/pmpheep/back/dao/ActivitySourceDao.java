@@ -28,4 +28,9 @@ public interface ActivitySourceDao {
     Integer delsourceChin(Long id);
     Integer checkedName(String title);
     List<ActivitySourceVO> getChainList(PageParameter<ActivitySourceVO> pageParameter);
+    Long getChainSortMax(long activityId);
+    Integer updateChainSort(ActivitySourceChain activitySourceChain);
+    ActivitySourceChain getUpChianById(Map<String,Long> map);
+    ActivitySourceChain getDownChainById(Map<String,Long> map) ;
+
 }

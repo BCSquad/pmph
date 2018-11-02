@@ -462,7 +462,7 @@ public class MaterialSurveyServiceImpl implements MaterialSurveyService {
         Integer count = surveyDao.toAnswerListCount(pageParameter);
         if(CollectionUtil.isNotEmpty(result)){
             pageResult.setRows(result);
-            pageResult.setTotal(result.get(0).getCount());
+            pageResult.setTotal(count);
         }
 
         return pageResult;
