@@ -97,12 +97,14 @@ public class ActivitySourceServiceImpl implements ActivitySourceService {
     @Override
     public void addActivitySourceChain(String activityId, String[] sourceIds) {
             activitySourceDao.delsourceChin(Long.parseLong(activityId));
-
+            Long i=0L;
             for (String sourceId : sourceIds) {
                 ActivitySourceChain activitySourceChain = new ActivitySourceChain();
                 activitySourceChain.setActivityId(Long.parseLong(activityId));
                 activitySourceChain.setActivitySourceId(Long.parseLong(sourceId));
+                activitySourceChain.setSort(i);
                 addActivitySourcechin(activitySourceChain);
+                i++;
             }
 
     }
@@ -211,6 +213,16 @@ public class ActivitySourceServiceImpl implements ActivitySourceService {
         paramsMap.put("activityId",activityId);
         paramsMap.put("activitySourceId",activitySourceId);
         return activitySourceDao.delChainBySourceId(paramsMap);
+    }
+
+    public Integer updateChainSort(ActivitySourceChain activitySourceChain){
+        return  activitySourceDao.updateChainSort(activitySourceChain);
+    }
+    public  ActivitySourceChain getUpChainById(Map<String,Long> map){
+        return  activitySourceDao.getUpChianById(map);
+    }
+    public  ActivitySourceChain getDownChainnById(Map<String,Long> map){
+        return  activitySourceDao.getDownChainById(map);
     }
 
 }

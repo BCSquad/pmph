@@ -3,14 +3,14 @@ package com.bc.pmpheep.back.controller.teacherTraining;
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.dao.ActivityVideoDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
-import com.bc.pmpheep.back.po.ActivitySource;
-import com.bc.pmpheep.back.po.ActivityVideo;
-import com.bc.pmpheep.back.po.BookVideo;
+import com.bc.pmpheep.back.po.*;
 import com.bc.pmpheep.back.service.ActivityVideoService;
 import com.bc.pmpheep.back.util.CookiesUtil;
+import com.bc.pmpheep.back.util.JsonUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.ActivitySourceVO;
 import com.bc.pmpheep.back.vo.ActivityVideoVO;
+import com.bc.pmpheep.back.vo.ProductVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -22,6 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/activityVideo")
@@ -206,4 +209,46 @@ public class ActivityVideoController {
         return new ResponseBean(activityVideoService.delChainVideoByid(activityId,activityVideoId));
     }
 
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "排序移动")
+    @RequestMapping(value = "/updateChainSort", method = RequestMethod.GET)
+    public ResponseBean updateChainSort(ActivityVideoChain activityVideoChain,HttpServletRequest request
+    ) {
+        String type="";
+        if(StringUtil.notEmpty(request.getParameter("type"))){
+            type = request.getParameter("type");
+
+        }
+        Map<String, Long> map = new HashMap<>();
+        map.put("sort",activityVideoChain.getSort());
+        map.put("activityId",activityVideoChain.getActivityId());
+
+        if("up".equals(type)){
+            Long sort=null;
+            ActivityVideoChain upChianById = activityVideoService.getUpChainById(map);
+            if(upChianById!=null){
+                sort=upChianById.getSort();
+
+            upChianById.setSort(activityVideoChain.getSort());
+            activityVideoChain.setSort(sort);
+            activityVideoService.updateChainSort(upChianById);
+            return  new ResponseBean (activityVideoService.updateChainSort(activityVideoChain));
+            }
+        }
+        if("down".equals(type)){
+            Long sort=null;
+            ActivityVideoChain upChianById = activityVideoService.getDownChainnById(map);
+
+            if(upChianById!=null){
+                sort=upChianById.getSort();
+
+            upChianById.setSort(activityVideoChain.getSort());
+            activityVideoChain.setSort(sort);
+            activityVideoService.updateChainSort(upChianById);
+            return  new ResponseBean (activityVideoService.updateChainSort(activityVideoChain));
+            }
+        }
+        return new ResponseBean (0);
+
+    }
 }

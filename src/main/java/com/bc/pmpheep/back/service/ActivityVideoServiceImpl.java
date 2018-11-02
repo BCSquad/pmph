@@ -20,10 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.awt.print.PrinterException;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ActivityVideoServiceImpl implements ActivityVideoService {
@@ -88,14 +85,18 @@ public class ActivityVideoServiceImpl implements ActivityVideoService {
         public Integer addActivityVideoChain (String activityId, String[]ids){
 
             try {
+
                 if(StringUtil.notEmpty(activityId)){
                     activityVideoDao.delVideoChain(Long.parseLong(activityId));
                 }
+                Long i=0L;
                 for (String id : ids) {
                     ActivityVideoChain activitySourceChain = new ActivityVideoChain();
                     activitySourceChain.setActivityId(Long.parseLong(activityId));
                     activitySourceChain.setActivityVideoId(Long.parseLong(id));
+                    activitySourceChain.setSort(i);
                     addActivityVideoChain(activitySourceChain);
+                    i++;
                 }
                 return 1;
             } catch (Exception e) {
@@ -205,6 +206,17 @@ public class ActivityVideoServiceImpl implements ActivityVideoService {
         paramsMap.put("activityId",activityId);
         paramsMap.put("activityVideoId",activityVideoId);
         return activityVideoDao.delChainByVideoId(paramsMap);
+    }
+
+    public Integer updateChainSort(ActivityVideoChain activityVideoChain){
+        return activityVideoDao.updateChainSort(activityVideoChain);
+    }
+
+    public  ActivityVideoChain getUpChainById(Map<String,Long> map){
+        return  activityVideoDao.getUpChianById(map);
+    }
+    public  ActivityVideoChain getDownChainnById(Map<String,Long> map){
+        return  activityVideoDao.getDownChainById(map);
     }
 
 

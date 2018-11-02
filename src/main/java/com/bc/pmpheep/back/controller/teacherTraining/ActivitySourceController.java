@@ -1,9 +1,11 @@
 package com.bc.pmpheep.back.controller.teacherTraining;
 
 import com.bc.pmpheep.annotation.LogDetail;
+import com.bc.pmpheep.back.dao.ActivitySourceDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Activity;
 import com.bc.pmpheep.back.po.ActivitySource;
+import com.bc.pmpheep.back.po.ActivitySourceChain;
 import com.bc.pmpheep.back.po.CmsContent;
 import com.bc.pmpheep.back.service.ActivitySourceService;
 import com.bc.pmpheep.back.util.CookiesUtil;
@@ -14,12 +16,15 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.mchange.lang.LongUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/activitySource")
@@ -76,6 +81,52 @@ public class ActivitySourceController {
         PageParameter<ActivitySourceVO> pageParameter =
                 new PageParameter<ActivitySourceVO>(pageNumber, pageSize, ActivitySourceVO);
         return new ResponseBean(activitySourceService.updateSort(id,pageParameter, type));
+    }
+
+    /**
+     * 功能描述: 根据id排序移动
+     *
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "排序移动")
+    @RequestMapping(value = "/updateChainSort", method = RequestMethod.GET)
+    public ResponseBean updateChainSort(ActivitySourceChain activitySourceChain,HttpServletRequest request
+                                   ) {
+        String type="";
+        if(StringUtil.notEmpty(request.getParameter("type"))){
+            type = request.getParameter("type");
+
+        }
+        Map<String, Long> map = new HashMap<>();
+        map.put("sort",activitySourceChain.getSort());
+        map.put("activityId",activitySourceChain.getActivityId());
+
+        if("up".equals(type)){
+            Long sort=null;
+            ActivitySourceChain upChianById = activitySourceService.getUpChainById(map);
+            if(upChianById!=null){
+                sort=upChianById.getSort();
+
+            upChianById.setSort(activitySourceChain.getSort());
+            activitySourceChain.setSort(sort);
+            activitySourceService.updateChainSort(upChianById);
+            return  new ResponseBean (activitySourceService.updateChainSort(activitySourceChain));
+            }
+        }
+        if("down".equals(type)){
+            Long sort=null;
+            ActivitySourceChain upChianById = activitySourceService.getDownChainnById(map);
+
+            if(upChianById!=null){
+                sort=upChianById.getSort();
+            upChianById.setSort(activitySourceChain.getSort());
+            activitySourceChain.setSort(sort);
+            activitySourceService.updateChainSort(upChianById);
+            return  new ResponseBean (activitySourceService.updateChainSort(activitySourceChain));
+            }
+        }
+        return new ResponseBean (0);
+
     }
 
 

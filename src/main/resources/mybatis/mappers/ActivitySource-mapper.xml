@@ -164,11 +164,10 @@
 		where id=#{id}
 	</select>
 
-
 	<insert id="addActivitySourceChain" parameterType="ActivitySourceChain"
 			useGeneratedKeys="true" keyProperty="id">
-		insert into activity_source_chain(activity_id,activity_source_id)values(
-			#{activityId},#{activitySourceId}
+		insert into activity_source_chain(activity_id,activity_source_id,sort)values(
+			#{activityId},#{activitySourceId},#{sort}
 		)
 
 	</insert>
@@ -189,7 +188,7 @@
 	<select id="getChainList"  parameterType="PageParameter"  resultType="ActivitySourceVO">
 		SELECT * FROM
 		(
-		select ac.*,pu.realname
+		select ac.id,ac.source_name,ac.uploader_id,ac.gmt_upload,ac.file_id,ac.is_deleted,pu.realname,a.sort
 		from
 		activity_source_chain a
 		left join activity_source ac on a.activity_source_id=ac.id
@@ -202,7 +201,7 @@
 		<if test="parameter.sourceName != null and parameter.sourceName !='' ">
 			and (ac.source_name like concat('%',#{parameter.sourceName},'%'))
 		</if>
-		order by ac.sort asc
+		order by a.sort asc
 		)
 		a,
 		(
@@ -229,5 +228,41 @@
 	<delete id="delChainBySourceId" parameterType="map">
         delete from activity_source_chain where activity_id=#{activityId} and activity_source_id =#{activitySourceId}
     </delete>
+
+	<select id="getChainSortMax" resultType="java.lang.Long" parameterType="Long">
+		 select MAX(sort) from activity_source_chain where activity_id=#{activityId}
+	</select>
+
+
+	<update id="updateChainSort" parameterType="ActivitySourceChain">
+			update activity_source_chain set
+				sort =#{sort}
+		where activity_id=#{activityId}
+		and activity_source_id=#{activitySourceId}
+	</update>
+
+
+	<select id="getUpChianById"  resultType="ActivitySourceChain" parameterType="map">
+		SELECT * FROM
+		(
+		select *
+		from activity_source_chain ac
+		where ac.sort  &lt; #{sort}
+		and ac.activity_id=#{activityId}
+		order by sort desc
+		)a
+		limit 0,1
+	</select>
+	<select id="getDownChainById"  resultType="ActivitySourceChain" parameterType="map">
+		SELECT * FROM
+		(
+		select *
+		from activity_source_chain ac
+		where ac.sort &gt; #{sort}
+		and ac.activity_id=#{activityId}
+		order by sort asc
+		)a
+		limit 0,1
+	</select>
 
 </mapper>
