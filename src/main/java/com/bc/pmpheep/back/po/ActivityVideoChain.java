@@ -63,6 +63,12 @@ public class ActivityVideoChain implements Serializable {
     public ActivityVideoChain() {
     }
 
+    public ActivityVideoChain(Long activityId, Long activityVideoId, Long sort) {
+        this.activityId = activityId;
+        this.activityVideoId = activityVideoId;
+        this.sort = sort;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
