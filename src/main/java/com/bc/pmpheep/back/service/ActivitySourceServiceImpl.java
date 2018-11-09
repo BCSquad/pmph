@@ -55,7 +55,12 @@ public class ActivitySourceServiceImpl implements ActivitySourceService {
                 }
                 activitySource.setSort(activitySourceDao.getMaxSort() + 1);
                 activitySource.setFileId(gridFSFileId);
-                activitySourceDao.addActivitySourceChain(new ActivitySourceChain(activityId,activitySource.getId()));
+
+                long chainMax=0;
+                if(activitySourceDao.getSourceChainSortMax(activityId)!=null){
+                    chainMax= activitySourceDao.getSourceChainSortMax(activityId) + 1;
+                }
+                activitySourceDao.addActivitySourceChain(new ActivitySourceChain(activityId,activitySource.getId(),chainMax));
 
 
 

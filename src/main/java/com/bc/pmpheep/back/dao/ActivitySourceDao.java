@@ -32,5 +32,6 @@ public interface ActivitySourceDao {
     Integer updateChainSort(ActivitySourceChain activitySourceChain);
     ActivitySourceChain getUpChianById(Map<String,Long> map);
     ActivitySourceChain getDownChainById(Map<String,Long> map) ;
+    Long getSourceChainSortMax(Long activityId);
 
 }
