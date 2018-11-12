@@ -74,7 +74,11 @@ public class ActivityVideoServiceImpl implements ActivityVideoService {
             activityVideo.setCover("DEFAULT");//暂设为默认值
             activityVideo.setGmtCreate(DateUtil.getCurrentTime());
             activityVideoDao.addActivityVideo(activityVideo);
-            activityVideoDao.addActivityVideochain(new ActivityVideoChain(activityId,activityVideo.getId()));
+            long chainMax=0;
+            if(activityVideoDao.getVideoChainSortMax(activityId)!=null){
+                chainMax= activityVideoDao.getVideoChainSortMax(activityId) + 1;
+            }
+            activityVideoDao.addActivityVideochain(new ActivityVideoChain(activityId,activityVideo.getId(),chainMax));
             /* 保存封面 */
             String coverId = fileService.save(cover, FileType.BOOKVEDIO_CONER, activityVideo.getId());
             activityVideo.setCover(coverId);
