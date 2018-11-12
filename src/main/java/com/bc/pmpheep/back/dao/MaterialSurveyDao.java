@@ -2,14 +2,12 @@ package com.bc.pmpheep.back.dao;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Survey;
-import com.bc.pmpheep.back.vo.MaterialSurveyCountAnswerVO;
-import com.bc.pmpheep.back.vo.OrgVO;
-import com.bc.pmpheep.back.vo.SurveyQuestionOptionCategoryVO;
-import com.bc.pmpheep.back.vo.SurveyVO;
+import com.bc.pmpheep.back.vo.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Survey问卷实体类数据访问层接口
@@ -101,6 +99,13 @@ public interface MaterialSurveyDao {
     List<SurveyQuestionOptionCategoryVO> getSurveyQuestionBySurveyId(@Param("id")Long id);
 
     /**
+     * 查询选项及答案
+     * @param paramMap
+     * @return
+     */
+    List<SurveyQuestionOptionCategoryVO> getSurveyResult(Map<String, Object> paramMap);
+
+    /**
      * 查询调研表结果列表
      * @param pageParameter
      * @return
@@ -108,4 +113,41 @@ public interface MaterialSurveyDao {
     List<MaterialSurveyCountAnswerVO> toAnswerList(PageParameter<MaterialSurveyCountAnswerVO> pageParameter);
 
     Integer toAnswerListCount(PageParameter<MaterialSurveyCountAnswerVO> pageParameter);
+
+    /**
+     * 物理删除该书籍下所有调研表的中间关联表
+     * @param materialId
+     * @param textbookId
+     * @return
+     */
+    int deleteSurveyChainByTextbookId(@Param("materialId") Long materialId,@Param("textbookId")  Long textbookId);
+
+    /**
+     * 插入书籍和调研表的中间关联
+     * @param chain
+     * @return
+     */
+    int insertChain(MaterialSurveyChain chain);
+
+    /**
+     * 从模板克隆问题及选项
+     * @param templateId
+     * @param surveyId
+     * @return
+     */
+    int cloneQuestionAndOptionByTemplateId(@Param("templateId") Long templateId,@Param("surveyId")  Long surveyId);
+
+    /**
+     * 获取书籍相关调研
+     * @param textbookId
+     * @return
+     */
+    List<SurveyVO> getSurveyByTextbook(@Param("textbookId")Long textbookId);
+
+    List<SurveyVO> getSurveyByMaterial(@Param("materialId")Long materialId);
+
+
+    SurveyVO getSurveyByMaterialIdAndTemplateId(@Param("materialId")Long materialId, @Param("templateId")Long templateId);
+
+
 }

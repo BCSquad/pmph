@@ -88,6 +88,10 @@ public class Survey implements java.io.Serializable {
     private Long preVersionMaterialId;
     private String preVersionMaterialName ;
     private Long preVersionMaterialRound ;
+    //对绑定到教材的调研表 是否必填
+    private Boolean  requiredForMaterial;
+    //绑定到教材true 绑定到书籍false
+    private Boolean allTextbookUsed;
 
     // Constructors
 
@@ -407,5 +411,21 @@ public class Survey implements java.io.Serializable {
 
     public void setMaterialId(Long materialId) {
         this.materialId = materialId;
+    }
+
+    public Boolean getRequiredForMaterial() {
+        return requiredForMaterial;
+    }
+
+    public void setRequiredForMaterial(Boolean requiredForMaterial) {
+        this.requiredForMaterial = requiredForMaterial;
+    }
+
+    public Boolean getAllTextbookUsed() {
+        return allTextbookUsed;
+    }
+
+    public void setAllTextbookUsed(Boolean allTextbookUsed) {
+        this.allTextbookUsed = allTextbookUsed;
     }
 }

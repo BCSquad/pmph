@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -96,6 +97,50 @@ public class MaterialSurveyController {
                 sessionId,tempReCreat));
     }
 
+
+
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取书籍相关调研")
+    @RequestMapping(value = "/getSurveyByTextbook", method = RequestMethod.POST)
+    public ResponseBean getSurveyByTextbook(@RequestParam("textbookId")Long textbookId,
+                                       @RequestParam("materialId")Long materialId,
+                                       @RequestParam("allTextbookUsed")Boolean allTextbookUsed,
+                                       HttpServletRequest request){
+        List<SurveyVO> resultList = surveyService.getSurveyByTextbook(materialId,textbookId,allTextbookUsed);
+        return new ResponseBean(resultList);
+
+    }
+
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增教材书籍相关教材调研")
+    @RequestMapping(value = "/saveBookSurvey", method = RequestMethod.POST)
+    public ResponseBean saveBookSurvey(@RequestParam("textbookId")Long textbookId,
+                                       @RequestParam("materialId")Long materialId,
+                                       @RequestParam("surveyListJson") String surveyListJson,
+                                       @RequestParam("allTextbookUsed")Boolean allTextbookUsed,
+                                       HttpServletRequest request){
+
+        List<SurveyVO> resultList = surveyService.saveMaterialAndBookSurvey(materialId,textbookId,surveyListJson,allTextbookUsed);
+        return new ResponseBean(resultList);
+
+    }
+
+
+
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询下的所有问题及答案")
+    @RequestMapping(value = "/result", method = RequestMethod.GET)
+    public ResponseBean look(@RequestParam(value = "surveyId",required = true) Long surveyId,
+                            @RequestParam(value = "userId",required = true) Long userId,
+                            @RequestParam(value = "userType",required = true) Integer userType ) {
+        Map<String,Object> paramMap = new HashMap<>();
+        paramMap.put("surveyId",surveyId);
+        paramMap.put("userId",userId);
+        paramMap.put("userType",userType);
+        return new ResponseBean(
+                surveyService.getSurveyResult(paramMap));
+    }
+
     /**
      *
      * <pre>
@@ -109,11 +154,13 @@ public class MaterialSurveyController {
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询下的所有问题")
     @RequestMapping(value = "/question/look", method = RequestMethod.GET)
-    public ResponseBean look(/*@RequestParam("surveyId") Long surveyId,*/
+    public ResponseBean result(/*@RequestParam("surveyId") Long surveyId,*/
             @RequestParam("id") Long id) {
         return new ResponseBean(
                 surveyService.getSurveyAndQuestionById(id));
     }
+
+
 
 
     @ResponseBody

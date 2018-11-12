@@ -2,14 +2,13 @@ package com.bc.pmpheep.back.service;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
-import com.bc.pmpheep.back.po.Material;
-import com.bc.pmpheep.back.po.MaterialSurveyTemplate;
 import com.bc.pmpheep.back.po.Survey;
 import com.bc.pmpheep.back.vo.MaterialSurveyCountAnswerVO;
 import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.back.vo.SurveyVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -159,4 +158,51 @@ public interface MaterialSurveyService {
      * @return
      */
     PageResult<MaterialSurveyCountAnswerVO> toAnswerList(PageParameter<MaterialSurveyCountAnswerVO> pageParameter);
+
+
+
+    /**
+     * 将问题及选项 从模板克隆到调研表
+     * @param templateId
+     * @param surveyId
+     * @return
+     */
+    int cloneQuestionAndOptionByTemplateId(Long templateId, Long surveyId);
+
+    /**
+     * 获取书籍相关调研
+     * @param materialId
+     * @param textbookId
+     * @param allTextbookUsed
+     * @return
+     */
+    List<SurveyVO> getSurveyByTextbook(Long materialId, Long textbookId, Boolean allTextbookUsed);
+
+    /**
+     * 新增教材和书籍相关教材调研
+     * @param materialId
+     * @param textbookId
+     * @param surveyListJson
+     * @param allTextbookUsed
+     * @return
+     */
+    List<SurveyVO> saveMaterialAndBookSurvey(Long materialId, Long textbookId, String surveyListJson, Boolean allTextbookUsed);
+
+    /**
+     * 新增书籍相关教材调研
+     * @param materialId
+     * @param textbookId
+     * @param surveyListJson
+     * @return
+     */
+    List<SurveyVO> saveBookSurvey(Long materialId, Long textbookId, String surveyListJson);
+
+    /**
+     * 新增教材相关教材调研
+     * @param materialId
+     * @return
+     */
+    List<SurveyVO> saveMaterialSurvey(Long materialId, String surveyListJson);
+
+    Map<String,Object> getSurveyResult(Map<String, Object> paramMap);
 }

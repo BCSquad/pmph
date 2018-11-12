@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.vo;
 
 import java.sql.Timestamp;
 
+import com.bc.pmpheep.back.util.StringUtil;
 import org.apache.ibatis.type.Alias;
 
 /**
@@ -84,6 +85,14 @@ public class SurveyTemplateListVO implements java.io.Serializable {
     private Timestamp         endDate;
 
     private Boolean            isActive ;
+
+    private Long typeId;
+
+    private Long preVersionMaterialId;
+    private String preVersionMaterialName;
+    private Integer preVersionMaterialRound;
+    //不需要查出的id字符串 以,分隔
+    private String duplicateIds;
 
     /** default constructor */
     public SurveyTemplateListVO() {
@@ -308,5 +317,52 @@ public class SurveyTemplateListVO implements java.io.Serializable {
 
     public void setIsActive(Boolean active) {
         isActive = active;
+    }
+
+    public Long getPreVersionMaterialId() {
+        return preVersionMaterialId;
+    }
+
+    public void setPreVersionMaterialId(Long preVersionMaterialId) {
+        this.preVersionMaterialId = preVersionMaterialId;
+    }
+
+    public String getPreVersionMaterialName() {
+        return preVersionMaterialName;
+    }
+
+    public void setPreVersionMaterialName(String preVersionMaterialName) {
+        this.preVersionMaterialName = preVersionMaterialName;
+    }
+
+    public Integer getPreVersionMaterialRound() {
+        return preVersionMaterialRound;
+    }
+
+    public void setPreVersionMaterialRound(Integer preVersionMaterialRound) {
+        this.preVersionMaterialRound = preVersionMaterialRound;
+    }
+
+    public Long getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(Long typeId) {
+        this.typeId = typeId;
+    }
+
+    public String getDuplicateIds() {
+        return duplicateIds;
+    }
+
+    public void setDuplicateIds(String duplicateIds) {
+
+        if(StringUtil.notEmpty(duplicateIds)){
+            duplicateIds.replaceAll("[^\\d,]","")   //去掉除数字和,之外的
+                    .replaceAll("(?=,\\s*?,),","")  //去掉连续,
+                    .replaceAll("^\\s*?,","")   //去掉开头的,
+                    .replaceAll(",\\s*?$",""); //去掉最后的,
+        }
+        this.duplicateIds = duplicateIds;
     }
 }

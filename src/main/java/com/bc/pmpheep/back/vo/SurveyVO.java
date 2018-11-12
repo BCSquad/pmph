@@ -106,6 +106,12 @@ public class SurveyVO implements java.io.Serializable {
     private String preVersionMaterialName ;
 
     private Integer preVersionMaterialRound ;
+    //对绑定到书籍的调研表 是否必填（保存在中间表,此处只是接收）
+    private Boolean requiredForWriter;
+    //对绑定到教材的调研表 是否必填
+    private Boolean  requiredForMaterial;
+    //绑定到教材true 绑定到书籍false
+    private Boolean allTextbookUsed;
 
     /**
      * 是否教材相关 仅做查询条件
@@ -352,6 +358,46 @@ public class SurveyVO implements java.io.Serializable {
         this.preVersionMaterialRound = preVersionMaterialRound;
     }
 
+    public Long getMaterialId() {
+        return materialId;
+    }
+
+    public void setMaterialId(Long materialId) {
+        this.materialId = materialId;
+    }
+
+    public Boolean getMaterialRelative() {
+        return materialRelative;
+    }
+
+    public void setMaterialRelative(Boolean materialRelative) {
+        this.materialRelative = materialRelative;
+    }
+
+    public Boolean getRequiredForWriter() {
+        return requiredForWriter;
+    }
+
+    public void setRequiredForWriter(Boolean requiredForWriter) {
+        this.requiredForWriter = requiredForWriter;
+    }
+
+    public Boolean getRequiredForMaterial() {
+        return requiredForMaterial;
+    }
+
+    public void setRequiredForMaterial(Boolean requiredForMaterial) {
+        this.requiredForMaterial = requiredForMaterial;
+    }
+
+    public Boolean getAllTextbookUsed() {
+        return allTextbookUsed;
+    }
+
+    public void setAllTextbookUsed(Boolean allTextbookUsed) {
+        this.allTextbookUsed = allTextbookUsed;
+    }
+
     @Override
     public String toString() {
         return "SurveyVO{" +
@@ -376,25 +422,14 @@ public class SurveyVO implements java.io.Serializable {
                 ", realname='" + realname + '\'' +
                 ", beginDate=" + beginDate +
                 ", endDate=" + endDate +
+                ", materialId=" + materialId +
                 ", preVersionMaterialId=" + preVersionMaterialId +
                 ", preVersionMaterialName='" + preVersionMaterialName + '\'' +
                 ", preVersionMaterialRound=" + preVersionMaterialRound +
+                ", requiredForWriter=" + requiredForWriter +
+                ", requiredForMaterial=" + requiredForMaterial +
+                ", allTextbookUsed=" + allTextbookUsed +
+                ", materialRelative=" + materialRelative +
                 '}';
-    }
-
-    public Long getMaterialId() {
-        return materialId;
-    }
-
-    public void setMaterialId(Long materialId) {
-        this.materialId = materialId;
-    }
-
-    public Boolean getMaterialRelative() {
-        return materialRelative;
-    }
-
-    public void setMaterialRelative(Boolean materialRelative) {
-        this.materialRelative = materialRelative;
     }
 }

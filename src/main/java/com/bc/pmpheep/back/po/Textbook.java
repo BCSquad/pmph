@@ -59,6 +59,9 @@ public class Textbook implements java.io.Serializable {
     // 修改时间
     private Timestamp gmtUpdate;
 
+    //调研表数量
+    private Integer surveyNum;
+
     // Constructors
 
     /** default constructor */
@@ -323,5 +326,69 @@ public class Textbook implements java.io.Serializable {
 
     public void setRealname(String realname) {
         this.realname = realname;
+    }
+
+    public Boolean getChiefChosen() {
+        return isChiefChosen;
+    }
+
+    public void setChiefChosen(Boolean chiefChosen) {
+        isChiefChosen = chiefChosen;
+    }
+
+    public Boolean getChiefPublished() {
+        return isChiefPublished;
+    }
+
+    public void setChiefPublished(Boolean chiefPublished) {
+        isChiefPublished = chiefPublished;
+    }
+
+    public Boolean getListSelected() {
+        return isListSelected;
+    }
+
+    public void setListSelected(Boolean listSelected) {
+        isListSelected = listSelected;
+    }
+
+    public Boolean getPlanningEditorConfirm() {
+        return isPlanningEditorConfirm;
+    }
+
+    public void setPlanningEditorConfirm(Boolean planningEditorConfirm) {
+        isPlanningEditorConfirm = planningEditorConfirm;
+    }
+
+    public Boolean getProjectEditorConfirm() {
+        return isProjectEditorConfirm;
+    }
+
+    public void setProjectEditorConfirm(Boolean projectEditorConfirm) {
+        isProjectEditorConfirm = projectEditorConfirm;
+    }
+
+    public Boolean getLocked() {
+        return isLocked;
+    }
+
+    public void setLocked(Boolean locked) {
+        isLocked = locked;
+    }
+
+    public Boolean getPublished() {
+        return isPublished;
+    }
+
+    public void setPublished(Boolean published) {
+        isPublished = published;
+    }
+
+    public Integer getSurveyNum() {
+        return surveyNum;
+    }
+
+    public void setSurveyNum(Integer surveyNum) {
+        this.surveyNum = surveyNum;
     }
 }
