@@ -505,6 +505,7 @@ public class MaterialSurveyServiceImpl implements MaterialSurveyService {
 
                 //插入及更新所有传入的调研表
                 survey.setDeleted(false);
+                survey.setStatus(1);
                 survey.setAllTextbookUsed(null);
                 survey.setRequiredForMaterial(null);
                 //插入也会返回id到survey
@@ -560,6 +561,7 @@ public class MaterialSurveyServiceImpl implements MaterialSurveyService {
                 //插入及更新所有传入的调研表
                 survey.setDeleted(false);
                 survey.setAllTextbookUsed(true);
+                survey.setStatus(1);
                 //插入也会返回id到survey
                 survey = this.addSurvey(survey);
 
