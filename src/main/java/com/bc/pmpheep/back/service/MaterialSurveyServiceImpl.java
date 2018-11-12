@@ -522,7 +522,7 @@ public class MaterialSurveyServiceImpl implements MaterialSurveyService {
                 surveyDao.insertChain(chain);
 
                 //该调研表是否已有问题及选项
-                List<SurveyQuestionOptionCategoryVO> existedQuestion = surveyQuestionService.getQuestionOptionByQuestionIdOrCategoryId(survey.getId(), null);
+                List<SurveyQuestionOptionCategoryVO> existedQuestion = surveyDao.getSurveyQuestionBySurveyId(survey.getId());
                 //如果没有,从模板的问题及选项克隆（有则不再变化）
                 if(ObjectUtil.isNull(existedQuestion)||existedQuestion.size()<=0){
                     //从模板克隆问题及选项
@@ -564,7 +564,8 @@ public class MaterialSurveyServiceImpl implements MaterialSurveyService {
                 survey = this.addSurvey(survey);
 
                 //该调研表是否已有问题及选项
-                List<SurveyQuestionOptionCategoryVO> existedQuestion = surveyQuestionService.getQuestionOptionByQuestionIdOrCategoryId(survey.getId(), null);
+                //List<SurveyQuestionOptionCategoryVO> existedQuestion = surveyQuestionService.getQuestionOptionByQuestionIdOrCategoryId(survey.getId(), null);
+                List<SurveyQuestionOptionCategoryVO> existedQuestion = surveyDao.getSurveyQuestionBySurveyId(survey.getId());
                 //如果没有,从模板的问题及选项克隆（有则不再变化）
                 if(ObjectUtil.isNull(existedQuestion)||existedQuestion.size()<=0){
                     //从模板克隆问题及选项
