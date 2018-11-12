@@ -245,13 +245,44 @@
 	<select id="getTextbookByMaterialId" parameterType="map"
 		resultType="Textbook">
 		select
-		*
+		tb.*,ifnull(c.surveyNum,0) as surveyNum
 		from
 		textbook tb
+		left join
+		(
+			select textbook_id,count(id) as surveyNum
+			from material_survey_chain
+			group by textbook_id
+		) c on c.textbook_id = tb.id
+
 		where
 		tb.`material_id`=#{materialId}
 		order by tb.sort asc;
 	</select>
+
+	<!-- 根据教材Id查询对应的书籍 -->
+	<select id="getTextbookByMaterialIdAndSurveyId" parameterType="map"
+			resultType="Textbook">
+		select
+		tb.*,ifnull(c.surveyNum,0) as surveyNum
+		from
+		textbook tb
+		left join
+		(
+		select textbook_id,count(id) as surveyNum
+		from material_survey_chain
+		<if test="materialSurveyId != null">
+			where material_survey_id = #{materialSurveyId}
+		</if>
+		group by textbook_id
+		) c on c.textbook_id = tb.id
+
+		where
+		tb.`material_id`=#{materialId}
+		order by tb.sort asc;
+	</select>
+
+
 
 	<!-- 职位遴选界面书籍总条数 -->
 	<select id="listBookPositionTotal" parameterType="PageParameter"

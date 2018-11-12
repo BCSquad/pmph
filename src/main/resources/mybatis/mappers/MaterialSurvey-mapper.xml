@@ -35,7 +35,7 @@
 			<if test="sort != null">
 				sort,
 			</if>
-			<if test="isDeleted != null and isDeleted !=''">
+			<if test="isDeleted != null">
 				is_deleted,
 			</if>
 			<if test="status != null">
@@ -53,6 +53,13 @@
 			<if test="preVersionMaterialRound != null ">
 				pre_version_material_round	,
 			</if>
+			<if test="allTextbookUsed != null">
+				all_textbook_used,
+			</if>
+			<if test="requiredForMaterial != null">
+				required_for_material,
+			</if>
+
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
@@ -107,6 +114,12 @@
 			<if test="preVersionMaterialRound != null ">
 				#{preVersionMaterialRound}	,
 			</if>
+			<if test="allTextbookUsed != null">
+				#{allTextbookUsed},
+			</if>
+			<if test="requiredForMaterial != null">
+				#{requiredForMaterial},
+			</if>
 		</trim>
 	</sql>
 	<sql id="duplicate_key_update">
@@ -155,6 +168,12 @@
 			</if>
 			<if test="preVersionMaterialRound != null ">
 				pre_version_material_round	=	values(pre_version_material_round)	,
+			</if>
+			<if test="allTextbookUsed != null">
+				all_textbook_used = VALUES(all_textbook_used),
+			</if>
+			<if test="requiredForMaterial != null">
+				required_for_material = VALUES(required_for_material),
 			</if>
 		</trim>
 	</sql>
@@ -416,6 +435,43 @@
 		stq.`id`
 	</select>
 
+	<!-- 根据Id查询下面的所有问题 -->
+	<select id="getSurveyResult" parameterType="java.util.Map" resultType="SurveyQuestionOptionCategoryVO">
+		SELECT
+		stq.`id`,stq.`title`,
+		stq.`type`, stq.`sort`,
+		stq.direction,
+		GROUP_CONCAT(
+			concat_ws('-',sqo.`id`,!isNull(oa.id) )
+		) optionIdString,
+		Ifnull(GROUP_CONCAT(
+		oa.option_id
+		),0) checkedOptionIdS,
+		GROUP_CONCAT(
+			ifNull(sqo.`option_content`,ca.option_content) separator '_,_'
+		) optionContent
+		FROM
+		`material_survey_question` stq
+		LEFT JOIN
+		`material_survey_question_option`sqo
+		ON
+		sqo.`question_id`= stq.`id` and sqo.is_deleted = 0
+		left join
+		material_survey_question_answer oa on oa.option_id = sqo.id and stq.type in(1,2)
+		and oa.user_id =#{userId} and oa.user_type = #{userType}
+		left join
+		material_survey_question_answer ca on ca.question_id = stq.id and stq.type in(4,5)
+		and ca.user_id =#{userId} and ca.user_type = #{userType}
+		<where>
+			stq.is_deleted = 0
+
+			and stq.`survey_id`=#{surveyId}
+
+		</where>
+		GROUP BY
+		stq.`id`
+	</select>
+
 	<!--查询调研表结果列表-->
 	<select id="toAnswerList" parameterType="PageParameter" resultType="MaterialSurveyCountAnswerVO">
 
@@ -481,6 +537,115 @@
 			</where>
 		)t
 
+	</select>
+
+	<delete id="deleteSurveyChainByTextbookId" >
+		DELETE from material_survey_chain
+
+		<where>
+			<if test="textbookId != null">
+				and textbook_id = #{textbookId}
+			</if>
+			<if test="materialId != null">
+				and material_id = #{materialId}
+			</if>
+		</where>
+
+
+	</delete>
+
+	<insert id="insertChain" parameterType="MaterialSurveyChain" keyProperty="id" useGeneratedKeys="true">
+		insert into material_survey_chain(
+			material_survey_id,
+			material_id,
+			textbook_id,
+			required,
+			pre_version_material_id,
+			pre_version_material_name,
+			pre_version_material_round
+		)
+		VALUES(
+			#{materialSurveyId},
+			#{materialId},
+			#{textbookId},
+			#{required},
+			#{preVersionMaterialId},
+			#{preVersionMaterialName},
+			#{preVersionMaterialRound}
+		)
+		on duplicate key UPDATE  required = VALUES(required)
+	</insert>
+
+	<!--从模板克隆问题及选项-->
+	<select id="cloneQuestionAndOptionByTemplateId" >
+
+		insert into material_survey_question
+		(template_question_id,category_id,title,type,sort,direction,is_answer,is_deleted,survey_id)
+
+		select id,category_id,title,type,sort,direction,is_answer,is_deleted,#{surveyId} -- 调研表id
+		from material_survey_template_question
+		where survey_id = #{templateId} -- 调研表模板id
+		;
+		insert into material_survey_question_option
+		(question_id,template_option_id,option_content,is_other,is_deleted,remark)
+
+		select sq.id as question_id,tqo.id as template_option_id,tqo.option_content,tqo.is_other,tqo.is_deleted,tqo.remark
+		from material_survey_template_question tq
+		join material_survey_template_question_option tqo
+		on tq.id = tqo.question_id
+		join material_survey_question sq
+		on sq.template_question_id = tq.id
+
+		where tq.survey_id = #{templateId} -- 调研表模板id
+
+	</select>
+
+	<!--获取书籍相关调研-->
+	<select id="getSurveyByTextbook" resultType="SurveyVO">
+		select
+		s.id,
+		s.title,
+		s.intro,
+		s.template_id,
+		s.type_id,
+		s.user_id,
+		s.sort,
+		s.is_deleted,
+		s.gmt_create,
+		s.material_id,
+		s.all_textbook_used,
+		s.required_for_material,
+		t.survey_name,
+		c.required as requiredForWriter,
+		c.pre_version_material_id,
+		c.pre_version_material_name,
+		c.pre_version_material_round
+
+		from
+		material_survey s
+		join
+		(
+		  select * from material_survey_chain where textbook_id = #{textbookId}
+		)
+		c
+		on c.material_survey_id = s.id
+		left join material_survey_type t on t.id = s.type_id
+		where s.is_deleted = 0 and s.all_textbook_used = 0
+	</select>
+
+	<select id="getSurveyByMaterial" resultType="SurveyVO">
+		select s.*,t.survey_name FROM
+		material_survey s
+		left join material_survey_type t on t.id = s.type_id
+		where s.is_deleted = 0 and s.all_textbook_used = 1
+		and s.material_id = #{materialId}
+	</select>
+
+	<select id="getSurveyByMaterialIdAndTemplateId" resultType="SurveyVO">
+		select * FROM
+		material_survey
+		where material_id = #{materialId} and template_id = #{templateId}
+		limit 0,1
 	</select>
 	
 </mapper>

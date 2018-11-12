@@ -87,6 +87,15 @@ public class SurveyQuestionOptionCategoryVO implements Serializable {
      */
     private String            remark;
 
+    private Boolean  checked;
+
+    private String answerContent;
+
+    /**
+     * 答案中已选中的option_id，用，隔开
+     */
+    private String checkedOptionIdS;
+
     /**
      * @return the categoryName
      */
@@ -339,5 +348,29 @@ public class SurveyQuestionOptionCategoryVO implements Serializable {
 
     public void setOther(Boolean other) {
         isOther = other;
+    }
+
+    public Boolean getChecked() {
+        return checked;
+    }
+
+    public void setChecked(Boolean checked) {
+        this.checked = checked;
+    }
+
+    public String getAnswerContent() {
+        return answerContent;
+    }
+
+    public void setAnswerContent(String answerContent) {
+        this.answerContent = answerContent;
+    }
+
+    public String getCheckedOptionIdS() {
+        return checkedOptionIdS;
+    }
+
+    public void setCheckedOptionIdS(String checkedOptionIdS) {
+        this.checkedOptionIdS = checkedOptionIdS;
     }
 }

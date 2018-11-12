@@ -26,15 +26,14 @@ public interface TextbookDao {
     /**
      * 新增一个Textbook
      * 
-     * @param Textbook 实体对象
+     * @param textbook 实体对象
      * @return 影响行数
      */
     Integer addTextbook(Textbook textbook);
 
     /**
      * 删除Textbook 通过主键id
-     * 
-     * @param Textbook
+     *
      * @return 影响行数
      */
     Integer deleteTextbookById(Long id);
@@ -42,7 +41,7 @@ public interface TextbookDao {
     /**
      * 更新一个 Textbook通过主键id
      * 
-     * @param Textbook
+     * @param textbook
      * @return 影响行数
      */
     Integer updateTextbook(Textbook textbook);
@@ -50,7 +49,7 @@ public interface TextbookDao {
     /**
      * 查询一个 Textbook 通过主键id
      * 
-     * @param Textbook 必须包含主键ID
+     *  Textbook 必须包含主键ID
      * @return Textbook
      */
     Textbook getTextbookById(Long id);
@@ -58,7 +57,7 @@ public interface TextbookDao {
     /**
      * 通过用户id与教材id查询书籍集合
      * 
-     * @param Textbook 必须包含主键ID
+     *  Textbook 必须包含主键ID
      * @return Textbook
      */
     List<Textbook> getTextbookByMaterialIdAndUserId(@Param("materialId") Long materialId,
@@ -86,6 +85,18 @@ public interface TextbookDao {
 	 * </pre>
      */
     List<Textbook> getTextbookByMaterialId(@Param("materialId") Long materialId);
+
+    /**
+     *
+     * <pre>
+     * 功能描述：根据教材Id查询对应的书籍集合
+     * 使用示范：
+     *
+     * &#64;param materialId 教材Id
+     * &#64;return
+     * </pre>
+     */
+    List<Textbook> getTextbookByMaterialIdAndSurveyId(@Param("materialId") Long materialId,@Param("materialSurveyId") Long materialSurveyId);
 
     /**
      * 职位遴选界面书籍总条数
@@ -116,9 +127,8 @@ public interface TextbookDao {
 
     /**
      * 批量通过（名单确认）
-     * 
-     * @param textbooks
-     * @param isLocked
+     *
+     *  isLocked
      * @return
      */
     Integer updateTextbooks(List<Textbook> textBook);
@@ -155,8 +165,7 @@ public interface TextbookDao {
 
     /**
      * 通过书籍id 查询该书籍对应关系
-     * 
-     * @param textbookId
+     *
      * @return
      */
     List<TextbookDecVO> getTextbookDecVOList(PageParameter<TextbookDecVO> pageParameter);
@@ -172,17 +181,14 @@ public interface TextbookDao {
     /**
      * 通过书籍id查询该书籍下面的主编、编委
      * 
-     * @param textbookId
+     * @param textbookIds
      * @return
      */
     List<ExcelDecAndTextbookVO> getExcelDecAndTextbooks(Long[] textbookIds);
 
     /**
      * 通过教材id查询该教材的主编/副主编
-     * 
-     * @param textbookRoun
-     * @param textbookName
-     * @param materialId
+     *
      * @return
      */
     List<DecPositionBO> getExcelDecByMaterialId(Long[] textbookIds);

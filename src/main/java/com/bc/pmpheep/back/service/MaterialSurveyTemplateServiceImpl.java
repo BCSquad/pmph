@@ -14,6 +14,7 @@ import com.bc.pmpheep.back.vo.SurveyTemplateVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
+import com.mchange.lang.LongUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,6 +55,8 @@ public class MaterialSurveyTemplateServiceImpl implements MaterialSurveyTemplate
     private MaterialSurveyTemplateQuestionService             surveyQuestionService;
     @Autowired
     MaterialSurveyTemplateQuestionOptionService       surveyQuestionOptionService;
+    @Autowired
+    MaterialService materialService;
 
     @Override
     public MaterialSurveyTemplate addSurveyTemplate(MaterialSurveyTemplate surveyTemplate)
@@ -70,6 +73,11 @@ public class MaterialSurveyTemplateServiceImpl implements MaterialSurveyTemplate
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "模版创建人为空");
         }
+
+        if(ObjectUtil.notNull(surveyTemplate.getPreVersionMaterialId())){
+            surveyTemplate.setPreVersionMaterialName(materialService.getMaterialNameById(surveyTemplate.getPreVersionMaterialId()));
+        }
+
         surveyTemplateDao.addSurveyTemplate(surveyTemplate);
 
         Long id = surveyTemplate.getId();

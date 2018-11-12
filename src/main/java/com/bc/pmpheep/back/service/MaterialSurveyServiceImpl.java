@@ -1,25 +1,19 @@
 package com.bc.pmpheep.back.service;
 
 import com.bc.pmpheep.back.dao.MaterialSurveyDao;
+import com.bc.pmpheep.back.dao.MaterialSurveyTemplateDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.*;
 import com.bc.pmpheep.back.util.*;
-import com.bc.pmpheep.back.vo.MaterialSurveyCountAnswerVO;
-import com.bc.pmpheep.back.vo.OrgVO;
-import com.bc.pmpheep.back.vo.SurveyQuestionListVO;
-import com.bc.pmpheep.back.vo.SurveyVO;
+import com.bc.pmpheep.back.vo.*;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
-import com.mchange.lang.LongUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 
@@ -51,6 +45,8 @@ public class MaterialSurveyServiceImpl implements MaterialSurveyService {
     MaterialSurveyQuestionOptionService   surveyQuestionOptionService;
     @Autowired
     MaterialSurveyTemplateQuestionService surveyTemplateQuestionService;
+    @Autowired
+    private MaterialSurveyTemplateDao surveyTemplateDao;
 
     @Override
     public SurveyVO addSurvey(SurveyVO survey) throws CheckedServiceException {
@@ -71,6 +67,10 @@ public class MaterialSurveyServiceImpl implements MaterialSurveyService {
                                               CheckedExceptionResult.NULL_PARAM, "问卷创建人为空");
         }
         surveyDao.addSurvey(survey);
+        if(ObjectUtil.isNull(survey.getId())){
+            survey = surveyDao.getSurveyByMaterialIdAndTemplateId(survey.getMaterialId(),survey.getTemplateId());
+        }
+
         return survey;
     }
 
@@ -445,6 +445,21 @@ public class MaterialSurveyServiceImpl implements MaterialSurveyService {
     }
 
     @Override
+    public Map<String, Object> getSurveyResult(Map<String, Object> paramMap) {
+        if (ObjectUtil.isNull(paramMap.get("surveyId"))) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                    CheckedExceptionResult.NULL_PARAM, "调研表ID为空");
+        }
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+
+        resultMap.put("survey", surveyDao.getSurveyById((Long)paramMap.get("surveyId")));
+
+        resultMap.put("qestionAndOption",
+                surveyDao.getSurveyResult(paramMap));
+        return resultMap;
+    }
+
+    @Override
     public PageResult<MaterialSurveyCountAnswerVO> toAnswerList(PageParameter<MaterialSurveyCountAnswerVO> pageParameter) {
 
         if(ObjectUtil.isNull(pageParameter.getParameter())){
@@ -467,4 +482,141 @@ public class MaterialSurveyServiceImpl implements MaterialSurveyService {
 
         return pageResult;
     }
+
+    /**
+     * 新增 书籍相关 的 调研表
+     * @param materialId
+     * @param textbookId
+     * @param surveyListJson
+     * @return
+     */
+    @Override
+    public List<SurveyVO> saveBookSurvey(Long materialId, Long textbookId, String surveyListJson) {
+
+        List<SurveyVO> surveyList = new JsonUtil().getArrayListObjectFromStr(SurveyVO.class,surveyListJson);
+
+        //先将该书籍下的调研表 的 关联表 物理删除！！！
+        int clearedChainNum = surveyDao.deleteSurveyChainByTextbookId(materialId,textbookId);
+
+        MaterialSurveyChain chain = new MaterialSurveyChain(materialId,textbookId);
+
+        for (SurveyVO survey: surveyList) {
+            if(ObjectUtil.notNull(survey)){
+
+                //插入及更新所有传入的调研表
+                survey.setDeleted(false);
+                survey.setAllTextbookUsed(null);
+                survey.setRequiredForMaterial(null);
+                //插入也会返回id到survey
+                survey = this.addSurvey(survey);
+
+                //重新插入关联
+                chain.setRequired(ObjectUtil.notNull(survey.getRequiredForWriter())?survey.getRequiredForWriter():false);
+                chain.setMaterialSurveyId(survey.getId());
+
+                //上版教材信息保存在中间表
+                chain.setPreVersionMaterialId(survey.getPreVersionMaterialId());
+                chain.setPreVersionMaterialName(survey.getPreVersionMaterialName());
+                chain.setPreVersionMaterialRound(survey.getPreVersionMaterialRound());
+
+                surveyDao.insertChain(chain);
+
+                //该调研表是否已有问题及选项
+                List<SurveyQuestionOptionCategoryVO> existedQuestion = surveyQuestionService.getQuestionOptionByQuestionIdOrCategoryId(survey.getId(), null);
+                //如果没有,从模板的问题及选项克隆（有则不再变化）
+                if(ObjectUtil.isNull(existedQuestion)||existedQuestion.size()<=0){
+                    //从模板克隆问题及选项
+                    int cloneLines = this.cloneQuestionAndOptionByTemplateId(survey.getTemplateId(),survey.getId());
+                }
+
+            }
+
+        }
+
+        return surveyList;
+    }
+
+    /**
+     *
+     * @param materialId
+     * @param surveyListJson
+     * @return
+     */
+    @Override
+    public List<SurveyVO> saveMaterialSurvey(Long materialId,String surveyListJson) {
+
+        List<SurveyVO> surveyList = new JsonUtil().getArrayListObjectFromStr(SurveyVO.class,surveyListJson);
+
+        //取消原关联： 1查询教材直接相关的调研表 2 用addSurvey全部设为setAllTextbookUsed(false)
+        List<SurveyVO> oldMaterialSurveyList = this.getSurveyByTextbook(materialId, null, true);
+        for (SurveyVO os:oldMaterialSurveyList) {
+            os.setAllTextbookUsed(false);
+            this.addSurvey(os);
+        }
+
+        for (SurveyVO survey: surveyList) {
+            if(ObjectUtil.notNull(survey)){
+
+                //插入及更新所有传入的调研表
+                survey.setDeleted(false);
+                survey.setAllTextbookUsed(true);
+                //插入也会返回id到survey
+                survey = this.addSurvey(survey);
+
+                //该调研表是否已有问题及选项
+                List<SurveyQuestionOptionCategoryVO> existedQuestion = surveyQuestionService.getQuestionOptionByQuestionIdOrCategoryId(survey.getId(), null);
+                //如果没有,从模板的问题及选项克隆（有则不再变化）
+                if(ObjectUtil.isNull(existedQuestion)||existedQuestion.size()<=0){
+                    //从模板克隆问题及选项
+                    int cloneLines = this.cloneQuestionAndOptionByTemplateId(survey.getTemplateId(),survey.getId());
+                }
+            }
+
+        }
+        return surveyList;
+    }
+
+
+    /**
+     * 将问题及选项 从模板克隆到调研表
+     * @param templateId
+     * @param surveyId
+     * @return
+     */
+    @Override
+    public int cloneQuestionAndOptionByTemplateId(Long templateId, Long surveyId) {
+        int clonedLine = surveyDao.cloneQuestionAndOptionByTemplateId(templateId,surveyId);
+        return clonedLine;
+    }
+
+    /**
+     * 获取书籍相关调研
+     * @param materialId
+     * @param textbookId
+     * @param allTextbookUsed
+     * @return
+     */
+    @Override
+    public List<SurveyVO> getSurveyByTextbook(Long materialId, Long textbookId, Boolean allTextbookUsed) {
+        List<SurveyVO> list = new ArrayList<SurveyVO>();
+        if (allTextbookUsed){
+            list = surveyDao.getSurveyByMaterial(materialId);
+        }else{
+            list = surveyDao.getSurveyByTextbook(textbookId);
+        }
+
+        return list;
+    }
+
+    @Override
+    public List<SurveyVO> saveMaterialAndBookSurvey(Long materialId, Long textbookId, String surveyListJson, Boolean allTextbookUsed) {
+        List<SurveyVO> list = null;
+        if(allTextbookUsed){
+            list = this.saveMaterialSurvey( materialId, surveyListJson);
+        }else{
+            list = this.saveBookSurvey( materialId,textbookId, surveyListJson);
+        }
+        return list;
+    }
+
 }

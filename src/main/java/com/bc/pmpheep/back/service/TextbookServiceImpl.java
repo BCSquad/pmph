@@ -888,6 +888,7 @@ public class TextbookServiceImpl implements TextbookService {
 			bookListVO.setMaterialRound(material.getMaterialRound());
 			bookListVO.setMaterialType(pathType);
 			bookListVO.setIsPublic(material.getIsPublic());
+			bookListVO.setSurveyNum(0);
 			books.add(bookListVO);
 			return books;
 		}
@@ -899,6 +900,7 @@ public class TextbookServiceImpl implements TextbookService {
 			bookListVO.setMaterialType(pathType);
 			bookListVO.setIsPublic(material.getIsPublic());
 			bookListVO.setTextbook(textbook);
+			bookListVO.setSurveyNum(textbook.getSurveyNum());
 			if (CollectionUtil.isNotEmpty(decPositionService.listDecPositionsByTextbookId(textbook.getId()))
 					&& decPositionService.listDecPositionsByTextbookId(textbook.getId()).size() > 0) {
 				bookListVO.setAllowedDelete(false);

@@ -222,6 +222,9 @@
 				stl.is_deleted = false 
 		<!-- 下面是动态条件 -->
 		<if test="parameter !=null ">
+			<if test="parameter.duplicateIds != null and parameter.duplicateIds != '' ">
+				and stl.id not in (${parameter.duplicateIds})
+			</if>
 			<!-- 模版名称 -->
 			<if test="parameter.templateName != null and parameter.templateName != ''">
 				and stl.template_name like concat('%',#{parameter.templateName},'%')
@@ -254,6 +257,9 @@
 		where stl.is_deleted = false 
 		<!-- 下面是动态条件 -->
 		<if test="parameter !=null ">
+			<if test="parameter.duplicateIds != null and parameter.duplicateIds != '' ">
+				and stl.id not in (${parameter.duplicateIds})
+			</if>
 			<!-- 模版名称 -->
 			<if test="parameter.templateName != null and parameter.templateName != ''">
 				and stl.template_name like concat('%',#{parameter.templateName},'%')
@@ -282,7 +288,7 @@
 					ppu.realname like concat('%',#{parameter.username},'%') )
 			</if>
 		</if>
-		group by stl.template_name desc 
+		group by stl.id desc
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
