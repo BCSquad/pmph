@@ -577,7 +577,7 @@
 	</insert>
 
 	<!--从模板克隆问题及选项-->
-	<select id="cloneQuestionAndOptionByTemplateId" >
+	<insert id="cloneQuestionAndOptionByTemplateId" >
 
 		insert into material_survey_question
 		(template_question_id,category_id,title,type,sort,direction,is_answer,is_deleted,survey_id)
@@ -598,7 +598,7 @@
 
 		where tq.survey_id = #{templateId} -- 调研表模板id
 
-	</select>
+	</insert>
 
 	<!--获取书籍相关调研-->
 	<select id="getSurveyByTextbook" resultType="SurveyVO">
