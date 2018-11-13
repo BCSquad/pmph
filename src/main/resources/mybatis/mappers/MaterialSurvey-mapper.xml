@@ -41,7 +41,10 @@
 			<if test="status != null">
 				status,
 			</if>
-			<if test="materialId != null ">
+			<if test="materialId != null and  materialId != 0">
+				material_id	,
+			</if>
+			<if test="materialId == 0 ">
 				material_id	,
 			</if>
 			<if test="preVersionMaterialId != null ">
@@ -102,8 +105,11 @@
 			<if test="status != null">
 				#{status},
 			</if>
-			<if test="materialId != null ">
+			<if test="materialId != null  and  materialId != 0">
 				#{materialId}	,
+			</if>
+			<if test="materialId == 0 ">
+				null	,
 			</if>
 			<if test="preVersionMaterialId != null ">
 				#{preVersionMaterialId}	,
@@ -157,8 +163,11 @@
 			<if test="status != null ">
 				status	=	values(status)	,
 			</if>
-			<if test="materialId != null ">
+			<if test="materialId != null  and  materialId != 0">
 				material_id	=	values(material_id)	,
+			</if>
+			<if test="materialId == 0 ">
+				material_id	= null ,
 			</if>
 			<if test="preVersionMaterialId != null ">
 				pre_version_material_id	=	values(pre_version_material_id)	,
