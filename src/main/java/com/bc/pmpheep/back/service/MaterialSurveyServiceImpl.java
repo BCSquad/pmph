@@ -279,7 +279,7 @@ public class MaterialSurveyServiceImpl implements MaterialSurveyService {
     }
 
     @Override
-    public SurveyVO addSurvey(String questionAnswerJosn, String del_question, String del_question_option, SurveyVO surveyVO, String sessionId,Boolean tempReCreat) {
+    public SurveyVO addSurvey(String questionAnswerJosn, String del_question, String del_question_option, SurveyVO surveyVO,String checkedTextbookList, String sessionId,Boolean tempReCreat) {
         //若新增为模板
         if(tempReCreat){
             MaterialSurveyTemplate surveyTemplateVO = new MaterialSurveyTemplate();
@@ -313,6 +313,7 @@ public class MaterialSurveyServiceImpl implements MaterialSurveyService {
         List<SurveyQuestionListVO> surveyQuestionListVO;
         List<SurveyQuestionListVO> delQuestionList;
         List<SurveyQuestionOption> delQuestionOption;
+        List<MaterialSurveyChain> checkedTextbookListVO;
         try {
             surveyQuestionListVO =
                     new JsonUtil().getArrayListObjectFromStr(SurveyQuestionListVO.class, questionAnswerJosn);
@@ -320,6 +321,8 @@ public class MaterialSurveyServiceImpl implements MaterialSurveyService {
                     new JsonUtil().getArrayListObjectFromStr(SurveyQuestionListVO.class, del_question);
             delQuestionOption =
                     new JsonUtil().getArrayListObjectFromStr(SurveyQuestionOption.class, del_question_option);
+            checkedTextbookListVO =
+                    new JsonUtil().getArrayListObjectFromStr(MaterialSurveyChain.class, checkedTextbookList);
         } catch (Exception e) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.VO_CONVERSION_FAILED,
@@ -353,6 +356,18 @@ public class MaterialSurveyServiceImpl implements MaterialSurveyService {
         if (ObjectUtil.isNull(newId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "新增调研表失败");
+        }
+
+        for (MaterialSurveyChain materialSurveyChain: checkedTextbookListVO) {
+            materialSurveyChain.setMaterialSurveyId(newId);
+            materialSurveyChain.setRequired(materialSurveyChain.getRequired()==null?false:materialSurveyChain.getRequired());
+        }
+
+        if(CollectionUtil.isNotEmpty(checkedTextbookListVO)){
+            //物理删除该调研表的中间表
+            surveyDao.deleteSurveyChainByMaterialSurveyId(newId);
+            //重新批量插入中间表
+            int r =surveyDao.insertChainBatch(checkedTextbookListVO);
         }
 
         // 添加问题及问题选项
@@ -457,6 +472,18 @@ public class MaterialSurveyServiceImpl implements MaterialSurveyService {
         resultMap.put("qestionAndOption",
                 surveyDao.getSurveyResult(paramMap));
         return resultMap;
+    }
+
+    /**
+     * 查询调研表所关联教材下的图书及和图书的关联关系
+     *  materialId
+     *  materialSurveyId
+     * @return
+     */
+    @Override
+    public List<MaterialSurveyChain> chainBookList(Map<String,Object> paramMap) {
+        List<MaterialSurveyChain> list = surveyDao.chainBookList(paramMap);
+        return list;
     }
 
     @Override

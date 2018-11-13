@@ -18,6 +18,8 @@ public class MaterialSurveyChain implements Serializable{
 
     private Integer preVersionMaterialRound ;
 
+    private String textbookName;
+
     public MaterialSurveyChain() {
     }
 
@@ -91,6 +93,14 @@ public class MaterialSurveyChain implements Serializable{
         this.preVersionMaterialRound = preVersionMaterialRound;
     }
 
+    public String getTextbookName() {
+        return textbookName;
+    }
+
+    public void setTextbookName(String textbookName) {
+        this.textbookName = textbookName;
+    }
+
     @Override
     public String toString() {
         return "MaterialSurveyChain{" +
@@ -102,6 +112,7 @@ public class MaterialSurveyChain implements Serializable{
                 ", preVersionMaterialId=" + preVersionMaterialId +
                 ", preVersionMaterialName='" + preVersionMaterialName + '\'' +
                 ", preVersionMaterialRound=" + preVersionMaterialRound +
+                ", textbookName='" + textbookName + '\'' +
                 '}';
     }
 }

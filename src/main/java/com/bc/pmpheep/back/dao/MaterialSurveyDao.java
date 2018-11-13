@@ -123,6 +123,13 @@ public interface MaterialSurveyDao {
     int deleteSurveyChainByTextbookId(@Param("materialId") Long materialId,@Param("textbookId")  Long textbookId);
 
     /**
+     * 物理删除某调研表的中间关联表
+     * @return
+     */
+    int deleteSurveyChainByMaterialSurveyId(@Param("materialSurveyId")Long materialSurveyId);
+
+
+    /**
      * 插入书籍和调研表的中间关联
      * @param chain
      * @return
@@ -150,4 +157,17 @@ public interface MaterialSurveyDao {
     SurveyVO getSurveyByMaterialIdAndTemplateId(@Param("materialId")Long materialId, @Param("templateId")Long templateId);
 
 
+    /**
+     * 查询调研表所关联教材下的图书及和图书的关联关系
+     * @param paramMap
+     * @return
+     */
+    List<MaterialSurveyChain> chainBookList(Map<String, Object> paramMap);
+
+    /**
+     * 批量插入中间表
+     * @param checkedTextbookListVO
+     * @return
+     */
+    int insertChainBatch(List<MaterialSurveyChain> checkedTextbookListVO);
 }
