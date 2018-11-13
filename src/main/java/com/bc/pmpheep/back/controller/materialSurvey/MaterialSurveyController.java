@@ -5,9 +5,11 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Survey;
 import com.bc.pmpheep.back.po.SurveyTemplate;
+
 import com.bc.pmpheep.back.service.MaterialSurveyService;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.MaterialSurveyChain;
 import com.bc.pmpheep.back.vo.MaterialSurveyCountAnswerVO;
 import com.bc.pmpheep.back.vo.SurveyVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
@@ -87,6 +89,7 @@ public class MaterialSurveyController {
     public ResponseBean create(@RequestParam("questionAnswerJosn") String questionAnswerJosn,
                                @RequestParam("del_question")String del_question,
                                @RequestParam("del_question_option")String del_question_option,
+                               @RequestParam("checkedTextbookList")String checkedTextbookList,
                                @RequestParam(value = "tempReCreat",defaultValue = "false")Boolean tempReCreat,
                                SurveyVO surveyVO, HttpServletRequest request) {
         String sessionId = CookiesUtil.getSessionId(request);
@@ -94,6 +97,7 @@ public class MaterialSurveyController {
                 del_question,
                 del_question_option,
                 surveyVO,
+                checkedTextbookList,
                 sessionId,tempReCreat));
     }
 
@@ -121,6 +125,21 @@ public class MaterialSurveyController {
                                        HttpServletRequest request){
 
         List<SurveyVO> resultList = surveyService.saveMaterialAndBookSurvey(materialId,textbookId,surveyListJson,allTextbookUsed);
+        return new ResponseBean(resultList);
+
+    }
+
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询调研表所关联教材下的图书及和图书的关联关系")
+    @RequestMapping(value = "/chainBookList", method = RequestMethod.GET)
+    public ResponseBean chainBookList(
+                                       @RequestParam("materialId")Long materialId,
+                                       @RequestParam("materialSurveyId") Long materialSurveyId,
+                                       HttpServletRequest request){
+        Map<String,Object> paramMap = new HashMap<String,Object>();
+        paramMap.put("materialId",materialId);
+        paramMap.put("materialSurveyId",materialSurveyId);
+        List<MaterialSurveyChain> resultList = surveyService.chainBookList(paramMap);
         return new ResponseBean(resultList);
 
     }

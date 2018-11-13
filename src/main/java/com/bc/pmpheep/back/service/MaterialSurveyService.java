@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.service;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Survey;
+import com.bc.pmpheep.back.vo.MaterialSurveyChain;
 import com.bc.pmpheep.back.vo.MaterialSurveyCountAnswerVO;
 import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.back.vo.SurveyVO;
@@ -143,7 +144,7 @@ public interface MaterialSurveyService {
      * @param sessionId
      * @return
      */
-    SurveyVO addSurvey(String questionAnswerJosn, String del_question, String del_question_option, SurveyVO surveyVO, String sessionId,Boolean tempReCreat);
+    SurveyVO addSurvey(String questionAnswerJosn, String del_question, String del_question_option, SurveyVO surveyVO,String checkedTextbookList, String sessionId,Boolean tempReCreat);
 
     /**
      * 获取调研表详情
@@ -205,4 +206,12 @@ public interface MaterialSurveyService {
     List<SurveyVO> saveMaterialSurvey(Long materialId, String surveyListJson);
 
     Map<String,Object> getSurveyResult(Map<String, Object> paramMap);
+
+    /**
+     * 查询调研表所关联教材下的图书及和图书的关联关系
+     *  materialId
+     *  materialSurveyId
+     * @return
+     */
+    List<MaterialSurveyChain> chainBookList(Map<String,Object> map);
 }

@@ -41,7 +41,10 @@
 			<if test="status != null">
 				status,
 			</if>
-			<if test="materialId != null ">
+			<if test="materialId != null and  materialId != 0">
+				material_id	,
+			</if>
+			<if test="materialId == 0 ">
 				material_id	,
 			</if>
 			<if test="preVersionMaterialId != null ">
@@ -102,8 +105,11 @@
 			<if test="status != null">
 				#{status},
 			</if>
-			<if test="materialId != null ">
+			<if test="materialId != null  and  materialId != 0">
 				#{materialId}	,
+			</if>
+			<if test="materialId == 0 ">
+				null	,
 			</if>
 			<if test="preVersionMaterialId != null ">
 				#{preVersionMaterialId}	,
@@ -157,8 +163,11 @@
 			<if test="status != null ">
 				status	=	values(status)	,
 			</if>
-			<if test="materialId != null ">
+			<if test="materialId != null  and  materialId != 0">
 				material_id	=	values(material_id)	,
+			</if>
+			<if test="materialId == 0 ">
+				material_id	= null ,
 			</if>
 			<if test="preVersionMaterialId != null ">
 				pre_version_material_id	=	values(pre_version_material_id)	,
@@ -550,8 +559,10 @@
 				and material_id = #{materialId}
 			</if>
 		</where>
+	</delete>
 
-
+	<delete id="deleteSurveyChainByMaterialSurveyId" parameterType="Long">
+		DELETE from material_survey_chain where material_survey_id = #{materialSurveyId}
 	</delete>
 
 	<insert id="insertChain" parameterType="MaterialSurveyChain" keyProperty="id" useGeneratedKeys="true">
@@ -574,6 +585,37 @@
 			#{preVersionMaterialRound}
 		)
 		on duplicate key UPDATE  required = VALUES(required)
+	</insert>
+
+	<insert id="insertChainBatch" parameterType="MaterialSurveyChain" >
+		insert into material_survey_chain(
+			id,
+			material_survey_id,
+			material_id,
+			textbook_id,
+			required,
+			pre_version_material_id,
+			pre_version_material_name,
+			pre_version_material_round
+		)
+		VALUES
+		<foreach collection="list" item="item" separator="," index="index">
+			(
+			#{item.id},
+			#{item.materialSurveyId},
+			#{item.materialId},
+			#{item.textbookId},
+			#{item.required},
+			#{item.preVersionMaterialId},
+			#{item.preVersionMaterialName},
+			#{item.preVersionMaterialRound}
+			)
+		</foreach>
+		on duplicate key UPDATE
+		required = VALUES(required)
+		,pre_version_material_id = VALUES(pre_version_material_id)
+		,pre_version_material_name = VALUES(pre_version_material_name)
+		,pre_version_material_round = VALUES(pre_version_material_round)
 	</insert>
 
 	<!--从模板克隆问题及选项-->
@@ -646,6 +688,32 @@
 		material_survey
 		where material_id = #{materialId} and template_id = #{templateId}
 		limit 0,1
+	</select>
+
+	<select id="chainBookList" parameterType="java.util.Map" resultType="MaterialSurveyChain">
+		select
+		 b.id as textbook_id,
+		 b.textbook_name ,
+		 c.id,
+		 c.material_survey_id,
+		 c.material_id,
+		 c.required,
+		 c.pre_version_material_id,
+		 c.pre_version_material_name,
+		 c.pre_version_material_round
+		from
+		(
+		select * from
+		textbook
+		where material_id = #{materialId}
+		)b
+		left join
+		(
+		select * from
+		material_survey_chain
+		where material_survey_id = #{materialSurveyId}
+		)c
+		  on c.textbook_id = b.id
 	</select>
 	
 </mapper>
