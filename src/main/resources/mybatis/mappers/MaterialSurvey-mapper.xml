@@ -432,8 +432,8 @@
 		stq.`id`,stq.`title`,
 		stq.`type`, stq.`sort`,
 		stq.direction,
-		GROUP_CONCAT(sqo.`id`) optionIdString,
-		GROUP_CONCAT(sqo.`option_content`) optionContent
+		GROUP_CONCAT(sqo.`id` order by sqo.`id` asc ) optionIdString,
+		GROUP_CONCAT(sqo.`option_content` order by sqo.`id` asc ) optionContent
 		FROM
 		`material_survey_question` stq
 		LEFT JOIN
@@ -457,13 +457,13 @@
 		stq.`type`, stq.`sort`,
 		stq.direction,
 		GROUP_CONCAT(
-			concat_ws('-',sqo.`id`,!isNull(oa.id) )
+			concat_ws('-',sqo.`id`,!isNull(oa.id) ) order by sqo.id asc
 		) optionIdString,
 		Ifnull(GROUP_CONCAT(
-		oa.option_id
+		oa.option_id order by sqo.id asc
 		),0) checkedOptionIdS,
 		GROUP_CONCAT(
-			ifNull(sqo.`option_content`,ca.option_content) separator '_,_'
+			ifNull(sqo.`option_content`,ca.option_content) order by sqo.id asc separator '_,_'
 		) optionContent
 		FROM
 		`material_survey_question` stq
