@@ -287,6 +287,9 @@
 					<if test="parameter.title != null and parameter.title != ''">
 						and s.title like concat('%',#{parameter.title},'%')
 					</if>
+					<if test="parameter.typeId != null">
+						and s.type_id = #{parameter.typeId}
+					</if>
 					<if test="parameter.materialRelative != null">
 						<if test="parameter.materialRelative == true ">
 							<if test="parameter.materialId != null" >
@@ -316,6 +319,9 @@
 			<!-- 问卷标题 -->
 			<if test="parameter.title != null and parameter.title != ''">
 				and s.title like concat('%',#{parameter.title},'%')
+			</if>
+			<if test="parameter.typeId != null">
+				and s.type_id = #{parameter.typeId}
 			</if>
 			<if test="parameter.materialRelative != null">
 				<if test="parameter.materialRelative == true ">
@@ -714,6 +720,11 @@
 		where material_survey_id = #{materialSurveyId}
 		)c
 		  on c.textbook_id = b.id
+	</select>
+
+	<!--获取调研表（调查对象）分类-->
+	<select id="getTypeList" resultType="MaterialSurveyType">
+		select * from material_survey_type order by sort;
 	</select>
 	
 </mapper>

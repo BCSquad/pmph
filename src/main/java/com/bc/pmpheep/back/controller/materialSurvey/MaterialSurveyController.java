@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.controller.materialSurvey;
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
+import com.bc.pmpheep.back.po.MaterialSurveyType;
 import com.bc.pmpheep.back.po.Survey;
 import com.bc.pmpheep.back.po.SurveyTemplate;
 
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
@@ -204,4 +206,15 @@ public class MaterialSurveyController {
         PageResult<MaterialSurveyCountAnswerVO> pageResult = surveyService.toAnswerList(pageParameter);
         return new ResponseBean(pageResult);
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/typeList",method = RequestMethod.GET)
+    public ResponseBean typeList(HttpServletRequest request){
+
+        List<MaterialSurveyType> result = surveyService.getTypeList();
+
+        return new ResponseBean(result);
+    }
+
+
 }

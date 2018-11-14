@@ -229,6 +229,9 @@
 			<if test="parameter.templateName != null and parameter.templateName != ''">
 				and stl.template_name like concat('%',#{parameter.templateName},'%')
 			</if>
+			<if test="parameter.typeId != null">
+				and stl.type_id = #{parameter.typeId}
+			</if>
 			<if test="parameter.isActive != null">
 				and stl.is_active = #{parameter.isActive}
 			</if>
@@ -240,7 +243,7 @@
 			</if>
 			<if test="parameter.endTime !=null and parameter.endTime !='' ">
 				and
-				stl.`gmt_create` &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d %H:%i:%s')
+				stl.`gmt_create` &lt;= str_to_date(concat(#{parameter.endTime},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 			</if>
 			<!-- 模板创建人(0=系统) -->
 			<if test="parameter.userId != null">
@@ -264,6 +267,9 @@
 			<if test="parameter.templateName != null and parameter.templateName != ''">
 				and stl.template_name like concat('%',#{parameter.templateName},'%')
 			</if>
+			<if test="parameter.typeId != null">
+				and stl.type_id = #{parameter.typeId}
+			</if>
 			<if test="parameter.isActive != null">
 				and stl.is_active = #{parameter.isActive}
 			</if>
@@ -275,7 +281,7 @@
 			</if>
 			<if test="parameter.endTime !=null and parameter.endTime !='' ">
 				and
-				stl.`gmt_create` &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d %H:%i:%s')
+				stl.`gmt_create` &lt;= str_to_date(concat(#{parameter.endTime},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 			</if>
 			<!-- 模板创建人(0=系统) -->
 			<if test="parameter.userId != null">

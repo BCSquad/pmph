@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.dao;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.po.MaterialSurveyType;
 import com.bc.pmpheep.back.po.Survey;
 import com.bc.pmpheep.back.vo.*;
 import org.apache.ibatis.annotations.Param;
@@ -170,4 +171,10 @@ public interface MaterialSurveyDao {
      * @return
      */
     int insertChainBatch(List<MaterialSurveyChain> checkedTextbookListVO);
+
+    /**
+     * 获取调研表（调查对象）分类
+     * @return
+     */
+    List<MaterialSurveyType> getTypeList();
 }
