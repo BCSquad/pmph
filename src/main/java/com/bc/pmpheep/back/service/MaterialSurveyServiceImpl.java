@@ -486,6 +486,16 @@ public class MaterialSurveyServiceImpl implements MaterialSurveyService {
         return list;
     }
 
+    /**
+     * 获取调研表（调查对象）分类
+     * @return
+     */
+    @Override
+    public List<MaterialSurveyType> getTypeList() {
+        List<MaterialSurveyType> result = surveyDao.getTypeList();
+        return result;
+    }
+
     @Override
     public PageResult<MaterialSurveyCountAnswerVO> toAnswerList(PageParameter<MaterialSurveyCountAnswerVO> pageParameter) {
 

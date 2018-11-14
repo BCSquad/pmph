@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.service;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
+import com.bc.pmpheep.back.po.MaterialSurveyType;
 import com.bc.pmpheep.back.po.Survey;
 import com.bc.pmpheep.back.vo.MaterialSurveyChain;
 import com.bc.pmpheep.back.vo.MaterialSurveyCountAnswerVO;
@@ -214,4 +215,10 @@ public interface MaterialSurveyService {
      * @return
      */
     List<MaterialSurveyChain> chainBookList(Map<String,Object> map);
+
+    /**
+     * 获取调研表（调查对象）分类
+     * @return
+     */
+    List<MaterialSurveyType> getTypeList();
 }
