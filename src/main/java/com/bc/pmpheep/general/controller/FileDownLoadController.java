@@ -803,8 +803,6 @@ public class FileDownLoadController {
 	 *            1待审核 3已经审核
 	 * @param offlineProgress
 	 *            0 未 2 收到
-
-	 * 
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "申报表批量导出word")
