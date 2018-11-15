@@ -910,6 +910,10 @@ public class DeclarationServiceImpl implements DeclarationService {
 		ArrayList<DecIntention> decIntentions = (ArrayList<DecIntention>) decIntentionDao
 				.getDecIntentionByDeclarationIds(decIds);
 		for (DeclarationOrDisplayVO declarationOrDisplayVO : declarationOrDisplayVOs) {
+			if(StringUtil.isEmpty(declarationOrDisplayVO.getTextbookName())){
+				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+						"书籍名称为空");
+			}
 			String strOnlineProgress = "";// 审核进度
 			String strOfflineProgress = "";// 纸质表进度
 			String sex = "";// 性别
