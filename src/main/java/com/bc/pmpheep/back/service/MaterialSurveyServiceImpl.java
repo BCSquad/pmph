@@ -127,6 +127,7 @@ public class MaterialSurveyServiceImpl implements MaterialSurveyService {
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
         // 包含数据总条数的数据集
         List<SurveyVO> surveyList = surveyDao.listSurvey(pageParameter);
+        //List<SurveyWordMainVO> s = surveyDao.wordExMainList(pageParameter);
         if (CollectionUtil.isNotEmpty(surveyList)) {
             Integer count = surveyList.get(0).getCount();
             pageResult.setTotal(count);
