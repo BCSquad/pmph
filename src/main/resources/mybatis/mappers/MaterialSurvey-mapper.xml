@@ -350,6 +350,86 @@
 			limit #{start},#{pageSize}
 		</if>
 	</select>
+
+	<!--调研表导出word的主列表-->
+	<select id="wordExMainList" parameterType="SurveyVO" resultType="SurveyWordMainVO">
+		select m.material_name,s.id as survey_id,s.title,s.intro,u.*,o.org_name
+		from
+		material_survey_question_answer a
+		left join material_survey s on a.survey_id = s.id
+		left join material m on m.id = s.material_id
+		left join
+		(
+		select id as user_id,realname,1 as user_type,sex,position,title as user_title,concat_ws(',',handphone,telephone) as telephone ,email,address,postcode,fax,org_id
+		from writer_user
+		union
+		select id,realname,2,sex,position,title,concat_ws(',',handphone,telephone),email,address,postcode,fax,org_id
+		from org_user
+		)u on a.user_id = u.user_id and a.user_type = u.user_type
+		left join org o on o.id = u.org_id
+		<where>
+			<!-- 下面是动态条件 同查询列表 但导出不分页-->
+
+				<!-- 问卷标题 -->
+				<if test="title != null and title != ''">
+					and s.title like concat('%',#{title},'%')
+				</if>
+				<if test="typeId != null">
+					and s.type_id = #{typeId}
+				</if>
+				<if test="materialRelative != null">
+					<if test="materialRelative == true ">
+						<if test="materialId != null" >
+							and s.material_id = #{materialId}
+						</if>
+					</if>
+					<if test="materialRelative == false ">
+						and s.material_id is null
+					</if>
+				</if>
+
+				<!-- 问卷创建日期 %H:%i:%s-->
+				<if test="startTime !=null and startTime !='' ">
+					and
+					s.`gmt_create` &gt;= str_to_date(#{startTime},'%Y-%m-%d %H:%i:%s')
+
+				</if>
+				<if test="endTime !=null and endTime !='' ">
+					and
+					s.`gmt_create` &lt;= str_to_date(#{endTime},'%Y-%m-%d %H:%i:%s')
+				</if>
+
+		</where>
+		group by u.user_type,u.user_id,s.id
+	</select>
+
+	<!-- 获取调研表导出的题目和答案详情 需要在java后台组装-->
+	<select id="wordExDetailList" resultType="SurveyWordDetailVO">
+		select s.id,q.survey_id,q.id as question_id,q.title,q.type,q.category_id,o.id as option_id,o.option_content,!isnull(oa.id) as checked,ca.option_content as answer_content ,
+		sa.user_id,sa.user_type
+		from
+
+				material_survey_question_answer sa
+				inner join
+				material_survey s on sa.survey_id = s.id
+				left join
+				`material_survey_question` q on q.survey_id = s.id
+				LEFT JOIN
+				`material_survey_question_option`o
+				ON
+				o.`question_id`= q.`id` and o.is_deleted = 0
+				left join
+				material_survey_question_answer oa on oa.option_id = o.id and q.type in(1,2)  and sa.user_id = oa.user_id and sa.user_type = oa.user_type
+				left join
+				material_survey_question_answer ca on ca.question_id = q.id and q.type in(4,5) and sa.user_id = ca.user_id and sa.user_type = ca.user_type
+				where
+					q.is_deleted = 0
+
+		 group by sa.user_id ,sa.user_type ,q.id,o.id
+
+		order by sa.user_id ,sa.user_type ,q.id,o.id
+	</select>
+
 	
 	<!-- 查询问卷和问卷对应的类型 -->
 	<select id="getSurveyAndSurveyTypeById" parameterType="java.lang.Long" resultType="SurveyVO">

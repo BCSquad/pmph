@@ -3,6 +3,8 @@ package com.bc.pmpheep.back.dao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.MaterialSurveyType;
 import com.bc.pmpheep.back.po.Survey;
+import com.bc.pmpheep.back.po.SurveyWordDetailVO;
+import com.bc.pmpheep.back.po.SurveyWordMainVO;
 import com.bc.pmpheep.back.vo.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -67,6 +69,15 @@ public interface MaterialSurveyDao {
      * @return
      */
     List<SurveyVO> listSurvey(PageParameter<SurveyVO> pageParameter);
+
+    /**
+     * 调研表导出word的主列表
+     * @param surveyVO
+     * @return
+     */
+    List<SurveyWordMainVO> wordExMainList(SurveyVO surveyVO);
+
+    List<SurveyWordDetailVO> wordExDetailList();
 
     /**
      * 
@@ -177,4 +188,6 @@ public interface MaterialSurveyDao {
      * @return
      */
     List<MaterialSurveyType> getTypeList();
+
+
 }
