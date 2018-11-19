@@ -71,6 +71,10 @@ public class SurveyVO implements java.io.Serializable {
      */
     private Timestamp         gmtUpdate;
     /**
+     * 问卷发布时间
+     */
+    private Timestamp         gmtPublish;
+    /**
      * 条件分页总条数分页查询
      */
     private Integer           count;
@@ -398,6 +402,14 @@ public class SurveyVO implements java.io.Serializable {
         this.allTextbookUsed = allTextbookUsed;
     }
 
+    public Timestamp getGmtPublish() {
+        return gmtPublish;
+    }
+
+    public void setGmtPublish(Timestamp gmtPublish) {
+        this.gmtPublish = gmtPublish;
+    }
+
     @Override
     public String toString() {
         return "SurveyVO{" +
@@ -415,6 +427,7 @@ public class SurveyVO implements java.io.Serializable {
                 ", isDeleted=" + isDeleted +
                 ", gmtCreate=" + gmtCreate +
                 ", gmtUpdate=" + gmtUpdate +
+                ", gmtPublish=" + gmtPublish +
                 ", count=" + count +
                 ", status=" + status +
                 ", surveyName='" + surveyName + '\'' +
