@@ -17,6 +17,7 @@ public class SurveyWordDetailVO implements Serializable {
     private String answerContent;
     private Long userId;
     private Integer userType;
+    private String categoryName;
 
 
     public SurveyWordDetailVO() {
@@ -109,5 +110,13 @@ public class SurveyWordDetailVO implements Serializable {
 
     public void setUserType(Integer userType) {
         this.userType = userType;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 }
