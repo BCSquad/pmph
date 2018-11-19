@@ -55,12 +55,12 @@ public class MaterialSurveyWordHelper {
 			}
 			for (Map.Entry<String,HashMap<String,XWPFDocument>> fileMap:packMap.entrySet()) {
 				HashMap<String,XWPFDocument> map = fileMap.getValue();
-				filePath = filePath.concat(fileMap.getKey());
-				filePath = filePath.concat(File.separator);
-				createPath(filePath);
+				String packFilePath = filePath.concat(fileMap.getKey());
+				packFilePath = packFilePath.concat(File.separator);
+				createPath(packFilePath);
 				File file;
 				for (Map.Entry<String, XWPFDocument> entry : map.entrySet()) {
-					file = new File(filePath.concat(FileUtil.replaceIllegalCharForFileName(entry.getKey())));
+					file = new File(packFilePath.concat(FileUtil.replaceIllegalCharForFileName(entry.getKey())));
 					try {
 						FileOutputStream out = new FileOutputStream(file);
 						entry.getValue().write(out);
@@ -105,7 +105,7 @@ public class MaterialSurveyWordHelper {
 	private HashMap<String,HashMap<String,XWPFDocument>> fromSurveyList(List<SurveyWordMainVO> mainList, List<SurveyWordDetailVO> detailList, String groupBy) {
 		InputStream is;
 		XWPFDocument document;
-		String path = this.getClass().getClassLoader().getResource("ResumeTemplate.docx").getPath();
+		String path = this.getClass().getClassLoader().getResource("MaterialSurveyTemplate.docx").getPath();
 		HashMap<String,HashMap<String,XWPFDocument>> map= new HashMap<String,HashMap<String,XWPFDocument>>(mainList.size());
 		int decSequese =0;
 		String packageName = "";
@@ -131,7 +131,7 @@ public class MaterialSurveyWordHelper {
 			wordFileName = (++decSequese)+wordFileName+".docx";
 
 			try {
-				if(ObjectUtil.notNull(map.get(packageName).get(wordFileName))){
+				if(ObjectUtil.notNull(map.get(packageName))&&ObjectUtil.notNull(map.get(packageName).get(wordFileName))){
 					document = map.get(packageName).get(wordFileName);
 				}else{
 					is = new FileInputStream(path);
@@ -155,6 +155,8 @@ public class MaterialSurveyWordHelper {
 				materialName_paragraphIndex = 0;
 				xwpfParagraphs.get(materialName_paragraphIndex).getRuns().get(0).setText(bo.getMaterialName(),0);
 			}else{
+				int d = document.getPosOfParagraph(xwpfParagraphs.get(materialName_paragraphIndex));
+				document.removeBodyElement(d);
 				materialName_paragraphIndex = -1;
 			}
 
@@ -163,7 +165,7 @@ public class MaterialSurveyWordHelper {
 			int intro_paragraphIndex = title_paragraphIndex+1;
 
 			xwpfParagraphs.get(title_paragraphIndex).getRuns().get(0).setText(bo.getTitle(),0);
-			xwpfParagraphs.get(intro_paragraphIndex).getRuns().get(0).setText("说明：".concat(bo.getIntro()),0);
+			xwpfParagraphs.get(intro_paragraphIndex).getRuns().get(1).setText(bo.getIntro(),0);
 
 			//表格内容
 			XWPFTable table = tables.get(0);
@@ -178,30 +180,92 @@ public class MaterialSurveyWordHelper {
 				cell.setText(bo.getMaterialName());
 				rowNum += 1;
 			}else{
-				//TODO 确定此删除是否会影响rows
+				//DONE 确定此删除是否会影响rows --会
 				table.removeRow(rowNum);
 			}
 
 			//基础信息
 			//			row		cell			text
-			rows.get(rowNum).getCell(1).setText(bo.getRealname());
-			rows.get(rowNum).getCell(3).setText(bo.getPosition());
-			rows.get(rowNum).getCell(5).setText(bo.getUserTitle());
+			//rows.get(rowNum).getCell(1).setText(bo.getRealname());
+			setCellParagraph(rows.get(rowNum).getCell(1),bo.getRealname());
+			setCellParagraph(rows.get(rowNum).getCell(3),bo.getPosition());
+			setCellParagraph(rows.get(rowNum).getCell(5),bo.getUserTitle());
+			/*rows.get(rowNum).getCell(1).getParagraphs().get(0).createRun().setText(bo.getRealname(),0);
+			rows.get(rowNum).getCell(3).getParagraphs().get(0).createRun().setText(bo.getPosition(),0);
+			rows.get(rowNum).getCell(5).getParagraphs().get(0).createRun().setText(bo.getUserTitle(),0);*/
 			rowNum += 1;
-			rows.get(rowNum).getCell(1).setText(bo.getOrgName());
-			rows.get(rowNum).getCell(3).setText(bo.getAddress());
-			rows.get(rowNum).getCell(5).setText(bo.getPostcode());
+			setCellParagraph(rows.get(rowNum).getCell(1),bo.getOrgName());
+			setCellParagraph(rows.get(rowNum).getCell(3),bo.getAddress());
+			setCellParagraph(rows.get(rowNum).getCell(5),bo.getPostcode());
+			/*rows.get(rowNum).getCell(1).getParagraphs().get(0).createRun().setText(bo.getOrgName(),0);
+			rows.get(rowNum).getCell(3).getParagraphs().get(0).createRun().setText(bo.getAddress(),0);
+			rows.get(rowNum).getCell(5).getParagraphs().get(0).createRun().setText(bo.getPostcode(),0);*/
 			rowNum += 1;
-			rows.get(rowNum).getCell(1).setText(bo.getTelephone());
-			rows.get(rowNum).getCell(3).setText(bo.getFax());
-			rows.get(rowNum).getCell(5).setText(bo.getEmail());
+			setCellParagraph(rows.get(rowNum).getCell(1),bo.getTelephone());
+			setCellParagraph(rows.get(rowNum).getCell(3),bo.getFax());
+			setCellParagraph(rows.get(rowNum).getCell(5),bo.getEmail());
+			/*rows.get(rowNum).getCell(1).getParagraphs().get(0).createRun().setText(bo.getTelephone(),0);
+			rows.get(rowNum).getCell(3).getParagraphs().get(0).createRun().setText(bo.getFax(),0);
+			rows.get(rowNum).getCell(5).getParagraphs().get(0).createRun().setText(bo.getEmail(),0);*/
 			rowNum += 1;
 
 			//问题答案的占位模板行号（获取格式后需被删除的行）
 			int questionTemplateRowIndex = rowNum;
 			XWPFTableRow tempRow = rows.get(questionTemplateRowIndex);
+
+
+			setCellParagraph(tempRow.getCell(0),"问题","宋体","加粗");
+			//tempRow.getCell(0).getParagraphs().get(0).createRun().setText("问题");
+			XWPFTableCell questionCell = tempRow.getCell(1);
+
 			rowNum += 1;
-			XWPFTableRow row = table.insertNewTableRow(rowNum);
+
+			int mergeRowStrat = rowNum-1;
+			int mergeRowEnd = rowNum;
+
+			XWPFTableCell cell_1;
+			XWPFTableCell cell_2;
+
+			int questionSort = 1;
+
+			Long currentCategory = -1L;
+			for (SurveyWordDetailVO qd: detailList) {
+				if(qd.getUserId().equals(bo.getUserId())
+						&&qd.getUserType().equals(bo.getUserType())
+						&&qd.getSurveyId().equals(bo.getSurveyId())
+						){
+
+					XWPFTableRow row = table.insertNewTableRow(rowNum);
+					cell_1 = row.addNewTableCell();
+					cell_2 = row.addNewTableCell();
+					cellFormatClone(tempRow.getCell(0), cell_1);
+					cellFormatClone(tempRow.getCell(1), cell_2);
+
+					XWPFParagraph p1 = cell_2.getParagraphs().size() > 0 ? cell_2.getParagraphs().get(0) : cell_2.addParagraph();
+					XWPFParagraph p2 = cell_2.getParagraphs().size() > 1 ? cell_2.getParagraphs().get(1) : cell_2.addParagraph();
+
+					setParagraphWithFont(questionSort+"."+qd.getTitle(),p1,"黑体","加粗");
+					setParagraphWithFont(qd.getAnswerContent(),p2,"宋体");
+					cell_1.setVerticalAlignment(XWPFVertAlign.CENTER);
+					cell_2.setVerticalAlignment(XWPFVertAlign.TOP);
+					p1.setAlignment(ParagraphAlignment.LEFT);
+					p2.setAlignment(ParagraphAlignment.LEFT);
+
+
+					if(currentCategory.equals(qd.getCategoryId())){
+						mergeRowEnd = rowNum;
+						mergeCellsVertically(table,0,mergeRowStrat,Math.min(rows.size()-1,mergeRowEnd));
+					}else{
+						setParagraphWithFont(qd.getCategoryName(),cell_1.getParagraphs().get(0),"宋体","加粗");
+						mergeRowStrat = rowNum;
+						mergeRowEnd = rowNum;
+					}
+					currentCategory = qd.getCategoryId();
+					rowNum += 1;
+					questionSort += 1;
+				}
+			}
+			table.removeRow(questionTemplateRowIndex);
 
 			if(CollectionUtil.isNotEmpty(map.get(packageName))){
 				map.get(packageName).put(wordFileName, document);
@@ -212,6 +276,17 @@ public class MaterialSurveyWordHelper {
 			}
 		}
 		return map;
+	}
+
+	private void cellFormatClone(XWPFTableCell templateCell, XWPFTableCell cell_2) {
+		CTTc cttc = cell_2.getCTTc();  //单元格中的一个属性
+		CTTcPr tcpr = cttc.addNewTcPr(); //单元格中的一个属性
+		CTTblWidth tcw = tcpr.addNewTcW();
+		tcw.setType(templateCell.getCTTc().getTcPr().getTcW().getType());
+		tcw.setW(templateCell.getCTTc().getTcPr().getTcW().getW());
+		if (templateCell.getCTTc().getTcPr().getGridSpan() != null) {
+            tcpr.setGridSpan(templateCell.getCTTc().getTcPr().getGridSpan());
+        }
 	}
 
 	/**
@@ -264,14 +339,7 @@ public class MaterialSurveyWordHelper {
 				XWPFTable t = document.insertNewTbl(cursor);  //插入新的table
 				XWPFTableRow row = t.getRow(0);
 				XWPFTableCell cell = row.getCell(0);
-				CTTc cttc = cell.getCTTc();  //单元格中的一个属性
-				CTTcPr tcpr = cttc.addNewTcPr(); //单元格中的一个属性
-				CTTblWidth tcw = tcpr.addNewTcW();
-				tcw.setType(old.getRow(0).getCell(0).getCTTc().getTcPr().getTcW().getType());
-				tcw.setW(old.getRow(0).getCell(0).getCTTc().getTcPr().getTcW().getW());
-				if (old.getRow(0).getCell(0).getCTTc().getTcPr().getGridSpan() != null) {
-					tcpr.setGridSpan(old.getRow(0).getCell(0).getCTTc().getTcPr().getGridSpan());
-				}
+				cellFormatClone(old.getRow(0).getCell(0), cell);
 				String content = extension.getContent();
 				if (StringUtil.notEmpty(content)) {
 					XWPFRun run = cell.getParagraphs().get(0).createRun();
@@ -855,8 +923,51 @@ public class MaterialSurveyWordHelper {
 		return table;
 	}
 
+	// word跨列合并单元格
+	public  void mergeCellsHorizontal(XWPFTable table, int row, int fromCell, int toCell) {
+		for (int cellIndex = fromCell; cellIndex <= toCell; cellIndex++) {
+			XWPFTableCell cell = table.getRow(row).getCell(cellIndex);
+			if ( cellIndex == fromCell ) {
+				// The first merged cell is set with RESTART merge value
+				cell.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
+			} else {
+				// Cells which join (merge) the first one, are set with CONTINUE
+				cell.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+			}
+		}
+	}
+	// word跨行并单元格
+	public void mergeCellsVertically(XWPFTable table, int col, int fromRow, int toRow) {
+		for (int rowIndex = fromRow; rowIndex <= toRow; rowIndex++) {
+			XWPFTableCell cell = table.getRow(rowIndex).getCell(col);
+			if ( rowIndex == fromRow ) {
+				// The first merged cell is set with RESTART merge value
+				cell.getCTTc().addNewTcPr().addNewVMerge().setVal(STMerge.RESTART);
+			} else {
+				// Cells which join (merge) the first one, are set with CONTINUE
+				cell.getCTTc().addNewTcPr().addNewVMerge().setVal(STMerge.CONTINUE);
+			}
+		}
+	}
 
+	private void setCellParagraph(XWPFTableCell cell,String cellText,String... FontStr){
+		CTP ctp = CTP.Factory.newInstance();
+		XWPFParagraph p = new XWPFParagraph(ctp, cell);
+		setParagraphWithFont(cellText, p,FontStr);
+		cell.setParagraph(p);
+	}
 
+	private void setParagraphWithFont(String cellText, XWPFParagraph p,String... FontStr) {
+		p.setAlignment(ParagraphAlignment.CENTER);
+		XWPFRun run = p.createRun();
+		run.setText(cellText,0);
+		run.setBold(FontStr.length>=2?"加粗".equals(FontStr[1]):false);
+		CTRPr rpr = run.getCTR().isSetRPr() ? run.getCTR().getRPr() : run.getCTR().addNewRPr();
+		CTFonts fonts = rpr.isSetRFonts() ? rpr.getRFonts() : rpr.addNewRFonts();
+		fonts.setAscii((FontStr.length>0&&StringUtil.notEmpty(FontStr[0]))?FontStr[0]:"仿宋");
+		fonts.setEastAsia((FontStr.length>0&&StringUtil.notEmpty(FontStr[0]))?FontStr[0]:"仿宋");
+		fonts.setHAnsi((FontStr.length>0&&StringUtil.notEmpty(FontStr[0]))?FontStr[0]:"仿宋");
+	}
 
 
 }
