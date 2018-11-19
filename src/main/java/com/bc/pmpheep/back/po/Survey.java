@@ -83,6 +83,11 @@ public class Survey implements java.io.Serializable {
      * 问卷修改时间
      */
     private Timestamp         gmtUpdate;
+    /**
+     * 问卷发布时间
+     */
+    private Timestamp         gmtPublish;
+
 
     private Long materialId;
     private Long preVersionMaterialId;
@@ -427,5 +432,13 @@ public class Survey implements java.io.Serializable {
 
     public void setAllTextbookUsed(Boolean allTextbookUsed) {
         this.allTextbookUsed = allTextbookUsed;
+    }
+
+    public Timestamp getGmtPublish() {
+        return gmtPublish;
+    }
+
+    public void setGmtPublish(Timestamp gmtPublish) {
+        this.gmtPublish = gmtPublish;
     }
 }
