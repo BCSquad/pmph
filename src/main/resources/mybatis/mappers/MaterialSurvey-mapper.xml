@@ -145,9 +145,9 @@
 			<if test="intro != null ">
 				intro	=	values(intro)	,
 			</if>
-			<if test="templateId != null ">
-				template_id	=	values(template_id)	,
-			</if>
+
+				template_id	=	#{templateId}	,
+
 			<if test="typeId != null ">
 				type_id	=	values(type_id)	,
 			</if>
@@ -830,6 +830,11 @@
 	<!--获取调研表（调查对象）分类-->
 	<select id="getTypeList" resultType="MaterialSurveyType">
 		select * from material_survey_type order by sort;
+	</select>
+
+	<!--获取调研表名称和模板id-->
+	<select id="getTitleAndTemplateId" resultType="SurveyVO">
+		select id,title,template_id from material_survey
 	</select>
 	
 </mapper>
