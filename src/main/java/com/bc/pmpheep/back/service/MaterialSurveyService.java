@@ -221,4 +221,10 @@ public interface MaterialSurveyService {
      * @return
      */
     List<MaterialSurveyType> getTypeList();
+
+    /**
+     * 获取调研表名称和模板id
+     * @return
+     */
+    List<SurveyVO> getTitleAndTemplateId();
 }

@@ -218,5 +218,15 @@ public class MaterialSurveyController {
         return new ResponseBean(result);
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/getTitleAndTemplateId",method = RequestMethod.GET)
+    public ResponseBean getTitleAndTemplateId(HttpServletRequest request){
+
+        List<SurveyVO> result = surveyService.getTitleAndTemplateId();
+
+        return new ResponseBean(result);
+    }
+
+
 
 }

@@ -66,12 +66,32 @@ public class MaterialSurveyServiceImpl implements MaterialSurveyService {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "问卷创建人为空");
         }
+
+        daplicateTitleVali(survey);
+
         surveyDao.addSurvey(survey);
         if(ObjectUtil.isNull(survey.getId())){
             survey = surveyDao.getSurveyByMaterialIdAndTemplateId(survey.getMaterialId(),survey.getTemplateId());
         }
 
         return survey;
+    }
+
+    private void daplicateTitleVali(SurveyVO survey) {
+        List<SurveyVO> existedTitleList = surveyDao.getTitleAndTemplateId();
+
+        for (SurveyVO et: existedTitleList) {
+            if(et.getTitle().equals(survey.getTitle())
+                    &&!et.getId().equals(survey.getId())
+                    &&!(
+                            ObjectUtil.notNull(et.getTemplateId())&&ObjectUtil.notNull(et.getMaterialId())
+                            &&et.getTemplateId().equals(survey.getTemplateId())&&et.getMaterialId().equals(survey.getMaterialId())
+                        )
+                    ){
+                throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                        CheckedExceptionResult.ILLEGAL_PARAM, "调研表重名："+survey.getTitle());
+            }
+        }
     }
 
     @Override
@@ -350,7 +370,7 @@ public class MaterialSurveyServiceImpl implements MaterialSurveyService {
         }
         Long userId = pmphUser.getId();// 调研表创建人
         surveyVO.setUserId(userId);
-
+        daplicateTitleVali(surveyVO);
         surveyDao.addSurvey(surveyVO); // 添加调研表
 
         Long newId = surveyVO.getId(); // 获取模版id
@@ -494,6 +514,16 @@ public class MaterialSurveyServiceImpl implements MaterialSurveyService {
     @Override
     public List<MaterialSurveyType> getTypeList() {
         List<MaterialSurveyType> result = surveyDao.getTypeList();
+        return result;
+    }
+
+    /**
+     * 获取调研表名称和模板id
+     * @return
+     */
+    @Override
+    public List<SurveyVO> getTitleAndTemplateId() {
+        List<SurveyVO> result = surveyDao.getTitleAndTemplateId();
         return result;
     }
 
