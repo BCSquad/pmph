@@ -834,7 +834,7 @@
 
 	<!--获取调研表名称和模板id-->
 	<select id="getTitleAndTemplateId" resultType="SurveyVO">
-		select id,title,template_id from material_survey
+		select id,title,template_id,material_id from material_survey
 	</select>
 	
 </mapper>
