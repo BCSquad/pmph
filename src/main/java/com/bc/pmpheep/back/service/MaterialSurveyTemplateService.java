@@ -8,6 +8,7 @@ import com.bc.pmpheep.back.vo.SurveyTemplateListVO;
 import com.bc.pmpheep.back.vo.SurveyTemplateVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -100,4 +101,10 @@ public interface MaterialSurveyTemplateService {
      */
     PageResult<SurveyTemplateListVO> listSurveyTemplateList(
             PageParameter<SurveyTemplateListVO> pageParameter) throws CheckedServiceException;
+
+    /**
+     * 获取已存在的模板名称
+     * @return
+     */
+    List<SurveyTemplateListVO> getTemplateNameList();
 }

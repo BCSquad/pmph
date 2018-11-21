@@ -299,5 +299,10 @@
 			limit #{start},#{pageSize}
 		</if>
 	</select>
+
+	<!--获取已存在的模板名称-->
+	<select id="getTemplateNameList" resultType="SurveyTemplateListVO">
+		select id , template_name from material_survey_template
+	</select>
 	
 </mapper>

@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 
@@ -141,5 +142,18 @@ public class MaterialSurveyTemplateController {
         updateTemplate.setId(templateId);
         updateTemplate.setActive(isActive);
         return new ResponseBean(surveyTemplateService.updateSurveyTemplate(updateTemplate));
+    }
+
+
+    /**
+     * 获取已存在的模板名称
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/getTemplateName",method = RequestMethod.GET)
+    public ResponseBean getTemplateNameList(HttpServletRequest request){
+        List<SurveyTemplateListVO> result = surveyTemplateService.getTemplateNameList();
+        return new ResponseBean(result);
     }
 }

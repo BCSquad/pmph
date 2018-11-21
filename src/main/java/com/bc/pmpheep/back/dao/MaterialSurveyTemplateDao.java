@@ -25,7 +25,7 @@ public interface MaterialSurveyTemplateDao {
      *
      * @author:tyc
      * @date:2017年12月20日下午17:03:01
-     * @param SurveyTemplate 实体对象
+     * @param surveyTemplate 实体对象
      * @return 影响行数
      */
     Integer addSurveyTemplate(MaterialSurveyTemplate surveyTemplate) throws CheckedServiceException;
@@ -35,7 +35,7 @@ public interface MaterialSurveyTemplateDao {
      *
      * @author:tyc
      * @date:2017年12月20日下午17:03:01
-     * @param SurveyTemplate
+     * @param id
      * @return 影响行数
      */
     Integer deleteSurveyTemplateById(Long id) throws CheckedServiceException;
@@ -45,7 +45,7 @@ public interface MaterialSurveyTemplateDao {
      *
      * @author:tyc
      * @date:2017年12月20日下午17:03:01
-     * @param SurveyTemplate
+     * @param surveyTemplate
      * @return 影响行数
      */
     Integer updateSurveyTemplate(SurveyTemplate surveyTemplate) throws CheckedServiceException;
@@ -55,7 +55,7 @@ public interface MaterialSurveyTemplateDao {
      *
      * @author:tyc
      * @date:2017年12月20日下午17:03:01
-     * @param SurveyTemplate
+     * @param id
      * @return 影响行数
      */
     SurveyTemplate getSurveyTemplateById(Long id) throws CheckedServiceException;
@@ -93,4 +93,10 @@ public interface MaterialSurveyTemplateDao {
      */
     List<SurveyTemplateListVO> listSurveyTemplateList(
             PageParameter<SurveyTemplateListVO> pageParameter);
+
+    /**
+     * 获取已存在的模板名称
+     * @return
+     */
+    List<SurveyTemplateListVO> getTemplateNameList();
 }
