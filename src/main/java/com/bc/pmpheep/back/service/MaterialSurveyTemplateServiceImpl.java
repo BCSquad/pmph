@@ -134,6 +134,19 @@ public class MaterialSurveyTemplateServiceImpl implements MaterialSurveyTemplate
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "问题及问题选项为空");
         }
+        if (StringUtil.isEmpty(surveyTemplateVO.getTemplateName())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                    CheckedExceptionResult.NULL_PARAM, "模板名称为空");
+        }
+
+        List<SurveyTemplateListVO> existedTemplateList = surveyTemplateDao.getTemplateNameList();
+        for (SurveyTemplateListVO et: existedTemplateList) {
+            if(et.getTemplateName().equals(surveyTemplateVO.getTemplateName())
+                    &&!et.getId().equals(surveyTemplateVO.getId())){
+                throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                        CheckedExceptionResult.ILLEGAL_PARAM, "调研表模板重名："+surveyTemplateVO.getTemplateName());
+            }
+        }
         // json字符串转List对象集合
         List<SurveyQuestionListVO> surveyQuestionListVO;
         List<SurveyQuestionListVO> delQuestionList;
@@ -218,6 +231,16 @@ public class MaterialSurveyTemplateServiceImpl implements MaterialSurveyTemplate
             pageResult.setRows(surveyTemplateList);
         }
         return pageResult;
+    }
+
+    /**
+     * 获取已存在的模板名称
+     * @return
+     */
+    @Override
+    public List<SurveyTemplateListVO> getTemplateNameList() {
+        List<SurveyTemplateListVO> list = surveyTemplateDao.getTemplateNameList();
+        return list;
     }
 
     /**
