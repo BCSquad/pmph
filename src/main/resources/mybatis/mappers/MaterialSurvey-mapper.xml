@@ -422,7 +422,7 @@
 		case
 		when q.type = 1 or q.type = 2
 		then
-		group_concat(distinct concat_ws('',case when !isnull(oa.id) then '√' else '' end ), o.option_content order by oa.id asc separator '\t\t\n')
+		group_concat(distinct concat_ws('',case when !isnull(oa.id) then '√' else '' end ), o.option_content order by o.id asc separator '\t\t\n')
 		when q.type = 4 or q.type = 5
 		then
 		ca.option_content
