@@ -4,12 +4,16 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.MaterialSurveyTemplate;
 import com.bc.pmpheep.back.po.SurveyTemplate;
+import com.bc.pmpheep.back.vo.SurveyQuestionListVO;
 import com.bc.pmpheep.back.vo.SurveyTemplateListVO;
 import com.bc.pmpheep.back.vo.SurveyTemplateVO;
+import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 
@@ -107,4 +111,24 @@ public interface MaterialSurveyTemplateService {
      * @return
      */
     List<SurveyTemplateListVO> getTemplateNameList();
+
+    /**
+     * 插入从excel读取到的模板
+     * @param surveyQuestionListVO
+     * @param categoryNameSet
+     * @param surveyTemplateVO
+     * @param sessionId
+     * @return
+     * @throws CheckedServiceException
+     */
+    MaterialSurveyTemplate addSurveyTemplateFromExcel(List<SurveyQuestionListVO> surveyQuestionListVO,
+                                                      Set<String> categoryNameSet,
+                                                      MaterialSurveyTemplate surveyTemplateVO, String sessionId) throws CheckedServiceException;
+
+    /**
+     * 读取excel并解析 然后调用addSurveyTemplateFromExcel插入数据库
+     * @param file
+     * @return
+     */
+    ResponseBean importExcel(MultipartFile file,String sessionId);
 }

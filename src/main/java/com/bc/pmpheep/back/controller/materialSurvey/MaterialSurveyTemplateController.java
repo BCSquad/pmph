@@ -7,21 +7,28 @@ import com.bc.pmpheep.back.po.MaterialSurveyTemplate;
 import com.bc.pmpheep.back.po.SurveyTemplate;
 import com.bc.pmpheep.back.service.MaterialSurveyTemplateService;
 import com.bc.pmpheep.back.service.SurveyTemplateService;
+import com.bc.pmpheep.back.sessioncontext.SessionContext;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.SurveyQuestionListVO;
 import com.bc.pmpheep.back.vo.SurveyTemplateListVO;
 import com.bc.pmpheep.back.vo.SurveyTemplateVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * 
@@ -155,5 +162,27 @@ public class MaterialSurveyTemplateController {
     public ResponseBean getTemplateNameList(HttpServletRequest request){
         List<SurveyTemplateListVO> result = surveyTemplateService.getTemplateNameList();
         return new ResponseBean(result);
+    }
+
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "调研表模板导入Excel文件")
+    @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
+    public ResponseBean importExcel(@RequestParam(name = "file")MultipartFile file
+            , HttpServletRequest request){
+        ResponseBean responseBean = null;
+        String sessionId = CookiesUtil.getSessionId(request);
+        if (StringUtil.isEmpty(sessionId)){
+            throw new CheckedServiceException(CheckedExceptionBusiness.SESSION,
+                    CheckedExceptionResult.NULL_PARAM, "用户登陆超时，请重新登陆再试");
+        }
+        HttpSession session = SessionContext.getSession(sessionId);
+        String uuid = UUID.randomUUID().toString().replace("-", "").toLowerCase();
+
+        try {
+            responseBean = surveyTemplateService.importExcel(file,sessionId);
+        } catch (CheckedServiceException e) {
+            return new ResponseBean(e);
+        }
+        return responseBean;
     }
 }

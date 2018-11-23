@@ -212,5 +212,22 @@
 	<delete id="deleteSurveyTemplateQuestionByTemplateId" parameterType="java.lang.Long">
 		delete from material_survey_template_question where survey_id = #{templateId};
 	</delete>
+
+	<insert id="batchInsertCategory" parameterType="java.util.List">
+		insert into material_survey_question_category
+		(category_name)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+				#{item}
+			)
+		</foreach>
+		on duplicate key update
+		category_name = VALUES(category_name)
+	</insert>
+
+	<select id="getCategoryIdByName" parameterType="String" resultType="Long">
+		select id from material_survey_question_category where category_name = #{categoryName}
+	</select>
 	
 </mapper>
