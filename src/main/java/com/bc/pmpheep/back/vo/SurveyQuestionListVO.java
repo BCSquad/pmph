@@ -50,6 +50,8 @@ public class SurveyQuestionListVO {
      */
     private List<SurveyQuestionOption> surveyQuestionOptionList;
 
+    private String categoryName;
+
     public SurveyQuestionListVO() {
     }
 
@@ -174,9 +176,19 @@ public class SurveyQuestionListVO {
         isDeleted = deleted;
     }
 
+
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
     @Override
     public String toString() {
-        return "SurveyQuestionListVO[" +
+        return "SurveyQuestionListVO{" +
                 "id=" + id +
                 ", categoryId=" + categoryId +
                 ", title='" + title + '\'' +
@@ -186,6 +198,7 @@ public class SurveyQuestionListVO {
                 ", isAnswer=" + isAnswer +
                 ", isDeleted=" + isDeleted +
                 ", surveyQuestionOptionList=" + surveyQuestionOptionList +
-                ']';
+                ", categoryName='" + categoryName + '\'' +
+                '}';
     }
 }

@@ -2,9 +2,11 @@ package com.bc.pmpheep.back.dao;
 
 import com.bc.pmpheep.back.po.SurveyQuestion;
 import com.bc.pmpheep.back.po.SurveyQuestion;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * SurveyTemplateQuestion问题模版关联实体类数据访问层接口
@@ -87,4 +89,13 @@ public interface MaterialSurveyTemplateQuestionDao {
      * </pre>
      */
     Integer deleteSurveyTemplateQuestionByTemplateId(Long templateId);
+
+    /**
+     * 批量插入问题分类
+     * @param categoryNameSet
+     * @return
+     */
+    int batchInsertCategory(List<String> categoryNameSet);
+
+    Long getCategoryIdByName(@Param(value = "categoryName") String categoryName);
 }

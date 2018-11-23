@@ -77,6 +77,8 @@ public class SurveyQuestion implements java.io.Serializable {
      */
     private Timestamp         gmtUpdate;
 
+    private String categoryName ;
+
     /** default constructor */
     public SurveyQuestion() {
     }
@@ -319,5 +321,13 @@ public class SurveyQuestion implements java.io.Serializable {
 
     public void setSurveyId(Long surveyId) {
         this.surveyId = surveyId;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 }

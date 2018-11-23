@@ -101,12 +101,23 @@ public class BookUserComment implements Serializable {
 	 */
 	private Timestamp gmtUpdate;
 
+
+	private String authReason;
+
+	public String getAuthReason() {
+		return authReason;
+	}
+
+	public void setAuthReason(String authReason) {
+		this.authReason = authReason;
+	}
+
 	public BookUserComment() {
 		super();
 	}
 
 	public BookUserComment(Long bookId, Long writerId, Double score, String content, Boolean isHide, Integer isAuth,
-			Long authUserId, Timestamp authDate, Boolean isDeleted, Timestamp gmtCreate, Timestamp gmtUpdate) {
+			Long authUserId, Timestamp authDate, Boolean isDeleted, Timestamp gmtCreate, Timestamp gmtUpdate,String authReason) {
 		super();
 		this.bookId = bookId;
 		this.writerId = writerId;
@@ -119,6 +130,7 @@ public class BookUserComment implements Serializable {
 		this.isDeleted = isDeleted;
 		this.gmtCreate = gmtCreate;
 		this.gmtUpdate = gmtUpdate;
+		this.authReason=authReason;
 	}
 
 	public Long getId() {
