@@ -122,7 +122,7 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 			}
 			if(isAuth==2){
 				 String messageTitle = "系统消息";
-				 Message message = messageService.add(new Message("您在"+"《"+bookname[i]+"》中评论：\'"+content[i]+"\'  未通过审核。  退回理由："+reason));
+				 Message message = messageService.add(new Message("您在"+"《"+bookname[i]+"》中的评论：\" "+content[i]+" \"  未通过审核。  退回理由："+reason));
 				// 信息是由系统发出
 				UserMessage userMessage = new UserMessage(message.getId(), messageTitle, new Short("0"), pmphUser.getId(), new Short("1"),
 						Long.parseLong(writerId[i]), new Short("2"),Long.parseLong("0"), new Short("0"));
