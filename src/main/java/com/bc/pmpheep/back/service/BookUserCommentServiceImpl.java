@@ -2,6 +2,9 @@ package com.bc.pmpheep.back.service;
 
 import java.util.List;
 
+import com.bc.pmpheep.back.po.*;
+import com.bc.pmpheep.general.po.Message;
+import com.bc.pmpheep.general.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,12 +12,6 @@ import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.BookUserCommentDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
-import com.bc.pmpheep.back.po.BookUserComment;
-import com.bc.pmpheep.back.po.PmphUser;
-import com.bc.pmpheep.back.po.WriterPoint;
-import com.bc.pmpheep.back.po.WriterPointLog;
-import com.bc.pmpheep.back.po.WriterPointRule;
-import com.bc.pmpheep.back.po.WriterUserTrendst;
 import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
@@ -57,6 +54,10 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 	WriterPointLogService writerPointLogService;
 	@Autowired
 	WriterPointService writerPointService;
+	@Autowired
+	MessageService messageService;
+	@Autowired
+	UserMessageService userMessageService;
 
 	@Override
 	public PageResult<BookUserCommentVO> listBookUserComment(PageParameter<BookUserCommentVO> pageParameter)
@@ -73,7 +74,7 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 	}
 
 	@Override
-	public String updateBookUserCommentByAuth(Long[] ids, Integer isAuth, String sessionId)
+	public String updateBookUserCommentByAuth(Long[] ids, Integer isAuth,String reason, String[] writerId,String[] bookname,String[] content,String sessionId)
 			throws CheckedServiceException {
 		String result = "FAIL";
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
@@ -86,8 +87,8 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 					"审核内容为空");
 		}
 		int num = 0;
-		for (Long id : ids) {
-			BookUserComment bookUserComment = bookUserCommentDao.getBookUserCommentById(id);
+		for (int i=0;i<ids.length;i++) {
+			BookUserComment bookUserComment = bookUserCommentDao.getBookUserCommentById(ids[i]);
 			if (bookUserComment.getIsAuth() != 0) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.ILLEGAL_PARAM,
 						"您选中的评论中有已经审核完成的评论，请确认后再次提交");
@@ -97,10 +98,18 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 				writerUserTrendst.setUserId(bookUserComment.getWriterId());
 				writerUserTrendst.setType(5);
 				writerUserTrendst.setBookId(bookUserComment.getBookId());
-				writerUserTrendst.setBookCommentId(id);
+				writerUserTrendst.setBookCommentId(ids[i]);
 				writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
 			}
-			bookUserComment.setId(id);
+			if(isAuth==2){
+                if (ObjectUtil.isNull(reason)) {
+                    throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
+                            "退回理由为空");
+                }
+			    bookUserComment.setAuthReason(reason);
+            }
+			bookUserComment.setId(ids[i]);
+
 			bookUserComment.setIsAuth(isAuth);
 			bookUserComment.setAuthUserId(pmphUser.getId());
 			bookUserComment.setAuthDate(DateUtil.getCurrentTime());
@@ -110,6 +119,14 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 				bookService.updateBookCore(bookUserComment.getBookId());
 				// 更新书的评论数
 				bookService.updateUpComments(bookUserComment.getBookId());
+			}
+			if(isAuth==2){
+				 String messageTitle = "系统消息";
+				 Message message = messageService.add(new Message("您在"+"《"+bookname[i]+"》中评论：\'"+content[i]+"\'  未通过审核。  退回理由："+reason));
+				// 信息是由系统发出
+				UserMessage userMessage = new UserMessage(message.getId(), messageTitle, new Short("0"), pmphUser.getId(), new Short("1"),
+						Long.parseLong(writerId[i]), new Short("2"),Long.parseLong("0"), new Short("0"));
+				userMessageService.addUserMessage(userMessage);
 			}
 			// 当用户评论过后 增加相应积分
 			if (isAuth == 1) {
