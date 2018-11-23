@@ -172,6 +172,7 @@
 		stq.`id`,stq.`title`,
 		stq.`type`, stq.`sort`,
 		stq.direction,
+		stq.category_id,
 			GROUP_CONCAT(sqo.`id`order by sqo.`id` asc ) optionIdString,
 			GROUP_CONCAT(sqo.`option_content` order by sqo.`id` asc ) optionContent
 		FROM
