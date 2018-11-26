@@ -417,45 +417,81 @@
 
 	<!-- 获取调研表导出的题目和答案详情 需要在java后台组装-->
 	<select id="wordExDetailList" resultType="SurveyWordDetailVO">
-		select s.id,q.survey_id,q.id as question_id,q.title,q.type,q.category_id,qc.category_name,o.id as option_id,o.option_content,!isnull(oa.id) as checked,
 
-		case
-		when q.type = 1 or q.type = 2
-		then
-		group_concat(distinct concat_ws('',case when !isnull(oa.id) then '√' else '' end ), o.option_content order by o.id asc separator '\t\t\n')
-		when q.type = 4 or q.type = 5
-		then
-		ca.option_content
-		end as answer_content ,
-
-		sa.user_id,sa.user_type
+		select
+		s.id,q.survey_id,q.id as question_id,q.title,q.type,q.category_id,qc.category_name,
+			case   when q.type = 1 or q.type = 2
+			then   oa.option_content
+			   when q.type = 4 or q.type = 5
+			then   ca.option_content
+			end as answer_content ,
+			sa.user_id,sa.user_type
 		from
 
-				material_survey_question_answer sa
-				inner join
-				material_survey s on sa.survey_id = s.id
-				left join
-				`material_survey_question` q on q.survey_id = s.id
-				left join
-				material_survey_question_category qc on q.category_id = qc.id
-				LEFT JOIN
-				`material_survey_question_option`o
-				ON
-				o.`question_id`= q.`id` and o.is_deleted = 0
-				left join
-				material_survey_question_answer oa on oa.option_id = o.id and q.type in(1,2)  and sa.user_id = oa.user_id and sa.user_type = oa.user_type
-				left join
-				material_survey_question_answer ca on ca.question_id = q.id and q.type in(4,5) and sa.user_id = ca.user_id and sa.user_type = ca.user_type
-				where
-					q.is_deleted = 0
+		material_survey_question_answer sa
+		inner join     material_survey s on sa.survey_id = s.id
 
-		 group by sa.user_id ,sa.user_type ,q.id -- ,o.id
 
-		order by sa.user_id ,sa.user_type ,q.category_id,q.sort,q.id
-	</select>
+		left join     `material_survey_question` q on q.survey_id = sa.survey_id
+		left join     material_survey_question_category qc on q.category_id = qc.id
 
-	
-	<!-- 查询问卷和问卷对应的类型 -->
+		left join
+		(
+		select group_concat(distinct concat_ws('',case when !isnull(oa.id) then '√' else '' end ), o.option_content order by o.id asc separator '\t\t\n')as  option_content,
+		oa.user_id,oa.user_type,o.id,o.`question_id`
+		 from
+		`material_survey_question_option`o
+		left join material_survey_question_answer oa on oa.option_id = o.id
+		where o.is_deleted = 0
+		group by oa.user_id,oa.user_type,o.id
+		)oa on oa.question_id = q.id and q.type in (1,2)
+
+		left join     material_survey_question_answer ca on ca.question_id = q.id and q.type in(4,5) -- and sa.user_id = ca.user_id and sa.user_type = ca.user_type
+		where      q.is_deleted = 0
+		group by sa.user_id ,sa.user_type ,q.id -- ,o.id
+		order by sa.user_id ,sa.user_type ,q.category_id,q.sort
+
+	<!--
+            select s.id,q.survey_id,q.id as question_id,q.title,q.type,q.category_id,qc.category_name,o.id as option_id,o.option_content,!isnull(oa.id) as checked,
+
+            case
+            when q.type = 1 or q.type = 2
+            then
+            group_concat(distinct concat_ws('',case when !isnull(oa.id) then '√' else '' end ), o.option_content order by o.id asc separator '\t\t\n')
+            when q.type = 4 or q.type = 5
+            then
+            ca.option_content
+            end as answer_content ,
+
+            sa.user_id,sa.user_type
+            from
+
+                    material_survey_question_answer sa
+                    inner join
+                    material_survey s on sa.survey_id = s.id
+                    left join
+                    `material_survey_question` q on q.survey_id = s.id
+                    left join
+                    material_survey_question_category qc on q.category_id = qc.id
+                    LEFT JOIN
+                    `material_survey_question_option`o
+                    ON
+                    o.`question_id`= q.`id` and o.is_deleted = 0
+                    left join
+                    material_survey_question_answer oa on oa.option_id = o.id and q.type in(1,2)  and sa.user_id = oa.user_id and sa.user_type = oa.user_type
+                    left join
+                    material_survey_question_answer ca on ca.question_id = q.id and q.type in(4,5) and sa.user_id = ca.user_id and sa.user_type = ca.user_type
+                    where
+                        q.is_deleted = 0
+
+             group by sa.user_id ,sa.user_type ,q.id
+
+            order by sa.user_id ,sa.user_type ,q.category_id,q.sort,q.id
+            -->
+        </select>
+
+
+        <!-- 查询问卷和问卷对应的类型 -->
 	<select id="getSurveyAndSurveyTypeById" parameterType="java.lang.Long" resultType="SurveyVO">
 		select 
 			s.*,

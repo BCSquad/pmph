@@ -61,11 +61,7 @@ public class MaterialSurveySpringThread implements Runnable {
             //业务逻辑获取数据
             List<SurveyWordMainVO> mainList = materialSurveyDao.wordExMainList(surveyVO);
 
-
-
             List<SurveyWordDetailVO> detailList = materialSurveyDao.wordExDetailList();
-
-
 
             Long materialId = surveyVO.getMaterialId();
             Material material = null;
@@ -108,7 +104,7 @@ public class MaterialSurveySpringThread implements Runnable {
             e.getMessage();
         }
 
-        if(CollectionUtil.isEmpty(mainList)){
+        if(CollectionUtil.isEmpty(mainList)||CollectionUtil.isEmpty(detailList)){
             zipDownload.setState(2);
             zipDownload.setDetail("所查询调研表未被填写过");
         }else{
