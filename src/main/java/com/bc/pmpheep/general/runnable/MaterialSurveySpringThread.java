@@ -8,6 +8,9 @@ import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.back.util.*;
 import com.bc.pmpheep.back.vo.SurveyVO;
 import com.bc.pmpheep.general.bean.ZipDownload;
+import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
+import com.bc.pmpheep.service.exception.CheckedExceptionResult;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.utils.MaterialSurveyWordHelper;
 import com.bc.pmpheep.utils.ZipHelper;
 import org.slf4j.Logger;
@@ -58,7 +61,11 @@ public class MaterialSurveySpringThread implements Runnable {
             //业务逻辑获取数据
             List<SurveyWordMainVO> mainList = materialSurveyDao.wordExMainList(surveyVO);
 
+
+
             List<SurveyWordDetailVO> detailList = materialSurveyDao.wordExDetailList();
+
+
 
             Long materialId = surveyVO.getMaterialId();
             Material material = null;
@@ -100,8 +107,15 @@ public class MaterialSurveySpringThread implements Runnable {
         } catch (Exception e) {
             e.getMessage();
         }
-        zipDownload.setState(1);
-        zipDownload.setDetail("/zip/download?id=" + this.id);
+
+        if(CollectionUtil.isEmpty(mainList)){
+            zipDownload.setState(2);
+            zipDownload.setDetail("所查询调研表未被填写过");
+        }else{
+            zipDownload.setState(1);
+            zipDownload.setDetail("/zip/download?id=" + this.id);
+        }
+
         Const.WORD_EXPORT_MAP.put(this.id, zipDownload);
 
     }

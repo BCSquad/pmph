@@ -451,7 +451,7 @@
 
 		 group by sa.user_id ,sa.user_type ,q.id -- ,o.id
 
-		order by sa.user_id ,sa.user_type ,q.category_id,q.id
+		order by sa.user_id ,sa.user_type ,q.category_id,q.sort,q.id
 	</select>
 
 	
