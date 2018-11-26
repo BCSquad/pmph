@@ -377,8 +377,11 @@ public class MaterialSurveyTemplateServiceImpl implements MaterialSurveyTemplate
                     CheckedExceptionResult.NULL_PARAM, "新增模版失败");
         }
 
-
-        int categoryInsertNum =surveyTemplateQuestionDao.batchInsertCategory(new ArrayList<>(categoryNameSet));
+        categoryNameSet.remove(null);
+        categoryNameSet.remove("");
+        if(CollectionUtil.isNotEmpty(categoryNameSet)){
+            int categoryInsertNum =surveyTemplateQuestionDao.batchInsertCategory(new ArrayList<>(categoryNameSet));
+        }
 
         // 添加问题及问题选项
         List<Long> newIds = addQuestionAndOption(surveyQuestionListVO,null,null,templateId);
