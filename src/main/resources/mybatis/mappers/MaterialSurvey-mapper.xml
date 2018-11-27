@@ -782,7 +782,7 @@
 		join material_survey_template_question_option tqo
 		on tq.id = tqo.question_id
 		join material_survey_question sq
-		on sq.template_question_id = tq.id
+		on sq.template_question_id = tq.id and sq.survey_id = #{surveyId}
 
 		where tq.survey_id = #{templateId} -- 调研表模板id
 
