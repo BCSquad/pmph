@@ -357,7 +357,7 @@
 					</if>
 		</if>
 		group by s.id desc
-		ORDER BY s.`gmt_publish` DESC
+		ORDER BY s.`gmt_publish` DESC,/*s.gmt_create,*/s.id DESC
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>

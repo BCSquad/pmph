@@ -431,7 +431,7 @@ public class MaterialSurveyServiceImpl implements MaterialSurveyService {
         if(!CollectionUtil.isEmpty(delQuestionOption)){
             for (SurveyQuestionOption delOption : delQuestionOption) {
                 delOption.setDeleted(true);
-                delOption.setQuestionId(0L);
+                delOption.setQuestionId(delOption.getQuestionId()!=null?delOption.getQuestionId():0L);
             }
             surveyQuestionOptionService.batchInsertSurveyQuestionOption(delQuestionOption);
         }
