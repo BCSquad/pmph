@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.controller.materialSurvey;
 
 import com.bc.pmpheep.annotation.LogDetail;
+import com.bc.pmpheep.back.service.MaterialSurveyTargetService;
 import com.bc.pmpheep.back.service.SurveyTargetService;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.vo.SurveyTargetVO;
@@ -19,7 +20,7 @@ import java.io.IOException;
 /**
  * 
  * <pre>
- * 功能描述：发起问卷控制器
+ * 功能描述：发起调研控制器
  * 使用示范：
  * 
  * 
@@ -38,27 +39,27 @@ import java.io.IOException;
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class MaterialSurveyTargetController {
     @Autowired
-    SurveyTargetService         surveyTargetService;
+    MaterialSurveyTargetService surveyTargetService;
 
     // 当前业务类型
-    private static final String BUSSINESS_TYPE = "发起问卷";
+    private static final String BUSSINESS_TYPE = "发起调研";
 
     /**
      * 
      * <pre>
-     * 功能描述：发起问卷
+     * 功能描述：发起调研
      * 使用示范：
      *
      * @param message 系统消息
-     * @param title 消息标题
-     * @param surveyId 问卷表Id
-     * @param orgIds 机构id
-     * @param sessionId 
+     *  title 消息标题
+     *  surveyId 调研表Id
+     *  orgIds 机构id
+     *  sessionId
      * @return 影响行数
      * </pre>
      */
     @ResponseBody
-    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "发起问卷")
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "发起调研")
     @RequestMapping(value = "/send", method = RequestMethod.POST)
     public ResponseBean send(Message message, SurveyTargetVO surveyTargetVO,
     HttpServletRequest request) throws Exception {
@@ -71,18 +72,18 @@ public class MaterialSurveyTargetController {
     /**
      * 
      * <pre>
-     * 功能描述：问卷调查补发消息
+     * 功能描述：调研调查补发消息
      * 使用示范：
      *
      * @param message 消息对象
-     * @param title 问卷调查名称
-     * @param surveyId 问卷ID
+     * @param title 调研调查名称
+     * @param surveyId 调研ID
      * @param request
      * @return
      * </pre>
      */
     @ResponseBody
-    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "问卷调查补发消息")
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "调研调查补发消息")
     @RequestMapping(value = "/send/message", method = RequestMethod.POST)
     public ResponseBean message(Message message, @RequestParam("title") String title,
     @RequestParam("surveyId") Long surveyId, HttpServletRequest request) {

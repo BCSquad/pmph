@@ -840,7 +840,7 @@ public class FileDownLoadController {
 	 * @return
 	 */
 	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "临床申报表批量导出word")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "调研表批量导出word")
 	@RequestMapping(value = "/word/material/survey", method = RequestMethod.GET)
 	public String materialSurveyWord(SurveyVO surveyVO) {
 		String id = String.valueOf(System.currentTimeMillis()).concat(String.valueOf(RandomUtil.getRandomNum()));

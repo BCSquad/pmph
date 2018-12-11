@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.bc.pmpheep.back.dao.SurveyTargetDao">
+<mapper namespace="com.bc.pmpheep.back.dao.MaterialSurveyTargetDao">
 	<sql id="key">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
@@ -37,7 +37,7 @@
 			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
 			SELECT LAST_INSERT_ID()
 		</selectKey>
-		insert into survey_target (
+		insert into material_survey_target (
 		<include refid="key" />
 		)
 		values(
@@ -47,7 +47,7 @@
 	
 	<!-- 批量插入SurveyTarget -->
 	<insert id="batchSaveSurveyTargetByList" parameterType="java.util.List">
-        insert into survey_target (user_id,survey_id,org_id)
+        insert into material_survey_target (user_id,survey_id,org_id)
         values
         <foreach collection="list" item="item" index="index" separator=",">
             (#{item.userId}, #{item.surveyId},#{item.orgId})
@@ -56,11 +56,11 @@
 	
 	<!-- 删除SurveyTarget通过主键id -->
 	<delete id="deleteSurveyTargetById" parameterType="java.lang.Long">
-		delete from survey_target where id=#{id};
+		delete from material_survey_target where id=#{id};
 	</delete>
 	<!-- 更新一个 SurveyTarget通过主键id -->
 	<update id="updateSurveyTarget" parameterType="SurveyTarget">
-		update survey_target
+		update material_survey_target
 		<set>
 			<if test="userId != null">
 				user_id=#{userId},
@@ -78,29 +78,29 @@
 	<!-- 查找SurveyTarget通过主键id -->
 	<select id="getSurveyTargetById" parameterType="java.lang.Long" 
 	resultType="SurveyTarget">
-		select * from survey_target where id=#{id};
+		select * from material_survey_target where id=#{id};
 	</select>
 	
 	<!-- 根据发起人id查询问卷表 -->
 	<select id="getSurveyTargetByUserId" parameterType="list" 
-	resultType="Survey">
-		select * from survey_target stg 
+	resultType="survey">
+		select * from material_survey_target stg 
 		left join pmph_user ppu on ppu.id=stg.user_id 
-		left join survey s on s.id=stg.survey_id 
+		left join material_survey s on s.id=stg.survey_id 
 		where user_id=#{userId};
 	</select>
 	
 	<!-- 根据机构id查询问卷表 -->
 	<select id="getSurveyTargetByOrgId" parameterType="list" 
-	resultType="Survey">
-		select * from survey_target stg 
-		left join survey s on s.id=stg.survey_id 
+	resultType="survey">
+		select * from material_survey_target stg 
+		left join material_survey s on s.id=stg.survey_id 
 		left join org o on o.id=stg.org_id  
 		where org_id=#{orgId};
 	</select>
 	
 	<!-- 按问卷ID查询，已经发布的学校 -->
 	<select id="listOrgIdBySurveyId" parameterType="java.lang.Long" resultType="java.lang.Long">
-		SELECT stg.`org_id` FROM survey_target stg  WHERE stg.`survey_id`=#{surveyId};
+		SELECT stg.`org_id` FROM material_survey_target stg  WHERE stg.`survey_id`=#{surveyId};
 	</select>
 </mapper>

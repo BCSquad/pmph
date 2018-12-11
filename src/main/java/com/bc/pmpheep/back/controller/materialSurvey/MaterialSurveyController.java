@@ -12,6 +12,7 @@ import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.MaterialSurveyChain;
 import com.bc.pmpheep.back.vo.MaterialSurveyCountAnswerVO;
+import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.back.vo.SurveyVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -225,6 +226,26 @@ public class MaterialSurveyController {
         List<SurveyVO> result = surveyService.getTitleAndTemplateId();
 
         return new ResponseBean(result);
+    }
+
+    /**
+     *
+     * <pre>
+     * 功能描述：根据问卷ID查询问卷已发送对象
+     * 使用示范：
+     *
+     * surveyId 问卷ID
+     * @return 已发送对象(学校)集合
+     * </pre>
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询问卷已发送对象")
+    @GetMapping(value = "/send/org")
+    public ResponseBean org(OrgVO orgVO, @RequestParam("pageNumber") Integer pageNumber,
+                            @RequestParam("pageSize") Integer pageSize) {
+        PageParameter<OrgVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
+        pageParameter.setParameter(orgVO);
+        return new ResponseBean(surveyService.listSendOrgBySurveyId(pageParameter));
     }
 
 
