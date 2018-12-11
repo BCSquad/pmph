@@ -520,7 +520,7 @@
 		SELECT 
 			o.`id`,o.`org_name`, ou.`username`, ou.`handphone` ,t.`count`
 		FROM 
-			`survey_target` st 
+			`material_survey_target` st 
 		JOIN 
 			`org` o 
 		ON 
@@ -533,7 +533,7 @@
 			SELECT 
 				count(*) `count`
 			FROM 
-				`survey_target` st 
+				`material_survey_target` st 
 			JOIN 
 				`org` o 
 			ON 

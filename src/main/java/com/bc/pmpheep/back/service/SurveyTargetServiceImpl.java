@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.ibatis.type.Alias;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -52,6 +53,7 @@ import com.bc.pmpheep.websocket.WebScocketMessage;
  * </pre>
  */
 @Service
+@Alias("com.bc.pmpheep.back.service.SurveyTargetServiceImpl")
 public class SurveyTargetServiceImpl implements SurveyTargetService {
     @Autowired
     SurveyTargetDao             surveyTargetDao;

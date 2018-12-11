@@ -55,7 +55,7 @@
 			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
 			SELECT LAST_INSERT_ID()
 		</selectKey>
-		insert into survey_question_answer (
+		insert into material_survey_question_answer (
 		<include refid="key" />
 		)
 		values(
@@ -65,7 +65,7 @@
 	
 	<!-- 批量新增SurveyQuestionAnswer -->
 	<insert id="batchAddSurveyQuestionAnswer" parameterType="java.util.List">
-		insert into survey_question_answer (user_id,question_id,option_id,option_content,attachment)
+		insert into material_survey_question_answer (user_id,question_id,option_id,option_content,attachment)
 		values
 		<foreach collection="list" item="item" index="index" separator=",">
             (#{item.userId}, #{item.questionId},#{item.optionId},#{item.optionContent},#{item.attachment})
@@ -74,11 +74,11 @@
 	
 	<!-- 删除SurveyQuestionAnswer通过主键id -->
 	<delete id="deleteSurveyQuestionAnswerById" parameterType="java.lang.Long">
-		delete from survey_question_answer where id=#{id};
+		delete from material_survey_question_answer where id=#{id};
 	</delete>
 	<!-- 更新一个 SurveyQuestionAnswer通过主键id -->
 	<update id="updateSurveyQuestionAnswer" parameterType="SurveyQuestionAnswer">
-		update survey_question_answer
+		update material_survey_question_answer
 		<set>
 			<if test="id != null">
 				id=#{id},
@@ -107,7 +107,7 @@
 	</update>
 	<!-- 查找SurveyQuestionAnswer通过主键id -->
 	<select id="getSurveyQuestionAnswerById" parameterType="java.lang.Long" resultType="SurveyQuestionAnswer">
-		select * from survey_question_answer where id=#{id};
+		select * from material_survey_question_answer where id=#{id};
 	</select>
 	
 	<!-- 问卷回收列表 -->
@@ -121,8 +121,8 @@
 		sqa.`user_id`,
 		t.`count`
 		FROM
-		`survey_question_answer` sqa
-		JOIN `survey` s ON sqa.`survey_id` = s.`id` and s.is_deleted = 0
+		`material_survey_question_answer` sqa
+		JOIN `material_survey` s ON sqa.`survey_id` = s.`id` and s.is_deleted = 0
 		JOIN `writer_user` wu ON sqa.`user_id` = wu.`id`
 		JOIN `org` org ON wu.`org_id` = org.`id`,
 		(
@@ -133,8 +133,8 @@
 		SELECT
 		count(*) `count`
 		FROM
-		`survey_question_answer` sqa
-		JOIN `survey` s ON sqa.`survey_id` = s.`id`
+		`material_survey_question_answer` sqa
+		JOIN `material_survey` s ON sqa.`survey_id` = s.`id`
 		JOIN `writer_user` wu ON sqa.`user_id` = wu.`id`
 		JOIN `org` org ON wu.`org_id` = org.`id`
 	    		<where>
@@ -174,9 +174,9 @@
 		   	GROUP_CONCAT(sqo.`option_content`) oneOrManyOptionContent,
 		   	sqa.`option_content` noteOptionContent 
 		FROM
-		 	`survey_question_answer` sqa
+		 	`material_survey_question_answer` sqa
 		JOIN 
-			`survey_question` sq 
+			`material_survey_question` sq 
 		ON 
 			sqa.`question_id` = sq.`id` 
 		LEFT JOIN 
@@ -211,13 +211,13 @@
 		    pu.`realname`,
 		    t.count
 		 FROM
-		   `survey_target` sta
+		   `material_survey_target` sta
 		 JOIN 
-		    `survey_question_answer` sqa 
+		    `material_survey_question_answer` sqa 
 		 ON 
 		 	 sta.`survey_id` = sqa.`survey_id`
 		 JOIN 
-		 	`survey` s 
+		 	`material_survey` s 
 		 ON 
 		 	 sqa.`survey_id` = s.`id` and s.is_deleted = 0
 		 JOIN 
@@ -230,10 +230,10 @@
 		 	SELECT 
 			  COUNT(DISTINCT sqa.`user_id`) `count`
 			FROM
-			  `survey_target` sta 
-			  JOIN `survey_question_answer` sqa 
+			  `material_survey_target` sta 
+			  JOIN `material_survey_question_answer` sqa 
 			    ON sta.`survey_id` = sqa.`survey_id` 
-			  JOIN `survey` s 
+			  JOIN `material_survey` s 
 			    ON sqa.`survey_id` = s.`id` 
 			  JOIN `survey_type` st 
 			    ON s.`type_id` = st.`id` 
@@ -283,7 +283,7 @@
 		      	sqo.`id` option_id,
 		      	sqo.`option_content` 
 		    FROM
-		      	`survey_question` sq 
+		      	`material_survey_question` sq 
 		    JOIN 
 		    	`survey_question_option` sqo 
 		    ON 
@@ -293,7 +293,7 @@
         	ON 
         		sq.`id` = stq.`question_id` 
       		JOIN 
-      			`survey` s 
+      			`material_survey` s 
         	ON 
         		stq.`template_id` = s.`template_id` 
         		<where>
@@ -310,7 +310,7 @@
 			        sqa.`option_id` optId,
 			        sqa.`option_content` optCont 
 			    FROM
-        			`survey_question_answer` sqa
+        			`material_survey_question_answer` sqa
         	) b 
 	      	ON 
 	      		a.id = b.question_id 
@@ -335,9 +335,9 @@
 		  sq.`type`questionType,
 		  COUNT(sqa.`user_id`) count
 		FROM
-		  `survey_question_answer` sqa 
+		  `material_survey_question_answer` sqa 
 		JOIN 
-			`survey_question` sq 
+			`material_survey_question` sq 
 		ON 
 			sqa.`question_id` = sq.`id` 
 		<where>
@@ -362,9 +362,9 @@
 		  	wu.`realname`,
 		  	t.count
 		FROM
-		  	`survey_question_answer` sqa 
+		  	`material_survey_question_answer` sqa 
 		JOIN 
-			`survey_question` sq 
+			`material_survey_question` sq 
 		ON 
 			sqa.`question_id` = sq.`id` 
 		JOIN 
@@ -375,9 +375,9 @@
 			SELECT 
 			  	count(*) count
 			FROM
-			  	`survey_question_answer` sqa 
+			  	`material_survey_question_answer` sqa 
 			JOIN 
-				`survey_question` sq 
+				`material_survey_question` sq 
 			ON 
 				sqa.`question_id` = sq.`id` 
 			JOIN 
@@ -415,7 +415,7 @@
 	
 	<!-- 根据问题ID查询问卷已回答人 -->
 	<select id="getUserIdBySurveyId" parameterType="java.lang.Long" resultType="java.lang.Long">
-		select t.`user_id` from `survey_question_answer` t where t.`survey_id`=#{surveyId} GROUP BY t.`user_id`;
+		select t.`user_id` from `material_survey_question_answer` t where t.`survey_id`=#{surveyId} GROUP BY t.`user_id`;
 	</select>
 	
 </mapper>
