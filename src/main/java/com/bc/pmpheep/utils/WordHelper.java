@@ -273,7 +273,7 @@ public class WordHelper {
 		List<XWPFTable> tables = document.getTables();
 		for (int i = 18; i >= 1; i--) {
 			if (BinaryUtil.getBit(filter, i - 1) == false) {
-				int index = document.getPosOfTable(tables.get(i));
+				int index = document.getPosOfTable(tables.get(i +1 ));
 				document.removeBodyElement(index);
 				document.removeBodyElement(index - 1);
 			}

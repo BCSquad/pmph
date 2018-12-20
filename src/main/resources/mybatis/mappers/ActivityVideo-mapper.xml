@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.ActivityVideoDao">
+
+
+    <sql id="key">
+        <!-- 去掉最后一个, -->
+        <trim suffixOverrides=",">
+            <if test="id != null ">
+                id,
+            </if>
+            <if test="title != null and title != ''  ">
+                title,
+            </if>
+            <if test="origPath != null and origPath !='' ">
+                orig_path,
+            </if>
+            <if test="origFileName != null and origFileName !=''">
+                orig_file_name,
+            </if>
+            <if test="origFileSize != null ">
+                orig_file_size,
+            </if>
+            <if test="path != null and path !=''">
+                path,
+            </if>
+            <if test="fileName != null and fileName !=''">
+                file_name,
+            </if>
+            <if test="fileSize != null ">
+                file_size,
+            </if>
+            <if test="sort != null ">
+                sort,
+            </if>
+            <if test="clicks != null ">
+                clicks,
+            </if>
+            <if test="userId != null ">
+                user_id,
+            </if>
+            <if test="isAuth != null ">
+                is_auth,
+            </if>
+            <if test="authUserId != null ">
+                auth_user_id,
+            </if>
+            <if test="authDate != null ">
+                auth_date,
+            </if>
+            <if test="cover != null and cover != '' ">
+                cover,
+            </if>
+            <if test="gmtCreate!=null ">
+                gmt_create,
+            </if>
+            <if test="gmtUpdate!=null ">
+                gmt_update,
+            </if>
+        </trim>
+    </sql>
+
+    <sql id="value">
+        <!-- 去掉最后一个, -->
+        <trim suffixOverrides=",">
+            <if test="id != null ">
+                #{id},
+            </if>
+            <if test="title != null and title != ''  ">
+                #{title},
+            </if>
+            <if test="origPath != null and origPath !='' ">
+                #{origPath},
+            </if>
+            <if test="origFileName != null and origFileName !=''">
+                #{origFileName},
+            </if>
+            <if test="origFileSize != null ">
+                #{origFileSize},
+            </if>
+            <if test=" path != null and path !=''">
+                #{path},
+            </if>
+            <if test=" fileName != null and fileName !=''">
+                #{fileName},
+            </if>
+            <if test=" fileSize != null ">
+                #{fileSize},
+            </if>
+            <if test=" sort != null ">
+                #{sort},
+            </if>
+            <if test=" clicks != null ">
+                #{clicks},
+            </if>
+            <if test=" userId != null ">
+                #{userId},
+            </if>
+            <if test=" isAuth != null ">
+                #{isAuth},
+            </if>
+            <if test=" authUserId != null ">
+                #{authUserId},
+            </if>
+            <if test=" authDate != null ">
+                #{authDate},
+            </if>
+            <if test=" cover != null and cover != '' ">
+                #{cover},
+            </if>
+            <if test="gmtCreate!=null ">
+                #{gmtCreate},
+            </if>
+            <if test="gmtUpdate!=null ">
+                #{gmtUpdate},
+            </if>
+        </trim>
+    </sql>
+    <select id="getMaxSort" resultType="java.lang.Integer">
+        select max(sort) from activity_video
+    </select>
+
+    <select id="getSortById" resultType="ActivityVideo" parameterType="java.lang.Integer">
+        select * from activity_video where id=#{id}
+    </select>
+
+    <select id="getUpSortById" resultType="ActivityVideo" parameterType="java.lang.Integer">
+        SELECT
+        *
+        FROM
+        ( SELECT * FROM activity_video ac WHERE ac.sort &lt; #{sort} AND is_deleted = 0 ORDER BY sort DESC ) a
+        LIMIT 0,
+        1
+    </select>
+    <select id="getDownSortById" resultType="ActivityVideo" parameterType="java.lang.Integer">
+		 SELECT
+        *
+        FROM
+        ( SELECT * FROM activity_video ac WHERE ac.sort &gt; #{sort} AND is_deleted = 0 ORDER BY sort asc ) a
+        LIMIT 0,
+        1
+	</select>
+
+
+    <update id="updateVideoSort" parameterType="ActivityVideo">
+        update activity_video set
+                sort =#{sort}
+        where id=#{id}
+    </update>
+
+    <insert id="addActivityVideo" parameterType="ActivityVideo">
+        <selectKey resultType="java.lang.Long" order="AFTER"
+                   keyProperty="id">
+            <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into activity_video (
+        <include refid="key"/>
+        ) values(
+        <include refid="value"/>
+        ) ;
+    </insert>
+
+    <!-- 动态更新 -->
+    <update id="updateActivityVideo">
+        update activity_video set
+        <!-- 去掉最后一个, -->
+        <trim suffixOverrides=",">
+            <if test="title != null and title != ''  ">
+                title =#{title},
+            </if>
+            <if test="origPath != null and origPath !='' ">
+                orig_path =#{origPath},
+            </if>
+            <if test="origFileName != null and origFileName !=''">
+                orig_file_name =#{origFileName},
+            </if>
+            <if test="origFileSize != null ">
+                orig_file_size =#{origFileSize},
+            </if>
+            <if test=" path != null and path !=''">
+                path =#{path},
+            </if>
+            <if test=" fileName != null and fileName !=''">
+                file_name =#{fileName},
+            </if>
+            <if test=" fileSize != null ">
+                file_size =#{fileSize},
+            </if>
+            <if test=" sort != null ">
+                sort =#{sort},
+            </if>
+            <if test=" clicks != null ">
+                clicks =#{clicks},
+            </if>
+            <if test=" userId != null ">
+                user_id =#{userId},
+            </if>
+            <if test=" isAuth != null ">
+                is_auth =#{isAuth},
+            </if>
+            <if test=" authUserId != null ">
+                auth_user_id =#{authUserId},
+            </if>
+            <if test=" authDate != null ">
+                auth_date =#{authDate},
+            </if>
+            <if test=" cover != null and cover != '' ">
+                cover =#{cover},
+            </if>
+            <if test="gmtUpdate!=null ">
+                gmt_update=#{gmt_update},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <select id="listActivityVideo" parameterType="PageParameter" resultType="ActivityVideoVO">
+        SELECT * FROM
+        (
+        select ac.*,pu.realname
+        from activity_video ac
+        LEFT JOIN pmph_user pu
+        ON ac.user_id = pu.id
+        where 1=1 and ac.is_deleted=0
+        <if test="parameter.title != null and parameter.title !='' ">
+            and (ac.title like concat('%',#{parameter.title},'%'))
+        </if>
+        order by ac.gmt_create asc
+        )
+        a,
+        (
+        select count(*) count
+        from activity_video ac
+        LEFT JOIN pmph_user pu
+        ON ac.user_id = pu.id
+        where 1=1 and ac.is_deleted=0
+        <if test="parameter.title != null and parameter.title !='' ">
+            and (ac.title like concat('%',#{parameter.title},'%'))
+        </if>
+
+        )b
+        <if test="start !=null and pageNumber != null">
+            limit #{start},#{pageSize}
+        </if>
+    </select>
+    <insert id="addActivityVideochain">
+	insert into activity_video_chain(activity_id, activity_video_id,sort) values (
+	#{activityId},#{activityVideoId},#{sort}
+	)
+
+</insert>
+
+    <update id="deleteVideoById" parameterType="java.lang.Long">
+		update
+				activity_video set is_deleted = 1 where id = #{id};
+	</update>
+
+    <select id="getVideoChain" parameterType="java.lang.Long" resultType="ActivityVideoChain">
+		select * from  activity_video_chain ac where  ac.activity_id=#{id}
+	</select>
+    <delete id="delVideoChain" parameterType="java.lang.Long">
+		 DELETE FROM activity_video_chain WHERE activity_id = #{id}
+	</delete>
+    <select id="checkedName" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(*) from activity_video where title=#{title}
+	</select>
+
+
+    <select id="getChainList" parameterType="PageParameter" resultType="ActivityVideoVO">
+        SELECT * FROM
+        (
+        select ac.id,ac.title,ac.gmt_create,ac.cover,ac.path,ac.file_size,ac.is_deleted,pu.realname,a.sort
+        from
+        activity_video_chain a
+        left join activity_video ac on a.activity_video_id=ac.id
+        LEFT JOIN pmph_user pu
+        ON ac.user_id = pu.id
+        where 1=1 and ac.is_deleted=0
+        and a.activity_id=#{parameter.activityId}
+        <if test="parameter.title != null and parameter.title !='' ">
+            and (ac.title like concat('%',#{parameter.title},'%'))
+        </if>
+        order by a.sort asc
+        )
+        a,
+        (
+        select count(*) count
+        from
+        activity_video_chain a
+        left join activity_video ac on a.activity_video_id=ac.id
+        LEFT JOIN pmph_user pu
+        ON ac.user_id = pu.id
+        where 1=1 and ac.is_deleted=0
+        <if test="parameter.activityId != null  ">
+            and a.activity_id=#{parameter.activityId}
+        </if>
+        <if test="parameter.title != null and parameter.title !='' ">
+            and (ac.title like concat('%',#{parameter.title},'%'))
+        </if>
+        )b
+        <if test="start !=null and pageNumber != null">
+            limit #{start},#{pageSize}
+        </if>
+    </select>
+
+    <delete id="delChainByVideoId" parameterType="map">
+        delete from activity_video_chain  where activity_id=#{activityId} and activity_video_id =#{activityVideoId}
+    </delete>
+
+    <update id="updateChainSort" parameterType="ActivityVideoChain">
+			update activity_video_chain set
+				sort =#{sort}
+		where activity_id=#{activityId}
+		and activity_video_id=#{activityVideoId}
+	</update>
+
+    <select id="getUpChianById" resultType="ActivityVideoChain" parameterType="map">
+		SELECT * FROM
+		(
+		select *
+		from activity_video_chain ac
+		where ac.sort  &lt; #{sort}
+		and ac.activity_id=#{activityId}
+		order by sort desc
+		)a
+		limit 0,1
+	</select>
+    <select id="getDownChainById" resultType="ActivityVideoChain" parameterType="map">
+		SELECT * FROM
+		(
+		select *
+		from activity_video_chain ac
+		where ac.sort &gt; #{sort}
+		and ac.activity_id=#{activityId}
+		order by sort asc
+		)a
+		limit 0,1
+	</select>
+    <select id="getVideoListByActivityId" resultType="ActivityVideoChain" parameterType="java.lang.Long">
+        	select *
+		from activity_video_chain ac
+		where ac.activity_id=#{activityId}
+    </select>
+
+    <select id="getVideoChainSortMax" resultType="java.lang.Long" parameterType="java.lang.Long">
+        select max(sort) from  activity_source_chain ac
+        where ac.activity_id=#{activityId};
+    </select>
+
+</mapper>

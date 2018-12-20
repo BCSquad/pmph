@@ -36,6 +36,9 @@ public class BookListVO implements Serializable{
 	private Integer bookSort;
 	//是否允许被删除标识
 	private Boolean allowedDelete;
+
+	//调研表数量
+	private Integer surveyNum;
 	
 	public BookListVO() {
 		super();
@@ -105,4 +108,19 @@ public class BookListVO implements Serializable{
 		this.allowedDelete = allowedDelete;
 	}
 
+	public Boolean getPublic() {
+		return isPublic;
+	}
+
+	public void setPublic(Boolean aPublic) {
+		isPublic = aPublic;
+	}
+
+	public Integer getSurveyNum() {
+		return surveyNum;
+	}
+
+	public void setSurveyNum(Integer surveyNum) {
+		this.surveyNum = surveyNum;
+	}
 }

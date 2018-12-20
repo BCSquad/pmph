@@ -54,7 +54,7 @@ public interface BookUserCommentService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	String updateBookUserCommentByAuth(Long[] ids, Integer isAuth, String sessionId) throws CheckedServiceException;
+	String updateBookUserCommentByAuth(Long[] ids, Integer isAuth,String reason,String[] writerId,String[] bookname,String[] content, String sessionId) throws CheckedServiceException;
 
 	/**
 	 * 

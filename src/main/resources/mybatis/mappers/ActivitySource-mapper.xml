@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.ActivitySourceDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="sourceName != null and sourceName !=''" >
+				source_name,
+			</if>
+			<if test="uploaderId != null">
+				uploader_id,
+			</if>
+			<if test="gmtUpload != null">
+				gmt_upload,
+			</if>
+			<if test="isDeleted != null ">
+				is_deleted,
+			</if>
+			<if test="sort != null ">
+				sort,
+			</if>
+			<if test="fileId != null and fileId !='' ">
+				file_id,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="sourceName != null and sourceName !=''">
+				#{sourceName},
+			</if>
+			<if test="uploaderId != null">
+				#{uploaderId},
+			</if>
+			<if test="gmtUpload != null">
+				#{gmtUpload},
+			</if>
+			<if test="isDeleted != null ">
+				#{isDeleted},
+			</if>
+			<if test="sort != null ">
+				#{sort},
+			</if>
+			<if test="fileId != null and fileId !='' ">
+				#{fileId},
+			</if>
+
+		</trim>
+	</sql>
+
+	<select id="getMaxSort" resultType="java.lang.Integer">
+         select MAX(sort) from activity_source
+    </select>
+
+	<select id="getSortById" resultType="ActivitySource" parameterType="java.lang.Integer">
+        select * from activity_source where id=#{id}
+    </select>
+	<update id="updateSourceSort" parameterType="ActivitySource">
+		update activity_source set
+				sort =#{sort}
+		where id=#{id}
+	</update>
+
+
+	<select id="getUpSortById"  resultType="ActivitySource" parameterType="java.lang.Integer">
+		SELECT * FROM
+		(
+		select *
+		from activity_source ac
+		where ac.sort  &lt; #{sort} and is_deleted=0
+		order by sort desc
+		)a
+		limit 0,1
+	</select>
+	<select id="getDownSortById"  resultType="ActivitySource" parameterType="java.lang.Integer">
+		SELECT * FROM
+		(
+		select *
+		from activity_source ac
+		where ac.sort &gt; #{sort} and is_deleted=0
+		order by sort asc
+		)a
+		limit 0,1
+	</select>
+
+
+	<!-- 新增CmsContent -->
+	<insert id="addSource" parameterType="ActivitySource"
+			useGeneratedKeys="true" keyProperty="id">
+		insert into activity_source(
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		) ;
+	</insert>
+	<update id="updateSource" parameterType="ActivitySource">
+		update activity_source
+		<set>
+			<if test="sourceName != null and sourceName !=''">
+				source_name=#{sourceName},
+			</if>
+			<if test="uploaderId != null">
+				uploader_id=#{uploaderId},
+			</if>
+			<if test="gmtUpload != null">
+				gmt_upload=#{gmtUpload},
+			</if>
+			<if test="isDeleted != null ">
+				is_deleted=#{isDeleted},
+			</if>
+			<if test="sort != null ">
+				sort=#{sort},
+			</if>
+			<if test="fileId != null ">
+				file_id=#{fileId},
+			</if>
+		</set>
+		where
+		id=#{id};
+	</update>
+
+	<update id="deleteSourceById" parameterType="java.lang.Long">
+		update
+				activity_source set is_deleted = 1 where id = #{id};
+	</update>
+
+
+	<!--CmsContentVO模糊查询获取列表 -->
+	<select id="listActivitySource" parameterType="PageParameter" resultType="ActivitySourceVO">
+		SELECT * FROM
+		(
+		select ac.*,pu.realname
+		from activity_source ac
+		LEFT JOIN pmph_user pu
+		ON ac.uploader_id = pu.id
+		where 1=1 and ac.is_deleted=0
+		<if test="parameter.sourceName != null and parameter.sourceName !='' ">
+			and (ac.source_name like concat('%',#{parameter.sourceName},'%'))
+		</if>
+		order by ac.sort asc
+		)
+		a,
+		(
+		select count(*) count
+		from activity_source ac
+		LEFT JOIN pmph_user pu
+		ON ac.uploader_id = pu.id
+		where 1=1 and ac.is_deleted=0
+		<if test="parameter.sourceName != null and parameter.sourceName !='' ">
+			and (ac.source_name like concat('%',#{parameter.sourceName},'%'))
+		</if>
+
+		)b
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+	<select id="getActivityById" parameterType="java.lang.Long" resultType="Activity">
+		SELECT * FROM activity
+		where id=#{id}
+	</select>
+
+	<insert id="addActivitySourceChain" parameterType="ActivitySourceChain"
+			useGeneratedKeys="true" keyProperty="id">
+		insert into activity_source_chain(activity_id,activity_source_id,sort)values(
+			#{activityId},#{activitySourceId},#{sort}
+		)
+
+	</insert>
+
+
+	<select id="getSourceChain" parameterType="java.lang.Long" resultType="ActivitySourceChain">
+		select * from  activity_source_chain ac where  ac.activity_id=#{id}
+	</select>
+	<delete id="delsourceChin" parameterType="java.lang.Long">
+		 DELETE FROM activity_source_chain WHERE activity_id = #{id}
+	</delete>
+
+	<select id="checkedName" parameterType="java.lang.String"  resultType="java.lang.Integer">
+		select count(*) from activity_source where source_name=#{sourceName}
+	</select>
+
+
+	<select id="getChainList"  parameterType="PageParameter"  resultType="ActivitySourceVO">
+		SELECT * FROM
+		(
+		select ac.id,ac.source_name,ac.uploader_id,ac.gmt_upload,ac.file_id,ac.is_deleted,pu.realname,a.sort
+		from
+		activity_source_chain a
+		left join activity_source ac on a.activity_source_id=ac.id
+		LEFT JOIN pmph_user pu
+		ON ac.uploader_id = pu.id
+		where 1=1 and ac.is_deleted=0
+		<if test="parameter.activityId != null  ">
+			and a.activity_id=#{parameter.activityId}
+		</if>
+		<if test="parameter.sourceName != null and parameter.sourceName !='' ">
+			and (ac.source_name like concat('%',#{parameter.sourceName},'%'))
+		</if>
+		order by a.sort asc
+		)
+		a,
+		(
+		select count(*) count
+		from
+		activity_source_chain a
+		left join activity_source ac on a.activity_source_id=ac.id
+		LEFT JOIN pmph_user pu
+		ON ac.uploader_id = pu.id
+		where 1=1 and ac.is_deleted=0
+		<if test="parameter.activityId != null  ">
+			and a.activity_id=#{parameter.activityId}
+		</if>
+		<if test="parameter.sourceName != null and parameter.sourceName !='' ">
+			and (ac.source_name like concat('%',#{parameter.sourceName},'%'))
+		</if>
+		)b
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+
+
+	<delete id="delChainBySourceId" parameterType="map">
+        delete from activity_source_chain where activity_id=#{activityId} and activity_source_id =#{activitySourceId}
+    </delete>
+
+	<select id="getChainSortMax" resultType="java.lang.Long" parameterType="Long">
+		 select MAX(sort) from activity_source_chain where activity_id=#{activityId}
+	</select>
+
+
+	<update id="updateChainSort" parameterType="ActivitySourceChain">
+			update activity_source_chain set
+				sort =#{sort}
+		where activity_id=#{activityId}
+		and activity_source_id=#{activitySourceId}
+	</update>
+
+
+	<select id="getUpChianById"  resultType="ActivitySourceChain" parameterType="map">
+		SELECT * FROM
+		(
+		select *
+		from activity_source_chain ac
+		where ac.sort  &lt; #{sort}
+		and ac.activity_id=#{activityId}
+		order by sort desc
+		)a
+		limit 0,1
+	</select>
+	<select id="getDownChainById"  resultType="ActivitySourceChain" parameterType="map">
+		SELECT * FROM
+		(
+		select *
+		from activity_source_chain ac
+		where ac.sort &gt; #{sort}
+		and ac.activity_id=#{activityId}
+		order by sort asc
+		)a
+		limit 0,1
+	</select>
+
+	<select id="getSourceChainSortMax" resultType="java.lang.Long" parameterType="java.lang.Long">
+        select max(sort) from  activity_source_chain ac
+        where ac.activity_id=#{activityId};
+    </select>
+
+</mapper>

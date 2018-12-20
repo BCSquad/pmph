@@ -281,7 +281,7 @@
 				and b.id = #{parameter.areaId}
 			</if>
 		</if>
-		order by a.sort
+		order by a.sort,a.org_name
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>

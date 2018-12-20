@@ -83,6 +83,20 @@ public class Survey implements java.io.Serializable {
      * 问卷修改时间
      */
     private Timestamp         gmtUpdate;
+    /**
+     * 问卷发布时间
+     */
+    private Timestamp         gmtPublish;
+
+
+    private Long materialId;
+    private Long preVersionMaterialId;
+    private String preVersionMaterialName ;
+    private Long preVersionMaterialRound ;
+    //对绑定到教材的调研表 是否必填
+    private Boolean  requiredForMaterial;
+    //绑定到教材true 绑定到书籍false
+    private Boolean allTextbookUsed;
 
     // Constructors
 
@@ -364,4 +378,67 @@ public class Survey implements java.io.Serializable {
                + ", gmtUpdate=" + gmtUpdate + "]";
     }
 
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public Long getPreVersionMaterialId() {
+        return preVersionMaterialId;
+    }
+
+    public void setPreVersionMaterialId(Long preVersionMaterialId) {
+        this.preVersionMaterialId = preVersionMaterialId;
+    }
+
+    public String getPreVersionMaterialName() {
+        return preVersionMaterialName;
+    }
+
+    public void setPreVersionMaterialName(String preVersionMaterialName) {
+        this.preVersionMaterialName = preVersionMaterialName;
+    }
+
+    public Long getPreVersionMaterialRound() {
+        return preVersionMaterialRound;
+    }
+
+    public void setPreVersionMaterialRound(Long preVersionMaterialRound) {
+        this.preVersionMaterialRound = preVersionMaterialRound;
+    }
+
+    public Long getMaterialId() {
+        return materialId;
+    }
+
+    public void setMaterialId(Long materialId) {
+        this.materialId = materialId;
+    }
+
+    public Boolean getRequiredForMaterial() {
+        return requiredForMaterial;
+    }
+
+    public void setRequiredForMaterial(Boolean requiredForMaterial) {
+        this.requiredForMaterial = requiredForMaterial;
+    }
+
+    public Boolean getAllTextbookUsed() {
+        return allTextbookUsed;
+    }
+
+    public void setAllTextbookUsed(Boolean allTextbookUsed) {
+        this.allTextbookUsed = allTextbookUsed;
+    }
+
+    public Timestamp getGmtPublish() {
+        return gmtPublish;
+    }
+
+    public void setGmtPublish(Timestamp gmtPublish) {
+        this.gmtPublish = gmtPublish;
+    }
 }

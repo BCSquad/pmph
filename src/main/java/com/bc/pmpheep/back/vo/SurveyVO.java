@@ -46,12 +46,12 @@ public class SurveyVO implements java.io.Serializable {
      */
     private Long              userId;
     /**
-     * 问卷开始时间
+     * 问卷开始时间(query)
      */
     private String            startTime;
 
     /**
-     * 问卷结束时间
+     * 问卷结束时间(query)
      */
     private String            endTime;
     /**
@@ -70,6 +70,10 @@ public class SurveyVO implements java.io.Serializable {
      * 问卷修改时间
      */
     private Timestamp         gmtUpdate;
+    /**
+     * 问卷发布时间
+     */
+    private Timestamp         gmtPublish;
     /**
      * 条件分页总条数分页查询
      */
@@ -98,6 +102,25 @@ public class SurveyVO implements java.io.Serializable {
      * 问卷结束时间
      */
     private Timestamp         endDate;
+
+    private Long materialId;
+
+    private Long preVersionMaterialId ;
+
+    private String preVersionMaterialName ;
+
+    private Integer preVersionMaterialRound ;
+    //对绑定到书籍的调研表 是否必填（保存在中间表,此处只是接收）
+    private Boolean requiredForWriter;
+    //对绑定到教材的调研表 是否必填
+    private Boolean  requiredForMaterial;
+    //绑定到教材true 绑定到书籍false
+    private Boolean allTextbookUsed;
+
+    /**
+     * 是否教材相关 仅做查询条件
+     */
+    private Boolean materialRelative ;
 
     /** default constructor */
     public SurveyVO() {
@@ -307,4 +330,119 @@ public class SurveyVO implements java.io.Serializable {
         this.templateName = templateName;
     }
 
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public Long getPreVersionMaterialId() {
+        return preVersionMaterialId;
+    }
+
+    public void setPreVersionMaterialId(Long preVersionMaterialId) {
+        this.preVersionMaterialId = preVersionMaterialId;
+    }
+
+    public String getPreVersionMaterialName() {
+        return preVersionMaterialName;
+    }
+
+    public void setPreVersionMaterialName(String preVersionMaterialName) {
+        this.preVersionMaterialName = preVersionMaterialName;
+    }
+
+    public Integer getPreVersionMaterialRound() {
+        return preVersionMaterialRound;
+    }
+
+    public void setPreVersionMaterialRound(Integer preVersionMaterialRound) {
+        this.preVersionMaterialRound = preVersionMaterialRound;
+    }
+
+    public Long getMaterialId() {
+        return materialId;
+    }
+
+    public void setMaterialId(Long materialId) {
+        this.materialId = materialId;
+    }
+
+    public Boolean getMaterialRelative() {
+        return materialRelative;
+    }
+
+    public void setMaterialRelative(Boolean materialRelative) {
+        this.materialRelative = materialRelative;
+    }
+
+    public Boolean getRequiredForWriter() {
+        return requiredForWriter;
+    }
+
+    public void setRequiredForWriter(Boolean requiredForWriter) {
+        this.requiredForWriter = requiredForWriter;
+    }
+
+    public Boolean getRequiredForMaterial() {
+        return requiredForMaterial;
+    }
+
+    public void setRequiredForMaterial(Boolean requiredForMaterial) {
+        this.requiredForMaterial = requiredForMaterial;
+    }
+
+    public Boolean getAllTextbookUsed() {
+        return allTextbookUsed;
+    }
+
+    public void setAllTextbookUsed(Boolean allTextbookUsed) {
+        this.allTextbookUsed = allTextbookUsed;
+    }
+
+    public Timestamp getGmtPublish() {
+        return gmtPublish;
+    }
+
+    public void setGmtPublish(Timestamp gmtPublish) {
+        this.gmtPublish = gmtPublish;
+    }
+
+    @Override
+    public String toString() {
+        return "SurveyVO{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", templateName='" + templateName + '\'' +
+                ", subhead='" + subhead + '\'' +
+                ", intro='" + intro + '\'' +
+                ", templateId=" + templateId +
+                ", typeId=" + typeId +
+                ", userId=" + userId +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", sort=" + sort +
+                ", isDeleted=" + isDeleted +
+                ", gmtCreate=" + gmtCreate +
+                ", gmtUpdate=" + gmtUpdate +
+                ", gmtPublish=" + gmtPublish +
+                ", count=" + count +
+                ", status=" + status +
+                ", surveyName='" + surveyName + '\'' +
+                ", username='" + username + '\'' +
+                ", realname='" + realname + '\'' +
+                ", beginDate=" + beginDate +
+                ", endDate=" + endDate +
+                ", materialId=" + materialId +
+                ", preVersionMaterialId=" + preVersionMaterialId +
+                ", preVersionMaterialName='" + preVersionMaterialName + '\'' +
+                ", preVersionMaterialRound=" + preVersionMaterialRound +
+                ", requiredForWriter=" + requiredForWriter +
+                ", requiredForMaterial=" + requiredForMaterial +
+                ", allTextbookUsed=" + allTextbookUsed +
+                ", materialRelative=" + materialRelative +
+                '}';
+    }
 }

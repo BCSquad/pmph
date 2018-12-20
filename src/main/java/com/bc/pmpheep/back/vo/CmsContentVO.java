@@ -86,6 +86,7 @@ public class CmsContentVO implements Serializable {
     private String    realname;
     // 教材id
     private Long      materialId;
+    private String      materialName;
     // 平台类型
     private Integer   platform;
     // 原作家姓名
@@ -592,5 +593,13 @@ public class CmsContentVO implements Serializable {
     public void setGmtCreateS(String gmtCreateS) {
        // this.gmtCreateS = DateUtil.formatTimeStamp("yyyy-MM-dd",this.gmtCreate);
         this.gmtCreateS = gmtCreateS;
+    }
+
+    public String getMaterialName() {
+        return materialName;
+    }
+
+    public void setMaterialName(String materialName) {
+        this.materialName = materialName;
     }
 }

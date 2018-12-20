@@ -22,12 +22,14 @@ import javax.servlet.http.HttpSession;
 
 import com.bc.pmpheep.back.dao.CmsContentDao;
 import com.bc.pmpheep.back.dao.ExpertationDao;
+import com.bc.pmpheep.back.dao.MaterialSurveyDao;
 import com.bc.pmpheep.back.dao.ProductDao;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.service.*;
 import com.bc.pmpheep.back.vo.*;
 import com.bc.pmpheep.general.runnable.ClicSpringThread;
-import com.bc.pmpheep.utils.ClicWordHelper;
+import com.bc.pmpheep.general.runnable.MaterialSurveySpringThread;
+import com.bc.pmpheep.utils.*;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.shiro.session.Session;
 import org.slf4j.Logger;
@@ -63,9 +65,6 @@ import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
-import com.bc.pmpheep.utils.ExcelHelper;
-import com.bc.pmpheep.utils.WordHelper;
-import com.bc.pmpheep.utils.ZipHelper;
 import com.fasterxml.jackson.databind.annotation.JsonAppend.Prop;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -100,6 +99,8 @@ public class FileDownLoadController {
 	@Resource
 	ClicWordHelper clicWordHelper;
 	@Resource
+	MaterialSurveyWordHelper materialSurveyWordHelper;
+	@Resource
 	WordHelper wordHelper;
 	@Resource
 	MaterialService materialService;
@@ -111,6 +112,8 @@ public class FileDownLoadController {
 	ZipHelper zipHelper;
 	@Resource
 	MaterialOrgService materialOrgService;
+	@Resource
+	MaterialSurveyDao materialSurveyDao;
 
 	@Autowired
 	BookCorrectionService bookCorrectionService;
@@ -550,6 +553,7 @@ public class FileDownLoadController {
 			out.flush();
 			out.close();
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.warn("文件下载时出现IO异常： {}", e.getMessage());
 			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
 					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
@@ -802,8 +806,6 @@ public class FileDownLoadController {
 	 *            1待审核 3已经审核
 	 * @param offlineProgress
 	 *            0 未 2 收到
-
-	 * 
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "申报表批量导出word")
@@ -831,6 +833,22 @@ public class FileDownLoadController {
 		taskExecutor.execute(new ClicSpringThread(zipHelper, clicWordHelper,
 				expertationDao,expertationService, productService,expertationVO,id));
 
+		return '"' + id + '"';
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "调研表批量导出word")
+	@RequestMapping(value = "/word/material/survey", method = RequestMethod.GET)
+	public String materialSurveyWord(SurveyVO surveyVO) {
+		String id = String.valueOf(System.currentTimeMillis()).concat(String.valueOf(RandomUtil.getRandomNum()));
+
+		//List<ExpertationVO> list = expertationDao.queryExpertation(pageParameter);
+		taskExecutor.execute(new MaterialSurveySpringThread(zipHelper, materialSurveyWordHelper,
+				materialSurveyDao,materialService,surveyVO,id));
 		return '"' + id + '"';
 	}
 

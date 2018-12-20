@@ -1,0 +1,876 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.MaterialSurveyDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="title != null and title !=''">
+				title,
+			</if>
+			<if test="subhead != null and subhead !=''">
+				subhead,
+			</if>
+			<if test="intro != null and intro !=''">
+				intro,
+			</if>
+			<if test="templateId != null">
+				template_id,
+			</if>
+			<if test="typeId != null">
+				type_id,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="beginDate != null and beginDate !=''">
+				begin_date,
+			</if>
+			<if test="endDate != null and endDate !=''">
+				end_date,
+			</if>
+			<if test="sort != null">
+				sort,
+			</if>
+			<if test="isDeleted != null">
+				is_deleted,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="materialId != null and  materialId != 0">
+				material_id	,
+			</if>
+			<if test="materialId == 0 ">
+				material_id	,
+			</if>
+			<if test="preVersionMaterialId != null ">
+				pre_version_material_id	,
+			</if>
+			<if test="preVersionMaterialName != null ">
+				pre_version_material_name	,
+			</if>
+			<if test="preVersionMaterialRound != null ">
+				pre_version_material_round	,
+			</if>
+			<if test="allTextbookUsed != null">
+				all_textbook_used,
+			</if>
+			<if test="requiredForMaterial != null">
+				required_for_material,
+			</if>
+			<if test="gmtPublish != null">
+				gmt_publish,
+			</if>
+
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="title != null and title !=''">
+				#{title},
+			</if>
+			<if test="subhead != null and subhead !=''">
+				#{subhead},
+			</if>
+			<if test="intro != null and intro !=''">
+				#{intro},
+			</if>
+			<if test="templateId != null">
+				#{templateId},
+			</if>
+			<if test="typeId != null">
+				#{typeId},
+			</if>
+			<if test="userId != null">
+				#{userId},
+			</if>
+			<if test="beginDate != null">
+				#{beginDate},
+			</if>
+			<if test="endDate != null ">
+				#{endDate},
+			</if>
+			<if test="sort != null">
+				#{sort},
+			</if>
+			<if test="isDeleted != null">
+				#{isDeleted},
+			</if>
+			<if test="status != null">
+				#{status},
+			</if>
+			<if test="materialId != null  and  materialId != 0">
+				#{materialId}	,
+			</if>
+			<if test="materialId == 0 ">
+				null	,
+			</if>
+			<if test="preVersionMaterialId != null ">
+				#{preVersionMaterialId}	,
+			</if>
+			<if test="preVersionMaterialName != null ">
+				#{preVersionMaterialName}	,
+			</if>
+			<if test="preVersionMaterialRound != null ">
+				#{preVersionMaterialRound}	,
+			</if>
+			<if test="allTextbookUsed != null">
+				#{allTextbookUsed},
+			</if>
+			<if test="requiredForMaterial != null">
+				#{requiredForMaterial},
+			</if>
+			<if test="gmtPublish != null">
+				#{gmtPublish},
+			</if>
+		</trim>
+	</sql>
+	<sql id="duplicate_key_update">
+		<trim suffixOverrides=",">
+			<if test="title != null ">
+				title	=	values(title)	,
+			</if>
+			<if test="subhead != null ">
+				subhead	=	values(subhead)	,
+			</if>
+			<if test="intro != null ">
+				intro	=	values(intro)	,
+			</if>
+
+				template_id	=	#{templateId}	,
+
+			<if test="typeId != null ">
+				type_id	=	values(type_id)	,
+			</if>
+			<if test="userId != null ">
+				user_id	=	values(user_id)	,
+			</if>
+			<if test="beginDate != null ">
+				begin_date	=	values(begin_date)	,
+			</if>
+			<if test="endDate != null ">
+				end_date	=	values(end_date)	,
+			</if>
+			<if test="sort != null ">
+				sort	=	values(sort)	,
+			</if>
+			<if test="isDeleted != null ">
+				is_deleted	=	values(is_deleted)	,
+			</if>
+			<if test="status != null ">
+				status	=	values(status)	,
+			</if>
+			<if test="materialId != null  and  materialId != 0">
+				material_id	=	values(material_id)	,
+			</if>
+			<if test="materialId == 0 ">
+				material_id	= null ,
+			</if>
+			<if test="preVersionMaterialId != null ">
+				pre_version_material_id	=	values(pre_version_material_id)	,
+			</if>
+			<if test="preVersionMaterialName != null ">
+				pre_version_material_name	=	values(pre_version_material_name)	,
+			</if>
+			<if test="preVersionMaterialRound != null ">
+				pre_version_material_round	=	values(pre_version_material_round)	,
+			</if>
+			<if test="allTextbookUsed != null">
+				all_textbook_used = VALUES(all_textbook_used),
+			</if>
+			<if test="requiredForMaterial != null">
+				required_for_material = VALUES(required_for_material),
+			</if>
+			<if test="status != null and status == 1">
+				gmt_publish= CURDATE(),
+			</if>
+		</trim>
+	</sql>
+	<!-- 新增一个Survey -->
+	<insert id="addSurvey" parameterType="Survey" keyProperty="id" useGeneratedKeys="true">
+		<!--<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> &lt;!&ndash; order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER &ndash;&gt;
+			SELECT LAST_INSERT_ID()
+		</selectKey>-->
+		insert into material_survey (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		)
+		on duplicate key UPDATE
+		<include refid="duplicate_key_update"/>
+	</insert>
+	<!-- 逻辑删除Survey通过主键id -->
+	<update id="deleteSurveyById" parameterType="java.lang.Long">
+		update material_survey set is_deleted = true where id=#{id};
+	</update>
+	<!-- 更新一个 SurveyQuestionnaire通过主键id -->
+	<update id="updateSurvey" parameterType="Survey">
+		update material_survey
+		<set>
+			<if test="title != null and title !=''">
+				title=#{title},
+			</if>
+			<if test="subhead != null and subhead !=''">
+				subhead=#{subhead},
+			</if>
+			<if test="intro != null and intro !=''">
+				intro=#{intro},
+			</if>
+			<if test="templateId != null">
+				template_id=#{templateId},
+			</if>
+			<if test="typeId != null">
+				type_id=#{typeId},
+			</if>
+			<if test="userId != null">
+				user_id=#{userId},
+			</if>
+			<if test="beginDate != null">
+				begin_date=#{beginDate},
+			</if>
+			<if test="endDate != null ">
+				end_date=#{endDate},
+			</if>
+			<if test="sort != null">
+				sort=#{sort},
+			</if>
+			<if test="isDeleted != null">
+				is_deleted=#{isDeleted},
+			</if>
+			<if test="status != null">
+				status=#{status},
+			</if>
+			<if test="status != null and status == 1">
+				gmt_publish= CURDATE(),
+			</if>
+		</set>
+		where
+		id=#{id};
+	</update>
+	<!-- 查找Survey通过主键id -->
+	<select id="getSurveyById" parameterType="java.lang.Long" resultType="Survey">
+		select * from material_survey where id=#{id};
+	</select>
+	
+	<!-- 问卷表分页列表（同时查询分页数据和总条数） -->
+	<select id="listSurvey" parameterType="PageParameter" resultType="SurveyVO">
+		select 
+			s.*,stp.survey_name,
+			ppu.username,ppu.realname,t.count 
+		from 
+			material_survey s
+		left join 
+			material_survey_type stp
+		on 
+			stp.id=s.type_id 
+		left join 
+			pmph_user ppu 
+		on 
+			ppu.id=s.user_id,
+			(
+				select 
+					count(*) count 
+				from 
+					material_survey s
+				left join 
+					material_survey_type stp
+				on 
+					stp.id=s.type_id 
+				left join 
+					pmph_user ppu 
+				on 
+					ppu.id=s.user_id 
+				where 
+					s.is_deleted = false 
+				<!-- 下面是动态条件 -->
+				<if test="parameter !=null ">
+					<!-- 问卷标题 -->
+					<if test="parameter.title != null and parameter.title != ''">
+						and s.title like concat('%',#{parameter.title},'%')
+					</if>
+					<if test="parameter.typeId != null">
+						and s.type_id = #{parameter.typeId}
+					</if>
+					<if test="parameter.materialRelative != null">
+						<if test="parameter.materialRelative == true ">
+							<if test="parameter.materialId != null" >
+								and s.material_id = #{parameter.materialId}
+							</if>
+						</if>
+						<if test="parameter.materialRelative == false ">
+							and s.material_id is null
+						</if>
+					</if>
+
+					<!-- 问卷创建日期 %H:%i:%s--> 
+					<if test="parameter.startTime !=null and parameter.startTime !='' ">
+						and 
+							s.`gmt_publish` &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d %H:%i:%s')
+							
+					</if>
+					<if test="parameter.endTime !=null and parameter.endTime !='' ">
+						and 
+							s.`gmt_publish` &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d %H:%i:%s')
+					</if>
+				</if>
+				) t 
+		where s.is_deleted = false 
+		<!-- 下面是动态条件 -->
+		<if test="parameter !=null ">
+			<!-- 问卷标题 -->
+			<if test="parameter.title != null and parameter.title != ''">
+				and s.title like concat('%',#{parameter.title},'%')
+			</if>
+			<if test="parameter.typeId != null">
+				and s.type_id = #{parameter.typeId}
+			</if>
+			<if test="parameter.materialRelative != null">
+				<if test="parameter.materialRelative == true ">
+					<if test="parameter.materialId != null" >
+						and s.material_id = #{parameter.materialId}
+					</if>
+				</if>
+				<if test="parameter.materialRelative == false ">
+					and s.material_id is null
+				</if>
+			</if>
+			<!-- 问卷创建日期 %H:%i:%s--> 
+					<if test="parameter.startTime !=null and parameter.startTime !='' ">
+						and 
+							s.`gmt_publish` &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d %H:%i:%s')
+							
+					</if>
+					<if test="parameter.endTime !=null and parameter.endTime !='' ">
+						and 
+							s.`gmt_publish` &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d %H:%i:%s')
+					</if>
+		</if>
+		group by s.id desc
+		ORDER BY s.`gmt_publish` DESC,/*s.gmt_create,*/s.id DESC
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+
+	<!--调研表导出word的主列表-->
+	<select id="wordExMainList" parameterType="SurveyVO" resultType="SurveyWordMainVO">
+		select m.material_name,s.id as survey_id,s.title,s.intro,u.*,o.org_name
+		from
+		material_survey_question_answer a
+		left join material_survey s on a.survey_id = s.id
+		left join material m on m.id = s.material_id
+		left join
+		(
+		select id as user_id,realname,1 as user_type,sex,position,title as user_title,concat_ws(',',handphone,telephone) as telephone ,email,address,postcode,fax,org_id
+		from writer_user
+		union
+		select id,realname,2,sex,position,title,concat_ws(',',handphone,telephone),email,address,postcode,fax,org_id
+		from org_user
+		)u on a.user_id = u.user_id and a.user_type = u.user_type
+		left join org o on o.id = u.org_id
+		<where>
+			<!-- 下面是动态条件 同查询列表 但导出不分页-->
+
+				<!-- 问卷标题 -->
+				<if test="title != null and title != ''">
+					and s.title like concat('%',#{title},'%')
+				</if>
+				<if test="typeId != null">
+					and s.type_id = #{typeId}
+				</if>
+				<if test="materialRelative != null">
+					<if test="materialRelative == true ">
+						<if test="materialId != null" >
+							and s.material_id = #{materialId}
+						</if>
+					</if>
+					<if test="materialRelative == false ">
+						and s.material_id is null
+					</if>
+				</if>
+
+				<!-- 问卷创建日期 %H:%i:%s-->
+				<if test="startTime !=null and startTime !='' ">
+					and
+					s.`gmt_publish` &gt;= str_to_date(#{startTime},'%Y-%m-%d %H:%i:%s')
+
+				</if>
+				<if test="endTime !=null and endTime !='' ">
+					and
+					s.`gmt_publish` &lt;= str_to_date(#{endTime},'%Y-%m-%d %H:%i:%s')
+				</if>
+
+		</where>
+		group by u.user_type,u.user_id,s.id
+	</select>
+
+	<!-- 获取调研表导出的题目和答案详情 需要在java后台组装-->
+	<select id="wordExDetailList" resultType="SurveyWordDetailVO">
+
+		select
+		s.id,q.survey_id,q.id as question_id,q.title,q.type,q.category_id,qc.category_name,
+			case   when q.type = 1 or q.type = 2
+			then   oa.option_content
+			   when q.type = 4 or q.type = 5
+			then   ca.option_content
+			end as answer_content ,
+			sa.user_id,sa.user_type
+		from
+
+		material_survey_question_answer sa
+		inner join     material_survey s on sa.survey_id = s.id
+
+
+		left join     `material_survey_question` q on q.survey_id = sa.survey_id
+		left join     material_survey_question_category qc on q.category_id = qc.id
+
+		left join
+		(
+		select group_concat(distinct concat_ws('',case when !isnull(oa.id) then '√' else '' end ), o.option_content order by o.id asc separator '\t\t\n')as  option_content,
+		oa.user_id,oa.user_type,o.id,o.`question_id`
+		 from
+		`material_survey_question_option`o
+		left join material_survey_question_answer oa on oa.option_id = o.id
+		where o.is_deleted = 0
+		group by oa.user_id,oa.user_type,o.id
+		)oa on oa.question_id = q.id and q.type in (1,2)
+
+		left join     material_survey_question_answer ca on ca.question_id = q.id and q.type in(4,5) -- and sa.user_id = ca.user_id and sa.user_type = ca.user_type
+		where      q.is_deleted = 0
+		group by sa.user_id ,sa.user_type ,q.id -- ,o.id
+		order by sa.user_id ,sa.user_type ,q.category_id,q.sort
+
+	<!--
+            select s.id,q.survey_id,q.id as question_id,q.title,q.type,q.category_id,qc.category_name,o.id as option_id,o.option_content,!isnull(oa.id) as checked,
+
+            case
+            when q.type = 1 or q.type = 2
+            then
+            group_concat(distinct concat_ws('',case when !isnull(oa.id) then '√' else '' end ), o.option_content order by o.id asc separator '\t\t\n')
+            when q.type = 4 or q.type = 5
+            then
+            ca.option_content
+            end as answer_content ,
+
+            sa.user_id,sa.user_type
+            from
+
+                    material_survey_question_answer sa
+                    inner join
+                    material_survey s on sa.survey_id = s.id
+                    left join
+                    `material_survey_question` q on q.survey_id = s.id
+                    left join
+                    material_survey_question_category qc on q.category_id = qc.id
+                    LEFT JOIN
+                    `material_survey_question_option`o
+                    ON
+                    o.`question_id`= q.`id` and o.is_deleted = 0
+                    left join
+                    material_survey_question_answer oa on oa.option_id = o.id and q.type in(1,2)  and sa.user_id = oa.user_id and sa.user_type = oa.user_type
+                    left join
+                    material_survey_question_answer ca on ca.question_id = q.id and q.type in(4,5) and sa.user_id = ca.user_id and sa.user_type = ca.user_type
+                    where
+                        q.is_deleted = 0
+
+             group by sa.user_id ,sa.user_type ,q.id
+
+            order by sa.user_id ,sa.user_type ,q.category_id,q.sort,q.id
+            -->
+        </select>
+
+
+        <!-- 查询问卷和问卷对应的类型 -->
+	<select id="getSurveyAndSurveyTypeById" parameterType="java.lang.Long" resultType="SurveyVO">
+		select 
+			s.*,
+			stp.survey_name,
+			ppu.username,
+			ppu.realname
+		from 
+			material_survey s
+		left join 
+			material_survey_type stp
+		on 
+			stp.id = s.type_id
+		left join 
+			pmph_user ppu 
+		on 
+			ppu.id=s.user_id
+		<where>
+			<if test="id !=null">
+				s.`id`= #{id}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据问卷ID查询问卷已发送对象 -->
+	<select id="listSendOrgBySurveyId" parameterType="PageParameter" resultType="OrgVO">
+		SELECT 
+			o.`id`,o.`org_name`, ou.`username`, ou.`handphone` ,t.`count`
+		FROM 
+			`material_survey_target` st 
+		JOIN 
+			`org` o 
+		ON 
+			st.`org_id` = o.`id` 
+		JOIN 
+			`org_user` ou 
+		ON 
+			o.`id`= ou.`org_id`,
+		(
+			SELECT 
+				count(*) `count`
+			FROM 
+				`material_survey_target` st 
+			JOIN 
+				`org` o 
+			ON 
+				st.`org_id` = o.`id` 
+			JOIN 
+				`org_user` ou 
+			ON 
+				o.`id`= ou.`org_id`
+			<where>
+				<if test="parameter !=null ">
+					<!-- 问卷ID -->
+					<if test="parameter.surveyId != null">
+						st.`survey_id`= #{parameter.surveyId}
+					</if>
+				</if>
+			</where>
+		)t 
+		<where>
+				<if test="parameter !=null ">
+					<!-- 问卷ID  -->
+					<if test="parameter.surveyId != null">
+						st.`survey_id`= #{parameter.surveyId}
+					</if>
+				</if>
+			</where>
+		ORDER BY
+			 o.`id`
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+
+	<!-- 根据Id查询下面的所有问题 -->
+	<select id="getSurveyQuestionBySurveyId" parameterType="java.lang.Long" resultType="SurveyQuestionOptionCategoryVO">
+		SELECT
+		stq.`id`,stq.`title`,
+		stq.`type`, stq.`sort`,
+		stq.direction,
+		GROUP_CONCAT(sqo.`id` order by sqo.`id` asc ) optionIdString,
+		GROUP_CONCAT(sqo.`option_content` order by sqo.`id` asc ) optionContent
+		FROM
+		`material_survey_question` stq
+		LEFT JOIN
+		`material_survey_question_option`sqo
+		ON
+		sqo.`question_id`= stq.`id` and sqo.is_deleted = 0
+		<where>
+			stq.is_deleted = 0
+			<if test="id != null">
+				and stq.`survey_id`=#{id}
+			</if>
+		</where>
+		GROUP BY
+		stq.`id`
+	</select>
+
+	<!-- 根据Id查询下面的所有问题 -->
+	<select id="getSurveyResult" parameterType="java.util.Map" resultType="SurveyQuestionOptionCategoryVO">
+		SELECT
+		stq.`id`,stq.`title`,
+		stq.`type`, stq.`sort`,
+		stq.direction,
+		GROUP_CONCAT(
+			concat_ws('-',sqo.`id`,!isNull(oa.id) ) order by sqo.id asc
+		) optionIdString,
+		Ifnull(GROUP_CONCAT(
+		oa.option_id order by sqo.id asc
+		),0) checkedOptionIdS,
+		GROUP_CONCAT(
+			ifNull(sqo.`option_content`,ca.option_content) order by sqo.id asc separator '_,_'
+		) optionContent
+		FROM
+		`material_survey_question` stq
+		LEFT JOIN
+		`material_survey_question_option`sqo
+		ON
+		sqo.`question_id`= stq.`id` and sqo.is_deleted = 0
+		left join
+		material_survey_question_answer oa on oa.option_id = sqo.id and stq.type in(1,2)
+		and oa.user_id =#{userId} and oa.user_type = #{userType}
+		left join
+		material_survey_question_answer ca on ca.question_id = stq.id and stq.type in(4,5)
+		and ca.user_id =#{userId} and ca.user_type = #{userType}
+		<where>
+			stq.is_deleted = 0
+
+			and stq.`survey_id`=#{surveyId}
+
+		</where>
+		GROUP BY
+		stq.`id`
+	</select>
+
+	<!--查询调研表结果列表-->
+	<select id="toAnswerList" parameterType="PageParameter" resultType="MaterialSurveyCountAnswerVO">
+
+		select t.survey_id
+		,case t.user_type when 1 then '作家用户' else '机构用户' end as userTypeName
+		,t.user_type
+		,u.user_id
+		,u.realname
+		,o.org_name
+		,t.SubmitTime
+		from
+		(
+			select survey_id,user_id,user_type,max(gmt_create)as SubmitTime from material_survey_question_answer
+			where survey_id = #{parameter.surveyId}
+			group by user_id,user_type
+		)t
+		inner join
+		(
+			select id as user_id ,realname, 1 as user_type , org_id from writer_user
+			union
+			select id as user_id ,realname, 2 as user_type , org_id from org_user
+		)u
+		on t.user_id = u.user_id and t.user_type = u.user_type
+		left join
+		org o on u.org_id = o.id
+		<where>
+			<if test="parameter.realname !=null and parameter.realname != ''">
+				and u.realname like concat('%',#{parameter.realname},'%')
+			</if>
+			<if test="parameter.orgId !=null">
+				and o.id = #{parameter.orgId}
+			</if>
+		</where>
+	</select>
+
+	<!--查询调研表结果列表 总数-->
+	<select id="toAnswerListCount" parameterType="PageParameter" resultType="int">
+
+		select COUNT(t.survey_id)
+		from
+		(
+			select t.survey_id
+			from
+			(
+			select survey_id,user_id,user_type from material_survey_question_answer
+			where survey_id = #{parameter.surveyId}
+			group by user_id,user_type
+			)t
+			inner join
+			(
+			select id as user_id ,realname, 1 as user_type , org_id from writer_user
+			union
+			select id as user_id ,realname, 2 as user_type , org_id from org_user
+			)u
+			on t.user_id = u.user_id and t.user_type = u.user_type
+			<where>
+				<if test="parameter.realname !=null and parameter.realname != ''">
+					and u.realname like concat('%',#{parameter.realname},'%')
+				</if>
+				<if test="parameter.orgId !=null">
+					and u.org_id = #{parameter.orgId}
+				</if>
+			</where>
+		)t
+
+	</select>
+
+	<delete id="deleteSurveyChainByTextbookId" >
+		DELETE from material_survey_chain
+
+		<where>
+			<if test="textbookId != null">
+				and textbook_id = #{textbookId}
+			</if>
+			<if test="materialId != null">
+				and material_id = #{materialId}
+			</if>
+		</where>
+	</delete>
+
+	<delete id="deleteSurveyChainByMaterialSurveyId" parameterType="Long">
+		DELETE from material_survey_chain where material_survey_id = #{materialSurveyId}
+	</delete>
+
+	<insert id="insertChain" parameterType="MaterialSurveyChain" keyProperty="id" useGeneratedKeys="true">
+		insert into material_survey_chain(
+			material_survey_id,
+			material_id,
+			textbook_id,
+			required,
+			pre_version_material_id,
+			pre_version_material_name,
+			pre_version_material_round
+		)
+		VALUES(
+			#{materialSurveyId},
+			#{materialId},
+			#{textbookId},
+			#{required},
+			#{preVersionMaterialId},
+			#{preVersionMaterialName},
+			#{preVersionMaterialRound}
+		)
+		on duplicate key UPDATE  required = VALUES(required)
+	</insert>
+
+	<insert id="insertChainBatch" parameterType="MaterialSurveyChain" >
+		insert into material_survey_chain(
+			id,
+			material_survey_id,
+			material_id,
+			textbook_id,
+			required,
+			pre_version_material_id,
+			pre_version_material_name,
+			pre_version_material_round
+		)
+		VALUES
+		<foreach collection="list" item="item" separator="," index="index">
+			(
+			#{item.id},
+			#{item.materialSurveyId},
+			#{item.materialId},
+			#{item.textbookId},
+			#{item.required},
+			#{item.preVersionMaterialId},
+			#{item.preVersionMaterialName},
+			#{item.preVersionMaterialRound}
+			)
+		</foreach>
+		on duplicate key UPDATE
+		required = VALUES(required)
+		,pre_version_material_id = VALUES(pre_version_material_id)
+		,pre_version_material_name = VALUES(pre_version_material_name)
+		,pre_version_material_round = VALUES(pre_version_material_round)
+	</insert>
+
+	<!--从模板克隆问题及选项-->
+	<insert id="cloneQuestionAndOptionByTemplateId" >
+
+		insert into material_survey_question
+		(template_question_id,category_id,title,type,sort,direction,is_answer,is_deleted,survey_id)
+
+		select id,category_id,title,type,sort,direction,is_answer,is_deleted,#{surveyId} -- 调研表id
+		from material_survey_template_question
+		where survey_id = #{templateId} -- 调研表模板id
+		;
+		insert into material_survey_question_option
+		(question_id,template_option_id,option_content,is_other,is_deleted,remark)
+
+		select sq.id as question_id,tqo.id as template_option_id,tqo.option_content,tqo.is_other,tqo.is_deleted,tqo.remark
+		from material_survey_template_question tq
+		join material_survey_template_question_option tqo
+		on tq.id = tqo.question_id
+		join material_survey_question sq
+		on sq.template_question_id = tq.id and sq.survey_id = #{surveyId}
+
+		where tq.survey_id = #{templateId} -- 调研表模板id
+
+	</insert>
+
+	<!--获取书籍相关调研-->
+	<select id="getSurveyByTextbook" resultType="SurveyVO">
+		select
+		s.id,
+		s.title,
+		s.intro,
+		s.template_id,
+		s.type_id,
+		s.user_id,
+		s.sort,
+		s.is_deleted,
+		s.gmt_create,
+		s.gmt_publish,
+		s.material_id,
+		s.all_textbook_used,
+		s.required_for_material,
+		t.survey_name,
+		c.required as requiredForWriter,
+		c.pre_version_material_id,
+		c.pre_version_material_name,
+		c.pre_version_material_round
+
+		from
+		material_survey s
+		join
+		(
+		  select * from material_survey_chain where textbook_id = #{textbookId}
+		)
+		c
+		on c.material_survey_id = s.id
+		left join material_survey_type t on t.id = s.type_id
+		where s.is_deleted = 0 and s.all_textbook_used = 0
+	</select>
+
+	<select id="getSurveyByMaterial" resultType="SurveyVO">
+		select s.*,t.survey_name FROM
+		material_survey s
+		left join material_survey_type t on t.id = s.type_id
+		where s.is_deleted = 0 and s.all_textbook_used = 1
+		and s.material_id = #{materialId}
+	</select>
+
+	<select id="getSurveyByMaterialIdAndTemplateId" resultType="SurveyVO">
+		select * FROM
+		material_survey
+		where material_id = #{materialId} and template_id = #{templateId}
+		limit 0,1
+	</select>
+
+	<select id="chainBookList" parameterType="java.util.Map" resultType="MaterialSurveyChain">
+		select
+		 b.id as textbook_id,
+		 b.textbook_name ,
+		 c.id,
+		 c.material_survey_id,
+		 c.material_id,
+		 c.required,
+		 c.pre_version_material_id,
+		 c.pre_version_material_name,
+		 c.pre_version_material_round
+		from
+		(
+		select * from
+		textbook
+		where material_id = #{materialId}
+		)b
+		left join
+		(
+		select * from
+		material_survey_chain
+		where material_survey_id = #{materialSurveyId}
+		)c
+		  on c.textbook_id = b.id
+	</select>
+
+	<!--获取调研表（调查对象）分类-->
+	<select id="getTypeList" resultType="MaterialSurveyType">
+		select * from material_survey_type order by sort;
+	</select>
+
+	<!--获取调研表名称和模板id-->
+	<select id="getTitleAndTemplateId" resultType="SurveyVO">
+		select id,title,template_id,material_id from material_survey
+	</select>
+	
+</mapper>

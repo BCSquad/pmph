@@ -26,6 +26,8 @@ import org.apache.ibatis.type.Alias;
 public class SurveyQuestionOptionCategoryVO implements Serializable {
     //
     private static final long serialVersionUID = -8571933838375288824L;
+
+    private Long id ;
     /**
      * 分类名称
      */
@@ -84,6 +86,15 @@ public class SurveyQuestionOptionCategoryVO implements Serializable {
      * 备注
      */
     private String            remark;
+
+    private Boolean  checked;
+
+    private String answerContent;
+
+    /**
+     * 答案中已选中的option_id，用，隔开
+     */
+    private String checkedOptionIdS;
 
     /**
      * @return the categoryName
@@ -307,4 +318,59 @@ public class SurveyQuestionOptionCategoryVO implements Serializable {
 				+ ", isOther=" + isOther + ", remark=" + remark + "]";
 	}
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Boolean getAnswer() {
+        return isAnswer;
+    }
+
+    public void setAnswer(Boolean answer) {
+        isAnswer = answer;
+    }
+
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public Boolean getOther() {
+        return isOther;
+    }
+
+    public void setOther(Boolean other) {
+        isOther = other;
+    }
+
+    public Boolean getChecked() {
+        return checked;
+    }
+
+    public void setChecked(Boolean checked) {
+        this.checked = checked;
+    }
+
+    public String getAnswerContent() {
+        return answerContent;
+    }
+
+    public void setAnswerContent(String answerContent) {
+        this.answerContent = answerContent;
+    }
+
+    public String getCheckedOptionIdS() {
+        return checkedOptionIdS;
+    }
+
+    public void setCheckedOptionIdS(String checkedOptionIdS) {
+        this.checkedOptionIdS = checkedOptionIdS;
+    }
 }

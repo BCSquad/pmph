@@ -35,6 +35,11 @@ public class SurveyQuestion implements java.io.Serializable {
      * 主键
      */
     private Long              id;
+
+    /**
+     * 调研表id
+     */
+    private Long              surveyId;
     /**
      * 问题分类id
      */
@@ -71,6 +76,8 @@ public class SurveyQuestion implements java.io.Serializable {
      * 修改时间
      */
     private Timestamp         gmtUpdate;
+
+    private String categoryName ;
 
     /** default constructor */
     public SurveyQuestion() {
@@ -129,6 +136,16 @@ public class SurveyQuestion implements java.io.Serializable {
         this.sort = sort;
         this.direction = direction;
         this.isAnswer = isAnswer;
+    }
+
+    public SurveyQuestion(Long id,String title, Boolean isDeleted,Short type ,String direction,Integer sort,Long surveyId){
+        this.id = id;
+        this.isDeleted = isDeleted;
+        this.title = title;
+        this.type = type;
+        this.direction = direction;
+        this.sort = sort;
+        this.surveyId = surveyId;
     }
 
     // Property accessors
@@ -280,4 +297,37 @@ public class SurveyQuestion implements java.io.Serializable {
                + ", gmtUpdate=" + gmtUpdate + "]";
     }
 
+
+
+    public Boolean getAnswer() {
+        return isAnswer;
+    }
+
+    public void setAnswer(Boolean answer) {
+        isAnswer = answer;
+    }
+
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public Long getSurveyId() {
+        return surveyId;
+    }
+
+    public void setSurveyId(Long surveyId) {
+        this.surveyId = surveyId;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
 }
