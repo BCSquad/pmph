@@ -52,7 +52,7 @@
 	</sql>
 
 	<select id="getMaxSort" resultType="java.lang.Integer">
-         select MAX(sort) from activity_source
+         select ifNull(MAX(sort),0) from activity_source
     </select>
 
 	<select id="getSortById" resultType="ActivitySource" parameterType="java.lang.Integer">

@@ -118,7 +118,7 @@
         </trim>
     </sql>
     <select id="getMaxSort" resultType="java.lang.Integer">
-        select max(sort) from activity_video
+        select ifNull(MAX(sort),0) from activity_video
     </select>
 
     <select id="getSortById" resultType="ActivityVideo" parameterType="java.lang.Integer">
