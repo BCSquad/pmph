@@ -75,6 +75,13 @@ public interface ExpertationDao {
      */
     ExpertationVO getExpertationById(Long id);
 
+    /**
+     * 查询申报详情
+     * @param ids
+     * @return
+     */
+    List<ExpertationVO> getExpertationByIdList(@Param("ids")List<Long> ids);
+
     void updateOnlineProgress(@Param("id") Long id,@Param("onlineProgress") Integer onlineProgress,@Param("returnCause") String returnCause);
 
     List<ProductType> queryProductSubjectTypeListByExpertationId(Long id);
@@ -168,4 +175,23 @@ public interface ExpertationDao {
      * @return
      */
     int changeStatus(@Param("status") Integer status,@Param("id") Long id);
+
+    List<DecAcade> queryDecAcadeByIds(@Param("ids") List<Long> ids);
+
+    List<DecEduExp> queryDecEduExpByIds(@Param("ids") List<Long> ids);
+
+    List<DecWorkExp> queryDecWorkExpByIds(@Param("ids") List<Long> ids);
+
+    List<DecMonograph> queryDecMonographByIds(@Param("ids") List<Long> ids);
+
+    List<DecTextbookPmph> queryDecTextbookPmphByIds(@Param("ids")List<Long> queryExpertationIdList);
+
+    List<DecEditorBook> queryDecEditorBookByIds(@Param("ids")List<Long> queryExpertationIdList);
+
+    List<DecArticlePublished> queryDecArticlePublishedByIds(@Param("ids")List<Long> queryExpertationIdList);
+
+    List<DecProfessionAward> queryDecProfessionAwardByIds(@Param("ids")List<Long> queryExpertationIdList);
+
+    List<ProductProfessionType> queryProfessionByIds(@Param("ids")List<Long> queryExpertationIdList);
+
 }

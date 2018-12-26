@@ -37,7 +37,7 @@ public class DecEduExp implements java.io.Serializable {
 	//个人资料id
 	private String perId;
 	//临床决策申报id
-	private String expertationId;
+	private Long expertationId;
 
 	// 构造器
 
@@ -157,11 +157,11 @@ public class DecEduExp implements java.io.Serializable {
 		this.perId = perId;
 	}
 
-	public String getExpertationId() {
+	public Long getExpertationId() {
 		return expertationId;
 	}
 
-	public void setExpertationId(String expertationId) {
+	public void setExpertationId(Long expertationId) {
 		this.expertationId = expertationId;
 	}
 }
