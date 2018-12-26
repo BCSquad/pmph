@@ -52,7 +52,7 @@
 	</sql>
 
 	<select id="getMaxSort" resultType="java.lang.Integer">
-         select MAX(sort) from activity_source
+         select ifNull(MAX(sort),0) from activity_source
     </select>
 
 	<select id="getSortById" resultType="ActivitySource" parameterType="java.lang.Integer">
@@ -264,5 +264,10 @@
 		)a
 		limit 0,1
 	</select>
+
+	<select id="getSourceChainSortMax" resultType="java.lang.Long" parameterType="java.lang.Long">
+        select max(sort) from  activity_source_chain ac
+        where ac.activity_id=#{activityId};
+    </select>
 
 </mapper>
