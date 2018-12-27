@@ -797,7 +797,8 @@
 			</if>
 		</if>
 		<!-- 排序和分页条件 -->
-		order by a.realname
+		ORDER BY a.commit_date desc,
+		CONVERT ( f.org_name USING gbk ) ASC
 		limit #{start},#{pageSize}
 	</select>
 
