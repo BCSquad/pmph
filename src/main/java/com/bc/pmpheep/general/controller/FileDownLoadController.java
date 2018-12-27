@@ -570,18 +570,21 @@ public class FileDownLoadController {
 		switch (expert_type) {
 
 			case "1":
-				returnName= "人卫临床助手申报";
+				returnName= "人卫临床助手专家申报表";
 				break;
 			case "2":
-				returnName= "人卫用药助手";
+				returnName= "人卫用药助手专家申报表";
 				break;
 			case "3":
-				returnName= "人卫中医助手";
+				returnName= "人卫中医助手专家申报表";
 				break;
 
 			default:
 				returnName= "临床决策申报";;
 		}
+
+		returnName += "-" + DateUtil.date2Str(new Date(),"yyyy-MM-dd-HH：mm：ss");
+
 		return returnName;
 
 	}
