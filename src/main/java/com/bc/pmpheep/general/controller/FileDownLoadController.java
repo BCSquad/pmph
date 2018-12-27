@@ -501,6 +501,11 @@ public class FileDownLoadController {
 		pageParameter.setStart(null);
 		pageParameter.setParameter(expertationVO);
 		List<ExpertationVO> list = expertationDao.queryExpertation(pageParameter);
+		List<Long> queryExpertationIdList = new ArrayList();
+		for(ExpertationVO ev:list){
+			queryExpertationIdList.add(ev.getId());
+		}
+		list = expertationService.getExpertationByIdList(queryExpertationIdList);
 		//String[] stateList = new String[]{"未提交","待学校审核","被学校退回","学校已审核","待学校审核","被出版社退回"};
 		ProductVO productVO = null;
 		if(!CollectionUtil.isEmpty(list) ){
@@ -515,7 +520,7 @@ public class FileDownLoadController {
 			e.setProductContentTypeList(clist);
 			e.setProductProfessionTypeList1(plist);*/
 
-			e = expertationService.getExpertationById(e.getId());
+			//e = expertationService.getExpertationById(e.getId());
 
 			e.setExcelTypeStr();
 
@@ -530,7 +535,7 @@ public class FileDownLoadController {
 							)));
 			e.setFinalResultStr(e.getFinalResult()?"已公布":"未公布");
 			//e.setOnlineProgressName((e.getOrg_id()==0&&e.getOnline_progress()==1)?"待出版社审核":(e.getOrg_id()==0&&e.getOnline_progress()==3?"出版社已审核":stateList[e.getOnline_progress()]));
-			list.set(i,e);
+			//list.set(i,e);
 		}
 		Workbook workbook = null;
 		try {
@@ -565,18 +570,21 @@ public class FileDownLoadController {
 		switch (expert_type) {
 
 			case "1":
-				returnName= "人卫临床助手申报";
+				returnName= "人卫临床助手专家申报表";
 				break;
 			case "2":
-				returnName= "人卫用药助手";
+				returnName= "人卫用药助手专家申报表";
 				break;
 			case "3":
-				returnName= "人卫中医助手";
+				returnName= "人卫中医助手专家申报表";
 				break;
 
 			default:
 				returnName= "临床决策申报";;
 		}
+
+		returnName += "-" + DateUtil.date2Str(new Date(),"yyyy-MM-dd-HH：mm：ss");
+
 		return returnName;
 
 	}

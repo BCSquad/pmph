@@ -2971,6 +2971,7 @@ public class ExcelHelper {
 					"用于导出Excel的数据源为空");
 		}
 		Workbook workbook = new HSSFWorkbook();
+		sheetName = sheetName.replaceAll("-\\d{4}-\\d{2}-\\d{2}-\\d{2}：\\d{2}：\\d{2}","");
 		Sheet sheet = workbook.createSheet(sheetName);
 		sheet = generateExpertationHeader(dataSource,product, sheet); // 生成表头
 		headerStyleSetup(workbook, 2); // 设置表头样式
