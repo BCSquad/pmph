@@ -122,7 +122,8 @@
 		t.textbook_name bookName,
 		(select CONCAT(pge.display_name,':',pgm.msg_content)msg_content
 		from pmph_group_message pgm LEFT JOIN  pmph_group_member  pge on pgm.member_id=pge.id
-		where pgm.group_id=g.id and pgm.member_id >0 ORDER BY pgm.gmt_create desc LIMIT 0,1) as msg_content
+		where pgm.group_id=g.id and pgm.member_id >0 ORDER BY pgm.gmt_create desc LIMIT 0,1) as msg_content,
+		if(g.gmt_create>IFNULL(g.gmt_last_message,0) ,g.gmt_create,gmt_last_message)as gmtOrder
 		from
 		pmph_group g
 		LEFT
@@ -142,7 +143,7 @@
 		GROUP BY
 		g.id
 		order by
-		gmt_last_message desc , group_name ;
+		gmtOrder desc
 	</select>
 
 	<!-- 查当前用户的小组列表总数 -->
