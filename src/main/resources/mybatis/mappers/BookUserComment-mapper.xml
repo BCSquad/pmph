@@ -212,7 +212,11 @@
 			and c.is_auth = #{parameter.isAuth}
 		</if>
 		ORDER BY c.is_auth,c.gmt_create DESC
-		LIMIT #{start},#{pageSize}
+		<if test="start != null and pageSize != null">
+			LIMIT #{start},#{pageSize}
+		</if>
+
+
 	</select>
 	<!-- 查询评论总数 -->
 	<select id="getBookUserCommentTotal" parameterType="PageParameter"

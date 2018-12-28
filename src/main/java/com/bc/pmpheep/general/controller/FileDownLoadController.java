@@ -111,6 +111,8 @@ public class FileDownLoadController {
 	MaterialOrgService materialOrgService;
 	@Resource
 	MaterialSurveyDao materialSurveyDao;
+    @Autowired
+    BookUserCommentService bookUserCommentService;
 
 	@Autowired
 	BookCorrectionService bookCorrectionService;
@@ -472,8 +474,8 @@ public class FileDownLoadController {
 	 * Description:导出图书纠错审核信息
 	 *
 	 */
-	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "图书评论")
-	@RequestMapping(value = "/bookCorrection/exportComments", method = RequestMethod.GET)
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "文章评论")
+	@RequestMapping(value = "/article/exportComments", method = RequestMethod.GET)
 	public void exportComments(HttpServletRequest request, HttpServletResponse response, CmsContentVO cmsContentVO) {
 		cmsContentVO.setCategoryId(Const.CMS_CATEGORY_ID_0);
 		String title = cmsContentVO.getTitle();
@@ -513,12 +515,12 @@ public class FileDownLoadController {
 			list.add(new CmsContentVO());
 		}
 		try {
-			workbook = excelHelper.fromBusinessObjectList(list, "图书评论");
+			workbook = excelHelper.fromBusinessObjectList(list, "文章评论");
 
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");
 		}
-		String fileName = returnFileName(request,"图书评论.xls");
+		String fileName = returnFileName(request,"文章评论.xls");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
@@ -532,6 +534,62 @@ public class FileDownLoadController {
 					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
 		}
 	}
+
+
+    /**
+     *
+     * Description:导出图书纠错审核信息
+     *
+
+     */
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出图书评论")
+    @RequestMapping(value = "/book/commet/exportExcel", method = RequestMethod.GET)
+    public void bookCommet(HttpServletRequest request, HttpServletResponse response,  String name, Integer isAuth, Boolean isLong) {
+
+        PageParameter<BookUserCommentVO> pageParameter = new PageParameter<>();
+        BookUserCommentVO bookUserCommentVO = new BookUserCommentVO();
+        bookUserCommentVO.setIsAuth(isAuth);
+        bookUserCommentVO.setName(name.trim());// name.replaceAll(" ", "")去除空格
+        bookUserCommentVO.setIsLong(isLong);
+        pageParameter.setParameter(bookUserCommentVO);
+        pageParameter.setStart(null);
+
+        List<BookUserCommentVO> list = bookUserCommentService.listBookUserComment(pageParameter).getRows();
+        String[] stateStrArr = new String[]{"待审核","已通过","不通过"};
+        for (BookUserCommentVO b:list) {
+            b.setState(stateStrArr[b.getIsAuth()!=null&&b.getIsAuth()>=0&&b.getIsAuth()<=2?b.getIsAuth():0]);
+
+        }
+
+        Workbook workbook = null;
+        if (list.size() == 0) {
+            list.add(new BookUserCommentVO());
+        }
+        try {
+            workbook = excelHelper.fromBusinessObjectList(list, "图书评论");
+
+        } catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+            logger.warn("数据表格化的时候失败");
+        }
+        String fileName = returnFileName(request,"图书评论.xls");
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("application/force-download");
+        response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+        try (OutputStream out = response.getOutputStream()) {
+            workbook.write(out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            logger.warn("文件下载时出现IO异常： {}", e.getMessage());
+            throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+                    CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+        }
+    }
+
+
+
+
+
 	/**
 	 * 导出临床决策-申报列表
 	 * @param request
