@@ -20,10 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.bc.pmpheep.back.dao.CmsContentDao;
-import com.bc.pmpheep.back.dao.ExpertationDao;
-import com.bc.pmpheep.back.dao.MaterialSurveyDao;
-import com.bc.pmpheep.back.dao.ProductDao;
+import com.bc.pmpheep.back.dao.*;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.service.*;
 import com.bc.pmpheep.back.vo.*;
@@ -147,6 +144,9 @@ public class FileDownLoadController {
 
 	@Autowired
 	CmsContentDao cmsContentDao;
+
+	@Autowired
+	private PmphGroupMemberService pmphGroupMemberService;
 
 	/**
 	 * 普通文件下载
@@ -342,6 +342,52 @@ public class FileDownLoadController {
 					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
 		}
 	}
+
+	/**
+	 *
+	 * Description:导出小组成员
+	 *
+	 */
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出小组成员")
+	@RequestMapping(value = "/groupMembers/exportExcel", method = RequestMethod.GET)
+	public void groupMembersExportExcel(HttpServletRequest request, HttpServletResponse response, String name,
+							   Long groupId,String groupName) {
+		//Boolean result = null;
+		PageParameter<PmphGroupMemberManagerVO> pageParameter = new PageParameter<>();
+		pageParameter.setStart(null);
+		PmphGroupMemberManagerVO pmphGroupMemberManagerVO = new PmphGroupMemberManagerVO();
+		pmphGroupMemberManagerVO.setName(name);
+		pmphGroupMemberManagerVO.setGroupId(groupId);
+		pageParameter.setParameter(pmphGroupMemberManagerVO);
+
+		List<PmphGroupMemberManagerVO> list = pmphGroupMemberService.listGroupMemberManagerVOs(pageParameter).getRows();
+
+		Workbook workbook = null;
+		if (list.size() == 0) {
+			list.add(new PmphGroupMemberManagerVO());
+		}
+		try {
+			workbook = excelHelper.fromBusinessObjectList(list, "小组成员信息");
+
+		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+			logger.warn("数据表格化的时候失败");
+		}
+		String fileName = returnFileName(request,groupName+"-小组成员信息.xls");
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		try (OutputStream out = response.getOutputStream()) {
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常： {}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
+
+
 	/**
 	 *
 	 * Description:导出审核管理员信息
@@ -425,7 +471,6 @@ public class FileDownLoadController {
 	 *
 	 * Description:导出图书纠错审核信息
 	 *
-
 	 */
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "图书评论")
 	@RequestMapping(value = "/bookCorrection/exportComments", method = RequestMethod.GET)
