@@ -62,7 +62,10 @@
 	<!--CmsManualVO模糊查询获取帮助列表 -->
 	<select id="listCmsManual" parameterType="PageParameter" resultType="CmsManualVO">
 		SELECT 
-			cm.`id`,cm.`manual_name`,cm.`attachment`,cm.`note`,cm.`user_id`,cm.`gmt_create`,pu.`realname` username,t.count
+			cm.`id`,cm.`manual_name`,cm.`attachment`,cm.`note`,cm.`user_id`,cm.`gmt_create`
+			,pu.`realname`
+			,pu.`username`
+			,t.count
 		FROM 
 			`cms_manual`cm
 		LEFT JOIN
@@ -105,8 +108,8 @@
 						</if>
 				</if>
 			</where>
-		order by 
-   				  cm.`gmt_create` DESC 
+		order by
+			cm.`manual_name`,cm.`gmt_create` DESC
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>

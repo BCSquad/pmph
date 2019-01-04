@@ -751,7 +751,7 @@
 		ORDER BY
 		t1.gmt_create DESC,
 		m.actual_deadline DESC
-		<if test="pageSize != null">
+		<if test="start !=null and pageSize != null">
 			LIMIT #{start} , #{pageSize}
 		</if>
 	</select>
@@ -876,7 +876,7 @@
 		ORDER BY
 		t1.gmt_create DESC,
 		m.actual_deadline DESC
-		<if test="pageSize != null">
+		<if test="start != null and pageSize != null">
 			LIMIT #{start} , #{pageSize}
 		</if>
 	</select>
@@ -1017,7 +1017,7 @@
 		ORDER BY
 		t1.gmt_create DESC,
 		m.gmt_create DESC
-		<if test="pageSize != null">
+		<if test="start != null and pageSize != null">
 			LIMIT #{start} , #{pageSize}
 		</if>
 	</select>
@@ -1124,7 +1124,7 @@
 		ORDER BY
 		t1.gmt_create DESC,
 		m.gmt_create DESC
-		<if test="pageSize != null">
+		<if test="start != null and pageSize != null">
 			LIMIT #{start} , #{pageSize}
 		</if>
 	</select>

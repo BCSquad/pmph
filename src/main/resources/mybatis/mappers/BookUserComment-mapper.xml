@@ -193,7 +193,7 @@
 		SELECT
 		c.*, b.bookname,
 		b.isbn,
-		u.realname writerName
+		u.username writerName
 		FROM
 		book_user_comment c
 		LEFT

@@ -113,6 +113,8 @@ public class FileDownLoadController {
 	MaterialSurveyDao materialSurveyDao;
     @Autowired
     BookUserCommentService bookUserCommentService;
+	@Autowired
+	CmsContentService           cmsContentService;
 
 	@Autowired
 	BookCorrectionService bookCorrectionService;
@@ -128,6 +130,8 @@ public class FileDownLoadController {
 	ExpertationDao expertationDao;
 	@Autowired
 	ExpertationService expertationService;
+	@Autowired
+	WriterPointService writerPointService;
 
 	// 当前业务类型
 	private static final String BUSSINESS_TYPE = "文件下载";
@@ -389,6 +393,90 @@ public class FileDownLoadController {
 		}
 	}
 
+	/**
+	 *
+	 * Description:导出信息快报
+	 *
+	 */
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出信息快报")
+	@RequestMapping(value = "/infoExpress/exportExcel", method = RequestMethod.GET)
+	public void infoExpressExportExcel(HttpServletRequest request, HttpServletResponse response,CmsContentVO cmsContentVO) {
+		//Boolean result = null;
+		PageParameter<CmsContentVO> pageParameter = new PageParameter<>();
+		pageParameter.setStart(null);
+		cmsContentVO.setCategoryId(Const.CMS_CATEGORY_ID_2);
+		String sessionId = CookiesUtil.getSessionId(request);
+		pageParameter.setParameter(cmsContentVO);
+		//DONE CmsContentVO 的header被文章导出占了 需要设法解决
+		//ExcelHeader注解，新加alias_0属性替代header，不优雅，但是注解不支持集合，只支持基本类型
+		List<CmsContentVO> list = cmsContentService.listCmsContent(pageParameter, sessionId).getRows();
+
+		Workbook workbook = null;
+		if (list.size() == 0) {
+			list.add(new CmsContentVO());
+		}
+		try {
+			workbook = excelHelper.fromBusinessObjectList(list, "信息快报","0");
+
+		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+			logger.warn("数据表格化的时候失败");
+		}
+		String fileName = returnFileName(request,"信息快报.xls");
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		try (OutputStream out = response.getOutputStream()) {
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常： {}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
+
+	/**
+	 *
+	 * Description:导出文章
+	 *
+	 */
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出文章")
+	@RequestMapping(value = "/articel/exportExcel", method = RequestMethod.GET)
+	public void articelExportExcel(HttpServletRequest request, HttpServletResponse response,CmsContentVO cmsContentVO) {
+		//Boolean result = null;
+		PageParameter<CmsContentVO> pageParameter = new PageParameter<>();
+		pageParameter.setStart(null);
+		cmsContentVO.setCategoryId(Const.CMS_CATEGORY_ID_1);
+		String sessionId = CookiesUtil.getSessionId(request);
+		pageParameter.setParameter(cmsContentVO);
+
+		List<CmsContentVO> list = cmsContentService.listCmsContent(pageParameter, sessionId).getRows();
+
+		Workbook workbook = null;
+		if (list.size() == 0) {
+			list.add(new CmsContentVO());
+		}
+		try {
+			workbook = excelHelper.fromBusinessObjectList(list, "文章","1");
+
+		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+			logger.warn("数据表格化的时候失败");
+		}
+		String fileName = returnFileName(request,"文章.xls");
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		try (OutputStream out = response.getOutputStream()) {
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常： {}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
 
 	/**
 	 *
@@ -454,7 +542,7 @@ public class FileDownLoadController {
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");
 		}
-		String fileName = returnFileName(request,"图书纠错审核信息.xls");
+		String fileName = returnFileName(request,"图书纠错审核信息-" + DateUtil.date2Str(new Date(),"yyyy-MM-dd-HH：mm：ss")+".xls");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
@@ -505,8 +593,8 @@ public class FileDownLoadController {
 		List<CmsContentVO> list = cmsContentDao.listCmsComment(pageParameter);
 		String[] authStatusName = new String[]{"待审核","未通过","已通过"};
 		for(CmsContentVO cmsContentVO1:list){
-			cmsContentVO1.setAuthDateS(DateUtil.formatTimeStamp("yyyy-MM-dd",cmsContentVO1.getAuthDate()));
-			cmsContentVO1.setGmtCreateS(DateUtil.formatTimeStamp("yyyy-MM-dd",cmsContentVO1.getGmtCreate()));
+			//cmsContentVO1.setAuthDateS(DateUtil.formatTimeStamp("yyyy-MM-dd",cmsContentVO1.getAuthDate()));
+			//cmsContentVO1.setGmtCreateS(DateUtil.formatTimeStamp("yyyy-MM-dd",cmsContentVO1.getGmtCreate()));
 			cmsContentVO1.setAuthStatusName(authStatusName[cmsContentVO1.getAuthStatus()]);
 		}
 
@@ -538,7 +626,7 @@ public class FileDownLoadController {
 
     /**
      *
-     * Description:导出图书纠错审核信息
+     * Description:导出图书评论
      *
 
      */
@@ -587,8 +675,92 @@ public class FileDownLoadController {
     }
 
 
+	/**
+	 *
+	 * Description:导出用户积分
+	 *
+	 */
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出用户积分")
+	@RequestMapping(value = "/userPoint/exportExcel", method = RequestMethod.GET)
+	public void userPointExportExcel(HttpServletRequest request, HttpServletResponse response,  String username, String realname,String sessionId) {
+
+		PageParameter<WriterPointVO> pageParameter = new PageParameter<>();
+		WriterPointVO writerPointVO = new WriterPointVO();
+		writerPointVO.setRealname(realname);
+		writerPointVO.setUsername(username);
+		pageParameter.setParameter(writerPointVO);
+		pageParameter.setStart(null);
+
+		List<WriterPointVO> list = writerPointService.getListWriterPoint(pageParameter).getRows();
+
+		Workbook workbook = null;
+		if (list.size() == 0) {
+			list.add(new WriterPointVO());
+		}
+		try {
+			workbook = excelHelper.fromBusinessObjectList(list, "用户积分");
+
+		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+			logger.warn("数据表格化的时候失败");
+		}
+		String fileName = returnFileName(request,"用户积分.xls");
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		try (OutputStream out = response.getOutputStream()) {
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常： {}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
 
 
+
+	/**
+	 *
+	 * Description:教材导出
+	 *
+	 */
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "教材导出")
+	@RequestMapping(value = "/material/exportExcel", method = RequestMethod.GET)
+	public void materialExportExcel(HttpServletRequest request, HttpServletResponse response
+									,MaterialListVO materialListVO) {
+		PageParameter<MaterialListVO> pageParameter = new PageParameter<>();
+		pageParameter.setParameter(materialListVO);
+		pageParameter.setStart(null);
+		String sessionId = CookiesUtil.getSessionId(request);
+		List<MaterialListVO> list = materialService.listMaterials(pageParameter, sessionId).getRows();
+
+
+
+		Workbook workbook = null;
+		if (list.size() == 0) {
+			list.add(new MaterialListVO());
+		}
+		try {
+			workbook = excelHelper.fromBusinessObjectList(list, "教材申报");
+
+		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+			logger.warn("数据表格化的时候失败");
+		}
+		String fileName = returnFileName(request,"教材申报.xls");
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		try (OutputStream out = response.getOutputStream()) {
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常： {}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
 
 	/**
 	 * 导出临床决策-申报列表

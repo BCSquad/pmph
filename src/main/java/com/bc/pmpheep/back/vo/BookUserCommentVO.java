@@ -38,6 +38,11 @@ public class BookUserCommentVO implements Serializable {
 	 */
 	private Boolean isLong;
 	/**
+	 * 用户名称
+	 */
+	@ExcelHeader(header = "用户名")
+	private String writerName;
+	/**
 	 * 书籍名称
 	 */
 	@ExcelHeader(header = "书籍名称")
@@ -64,10 +69,7 @@ public class BookUserCommentVO implements Serializable {
 	 * 用户id
 	 */
 	private Long writerId;
-	/**
-	 * 用户名称
-	 */
-	private String writerName;
+
 	/**
 	 * 评分
 	 */

@@ -4,11 +4,15 @@
  */
 package com.bc.pmpheep.annotation;
 
+import com.bc.pmpheep.back.util.Const;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Excel表头注解
@@ -18,10 +22,15 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 @Documented
-public @interface ExcelHeader {
+public @interface  ExcelHeader {
 
     String header() default "";
     String cellType() default "";
+
+    String alias_0() default "";
+    String alias_1() default "";
+    String alias_2() default "";
+    String alias_3() default "";
 
     int headerTotalLevel() default 1;
     String usedPropertyName() default "";

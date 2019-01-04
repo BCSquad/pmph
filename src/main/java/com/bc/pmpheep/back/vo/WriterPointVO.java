@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.vo;
 
+import com.bc.pmpheep.annotation.ExcelHeader;
 import org.apache.ibatis.type.Alias;
 
 /**
@@ -15,20 +16,25 @@ public class WriterPointVO implements java.io.Serializable{
 	private Long id;
 	//用户id
 	private Long userId;
-	//当前总积分
-	private Integer total;
-	//获取积分合计
-	private Integer gain;
+	//真实姓名
+	@ExcelHeader(header = "用户姓名")
+	private String realname;
+	//用户名
+	@ExcelHeader(header = "用户账号")
+	private String username;
 	//消费积分合计
-	private Integer loss;    
+	@ExcelHeader(header = "兑换总积分")
+	private Integer loss;
+	//获取积分合计
+	@ExcelHeader(header = "获得总积分")
+	private Integer gain;
+	//当前总积分
+	@ExcelHeader(header = "当前总积分")
+	private Integer total;
 	//条件分页总条数分页查询
     private Integer count;
     //页面查询条件（状态）
     private Integer status;
-	//用户名
-    private String username;
-    //真实姓名
-    private String realname;
 	
 	//构造器
 	public WriterPointVO(){
