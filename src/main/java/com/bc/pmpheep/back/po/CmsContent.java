@@ -107,6 +107,9 @@ public class CmsContent implements java.io.Serializable {
     private String    returnReason;
     //作家姓名
     private String authorname;
+    //是否原创
+    private Boolean isOriginal;
+
 
     // Constructors
 
@@ -150,6 +153,18 @@ public class CmsContent implements java.io.Serializable {
         this.isPublished = isPublished;
         this.isStaging = isStaging;
         this.materialId = materialId;
+    }
+
+    public CmsContent(Long id, Short authStatus, Long authUserId, String authDate,
+                      Boolean isPublished, Boolean isStaging, Long materialId,Boolean isOriginal) {
+        this.id = id;
+        this.authStatus = authStatus;
+        this.authUserId = authUserId;
+        this.authDate = authDate;
+        this.isPublished = isPublished;
+        this.isStaging = isStaging;
+        this.materialId = materialId;
+        this.isOriginal = isOriginal;
     }
 
     public CmsContent(Long id, Long parentId, String path, String gmtReedit, Long materialId) {
@@ -668,5 +683,13 @@ public class CmsContent implements java.io.Serializable {
 
     public void setApporpc(int apporpc) {
         this.apporpc = apporpc;
+    }
+
+    public Boolean getIsOriginal() {
+        return isOriginal;
+    }
+
+    public void setIsOriginal(Boolean original) {
+        isOriginal = original;
     }
 }

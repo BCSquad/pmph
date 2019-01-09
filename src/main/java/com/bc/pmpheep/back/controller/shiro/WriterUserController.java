@@ -300,4 +300,11 @@ public class WriterUserController {
 	public ResponseBean isTop(Long id,Boolean isTop) {
 		return new ResponseBean<>(writerUserService.isTop(id,isTop));
 	}
+
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "作家用户-专家资料")
+	@RequestMapping(value = "/expertInfo", method = RequestMethod.GET)
+	public ResponseBean expertInfo(Long writerUserId) {
+		return new ResponseBean<Map<String,Object>>(writerUserService.expertInfo(writerUserId));
+	}
 }

@@ -354,6 +354,9 @@
 			<if test="apporpc != null ">
 				apporpc = #{apporpc},
 			</if>
+			<if test="isOriginal != null ">
+				is_original = #{isOriginal},
+			</if>
 
 		</set>
 		where
@@ -408,6 +411,9 @@
 			</if>
 			<if test="materialId != null">
 				material_id=#{materialId},
+			</if>
+			<if test="isOriginal != null">
+				is_original=#{isOriginal},
 			</if>
 		</set>
 		where

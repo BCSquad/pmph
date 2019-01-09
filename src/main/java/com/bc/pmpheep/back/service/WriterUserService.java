@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
@@ -150,7 +151,7 @@ public interface WriterUserService {
 	 * 
 	 * 功能描述：分页查询作家用户
 	 * 
-	 * @param page
+	 * @ page
 	 *            传入的查询条件
 	 * @param groupId
 	 *            不为空时表示在需要关联小组的遴选职位
@@ -178,7 +179,7 @@ public interface WriterUserService {
 	 * 
 	 * @author:lyc
 	 * @date:2017年10月12日下午6:43:33
-	 * @param pageParameter查询条件，若书籍、姓名/账号、遴选职位不为空则为模糊查询
+	 * @ pageParameter查询条件，若书籍、姓名/账号、遴选职位不为空则为模糊查询
 	 * @return PageResult<GroupMemberWriterUserVO>用户信息集合
 	 */
 	PageResult<GroupMemberWriterUserVO> listGroupMemberWriterUsers(PageParameter<GroupMemberWriterUserVO> pageParameter)
@@ -189,7 +190,7 @@ public interface WriterUserService {
 	 * 
 	 * 功能描述：后台添加作家用户
 	 * 
-	 * @param writerUser
+	 * @ writerUser
 	 *            添加的作家用户属性
 	 * @return 返回影响的行数
 	 * @throws CheckedServiceException
@@ -202,7 +203,7 @@ public interface WriterUserService {
 	 * 
 	 * 功能描述：修改作家用户
 	 * 
-	 * @param writerUser
+	 * @ writerUser
 	 *            修改作家用户的属性
 	 * @return 返回影响的行数
 	 * @throws CheckedServiceException
@@ -221,7 +222,7 @@ public interface WriterUserService {
 	/**
 	 * 查询教师认证数量
 	 * 
-	 * @param userid
+	 * @ userid
 	 * @return
 	 */
 	Integer getCount() throws CheckedServiceException;
@@ -279,4 +280,11 @@ public interface WriterUserService {
 	 */
     List<WriterUserManagerVO> exportWriterInfo(String name,
 											   Integer rank,  String orgName,  String handphone, String email);
+
+	/**
+	 * 查询专家资料库
+	 * @param writerUserId
+	 * @return
+	 */
+	Map<String, Object> expertInfo(Long writerUserId);
 }

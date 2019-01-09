@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -324,8 +325,7 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 	 * 
 	 * 功能描述：分页查询作家用户
 	 * 
-	 * 
-	 * @param page
+	 *
 	 *            传入的查询数据
 	 * @return 需要的Page对象
 	 */
@@ -782,6 +782,91 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 	@Override
 	public Integer isTop(Long id, Boolean isTop) {
 		return writerUserDao.isTop(id,isTop);
+	}
+
+	@Override
+	public Map<String, Object> expertInfo(Long writerUserId) {
+
+		Map<String, Object> expertInfoMap = writerUserDao.queryUserInfo(writerUserId);
+		
+		//公用查询条件（用户主键id，但为留扩展性用map包装）
+		Map<String,Object> queryMap = new HashMap<String,Object>();
+		queryMap.put("user_id",writerUserId);
+
+		//3.作家学习经历表
+		List<Map<String,Object>> learnExperience = new ArrayList<Map<String,Object>>();
+		//4.作家工作经历表
+		List<Map<String,Object>> workExperience = new ArrayList<Map<String,Object>>();
+		//5.作家教学经历表
+		List<Map<String,Object>> teachExperience = new ArrayList<Map<String,Object>>();
+		//6.作家兼职学术表
+		List<Map<String,Object>> academicExperience = new ArrayList<Map<String,Object>>();
+		//7.作家上套教材参编情况表
+		List<Map<String,Object>> lastPositionList = new ArrayList<Map<String,Object>>();
+		//8.作家精品课程建设情况表
+		List<Map<String,Object>> decCourseConstruction = new ArrayList<Map<String,Object>>();
+		//9.作家主编国家级规划教材情况表
+		List<Map<String,Object>> nationalPlan = new ArrayList<Map<String,Object>>();
+		//10.其他社教材编写情况
+		List<Map<String,Object>> decTextbookList = new ArrayList<Map<String,Object>>();
+		//11.作家科研情况表
+		List<Map<String,Object>> researchData = new ArrayList<Map<String,Object>>();
+		//13.个人成就
+		Map<String,Object> personalAchievements = new HashMap<String,Object>();
+		//14.主编学术专著情况表
+		List<Map<String,Object>> perMonograph = new ArrayList<Map<String,Object>>();
+		//15.出版行业获奖情况表
+		List<Map<String,Object>> publish_reward = new ArrayList<Map<String,Object>>();
+		//16.SCI论文投稿及影响因子情况表
+		List<Map<String,Object>> sci = new ArrayList<Map<String,Object>>();
+		//17.临床医学获奖情况表
+		List<Map<String,Object>> clinical_reward = new ArrayList<Map<String,Object>>();
+		//18.学术荣誉授予情况表
+		List<Map<String,Object>> acade_reward = new ArrayList<Map<String,Object>>();
+		//19.人卫社教材编写情况表
+		List<Map<String,Object>> decTextbookPmphList = new ArrayList<Map<String,Object>>();
+		//20.参加人卫慕课、数字教材编写情况
+		Map<String,Object> decMoocDigital = new HashMap<>();
+
+		//个人资料库信息
+		learnExperience = writerUserDao.queryPerStu(queryMap);
+		workExperience= writerUserDao.queryPerWork(queryMap);
+		teachExperience=writerUserDao.queryPerStea(queryMap);
+		academicExperience=writerUserDao.queryPerZjxs(queryMap);
+		lastPositionList=writerUserDao.queryPerJcbj(queryMap);
+		decCourseConstruction=writerUserDao.queryPerGjkcjs(queryMap);
+		nationalPlan=writerUserDao.queryPerGjghjc(queryMap);
+		decTextbookList=writerUserDao.queryPerJcbx(queryMap);
+		researchData=writerUserDao.queryPerZjkyqk(queryMap);
+		perMonograph=writerUserDao.queryPerMonograph(queryMap);
+		publish_reward=writerUserDao.queryPerPublish(queryMap);
+		sci=writerUserDao.queryPerSci(queryMap);
+		clinical_reward=writerUserDao.queryPerClinicalreward(queryMap);
+		acade_reward=writerUserDao.queryPerAcadereward(queryMap);
+		decTextbookPmphList=writerUserDao.queryPerRwsjc(queryMap);
+		personalAchievements=writerUserDao.queryPerAchievement(queryMap);
+
+
+		expertInfoMap.put("learnExperience",learnExperience);
+		expertInfoMap.put("workExperience",workExperience);
+		expertInfoMap.put("teachExperience",teachExperience);
+		expertInfoMap.put("academicExperience",academicExperience);
+		expertInfoMap.put("personalAchievements",personalAchievements);
+
+		expertInfoMap.put("lastPositionList",lastPositionList);
+		expertInfoMap.put("decCourseConstruction",decCourseConstruction);
+		expertInfoMap.put("nationalPlan",nationalPlan);
+		expertInfoMap.put("decTextbookList",decTextbookList);
+		expertInfoMap.put("researchData",researchData);
+		expertInfoMap.put("perMonograph",perMonograph);
+		expertInfoMap.put("decMoocDigital",decMoocDigital);
+		expertInfoMap.put("publish_reward",publish_reward);
+		expertInfoMap.put("clinical_reward",clinical_reward);
+		expertInfoMap.put("acade_reward",acade_reward);
+		expertInfoMap.put("sci",sci);
+		expertInfoMap.put("decTextbookPmphList",decTextbookPmphList);
+
+		return expertInfoMap;
 	}
 
 
