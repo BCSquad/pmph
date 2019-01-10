@@ -28,7 +28,7 @@ public class SearchKeywordServiceImpl extends BaseService implements SearchKeywo
 		}
 		if (SearchKeyword.getWord().length() > 10) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.SearchKeyword, CheckedExceptionResult.ILLEGAL_PARAM,
-					"敏感词太长了，请控制在10个字以内");
+					"关键词太长了，请控制在10个字以内");
 		}
 		if (!StringUtil.isEmpty(SearchKeyword.getNote())) {
 			if (SearchKeyword.getNote().length() > 100) {
@@ -41,7 +41,7 @@ public class SearchKeywordServiceImpl extends BaseService implements SearchKeywo
 		SearchKeyword sen = SearchKeywordDao.getSearchKeywordId(SearchKeyword.getWord());
 		if (ObjectUtil.notNull(sen)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.SearchKeyword, CheckedExceptionResult.ILLEGAL_PARAM,
-					"已经有该敏感词了。");
+					"已经有该关键词了。");
 		} else {
 			SearchKeywordDao.add(SearchKeyword);
 		}
@@ -52,7 +52,7 @@ public class SearchKeywordServiceImpl extends BaseService implements SearchKeywo
 	public String update(SearchKeyword SearchKeyword) throws CheckedServiceException {
 		if (ObjectUtil.isNull(SearchKeyword.getId())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.SearchKeyword, CheckedExceptionResult.NULL_PARAM,
-					"需要修改的敏感词id为空");
+					"需要修改的关键词id为空");
 		}
 		if (StringUtil.notEmpty(SearchKeyword.getNote())) {
 			if (SearchKeyword.getNote().length() > 100) {
@@ -66,14 +66,14 @@ public class SearchKeywordServiceImpl extends BaseService implements SearchKeywo
 		if (StringUtil.notEmpty(SearchKeyword.getWord())) {
 			if (SearchKeyword.getWord().length() > 10) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.SearchKeyword,
-						CheckedExceptionResult.ILLEGAL_PARAM, "敏感词太长了，请控制在10个字以内");
+						CheckedExceptionResult.ILLEGAL_PARAM, "关键词太长了，请控制在10个字以内");
 			}
 			SearchKeyword sen = SearchKeywordDao.getSearchKeywordId(SearchKeyword.getWord());
 			if (ObjectUtil.notNull(sen)) {
 				Long id = sen.getId();
 				if (null != id && !SearchKeyword.getId().equals(id)) {
 					throw new CheckedServiceException(CheckedExceptionBusiness.SearchKeyword,
-							CheckedExceptionResult.ILLEGAL_PARAM, "修改的敏感词重复了");
+							CheckedExceptionResult.ILLEGAL_PARAM, "修改的关键词重复了");
 				}
 			}
 		}
@@ -101,7 +101,7 @@ public class SearchKeywordServiceImpl extends BaseService implements SearchKeywo
 	public String deletedIsDeleted(Long[] id) throws CheckedServiceException {
 		if (ArrayUtil.isEmpty(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.SearchKeyword, CheckedExceptionResult.NULL_PARAM,
-					"没有找到需要删除的敏感词");
+					"没有找到需要删除的关键词");
 		}
 		String result = "FAIL";
 		Integer total = SearchKeywordDao.deletedIsDeleted(id);

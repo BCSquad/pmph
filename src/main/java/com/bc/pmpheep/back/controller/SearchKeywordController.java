@@ -19,19 +19,19 @@ public class SearchKeywordController {
 	SearchKeywordService SearchKeywordService;
 
 	// 当前业务类型
-	private static final String BUSSINESS_TYPE = "敏感词";
+	private static final String BUSSINESS_TYPE = "搜索关键词";
 
 	/**
 	 * 
 	 * 
-	 * 功能描述：添加一个敏感词
+	 * 功能描述：添加一个搜索关键词
 	 *
 	 * @param SearchKeyword
 	 * @return
 	 *
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "添加一个敏感词")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "添加一个搜索关键词")
 	@ResponseBody
 	public ResponseBean add(SearchKeyword SearchKeyword) {
 		return new ResponseBean(SearchKeywordService.add(SearchKeyword));
@@ -40,14 +40,14 @@ public class SearchKeywordController {
 	/**
 	 * 
 	 * 
-	 * 功能描述：修改敏感词
+	 * 功能描述：修改搜索关键词
 	 *
 	 * @param SearchKeyword
 	 * @return
 	 *
 	 */
 	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改敏感词")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改搜索关键词")
 	@RequestMapping(value = "/update", method = RequestMethod.PUT)
 	public ResponseBean update(SearchKeyword SearchKeyword) {
 		return new ResponseBean(SearchKeywordService.update(SearchKeyword));
@@ -56,14 +56,14 @@ public class SearchKeywordController {
 	/**
 	 * 
 	 * 
-	 * 功能描述：删除敏感词
+	 * 功能描述：删除搜索关键词
 	 *
 	 * @param ids
 	 * @return
 	 *
 	 */
 	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除敏感词")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除搜索关键词")
 	@RequestMapping(value = "/isDeleted", method = RequestMethod.DELETE)
 	public ResponseBean isDeleted(Long[] ids) {
 		return new ResponseBean(SearchKeywordService.deletedIsDeleted(ids));
@@ -73,7 +73,7 @@ public class SearchKeywordController {
 	/**
 	 * 
 	 * 
-	 * 功能描述：分页查询敏感词
+	 * 功能描述：分页查询搜索关键词
 	 *
 	 * @param word
 	 * @param pageSize
@@ -82,7 +82,7 @@ public class SearchKeywordController {
 	 *
 	 */
 	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "分页查询敏感词")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "分页查询搜索关键词")
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ResponseBean list(String word, Integer pageSize, Integer pageNumber) {
 		PageParameter<SearchKeyword> pageParameter = new PageParameter<>(pageNumber, pageSize);
