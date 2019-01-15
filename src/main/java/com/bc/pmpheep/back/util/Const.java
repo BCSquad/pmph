@@ -249,4 +249,6 @@ public class Const {
 	public static final Integer WRITER_USER_TRENDST_TYPE_5 = 5;
 	public static final Integer WRITER_USER_TRENDST_TYPE_6 = 6;
 	public static final Integer WRITER_USER_TRENDST_TYPE_7 = 7;
+
+	public static final String[] TOPIC_TYPES = new String[]{"专著","基础理论","论文集","科普","应用技术","工具书","其他"};
 }

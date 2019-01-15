@@ -462,8 +462,15 @@ AND t.is_withdraw = 1;
 		ou.id = m.sender_id
 		WHERE
 		m.is_deleted = 0
-		AND
-		m.msg_type = 1 and m.material_id = 0
+		<choose>
+			<when test="parameter.manualOnly != null and parameter.manualOnly == true ">
+				and m.msg_type = 1
+			</when>
+			<otherwise>
+				and m.msg_type in(0,1)
+			</otherwise>
+		</choose>
+		and m.material_id = 0
 		<if test="parameter.senderIds != null">
 			AND
 			m.sender_id in
@@ -483,7 +490,7 @@ AND t.is_withdraw = 1;
 		m.sender_id,
 		m.title
 		ORDER BY
-		m.`gmt_create` DESC)t where t.sendName is not null
+		m.`gmt_create` DESC)t -- where t.sendName is not null
 	</select>
 	<select id="listMessage" parameterType="PageParameter"
 		resultType="UserMessageVO">
@@ -499,7 +506,7 @@ AND t.is_withdraw = 1;
 		 (
 			    CASE
 			      WHEN m.`sender_type` = 0 ||m.`sender_type` = 1
-			      THEN u.realname 
+			      THEN ifNull(u.realname ,'系统')
 			      WHEN m.`sender_type` = 2 
 			      THEN wu.`realname` 
 			      WHEN m.`sender_type` = 3 
@@ -521,8 +528,15 @@ AND t.is_withdraw = 1;
 		ou.id = m.sender_id
 		WHERE
 		m.is_deleted = 0
-		AND
-		m.msg_type = 1 and m.material_id = 0
+		<choose>
+			<when test="parameter.manualOnly != null and parameter.manualOnly == true ">
+				and m.msg_type = 1
+			</when>
+			<otherwise>
+				and m.msg_type in(0,1)
+			</otherwise>
+		</choose>
+		and m.material_id = 0
 		<if test="parameter.senderIds != null">
 			AND
 			m.sender_id in
@@ -542,7 +556,7 @@ AND t.is_withdraw = 1;
 		m.sender_id,
 		m.title
 		ORDER BY
-		m.`gmt_create` DESC)t where t.sendName is not null
+		m.`gmt_create` DESC)t -- where t.sendName is not null
 		LIMIT
 		#{start},#{pageSize}
 	</select>

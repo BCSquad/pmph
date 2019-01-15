@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -132,6 +133,8 @@ public class FileDownLoadController {
 	ExpertationService expertationService;
 	@Autowired
 	WriterPointService writerPointService;
+	@Autowired
+	TopicService topicService;
 
 	// 当前业务类型
 	private static final String BUSSINESS_TYPE = "文件下载";
@@ -704,6 +707,98 @@ public class FileDownLoadController {
 			logger.warn("数据表格化的时候失败");
 		}
 		String fileName = returnFileName(request,"用户积分.xls");
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		try (OutputStream out = response.getOutputStream()) {
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常： {}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
+
+	/**
+	 *
+	 * Description:导出选题申报
+	 *
+	 */
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出选题申报")
+	@RequestMapping(value = "/topic/{topicTag}/exportExcel", method = RequestMethod.GET)
+	public void topicExcel(HttpServletRequest request, HttpServletResponse response, @PathVariable(value = "topicTag")String topicTag,
+						   String bookname,
+						   String submitTime1, String submitTime2,
+						   String authProgress) {
+		String sessionId = CookiesUtil.getSessionId(request);
+		PageParameter pageParameter = new PageParameter();
+		pageParameter.setStart(null);
+		String fileName = "选题申报";
+		List list = new ArrayList<>();
+		if(StringUtil.isEmpty(topicTag)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC,CheckedExceptionResult.NULL_PARAM,"无此类型选题");
+		}else if("forwardDepart".equals(topicTag)){
+			fileName = fileName + "-转发部门";
+			TopicOPtsManagerVO topicOPtsManagerVO = new TopicOPtsManagerVO();
+			topicOPtsManagerVO.setBookname(bookname);
+			topicOPtsManagerVO.setSubmitTime1(StringUtil.isEmpty(submitTime1)?null:DateUtil.str2Timestam(submitTime1));
+			topicOPtsManagerVO.setSubmitTime2(StringUtil.isEmpty(submitTime2)?null:DateUtil.str2Timestam(submitTime2));
+			pageParameter.setParameter(topicOPtsManagerVO);
+			list = topicService.listOpts(sessionId, pageParameter).getRows();
+			if (list.size() == 0) {
+				list.add(new TopicOPtsManagerVO());
+			}
+		}else if("distributeEditor".equals(topicTag)){
+			fileName = fileName + "-分配编辑";
+			TopicDirectorVO topicDirectorVO = new TopicDirectorVO();
+			topicDirectorVO.setBookname(bookname);
+			topicDirectorVO.setSubmitTime1(StringUtil.isEmpty(submitTime1)?null:DateUtil.str2Timestam(submitTime1));
+			topicDirectorVO.setSubmitTime2(StringUtil.isEmpty(submitTime2)?null:DateUtil.str2Timestam(submitTime2));
+			pageParameter.setParameter(topicDirectorVO);
+			list = topicService.listTopicDirectorVOs(sessionId, pageParameter).getRows();
+			if (list.size() == 0) {
+				list.add(new TopicDirectorVO());
+			}
+		}else if("acceptance".equals(topicTag)){
+			fileName = fileName + "-受理";
+			TopicEditorVO topicEditorVO = new TopicEditorVO();
+			topicEditorVO.setBookname(bookname);
+			topicEditorVO.setSubmitTime1(StringUtil.isEmpty(submitTime1)?null:DateUtil.str2Timestam(submitTime1));
+			topicEditorVO.setSubmitTime2(StringUtil.isEmpty(submitTime2)?null:DateUtil.str2Timestam(submitTime2));
+			pageParameter.setParameter(topicEditorVO);
+			list = topicService.listTopicEditorVOs(sessionId, pageParameter).getRows();
+			if (list.size() == 0) {
+				list.add(new TopicEditorVO());
+			}
+		}else if("submitApply".equals(topicTag)||"completedApply".equals(topicTag)){
+			fileName = fileName + ("submitApply".equals(topicTag)?"-已提交的申报":"-已完成的申报");
+			TopicDeclarationVO topicDeclarationVO = new TopicDeclarationVO();
+			topicDeclarationVO.setBookname(bookname);
+			topicDeclarationVO.setSubmitTime1(StringUtil.isEmpty(submitTime1)?null:DateUtil.str2Timestam(submitTime1));
+			topicDeclarationVO.setSubmitTime2(StringUtil.isEmpty(submitTime2)?null:DateUtil.str2Timestam(submitTime2));
+			pageParameter.setParameter(topicDeclarationVO);
+			String[] strs = authProgress.split(",");
+			List<Long> progress = new ArrayList<>();
+			for (String str : strs) {
+				progress.add(Long.valueOf(str));
+			}
+			list = topicService.listCheckTopic(progress, pageParameter,sessionId).getRows();
+			if (list.size() == 0) {
+				list.add(new TopicDeclarationVO());
+			}
+		}
+
+		Workbook workbook = null;
+
+		try {
+			workbook = excelHelper.fromBusinessObjectList(list, fileName);
+
+		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+			logger.warn("数据表格化的时候失败");
+		}
+		fileName = returnFileName(request,fileName+".xls");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
