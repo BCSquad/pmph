@@ -507,9 +507,27 @@
 							<if test="parameter.title != null and parameter.title != ''">
 								AND cc.`title` like concat('%',#{parameter.title},'%')
 							</if>
-							<if test="parameter.authStatus !=null ">
-								AND cc.`auth_status` = #{parameter.authStatus}
-							</if>
+					<if test="parameter.authStatus !=null ">
+						and
+						<if test=" parameter.authStatus == 0 ">
+							cc.`auth_status` = 0 and cc.author_type =2
+						</if>
+						<if test=" parameter.authStatus == 5 ">
+							cc.`auth_status` = 0 and cc.is_staging= 1
+						</if>
+						<if test=" parameter.authStatus == 1 ">
+							cc.`auth_status` = 1  and cc.author_type =2
+						</if>
+						<if test="parameter.authStatus == 2 ">
+							cc.`auth_status` = 2 and cc.author_type =2 and cc.is_published=0
+						</if>
+						<if test="parameter.authStatus == 3 ">
+							cc.`auth_status` = 2 and cc.is_published=1
+						</if>
+						<if test="parameter.authStatus == 4 ">
+							`auth_status` = 2  and cc.is_published=0 and cc.author_type <> 2
+						</if>
+					</if>
 							<if test="parameter.isPublished !=null ">
 								AND cc.`is_published` = #{parameter.isPublished}
 							</if>
@@ -557,8 +575,27 @@
 						AND `title` like concat('%',#{parameter.title},'%')
 					</if>
 					<if test="parameter.authStatus !=null ">
-						AND `auth_status` = #{parameter.authStatus}
+						and
+						<if test=" parameter.authStatus == 0 ">
+							`auth_status` = 0 and author_type =2
+						</if>
+						<if test=" parameter.authStatus == 5 ">
+							`auth_status` = 0 and is_staging= 1
+						</if>
+						<if test=" parameter.authStatus == 1 ">
+							`auth_status` = 1  and author_type =2
+						</if>
+						<if test="parameter.authStatus == 2 ">
+							`auth_status` = 2 and author_type =2 and is_published=0
+						</if>
+						<if test="parameter.authStatus == 3 ">
+							`auth_status` = 2 and is_published=1
+						</if>
+						<if test="parameter.authStatus == 4 ">
+							  is_published=0
+						</if>
 					</if>
+
 					<if test="parameter.isPublished !=null ">
 						AND `is_published` = #{parameter.isPublished}
 					</if>

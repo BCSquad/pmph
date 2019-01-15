@@ -63,10 +63,10 @@ public class CmsAdvertisementController {
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改广告")
 	@RequestMapping(value = "/cmsAdvertisement/update", method = RequestMethod.PUT)
 	public ResponseBean update(CmsAdvertisementOrImageVO cmsAdvertisementOrImageVO,HttpServletRequest request,
-			@RequestParam(name="imageId")Long[] imageId,@RequestParam(name="disable")Long[] disable)
+			@RequestParam(name="imageId")Long[] imageId,@RequestParam(name="disable")Long[] disable,@RequestParam(name="imageJumpUrl")String[] imageJumpUrl)
 			throws CheckedServiceException {
 		String sessionId = CookiesUtil.getSessionId(request);
-		return new ResponseBean(cmsAdvertisementService.updateCmsAdvertisement(cmsAdvertisementOrImageVO, sessionId,imageId,disable));
+		return new ResponseBean(cmsAdvertisementService.updateCmsAdvertisement(cmsAdvertisementOrImageVO, sessionId,imageId,disable,imageJumpUrl));
 	}
 
 	/**

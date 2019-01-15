@@ -85,7 +85,7 @@ public class CmsAdvertisementServiceImpl implements CmsAdvertisementService {
 
 	@Override
 	public Integer updateCmsAdvertisement(CmsAdvertisementOrImageVO cmsAdvertisementOrImageVO, String sessionId,
-			Long[] imageId, Long[] disable) throws CheckedServiceException {
+			Long[] imageId, Long[] disable,String[] imageJumpUrl) throws CheckedServiceException {
 		// session PmphUser用户验证
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
@@ -148,6 +148,7 @@ public class CmsAdvertisementServiceImpl implements CmsAdvertisementService {
 			for (int i = 0; i < imageId.length; i++) {
 				cmsAdvertisementImage.setId(imageId[i]);
 				cmsAdvertisementImage.setIsDisabled((Boolean) cmsAdvertisementOrImageVO.getIsDisplay());
+				cmsAdvertisementImage.setImageJumpUrl(imageJumpUrl[i]);
 				// 修改图片为显示
 				cmsAdvertisementImageDao.updateCmsAdvertisementImage(cmsAdvertisementImage);
 			}
