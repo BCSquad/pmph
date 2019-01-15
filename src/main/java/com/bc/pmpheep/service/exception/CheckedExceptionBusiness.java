@@ -60,6 +60,10 @@ public class CheckedExceptionBusiness {
 
 	public final static String SENSITIVE = "敏感词";
 
+	public final static String SearchKeyword = "搜索关键词";
+
+	public final static String SiteLink = "友情链接";
+
 	public final static String BOOK = "图书";
 
 	public final static String ORG = "机构/机构用户";

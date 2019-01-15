@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.SiteLinkDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id != null ">
+				id	,
+			</if>
+			<if test="name != null ">
+				name	,
+			</if>
+			<if test="href != null ">
+				href	,
+			</if>
+			<if test="rowNum != null ">
+				row_num	,
+			</if>
+			<!--<if test="sort != null ">
+				sort	,
+			</if>-->
+			sort,
+			<if test="deleted != null ">
+				is_deleted	,
+			</if>
+			<if test="active != null ">
+				is_active	,
+			</if>
+			<if test="gmtCreate != null ">
+				gmt_create	,
+			</if>
+			<if test="gmtUpdate != null ">
+				gmt_update	,
+			</if>
+			<if test="note != null ">
+				note	,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id != null ">
+				#{id}	,
+			</if>
+			<if test="name != null and name != '' ">
+				#{name}	,
+			</if>
+			<if test="href != null and href != '' ">
+				#{href}	,
+			</if>
+			<if test="rowNum != null ">
+				#{rowNum}	,
+			</if>
+			<!--<if test="sort != null ">
+				#{sort}	,
+			</if>-->
+			@newSort,
+			<if test="deleted != null ">
+				#{deleted}	,
+			</if>
+			<if test="active != null ">
+				#{active}	,
+			</if>
+			<if test="gmtCreate != null ">
+				#{gmtCreate}	,
+			</if>
+			<if test="gmtUpdate != null ">
+				#{gmtUpdate}	,
+			</if>
+			<if test="note != null and note != '' ">
+				#{note}	,
+			</if>
+		</trim>
+	</sql>
+	<!-- 新增SiteLink -->
+	<insert id="add" parameterType="SiteLink">
+		select @newSort := (max(sort) +1) from site_link;
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into `site_link` (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		) ;
+	</insert>
+
+	<!-- 更新SiteLink -->
+	<update id="update" parameterType="SiteLink">
+		update `site_link`
+		<set>
+			<if test="name != null and name != '' ">
+				name	=	#{name}	,
+			</if>
+			<if test="href != null and href != '' ">
+				href	=	#{href}	,
+			</if>
+			<if test="rowNum != null ">
+				row_num	=	#{rowNum}	,
+			</if>
+			<if test="sort != null ">
+				sort	=	#{sort}	,
+			</if>
+			<if test="deleted != null ">
+				is_deleted	=	#{deleted}	,
+			</if>
+			<if test="active != null ">
+				is_active	=	#{active}	,
+			</if>
+			<if test="gmtCreate != null ">
+				gmt_create	=	#{gmtCreate}	,
+			</if>
+			<if test="gmtUpdate != null ">
+				gmt_update	=	#{gmtUpdate}	,
+			</if>
+			<if test="note != null">
+				note	=	#{note}	,
+			</if>
+		</set>
+		where
+		id=#{id} ;
+	</update>
+
+	<select id="getTotal" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		SELECT
+		COUNT(*)
+		FROM
+		`site_link` s
+		WHERE
+		1=1
+		<if test="name != null and name != ''">
+			AND s.name LIKE CONCAT('%',#{name},'%')
+		</if>
+	</select>
+
+	<select id="list" resultType="SiteLink">
+		SELECT
+		*
+		FROM
+		`site_link` s
+		WHERE
+		1=1
+		<if test="name != null and name != ''">
+			AND s.name LIKE CONCAT('%',#{name},'%')
+		</if>
+		ORDER BY s.row_num asc , s.sort asc
+		LIMIT #{start},#{pageSize}
+	</select>
+
+	<delete id="deletedIsDeleted">
+		DELETE
+		FROM
+		`site_link`
+		WHERE
+		id IN
+		<foreach collection="array" open="(" separator="," close=")"
+			index="index" item="id">
+			#{id}
+		</foreach>
+	</delete>
+
+	<delete id="delete" parameterType="java.lang.Long">
+		DELETE
+		FROM
+		`site_link`
+		WHERE
+		id =
+		#{id}
+	</delete>
+	<select id="getSiteLinkId" parameterType="java.lang.String"
+		resultType="SiteLink">
+		SELECT
+		*
+		FROM
+		`site_link` s
+		WHERE
+		s.name = #{name}
+	</select>
+
+	<!--行内上移 （与行内上一个交换排序）-->
+	<select id="pushForward" parameterType="Long" resultType="Long">
+		set @rid = 0;
+		SELECT
+				@rid :=  s.id
+				FROM
+				`site_link` s inner join
+				site_link l on l.id = #{id} and l.row_num = s.row_num and l.sort>s.sort
+				ORDER BY s.sort desc
+				limit 0,1;
+
+		update
+		site_link p
+		inner join site_link a
+		on a.id =  #{id} and p.id = @rid
+		set p.sort = a.sort , a.sort = p.sort ;
+		select @rid;
+	</select>
+
+	<!--行内下移 （与行内下一个交换排序）-->
+	<select id="pushBack" parameterType="Long" resultType="Long">
+		set @rid = 0;
+		SELECT
+				@rid :=  s.id
+				FROM
+				`site_link` s inner join
+				site_link l on l.id = #{id} and l.row_num = s.row_num and l.sort&lt;s.sort
+				ORDER BY s.sort asc
+				limit 0,1;
+
+		update
+		site_link p
+		inner join site_link a
+		on a.id =  #{id} and p.id = @rid
+		set p.sort = a.sort , a.sort = p.sort ;
+		select @rid;
+	</select>
+
+</mapper>

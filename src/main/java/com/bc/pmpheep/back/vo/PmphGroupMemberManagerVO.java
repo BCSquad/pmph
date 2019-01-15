@@ -5,6 +5,7 @@ package com.bc.pmpheep.back.vo;
 
 import java.io.Serializable;
 
+import com.bc.pmpheep.annotation.ExcelHeader;
 import org.apache.ibatis.type.Alias;
 
 /**
@@ -31,18 +32,23 @@ public class PmphGroupMemberManagerVO implements Serializable {
 	// 是否为作家用户
 	private Boolean isWriter;
 	// 小组内显示名称;
+	@ExcelHeader(header = "姓名")
 	private String displayName;
 	// 账号
+	@ExcelHeader(header = "账号")
 	private String username;
 	// 账号/名称
 	private String name;
 	// 权限（身份）
+	@ExcelHeader(header = "身份")
 	private String identity;
 	// 职位
+	@ExcelHeader(header = "职位")
 	private String position;
 	// 工作单位id 社内用户为部门id/作家用户为机构id
 	private Long workId;
 	// 工作单位
+	@ExcelHeader(header = "工作单位")
 	private String workName;
 	// 联系电话
 	private String handphone;

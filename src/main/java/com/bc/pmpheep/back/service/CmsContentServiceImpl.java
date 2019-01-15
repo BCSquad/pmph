@@ -352,6 +352,10 @@ public class CmsContentServiceImpl implements CmsContentService {
             && Const.CMS_AUTHOR_TYPE_2 == cmsContent.getAuthorType()) {
             String ruleName = "发表文章";
             writerPointLogService.addWriterPointLogByRuleName(ruleName, cmsContent.getAuthorId());
+            //原创
+            if(cmsContent.getIsOriginal() != null && cmsContent.getIsOriginal()){
+                writerPointLogService.addWriterPointLogByRuleName("原创文章", cmsContent.getAuthorId());
+            }
         }
         // 删除附件
         if (ArrayUtil.isNotEmpty(attachment)) {
@@ -419,7 +423,7 @@ public class CmsContentServiceImpl implements CmsContentService {
     }
 
     @Override
-    public Integer checkContentById(Long id, Short authStatus, Long categoryId, String sessionId)
+    public Integer checkContentById(Long id, Short authStatus, Long categoryId, String sessionId,Boolean isOriginal)
     throws CheckedServiceException {
         // 获取当前登陆用户
         PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
@@ -455,7 +459,8 @@ public class CmsContentServiceImpl implements CmsContentService {
                                                       DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
                                                                                DateUtil.getCurrentTime()),
                                                       isPublished, isStaging,
-                                                      Const.MATERIAL_TYPE_ID));
+                                                      Const.MATERIAL_TYPE_ID
+                                                      ));
         CmsContent cmsContent = this.getCmsContentById(id);
         if (ObjectUtil.isNull(cmsContent)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
@@ -483,6 +488,10 @@ public class CmsContentServiceImpl implements CmsContentService {
             && Const.CMS_AUTHOR_TYPE_2 == cmsContent.getAuthorType()) {
             String ruleName = "发表文章";
             writerPointLogService.addWriterPointLogByRuleName(ruleName, cmsContent.getAuthorId());
+            //原创
+            if(cmsContent.getIsOriginal()!=null && cmsContent.getIsOriginal()){
+                writerPointLogService.addWriterPointLogByRuleName("原创文章", cmsContent.getAuthorId());
+            }
         }
         return count;
     }

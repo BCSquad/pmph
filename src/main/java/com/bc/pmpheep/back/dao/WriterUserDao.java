@@ -30,7 +30,7 @@ public interface WriterUserDao {
     /**
      * 添加一个用户
      * 
-     * @param pmphUser 添加用户的详细信息
+     * @ pmphUser 添加用户的详细信息
      * @return 添加的主键
      */
     Long add(WriterUser user);
@@ -109,7 +109,7 @@ public interface WriterUserDao {
      * 
      * @author:lyc
      * @date:2017年10月12日下午5:56:05
-     * @param pageParameter若教材书籍、遴选职位、账号或姓名有值则为模糊查询
+     * @ pageParameter若教材书籍、遴选职位、账号或姓名有值则为模糊查询
      * @return List<GroupMemberWriterUserVO>作家用户信息集合
      */
     List<GroupMemberWriterUserVO> listGroupMemberWriterUserVOs(
@@ -121,7 +121,7 @@ public interface WriterUserDao {
      * 
      * @author:lyc
      * @date:2017年10月12日下午5:59:59
-     * @param pageParameter若教材书籍、遴选职位、账号或姓名有值则为模糊查询
+     * @ pageParameter若教材书籍、遴选职位、账号或姓名有值则为模糊查询
      * @return Integer数据总数
      */
     Integer getGroupMemberWriterUserTotal(PageParameter<GroupMemberWriterUserVO> pageParameter);
@@ -225,4 +225,46 @@ public interface WriterUserDao {
     // */
     // List<WriterUser> getList(Page<WriterUser,Map<String, String>> page);
 
+	/**
+	 * 查看用户信息
+	 */
+	Map<String, Object> queryUserInfo(Long user_id);
+	//1查询学习经历
+	List<Map<String,Object>> queryPerStu(Map<String, Object> map);
+	//2查询工作经历
+	List<Map<String,Object>> queryPerWork(Map<String, Object> map);
+	//3查询教学经历
+	List<Map<String,Object>> queryPerStea(Map<String, Object> map);
+	//4作家学术
+	List<Map<String,Object>> queryPerZjxs(Map<String, Object> map);
+	//5查询上版教材编辑
+	List<Map<String,Object>> queryPerJcbj(Map<String, Object> map);
+	//6查询精品课程建设
+	List<Map<String,Object>> queryPerGjkcjs(Map<String, Object> map);
+	//7作家主编国家级规划教材情况
+	List<Map<String,Object>> queryPerGjghjc(Map<String, Object> map);
+	//8查询其他社教材编写情况
+	List<Map<String,Object>> queryPerJcbx(Map<String, Object> map);
+	//9查询人卫社教材编写情况
+	List<Map<String,Object>> queryPerRwsjc(Map<String, Object> map);
+	//10作家科研情况表
+	List<Map<String,Object>> queryPerZjkyqk(Map<String, Object> map);
+	//11个人成就
+	Map<String,Object> queryPerAchievement(Map<String, Object> map);
+	//12主编学术专著情况
+	List<Map<String,Object>> queryPerMonograph(Map<String, Object> map);
+	//13出版行业获奖情况
+	List<Map<String,Object>> queryPerPublish(Map<String, Object> map);
+	//14SCI论文投稿及影响因子
+	List<Map<String,Object>> queryPerSci(Map<String, Object> map);
+	//临床医学获奖情况
+	List<Map<String,Object>> queryPerClinicalreward(Map<String, Object> map);
+	//15学术荣誉授予情况
+	List<Map<String,Object>> queryPerAcadereward(Map<String, Object> map);
+	//16主编或参编图书情况
+	List<Map<String,Object>> queryPerEditor(Map<String, Object> map);
+	//17文章发表详情
+	//per_article_published
+	//18本专业获奖详情
+	//per_profession_award
 }

@@ -19,8 +19,13 @@ public class CmsContentVO implements Serializable {
     // 类别名称
     private String    categoryName;
     // 内容标题
-    @ExcelHeader(header = " 文章标题")
+    @ExcelHeader(header = " 文章标题",alias_0 = "信息快报标题",alias_1 = "文章标题")
     private String    title;
+    // 原作家姓名
+    @ExcelHeader(alias_1 = "文章来源")
+    private String authorname;
+    // 真实姓名
+    private String    realname;
     // 作者类型
     private Short     authorType;
     // 作者id
@@ -37,6 +42,7 @@ public class CmsContentVO implements Serializable {
     private Boolean   isStick;
     //类型 0-全部 1-pc 2-app
     private int apporpc;
+
     // 是否热门
     private Boolean   isHot;
     // 是否推荐
@@ -65,8 +71,10 @@ public class CmsContentVO implements Serializable {
     // 页面查询条件（状态）
     private Integer   status;
     // 作家姓名
-    @ExcelHeader(header = "评论人")
+    @ExcelHeader(header = "评论人",alias_0 = "发布者",alias_1 = "发布者")
     private String    username;
+    @ExcelHeader(alias_0 = "应用类型",alias_1 = "应用类型")
+    private String apporpcExcel;
     // 是否为管理员
     private Boolean   isAdmin;
     // 是否已发布
@@ -75,6 +83,14 @@ public class CmsContentVO implements Serializable {
     private Boolean   isMaterialEntry;
     // 创建时间
     private Timestamp gmtCreate;
+    @ExcelHeader(alias_0 = "创建时间",alias_1 = "创建时间")
+    private String gmtCreateExcel;
+    @ExcelHeader(alias_0 = "发布状态")
+    private String isPublishedExcel_info;
+    @ExcelHeader(alias_1 = "审核状态")
+    private String authStatus_article;
+    @ExcelHeader(alias_0 = "发布时间",alias_1 = "审核时间")
+    private String authDateExcel;
     // 创建时间
     @ExcelHeader(header = "评论时间")
     private String gmtCreateS;
@@ -82,15 +98,13 @@ public class CmsContentVO implements Serializable {
     private String    startCreateDate;
     // 创建结束时间
     private String    endCreateDate;
-    // 真实姓名
-    private String    realname;
+
     // 教材id
     private Long      materialId;
     private String      materialName;
     // 平台类型
     private Integer   platform;
-    // 原作家姓名
-    private String authorname;
+
 
     /**
      * @return the id
@@ -314,6 +328,8 @@ public class CmsContentVO implements Serializable {
      */
     public void setAuthDate(Timestamp authDate) {
         this.authDate = authDate;
+        this.authDateExcel = (authDate!=null? DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",authDate):"");
+        this.authDateS = (authDate!=null? DateUtil.formatTimeStamp("yyyy-MM-dd",authDate):"");
     }
 
     /**
@@ -398,6 +414,8 @@ public class CmsContentVO implements Serializable {
      */
     public void setGmtCreate(Timestamp gmtCreate) {
         this.gmtCreate = gmtCreate;
+        this.gmtCreateS = DateUtil.formatTimeStamp("yyyy-MM-dd",this.gmtCreate);
+        this.gmtCreateExcel = DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",this.gmtCreate);
     }
 
     /**
@@ -412,6 +430,7 @@ public class CmsContentVO implements Serializable {
      */
     public void setIsPublished(Boolean isPublished) {
         this.isPublished = isPublished;
+        this.isPublishedExcel_info = isPublished!=null&&isPublished?"已发布":"未发布";
     }
 
     /**
@@ -426,6 +445,13 @@ public class CmsContentVO implements Serializable {
      */
     public void setAuthStatus(Short authStatus) {
         this.authStatus = authStatus;
+        String[] t = new String[]{"未发布","未通过","已发布"};
+        if(authStatus!=null && authStatus>=0 && authStatus < t.length){
+            this.authStatus_article =t[authStatus];
+        }else{
+            this.authStatus_article = "";
+        }
+
     }
 
     /**
@@ -554,6 +580,12 @@ public class CmsContentVO implements Serializable {
 
     public void setApporpc(int apporpc) {
         this.apporpc = apporpc;
+        String[] t = new String[]{"全部","PC端","移动端"};
+        if(apporpc>=0&&apporpc<t.length){
+            this.apporpcExcel = t[apporpc];
+        }else{
+            this.apporpcExcel = "";
+        }
     }
 
     public String getAuthStatusName() {
@@ -601,5 +633,101 @@ public class CmsContentVO implements Serializable {
 
     public void setMaterialName(String materialName) {
         this.materialName = materialName;
+    }
+
+    public Boolean getStick() {
+        return isStick;
+    }
+
+    public void setStick(Boolean stick) {
+        isStick = stick;
+    }
+
+    public Boolean getHot() {
+        return isHot;
+    }
+
+    public void setHot(Boolean hot) {
+        isHot = hot;
+    }
+
+    public Boolean getPromote() {
+        return isPromote;
+    }
+
+    public void setPromote(Boolean promote) {
+        isPromote = promote;
+    }
+
+    public Boolean getAuth() {
+        return isAuth;
+    }
+
+    public void setAuth(Boolean auth) {
+        isAuth = auth;
+    }
+
+    public String getApporpcExcel() {
+        return apporpcExcel;
+    }
+
+    public void setApporpcExcel(String apporpcExcel) {
+        this.apporpcExcel = apporpcExcel;
+    }
+
+    public Boolean getAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(Boolean admin) {
+        isAdmin = admin;
+    }
+
+    public Boolean getPublished() {
+        return isPublished;
+    }
+
+    public void setPublished(Boolean published) {
+        isPublished = published;
+    }
+
+    public Boolean getMaterialEntry() {
+        return isMaterialEntry;
+    }
+
+    public void setMaterialEntry(Boolean materialEntry) {
+        isMaterialEntry = materialEntry;
+    }
+
+    public String getGmtCreateExcel() {
+        return gmtCreateExcel;
+    }
+
+    public void setGmtCreateExcel(String gmtCreateExcel) {
+        this.gmtCreateExcel = gmtCreateExcel;
+    }
+
+    public String getIsPublishedExcel_info() {
+        return isPublishedExcel_info;
+    }
+
+    public void setIsPublishedExcel_info(String isPublishedExcel_info) {
+        this.isPublishedExcel_info = isPublishedExcel_info;
+    }
+
+    public String getAuthDateExcel() {
+        return authDateExcel;
+    }
+
+    public void setAuthDateExcel(String authDateExcel) {
+        this.authDateExcel = authDateExcel;
+    }
+
+    public String getIsPublishedExcel_article() {
+        return authStatus_article;
+    }
+
+    public void setIsPublishedExcel_article(String isPublishedExcel_article) {
+        this.authStatus_article = isPublishedExcel_article;
     }
 }

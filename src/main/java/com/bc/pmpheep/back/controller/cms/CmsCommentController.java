@@ -55,7 +55,7 @@ public class CmsCommentController {
      * @param pageNumber 当前页
      * @param pageSize 页面数据条数
      * @param cmsContentVO 
-     * @param sessionId
+     * @ sessionId
      * @return 分页数据集
      * </pre>
      */
@@ -102,7 +102,7 @@ public class CmsCommentController {
         return new ResponseBean(cmsContentService.checkContentById(id,
                                                                    authStatus,
                                                                    Const.CMS_CATEGORY_ID_0,
-                                                                   sessionId));
+                                                                   sessionId,true));
     }
 
     /**
