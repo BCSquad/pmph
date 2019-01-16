@@ -370,12 +370,15 @@ public class TopicServiceImpl implements TopicService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
 					"用户为空！");
 		}
-		topicLog.setUserId(pmphUser.getId());
+
 		if (ObjectUtil.isNull(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
 					"选题申报的id为空！");
 		}
-		topicLogService.add(topicLog);
+		if(ObjectUtil.notNull(topicLog)){
+			topicLog.setUserId(pmphUser.getId());
+			topicLogService.add(topicLog);
+		}
 		TopicTextVO topicTextVO = topicDao.getTopicTextVO(id);
 		topicTextVO.setTopicExtra(topicExtraService.getTopicExtraByTopicId(id));
 		topicTextVO.setTopicWriters(topicWriertService.listTopicWriterByTopicId(id));

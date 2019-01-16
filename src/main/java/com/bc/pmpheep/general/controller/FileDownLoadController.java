@@ -25,8 +25,7 @@ import com.bc.pmpheep.back.dao.*;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.service.*;
 import com.bc.pmpheep.back.vo.*;
-import com.bc.pmpheep.general.runnable.ClicSpringThread;
-import com.bc.pmpheep.general.runnable.MaterialSurveySpringThread;
+import com.bc.pmpheep.general.runnable.*;
 import com.bc.pmpheep.utils.*;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.shiro.session.Session;
@@ -57,8 +56,6 @@ import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.general.bean.ZipDownload;
-import com.bc.pmpheep.general.runnable.Front;
-import com.bc.pmpheep.general.runnable.SpringThread;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -96,6 +93,8 @@ public class FileDownLoadController {
 	ExcelHelper excelHelper;
 	@Resource
 	ClicWordHelper clicWordHelper;
+	@Resource
+	TopicWordHelper topicWordHelper;
 	@Resource
 	MaterialSurveyWordHelper materialSurveyWordHelper;
 	@Resource
@@ -1218,6 +1217,21 @@ public class FileDownLoadController {
 	 * @return
 	 */
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "选题申报表导出word")
+	@RequestMapping(value = "/word/topic/declaration", method = RequestMethod.GET)
+	public String topicDeclarationWord(Long topicId,HttpServletRequest request) {
+		String sessionId = CookiesUtil.getSessionId(request);
+		String id = String.valueOf(System.currentTimeMillis()).concat(String.valueOf(RandomUtil.getRandomNum()));
+		taskExecutor.execute(new TopicSpringThread(zipHelper, topicWordHelper,topicId,sessionId,
+				topicService,id));
+		return '"' + id + '"';
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "调研表批量导出word")
 	@RequestMapping(value = "/word/material/survey", method = RequestMethod.GET)
 	public String materialSurveyWord(SurveyVO surveyVO) {
@@ -1300,6 +1314,59 @@ public class FileDownLoadController {
 		response.setContentType("application/force-download");
 		String filePath = src + id + File.separator + materialName + ".zip";
 		String fileName = returnFileName(request, materialName + ".zip");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		BufferedInputStream bis = null;
+		BufferedOutputStream bos = null;
+		OutputStream fos = null;
+		InputStream fis = null;
+		try {
+			fis = new FileInputStream(filePath);
+			bis = new BufferedInputStream(fis);
+			fos = response.getOutputStream();
+			bos = new BufferedOutputStream(fos);
+			int byteRead = 0;
+			byte[] buffer = new byte[1024];
+			while ((byteRead = bis.read(buffer, 0, 1024)) != -1) {
+				bos.write(buffer, 0, byteRead);
+			}
+			bos.flush();
+			fis.close();
+			bis.close();
+			fos.close();
+			bos.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.warn("文件下载时出现IO异常：{}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		} finally {
+			Const.WORD_EXPORT_MAP.remove(id);
+			ZipDownload.DeleteFolder(src + id);
+		}
+	}
+
+	/**
+	 * word文件
+	 *
+	 * @param id
+	 *            生成的唯一标识符
+	 * @param response
+	 *            服务响应
+	 * @throws UnsupportedEncodingException
+	 */
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "word文件")
+	@RequestMapping(value = "/word/download", method = RequestMethod.GET)
+	public void downloadWord(@RequestParam("id") String id, HttpServletRequest request, HttpServletResponse response) {
+		String src = this.getClass().getResource("/").getPath();
+		src = src.substring(1);
+		if (!src.endsWith(File.separator)) {
+			src += File.separator;
+		}
+		String materialName = Const.WORD_EXPORT_MAP.get(id).getMaterialName();
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		String filePath = src + id + File.separator + materialName + ".docx";
+		String fileName = returnFileName(request, materialName + ".docx");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
 		BufferedInputStream bis = null;
 		BufferedOutputStream bos = null;
