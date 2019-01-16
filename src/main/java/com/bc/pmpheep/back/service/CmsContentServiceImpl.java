@@ -437,9 +437,18 @@ public class CmsContentServiceImpl implements CmsContentService {
         }
         Boolean isPublished = false;
         Boolean isStaging = false;
-        if (Const.CMS_AUTHOR_STATUS_2 == authStatus) { // 发布
-            isPublished = true;
+        if (Const.CMS_AUTHOR_STATUS_2 == authStatus) { // 审核通过
             isStaging = true;
+        }
+        //发布
+        if(3==authStatus){
+            isPublished = true;
+            authStatus=2;
+        }
+        //撤回
+        if(4==authStatus){
+            isPublished = false;
+            authStatus=2;
         }
         Integer count = 0;
         count =

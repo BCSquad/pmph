@@ -38,6 +38,7 @@ public class CheckedExceptionBusiness {
 	public final static String BOOKCORRECTION = "图书纠错";
 	
 	public final static String BOOK_VEDIO = "图书微视频";
+	public final static String BOOK_SOURCE = "图书资源";
 
 	public final static String MATERIAL = "教材申报";
 

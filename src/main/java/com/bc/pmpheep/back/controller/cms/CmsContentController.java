@@ -217,6 +217,7 @@ public class CmsContentController {
     @RequestParam(value="scheduledTime",required = false) String scheduledTime, HttpServletRequest request) {
         try {
             String sessionId = CookiesUtil.getSessionId(request);
+            cmsContent.setIsPublished(false);
             return new ResponseBean(cmsContentService.updateCmsContent(cmsContent,
                                                                        files,
                                                                        imgFile,

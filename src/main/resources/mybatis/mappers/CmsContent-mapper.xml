@@ -232,7 +232,7 @@
 	</sql>
 	<!-- 新增CmsContent -->
 	<insert id="addCmsContent" parameterType="CmsContent"
-		useGeneratedKeys="true" keyProperty="id">
+			useGeneratedKeys="true" keyProperty="id">
 		insert into cms_content (
 		<include refid="key" />
 		)
@@ -366,7 +366,7 @@
 	<!-- CMS_content定时任务批量更新 -->
 	<update id="updateCmsContentByIds" parameterType="java.util.List">
 		<foreach collection="list" item="item" index="index" open=""
-			separator=";">
+				 separator=";">
 			update
 			cms_content
 			<set>
@@ -381,7 +381,7 @@
 	<!-- 内容发布 -->
 	<update id="publishCmsContentById" parameterType="java.lang.Long">
 		update
-		cms_content set is_published = true where id = #{id};
+			cms_content set is_published = true where id = #{id};
 	</update>
 	<!-- 内容隐藏 -->
 	<update id="hideCmsContentById" parameterType="java.lang.Long">
@@ -391,7 +391,7 @@
 	<!-- 逻辑删除 -->
 	<update id="deleteCmsContentById" parameterType="java.lang.Long">
 		update
-		cms_content set is_deleted = true where id = #{id};
+			cms_content set is_deleted = true where id = #{id};
 	</update>
 
 	<update id="checkContentById" parameterType="CmsContent">
@@ -423,7 +423,7 @@
 	<!--CmsContentVO模糊查询获取列表 -->
 	<select id="listCmsContent" parameterType="PageParameter" resultType="CmsContentVO">
 		SELECT * FROM
-			(
+		(
 		SELECT
 		cc.`id`,
 		cc.`title`,
@@ -459,15 +459,15 @@
 		END realname,
 		cc.apporpc,
 		cc.`material_id`
-			FROM
-			  `cms_content` cc 
-			  LEFT JOIN `pmph_user` pu 
-			    ON cc.author_id = pu.id 
-			  LEFT JOIN `writer_user` wu 
-			    ON cc.author_id = wu.id 
-			  LEFT JOIN `cms_category` ccg 
-			    ON cc.`category_id` = ccg.`id` 
-			WHERE cc.`is_deleted` = 0
+		FROM
+		`cms_content` cc
+		LEFT JOIN `pmph_user` pu
+		ON cc.author_id = pu.id
+		LEFT JOIN `writer_user` wu
+		ON cc.author_id = wu.id
+		LEFT JOIN `cms_category` ccg
+		ON cc.`category_id` = ccg.`id`
+		WHERE cc.`is_deleted` = 0
 		AND (
 		cc.`author_type` IN (0, 1)
 		OR (
@@ -475,27 +475,27 @@
 		AND cc.`is_staging` = FALSE
 		)
 		)
-			ORDER BY cc.`gmt_create` DESC) 
-	a,
-			  (
-				SELECT 
-					COUNT(*) `COUNT`
-				FROM
-				  `cms_content` cc 
-				LEFT JOIN 
-					`pmph_user` pu 
-				ON 
-					cc.author_id = pu.id 
-				LEFT JOIN 
-					`writer_user` wu 
-				ON 
-					cc.author_id = wu.id 
-				LEFT JOIN 
-					`cms_category` ccg 
-				ON 
-					cc.`category_id` = ccg.`id` 
-				WHERE 
-					cc.`is_deleted` = 0
+		ORDER BY cc.`gmt_create` DESC)
+		a,
+		(
+		SELECT
+		COUNT(*) `COUNT`
+		FROM
+		`cms_content` cc
+		LEFT JOIN
+		`pmph_user` pu
+		ON
+		cc.author_id = pu.id
+		LEFT JOIN
+		`writer_user` wu
+		ON
+		cc.author_id = wu.id
+		LEFT JOIN
+		`cms_category` ccg
+		ON
+		cc.`category_id` = ccg.`id`
+		WHERE
+		cc.`is_deleted` = 0
 		AND (
 		cc.`author_type` IN (0, 1)
 		OR (
@@ -503,197 +503,233 @@
 		AND cc.`is_staging` = FALSE
 		)
 		)
-				<if test="parameter !=null ">
-							<if test="parameter.categoryId != null">
-								AND cc.`category_id` = #{parameter.categoryId}
-							</if>
-							<if test="parameter.isAdmin == false ">
-								AND cc.`author_id`=#{parameter.authorId}
-							</if>
-							<if test="parameter.title != null and parameter.title != ''">
-								AND cc.`title` like concat('%',#{parameter.title},'%')
-							</if>
-							<if test="parameter.authStatus !=null ">
-								AND cc.`auth_status` = #{parameter.authStatus}
-							</if>
-							<if test="parameter.isPublished !=null ">
-								AND cc.`is_published` = #{parameter.isPublished}
-							</if>
-							<if test="parameter.username !=null and  parameter.username!='' ">
-								AND (
-								pu.`username` like
-								concat('%',#{parameter.username},'%')
-								OR
-								pu.`realname`like
-								concat('%',#{parameter.username},'%') )
-							</if>
-							<!-- 所属教材 -->
-							<if test="parameter.materialId !=null ">
-								AND cc.`material_id` = #{parameter.materialId}
-							</if>
-								<!-- 创建时间 -->
-							<if test="parameter.startCreateDate !=null and parameter.startCreateDate !=''">
-								AND cc.`gmt_create` &gt;= str_to_date(#{parameter.startCreateDate},'%Y-%m-%d %H:%i:%s')
-							</if>
-							<if test="parameter.endCreateDate !=null and parameter.endCreateDate !='' ">
-								AND cc.`gmt_create`  &lt;=  str_to_date(#{parameter.endCreateDate},'%Y-%m-%d %H:%i:%s')
-							</if>
-							<!-- 发布时间 -->
-							<if test="parameter.startAuDate !=null and parameter.startAuDate !='' ">
-								AND cc.`auth_date` &gt;= str_to_date(#{parameter.startAuDate},'%Y-%m-%d %H:%i:%s')
-							</if>
-							<if test="parameter.endAuDate !=null and parameter.endAuDate !='' ">
-								AND cc.`auth_date`  &lt;= str_to_date(#{parameter.endAuDate},'%Y-%m-%d %H:%i:%s')
-							</if>
-							<if test="parameter.isMaterialEntry !=null">
-								AND cc.`is_material_entry`  = ${parameter.isMaterialEntry}
-							</if>
-				</if>
-
-			)b
-		<where>
 		<if test="parameter !=null ">
-					<if test="parameter.categoryId != null">
-						 `category_id` = #{parameter.categoryId}
-					</if>
-					<if test="parameter.isAdmin == false ">
-						AND `author_id`=#{parameter.authorId}
-					</if>
-					<if test="parameter.title != null and parameter.title != ''">
-						AND `title` like concat('%',#{parameter.title},'%')
-					</if>
-					<if test="parameter.authStatus !=null ">
-						AND `auth_status` = #{parameter.authStatus}
-					</if>
-					<if test="parameter.isPublished !=null ">
-						AND `is_published` = #{parameter.isPublished}
-					</if>
-					<if test="parameter.username !=null and  parameter.username!='' ">
-						AND (
-						`username` like
-						concat('%',#{parameter.username},'%')
-						OR
-						`realname`like
-						concat('%',#{parameter.username},'%') )
-					</if>
-					<!-- 所属教材 -->
-					<if test="parameter.materialId !=null ">
-						AND `material_id` = #{parameter.materialId}
-					</if>
-						<!-- 创建时间 -->
-							<if test="parameter.startCreateDate !=null and parameter.startCreateDate !=''">
-								AND `gmt_create` &gt;= str_to_date(#{parameter.startCreateDate},'%Y-%m-%d %H:%i:%s')
-							</if>
-							<if test="parameter.endCreateDate !=null and parameter.endCreateDate !='' ">
-								AND `gmt_create`  &lt;=  str_to_date(#{parameter.endCreateDate},'%Y-%m-%d %H:%i:%s')
-							</if>
-							<!-- 发布时间 -->
-							<if test="parameter.startAuDate !=null and parameter.startAuDate !='' ">
-								AND `auth_date` &gt;= str_to_date(#{parameter.startAuDate},'%Y-%m-%d %H:%i:%s')
-							</if>
-							<if test="parameter.endAuDate !=null and parameter.endAuDate !='' ">
-								AND `auth_date`  &lt;= str_to_date(#{parameter.endAuDate},'%Y-%m-%d %H:%i:%s')
-							</if>
+			<if test="parameter.categoryId != null">
+				AND cc.`category_id` = #{parameter.categoryId}
+			</if>
+			<if test="parameter.isAdmin == false ">
+				AND cc.`author_id`=#{parameter.authorId}
+			</if>
+			<if test="parameter.title != null and parameter.title != ''">
+				AND cc.`title` like concat('%',#{parameter.title},'%')
+			</if>
+			<if test="parameter.authStatus !=null ">
+			and
+			<if test=" parameter.authStatus == 0 ">
+				cc.`auth_status` = 0 and cc.author_type =2
+			</if>
+			<if test=" parameter.authStatus == 5 ">
+				cc.`auth_status` = 0 and cc.is_staging= 1
+			</if>
+			<if test=" parameter.authStatus == 1 ">
+				cc.`auth_status` = 1  and cc.author_type =2
+			</if>
+			<if test="parameter.authStatus == 2 ">
+				cc.`auth_status` = 2 and cc.author_type =2 and cc.is_published=0
+			</if>
+			<if test="parameter.authStatus == 3 ">
+				cc.`auth_status` = 2 and cc.is_published=1
+			</if>
+			<if test="parameter.authStatus == 4 ">
+				 cc.is_published=0
+			</if>
+		</if>
+			<if test="parameter.isPublished !=null ">
+				AND cc.`is_published` = #{parameter.isPublished}
+			</if>
+			<if test="parameter.username !=null and  parameter.username!='' ">
+				AND (
+				pu.`username` like
+				concat('%',#{parameter.username},'%')
+				OR
+				pu.`realname`like
+				concat('%',#{parameter.username},'%') )
+			</if>
+			<!-- 所属教材 -->
+			<if test="parameter.materialId !=null ">
+				AND cc.`material_id` = #{parameter.materialId}
+			</if>
+			<!-- 创建时间 -->
+			<if test="parameter.startCreateDate !=null and parameter.startCreateDate !=''">
+				AND cc.`gmt_create` &gt;= str_to_date(#{parameter.startCreateDate},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="parameter.endCreateDate !=null and parameter.endCreateDate !='' ">
+				AND cc.`gmt_create`  &lt;=  str_to_date(#{parameter.endCreateDate},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!-- 发布时间 -->
+			<if test="parameter.startAuDate !=null and parameter.startAuDate !='' ">
+				AND cc.`auth_date` &gt;= str_to_date(#{parameter.startAuDate},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="parameter.endAuDate !=null and parameter.endAuDate !='' ">
+				AND cc.`auth_date`  &lt;= str_to_date(#{parameter.endAuDate},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="parameter.isMaterialEntry !=null">
+				AND cc.`is_material_entry`  = ${parameter.isMaterialEntry}
+			</if>
+		</if>
 
-							<if test="parameter.isMaterialEntry !=null">
-								AND `is_material_entry`  = ${parameter.isMaterialEntry}
-							</if>
+		)b
+		<where>
+			<if test="parameter !=null ">
+				<if test="parameter.categoryId != null">
+					`category_id` = #{parameter.categoryId}
 				</if>
+				<if test="parameter.isAdmin == false ">
+					AND `author_id`=#{parameter.authorId}
+				</if>
+				<if test="parameter.title != null and parameter.title != ''">
+					AND `title` like concat('%',#{parameter.title},'%')
+				</if>
+				<if test="parameter.authStatus !=null ">
+				and
+				<if test=" parameter.authStatus == 0 ">
+					`auth_status` = 0 and author_type =2
+				</if>
+				<if test=" parameter.authStatus == 5 ">
+					`auth_status` = 0 and is_staging= 1
+				</if>
+				<if test=" parameter.authStatus == 1 ">
+					`auth_status` = 1  and author_type =2
+				</if>
+				<if test="parameter.authStatus == 2 ">
+					`auth_status` = 2 and author_type =2 and is_published=0
+				</if>
+				<if test="parameter.authStatus == 3 ">
+					`auth_status` = 2 and is_published=1
+				</if>
+				<if test="parameter.authStatus == 4 ">
+					is_published=0
+				</if>
+			</if>
+				<if test="parameter.isPublished !=null ">
+					AND `is_published` = #{parameter.isPublished}
+				</if>
+				<if test="parameter.username !=null and  parameter.username!='' ">
+					AND (
+					`username` like
+					concat('%',#{parameter.username},'%')
+					OR
+					`realname`like
+					concat('%',#{parameter.username},'%') )
+				</if>
+				<!-- 所属教材 -->
+				<if test="parameter.materialId !=null ">
+					AND `material_id` = #{parameter.materialId}
+				</if>
+				<!-- 创建时间 -->
+				<if test="parameter.startCreateDate !=null and parameter.startCreateDate !=''">
+					AND `gmt_create` &gt;= str_to_date(#{parameter.startCreateDate},'%Y-%m-%d %H:%i:%s')
+				</if>
+				<if test="parameter.endCreateDate !=null and parameter.endCreateDate !='' ">
+					AND `gmt_create`  &lt;=  str_to_date(#{parameter.endCreateDate},'%Y-%m-%d %H:%i:%s')
+				</if>
+				<!-- 发布时间 -->
+				<if test="parameter.startAuDate !=null and parameter.startAuDate !='' ">
+					AND `auth_date` &gt;= str_to_date(#{parameter.startAuDate},'%Y-%m-%d %H:%i:%s')
+				</if>
+				<if test="parameter.endAuDate !=null and parameter.endAuDate !='' ">
+					AND `auth_date`  &lt;= str_to_date(#{parameter.endAuDate},'%Y-%m-%d %H:%i:%s')
+				</if>
+
+				<if test="parameter.isMaterialEntry !=null">
+					AND `is_material_entry`  = ${parameter.isMaterialEntry}
+				</if>
+			</if>
 		</where>
 		order by
-			`gmt_create` DESC
+		`gmt_create` DESC
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
 	</select>
-	
+
 	<!--CmsContentVO模糊查询获取评论列表 -->
 	<select id="listCmsComment" parameterType="PageParameter" resultType="CmsContentVO">
-		SELECT 
-			cc.`id`,cc.`title`,wu.realname username,cc.`auth_status`,cc.`auth_date`,cc.`gmt_create`,cc.`clicks`,pu.realname authUserName,
-			cc.`comments`,cc.`likes`,cc.`bookmarks`,cc.category_id,ccg.`category_name`,
-			cc.`is_published`,cc.`is_stick`,cc.`is_hot`,cc.`is_promote`,cc.`is_staging`,t.count
-		FROM 
-			`cms_content`cc
+		SELECT
+		cc.`id`,cc.`title`,wu.realname username,cc.`auth_status`,cc.`auth_date`,cc.`gmt_create`,cc.`clicks`,pu.realname authUserName,
+		cc.`comments`,cc.`likes`,cc.`bookmarks`,cc.category_id,ccg.`category_name`,
+		cc.`is_published`,cc.`is_stick`,cc.`is_hot`,cc.`is_promote`,cc.`is_staging`,t.count
+		FROM
+		`cms_content`cc
 		LEFT JOIN
-			`writer_user` wu 
+		`writer_user` wu
 		ON
-			cc.author_id = wu.id
+		cc.author_id = wu.id
 		LEFT JOIN pmph_user pu on pu.id = cc.auth_user_id
-		LEFT JOIN 
-			`cms_category` ccg
-		ON 
-			cc.`category_id` = ccg.`id`,
-			(
-				SELECT 
-					count(*) count
-				FROM 
-					`cms_content`cc
-				LEFT JOIN
-					`writer_user` wu 
-				ON
-					cc.author_id = wu.id
-				LEFT JOIN pmph_user pu on pu.id = cc.auth_user_id
-				LEFT JOIN 
-					`cms_category` ccg 
-				ON 
-					cc.`category_id` = ccg.`id`
-				WHERE
-					cc.`is_deleted`= 0 
-				AND cc.`is_staging` = FALSE 
-				<if test="parameter !=null ">
-					<if test="parameter.categoryId != null">
-						AND cc.`category_id` = #{parameter.categoryId} 
-					</if>
-					<if test="parameter.isAdmin == false ">
-						AND cc.`author_id`=#{parameter.authorId} 
-					</if>
-					<if test="parameter.title != null and parameter.title != ''">
-						AND cc.`title` like concat('%',#{parameter.title},'%')
-					</if>
-					<if test="parameter.authStatus !=null ">
-						AND cc.`auth_status` = #{parameter.authStatus} 
-					</if>
-					<if test="parameter.isPublished !=null ">
-						AND cc.`is_published` = #{parameter.isPublished} 
-					</if>
-					<if test="parameter.username !=null and  parameter.username!='' ">
-						AND (
-							wu.`username` like concat('%',#{parameter.username},'%') 
-						OR
-							wu.`realname` like concat('%',#{parameter.username},'%') )
-					</if>
-				</if>
-			) t
-			WHERE
-				cc.`is_deleted`= 0 
-			AND 
-			 	cc.`is_staging` = FALSE 
-			<if test="parameter !=null ">
-				<if test="parameter.categoryId != null">
-					AND cc.`category_id` = #{parameter.categoryId} 
-				</if>
-				<if test="parameter.isAdmin == false ">
-					AND cc.`author_id`=#{parameter.authorId} 
-				</if>
-				<if test="parameter.title != null and parameter.title != ''">
-					AND cc.`title` like concat('%',#{parameter.title},'%')
-				</if>
-				<if test="parameter.authStatus !=null ">
-					AND cc.`auth_status` = #{parameter.authStatus} 
-				</if>
-				<if test="parameter.isPublished !=null ">
-					AND cc.`is_published` = #{parameter.isPublished} 
-				</if>
-				<if test="parameter.username !=null and  parameter.username!='' ">
-						AND (
-							wu.`username` like concat('%',#{parameter.username},'%')
-						OR
-							wu.`realname`like concat('%',#{parameter.username},'%') )
-				</if>
+		LEFT JOIN
+		`cms_category` ccg
+		ON
+		cc.`category_id` = ccg.`id`,
+		(
+		SELECT
+		count(*) count
+		FROM
+		`cms_content`cc
+		LEFT JOIN
+		`writer_user` wu
+		ON
+		cc.author_id = wu.id
+		LEFT JOIN pmph_user pu on pu.id = cc.auth_user_id
+		LEFT JOIN
+		`cms_category` ccg
+		ON
+		cc.`category_id` = ccg.`id`
+		WHERE
+		cc.`is_deleted`= 0
+		AND cc.`is_staging` = FALSE
+		<if test="parameter !=null ">
+			<if test="parameter.categoryId != null">
+				AND cc.`category_id` = #{parameter.categoryId}
 			</if>
-		order by 
-   				  cc.`gmt_create` DESC 
+			<if test="parameter.isAdmin == false ">
+				AND cc.`author_id`=#{parameter.authorId}
+			</if>
+			<if test="parameter.title != null and parameter.title != ''">
+				AND cc.`title` like concat('%',#{parameter.title},'%')
+			</if>
+			<if test="parameter.authStatus !=null ">
+				AND cc.`auth_status` = #{parameter.authStatus}
+			</if>
+			<if test="parameter.isPublished !=null ">
+				AND cc.`is_published` = #{parameter.isPublished}
+			</if>
+			<if test="parameter.username !=null and  parameter.username!='' ">
+				AND (
+				wu.`username` like concat('%',#{parameter.username},'%')
+				OR
+				wu.`realname` like concat('%',#{parameter.username},'%') )
+			</if>
+		</if>
+		) t
+		WHERE
+		cc.`is_deleted`= 0
+		AND
+		cc.`is_staging` = FALSE
+		<if test="parameter !=null ">
+			<if test="parameter.categoryId != null">
+				AND cc.`category_id` = #{parameter.categoryId}
+			</if>
+			<if test="parameter.isAdmin == false ">
+				AND cc.`author_id`=#{parameter.authorId}
+			</if>
+			<if test="parameter.title != null and parameter.title != ''">
+				AND cc.`title` like concat('%',#{parameter.title},'%')
+			</if>
+			<if test="parameter.authStatus !=null ">
+				AND cc.`auth_status` = #{parameter.authStatus}
+			</if>
+			<if test="parameter.isPublished !=null ">
+				AND cc.`is_published` = #{parameter.isPublished}
+			</if>
+			<if test="parameter.username !=null and  parameter.username!='' ">
+				AND (
+				wu.`username` like concat('%',#{parameter.username},'%')
+				OR
+				wu.`realname`like concat('%',#{parameter.username},'%') )
+			</if>
+		</if>
+		order by
+		cc.`gmt_create` DESC
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
@@ -701,28 +737,28 @@
 
 	<!-- 根据materialId查询一个CmsContent -->
 	<select id="getCmsContentByMaterialId" parameterType="java.lang.Long"
-		resultType="CmsContent">
+			resultType="CmsContent">
 		SELECT
-		*
+			*
 		FROM
-		cms_content t
+			cms_content t
 		WHERE
-		t.`category_id`=3
-		AND
-		t.`is_material_entry` = TRUE
-		AND
-		t.`material_id` =#{materialId};
+			t.`category_id`=3
+		  AND
+			t.`is_material_entry` = TRUE
+		  AND
+			t.`material_id` =#{materialId};
 	</select>
 
 	<!-- 根据id查询一个CmsContent -->
 	<select id="getCmsContentById" parameterType="java.lang.Long"
-		resultType="CmsContent">
+			resultType="CmsContent">
 		select * from cms_content where id=#{id};
 	</select>
 
 	<!-- 查询表单的数据总数 -->
 	<select id="getCmsContentCount" parameterType="java.lang.Long"
-		resultType="java.lang.Integer">
+			resultType="java.lang.Integer">
 		select
 		count(*)
 		from
@@ -742,100 +778,100 @@
 		id
 		in
 		<foreach item="item" index="index" collection="list" open="("
-			separator="," close=")">
+				 separator="," close=")">
 			#{item}
 		</foreach>
 	</delete>
 	<update id="updateCmsContentByMaterialId" parameterType="Long">
 		update
-		cms_content set is_deleted =true
+			cms_content set is_deleted =true
 		where material_id = #{materialId};
 
 	</update>
 	<!-- 通过作者id查询cmsContent -->
 	<select id="getCmsContentByAuthorId" parameterType="java.lang.Long"
-		resultType="CmsContent">
+			resultType="CmsContent">
 		select * from cms_content where author_id=#{AuthorId}
 	</select>
-	
+
 	<!-- 通过作者id查询cmsContent -->
 	<select id="getCmsContentByParentId" parameterType="java.lang.Long"
-		resultType="CmsContent">
+			resultType="CmsContent">
 		select * from cms_content where parent_id=#{parentId}
 	</select>
-	
+
 	<!-- 评论审核通过后，评论数加1/-1 -->
 	<update id="updatCmsContentCommentsById" parameterType="java.util.Map">
 		UPDATE `cms_content` SET comments=comments + (#{comments}) WHERE id = #{id};
 	</update>
-	
+
 	<!-- 评论审核通过后，文章评论数加1/-1 -->
 	<update id="updateCmsContentByParentId" parameterType="java.util.Map">
 		UPDATE `cms_content` SET comments=comments +(#{comments}) WHERE category_id=1  AND id = #{id};
 	</update>
-	
+
 	<!--CmsContentVO模糊查询获取帮助列表 -->
 	<select id="listHelp" parameterType="PageParameter" resultType="CmsContentVO">
-		SELECT 
-			cc.`id`,cc.`title`,pu.`username`,pu.`realname`,cc.`gmt_create`,t.count
-		FROM 
-			`cms_content`cc
+		SELECT
+		cc.`id`,cc.`title`,pu.`username`,pu.`realname`,cc.`gmt_create`,t.count
+		FROM
+		`cms_content`cc
 		LEFT JOIN
-			`pmph_user` pu 
+		`pmph_user` pu
 		ON
-			cc.author_id = pu.id,
-			(
-				SELECT 
-					count(*) count
-				FROM 
-					`cms_content`cc
-				LEFT JOIN
-					`pmph_user` pu 
-				ON
-					cc.author_id =  pu .id
-				WHERE
-					cc.`is_deleted`= 0 
-				AND cc.`is_staging` = FALSE 
-				<if test="parameter !=null ">
-					<if test="parameter.categoryId != null">
-						AND cc.`category_id` = #{parameter.categoryId} 
-					</if>
-					<if test="parameter.title != null and parameter.title != ''">
-						AND cc.`title` like concat('%',#{parameter.title},'%')
-					</if>
-					<if test="parameter.username !=null and  parameter.username!='' ">
-						AND (
-							pu.`username` like concat('%',#{parameter.username},'%') 
-						OR
-							pu.`realname` like concat('%',#{parameter.username},'%') )
-					</if>
-				</if>
-			) t
-			WHERE
-				cc.`is_deleted`= 0 
-			AND 
-			 	cc.`is_staging` = FALSE 
-			<if test="parameter !=null ">
-					<if test="parameter.categoryId != null">
-						AND cc.`category_id` = #{parameter.categoryId} 
-					</if>
-					<if test="parameter.title != null and parameter.title != ''">
-						AND cc.`title` like concat('%',#{parameter.title},'%')
-					</if>
-					<if test="parameter.username !=null and  parameter.username!='' ">
-						AND (
-							pu.`username` like concat('%',#{parameter.username},'%') 
-						OR
-							pu.`realname` like concat('%',#{parameter.username},'%') )
-					</if>
+		cc.author_id = pu.id,
+		(
+		SELECT
+		count(*) count
+		FROM
+		`cms_content`cc
+		LEFT JOIN
+		`pmph_user` pu
+		ON
+		cc.author_id =  pu .id
+		WHERE
+		cc.`is_deleted`= 0
+		AND cc.`is_staging` = FALSE
+		<if test="parameter !=null ">
+			<if test="parameter.categoryId != null">
+				AND cc.`category_id` = #{parameter.categoryId}
 			</if>
-		order by 
-   				  cc.`gmt_create` DESC 
+			<if test="parameter.title != null and parameter.title != ''">
+				AND cc.`title` like concat('%',#{parameter.title},'%')
+			</if>
+			<if test="parameter.username !=null and  parameter.username!='' ">
+				AND (
+				pu.`username` like concat('%',#{parameter.username},'%')
+				OR
+				pu.`realname` like concat('%',#{parameter.username},'%') )
+			</if>
+		</if>
+		) t
+		WHERE
+		cc.`is_deleted`= 0
+		AND
+		cc.`is_staging` = FALSE
+		<if test="parameter !=null ">
+			<if test="parameter.categoryId != null">
+				AND cc.`category_id` = #{parameter.categoryId}
+			</if>
+			<if test="parameter.title != null and parameter.title != ''">
+				AND cc.`title` like concat('%',#{parameter.title},'%')
+			</if>
+			<if test="parameter.username !=null and  parameter.username!='' ">
+				AND (
+				pu.`username` like concat('%',#{parameter.username},'%')
+				OR
+				pu.`realname` like concat('%',#{parameter.username},'%') )
+			</if>
+		</if>
+		order by
+		cc.`gmt_create` DESC
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
 	</select>
-	
+
 	<!-- 帮助管理-常见问题按标题查询 -->
 	<select id="listCmsContentByTitle" parameterType="java.lang.String" resultType="CmsContent">
 		SELECT * FROM  `cms_content` t WHERE t.`category_id`=4 AND t.`title`=#{title}
@@ -933,36 +969,36 @@
 
 	<delete id="deleterecommend" parameterType="map">
 		DELETE
-				FROM
-					cms_relationship
-				WHERE
-					main_cms_id = #{currentCmsId}
-				AND related_cms_id = #{relationCmsId}
+		FROM
+			cms_relationship
+		WHERE
+			main_cms_id = #{currentCmsId}
+		  AND related_cms_id = #{relationCmsId}
 
 	</delete>
 
 	<insert id="insertrecommend"  parameterType="map">
 		INSERT INTO cms_relationship (
-		main_cms_id,
-		related_cms_id
+			main_cms_id,
+			related_cms_id
 		)
 		VALUES
-		( #{currentCmsId}, #{relationCmsId})
+			( #{currentCmsId}, #{relationCmsId})
 	</insert>
 
 	<select id="recommendisExist" parameterType="map" resultType="boolean">
 		SELECT
-		CASE
-		WHEN count(*) > 0 THEN
-		TRUE
-		ELSE
-		FALSE
-		END
+			CASE
+				WHEN count(*) > 0 THEN
+					TRUE
+				ELSE
+					FALSE
+				END
 		FROM
-		cms_relationship bb
+			cms_relationship bb
 		WHERE
-		bb.main_cms_id = #{currentCmsId}
-		AND bb.related_cms_id = #{relationCmsId}
+			bb.main_cms_id = #{currentCmsId}
+		  AND bb.related_cms_id = #{relationCmsId}
 
 	</select>
 
