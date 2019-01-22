@@ -133,4 +133,18 @@
 		resultType="WriterPoint">
 		select * from writer_point where user_id=#{userId};
 	</select>
+
+	<!-- 用户积分表分页列表（同时查询分页数据和总条数） -->
+	<select id="getAllWriterPoint" resultType="WriterPointVO">
+		select wp.*,wu.username,wu.realname,t.count
+		from writer_point wp
+		left join writer_user wu on wu.id=wp.user_id,
+		(select count(*) count from writer_point wp
+		left join writer_user wu on wu.id=wp.user_id
+		where 1 = 1
+		) t
+		where 1 = 1
+		<!-- 下面是动态条件 -->
+		group by wu.username desc
+	</select>
 </mapper>

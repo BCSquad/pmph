@@ -856,7 +856,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 					pageParameter.getParameter().setIsForceEnd(false);
 					pageParameter.getParameter().setIsPublished(false);
 					break;
-				case "已发布":
+				case "申报中":
 					pageParameter.getParameter().setIsAllTextbookPublished(false);
 					pageParameter.getParameter().setIsForceEnd(false);
 					pageParameter.getParameter().setIsPublished(true);
@@ -957,7 +957,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				} else if( time1> time2){
 					materialListVO.setState("报名结束");
 				}else{
-					materialListVO.setState("已发布");
+					materialListVO.setState("申报中");
 				}
 			} else{
 

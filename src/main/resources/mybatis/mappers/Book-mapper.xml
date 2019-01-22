@@ -802,4 +802,74 @@
 	<select id="deletedBookSupport">
 		delete from book_support
 	</select>
+
+	<select id="queryTscxReadList" parameterType="PageParameter" resultType="Book">
+		SELECT b.* FROM book AS b
+		inner JOIN material_type AS t ON b.type = t.id
+		and SUBSTRING_INDEX(SUBSTRING_INDEX(CONCAT(t.path,'-',t.id),'-',
+		(select cast(
+		(CHAR_LENGTH(path)-CHAR_LENGTH(REPLACE(path,'-','')))/CHAR_LENGTH('-')+2
+		as decimal(9,2)
+		)
+		from material_type where id = cast('${parameter.type}' as decimal(9,2)))),'-',-1) = '${parameter.type}'
+		where b.is_on_sale = 1
+		<if test="parameter.name != null and parameter.name != ''">
+		  and  (b.bookname like concat('%',#{parameter.name},'%')or b.isbn like concat('%',#{parameter.name},'%') )
+		</if>
+		ORDER BY b.sales DESC LIMIT #{start},#{pageSize}
+
+	</select>
+
+	<select id="queryTscxReadListCount" parameterType="map" resultType="int">
+		SELECT count(b.id) FROM book AS b
+									inner JOIN material_type AS t ON b.type = t.id
+				and SUBSTRING_INDEX(SUBSTRING_INDEX(CONCAT(t.path,'-',t.id),'-',
+													(select cast(
+																			(CHAR_LENGTH(path)-CHAR_LENGTH(REPLACE(path,'-','')))/CHAR_LENGTH('-')+2
+																as decimal(9,2)
+																)
+													 from material_type where id = cast('${parameter.type}' as decimal(9,2)))),'-',-1) = '${parameter.type}'
+		where b.is_on_sale = 1
+		<if test="parameter.name != null and parameter.name != ''">
+			and  (b.bookname like concat('%',#{parameter.name},'%')or b.isbn like concat('%',#{parameter.name},'%') )
+		</if>
+		ORDER BY b.sales DESC
+	</select>
+
+	<update id="updateBookSellWell" parameterType="list">
+		<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+			update book
+			<set>
+					is_sell_well=#{item.isSellWell},
+					sort_sell_well=#{item.sortSellWell},
+
+			</set>
+			where id = ${item.id}
+		</foreach>
+
+	</update>
+		<update id="updateBookSellWellByid" parameterType="java.lang.Long">
+			update book
+			<set>
+				is_sell_well=null,
+				sort_sell_well=null,
+			</set>
+			where id = ${id}
+	</update>
+
+
+	<select id="querySellwelList" parameterType="PageParameter" resultType="Book">
+		SELECT b.* FROM book AS b
+		inner JOIN material_type AS t ON b.type = t.id
+		and SUBSTRING_INDEX(SUBSTRING_INDEX(CONCAT(t.path,'-',t.id),'-',
+		(select cast(
+		(CHAR_LENGTH(path)-CHAR_LENGTH(REPLACE(path,'-','')))/CHAR_LENGTH('-')+2
+		as decimal(9,2)
+		)
+		from material_type where id = cast('${parameter.type}' as decimal(9,2)))),'-',-1) = '${parameter.type}'
+		where b.is_on_sale = 1 and b.is_sell_well=1
+		ORDER BY b.sort_sell_well  LIMIT #{start},#{pageSize}
+	</select>
+
+
 </mapper>
