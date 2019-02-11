@@ -273,6 +273,9 @@ public class BookServiceImpl extends BaseService implements BookService {
 							book.setScore(9.0);
 							book.setType(1L);
 							bookDao.addBook(book);
+							//Q93
+							book.setIsNew(true);
+							bookDao.updateBook(book);
 							BookDetail bookDetail = new BookDetail(book.getId(), content);
 							bookDetailDao.addBookDetail(bookDetail);
 						} else {

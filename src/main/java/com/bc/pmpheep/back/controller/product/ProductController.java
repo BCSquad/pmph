@@ -32,6 +32,9 @@ import java.util.Map;
 @RequestMapping(value = "/product")
 public class ProductController {
 
+    // 当前业务类型
+    private static final String BUSSINESS_TYPE = "临床决策通知";
+
     @Autowired
     ProductService productService;
 
@@ -42,6 +45,7 @@ public class ProductController {
      * @return
      */
     @RequestMapping("/init")
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询详情")
     @ResponseBody
     public ResponseBean productInit(HttpServletRequest request
             , @RequestParam(value = "type",required = true)Long product_type
@@ -66,6 +70,7 @@ public class ProductController {
      * @return
      */
     @RequestMapping(value="/save/{publish}",method = RequestMethod.POST)
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "保存/发布")
     @ResponseBody
     public ResponseBean save(HttpServletRequest request, @RequestBody ProductVO productVO, @PathVariable("publish")String publish) throws IOException {
         Boolean is_publish=!"noPub".equals(publish);
@@ -82,6 +87,7 @@ public class ProductController {
     }
 
     @RequestMapping(value = "/list",method = RequestMethod.POST)
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询列表")
     @ResponseBody
     public ResponseBean list(HttpServletRequest request
                              ,String product_name
@@ -105,7 +111,6 @@ public class ProductController {
         return responseBean;
     }
 
-    private static final String BUSINESS_TYPE = "临床通知备注";
 
     /**
      * 功能描述：发布临床通知
@@ -116,7 +121,7 @@ public class ProductController {
      * @return
      */
     @RequestMapping(value = "/published",method = RequestMethod.POST)
-    @LogDetail(businessType = BUSINESS_TYPE, logRemark = "产品通知发布")
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "产品通知发布")
     @ResponseBody
     public ResponseBean published(HttpServletRequest request,
                                   @RequestParam("productId") Long productId, @RequestParam("orgIds") List<Long> orgIds/*,
@@ -145,7 +150,7 @@ public class ProductController {
      * </pre>
      */
     @ResponseBody
-    @LogDetail(businessType = BUSINESS_TYPE, logRemark = "查询历史教材通知列表")
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询历史通知列表")
     @RequestMapping(value = "/history", method = RequestMethod.GET)
     public ResponseBean history(
             @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,

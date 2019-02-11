@@ -61,6 +61,7 @@ public class OrgController {
 	 * @return 分页数据集
 	 */
 	@RequestMapping(value = "/list/org", method = RequestMethod.GET)
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询机构列表")
 	@ResponseBody
 	public ResponseBean listOrg(@RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
 			@RequestParam(name = "pageSize") Integer pageSize, OrgVO orgVO) {
@@ -77,6 +78,7 @@ public class OrgController {
 	 * @return 新增后的org
 	 */
 	@RequestMapping(value = "/add/org", method = RequestMethod.POST)
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增机构")
 	@ResponseBody
 	public ResponseBean addOrg(Org org) {
 		return new ResponseBean(orgService.addOrg(org));
@@ -91,6 +93,7 @@ public class OrgController {
 	 * @return 更新影响的行数
 	 */
 	@RequestMapping(value = "/update/org", method = RequestMethod.PUT)
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "更新机构")
 	@ResponseBody
 	public ResponseBean updateOrg(Org org) {
 		return new ResponseBean(orgService.updateOrg(org));

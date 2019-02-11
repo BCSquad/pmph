@@ -101,6 +101,7 @@ public class PmphUserController {
 	}
 
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "上传文件")
 	@RequestMapping(value = "uploadFile" , method = RequestMethod.POST)
 	public ResponseBean uploadFile(@RequestParam("file") MultipartFile file,@RequestParam("ids")Long ids , HttpServletRequest request) throws IOException {
 

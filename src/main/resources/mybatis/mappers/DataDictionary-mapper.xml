@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.DataDictionaryDao">
+
+    <sql id="typeKey" >
+        <trim suffixOverrides=",">
+            <if test="id != null ">
+                id	,
+            </if>
+            <if test="typeCode != null ">
+                type_code	,
+            </if>
+            <if test="typeName != null ">
+                type_name	,
+            </if>
+            <if test="note != null ">
+                note	,
+            </if>
+            <if test="sort != null ">
+                sort	,
+            </if>
+            <if test="deleted != null ">
+                deleted	,
+            </if>
+        </trim>
+    </sql>
+
+    <sql id="typeValues">
+        <trim suffixOverrides=",">
+            <if test="id != null ">
+                #{id}	,
+            </if>
+            <if test="typeCode != null ">
+                #{typeCode}	,
+            </if>
+            <if test="typeName != null ">
+                #{typeName}	,
+            </if>
+            <if test="note != null ">
+                #{note}	,
+            </if>
+            <if test="sort != null ">
+                #{sort}	,
+            </if>
+            <if test="deleted != null ">
+                #{deleted}	,
+            </if>
+        </trim>
+    </sql>
+
+    <sql id="typeDuplicatUpdate">
+        <trim suffixOverrides=",">
+            <if test="id != null ">
+                id	=	values(id)	,
+            </if>
+            <if test="typeCode != null ">
+                type_code	=	values(type_code)	,
+            </if>
+            <if test="typeName != null ">
+                type_name	=	values(type_name)	,
+            </if>
+            <if test="note != null ">
+                note	=	values(note)	,
+            </if>
+            <if test="sort != null ">
+                sort	=	values(sort)	,
+            </if>
+            <if test="deleted != null ">
+                deleted	=	values(deleted)	,
+            </if>
+        </trim>
+    </sql>
+
+    <!--字典分类查询 严格条件查询 非模糊查询-->
+    <select id="getTypeListStrict" parameterType="PageParameter" resultType="DataDictionaryType">
+        select * from
+        data_dictionary_type
+        <where>
+            <if test="parameter.id != null ">
+                and id	=	#{parameter.id}
+            </if>
+            <if test="parameter.typeCode != null and parameter.typeCode !='' ">
+                and type_code	= #{parameter.typeCode}
+            </if>
+            <if test="parameter.typeName != null and parameter.typeName !='' ">
+                and type_name	= #{parameter.typeName}
+            </if>
+            <if test="parameter.note != null and parameter.note !='' ">
+                and note	=	#{parameter.note}
+            </if>
+            <if test="parameter.sort != null  ">
+                and sort	=	#{parameter.sort}
+            </if>
+            <if test="parameter.deleted != null  ">
+                and deleted	=	#{parameter.deleted}
+            </if>
+        </where>
+        <if test="start != null">
+            limit #{start} ,#{pageSize}
+        </if>
+    </select>
+
+    <!--字典分类列表查询 模糊查询-->
+    <select id="getTypeList" parameterType="PageParameter" resultType="DataDictionaryType">
+        select * from
+        data_dictionary_type
+        <where>
+            <if test="parameter.id != null ">
+                and id	=	#{parameter.id}
+            </if>
+            <if test="parameter.typeCode != null and parameter.typeCode !='' ">
+                and type_code	like concat('%',#{parameter.typeCode},'%')
+            </if>
+            <if test="parameter.typeName != null and parameter.typeName !='' ">
+                and type_name	like concat('%',#{parameter.typeName},'%')
+            </if>
+            <if test="parameter.note != null and parameter.note !='' ">
+                and note	=	like concat('%',#{parameter.note},'%')
+            </if>
+            <if test="parameter.sort != null  ">
+                and sort	=	#{parameter.sort}
+            </if>
+            <if test="parameter.deleted != null  ">
+                and deleted	=	#{parameter.deleted}
+            </if>
+        </where>
+        <if test="start != null">
+            limit #{start} ,#{pageSize}
+        </if>
+    </select>
+
+    <select id="getTypeListCount" resultType="int" parameterType="DataDictionaryType">
+        select count(id) from
+        data_dictionary_type
+        <where>
+            <if test="parameter.id != null ">
+                and id	=	#{parameter.id}
+            </if>
+            <if test="parameter.typeCode != null and parameter.typeCode !='' ">
+                and type_code	like concat('%',#{parameter.typeCode},'%')
+            </if>
+            <if test="parameter.typeName != null and parameter.typeName !='' ">
+                and type_name	like concat('%',#{parameter.typeName},'%')
+            </if>
+            <if test="parameter.note != null and parameter.note !='' ">
+                and note	=	like concat('%',#{parameter.note},'%')
+            </if>
+            <if test="parameter.sort != null  ">
+                and sort	=	#{parameter.sort}
+            </if>
+            <if test="parameter.deleted != null  ">
+                and deleted	=	#{parameter.deleted}
+            </if>
+        </where>
+    </select>
+
+    <insert id="typeAdd" parameterType="DataDictionaryType" keyProperty="id" useGeneratedKeys="true">
+      insert into data_dictionary_type(
+        <include refid="typeKey" />
+        )
+        VALUES
+        (
+        <include refid="typeValues" />
+        )
+        on duplicate key UPDATE
+        <include refid="typeDuplicatUpdate"/>
+        ;
+    </insert>
+
+    <!--字典项查询 严格条件查询 非模糊查询-->
+    <select id="getItemListStrict" parameterType="PageParameter" resultType="DataDictionaryItem">
+        select * from
+        data_dictionary_item
+        <where>
+            <if test="parameter.id != null">
+                and id	=	#{parameter.id}
+            </if>
+            <if test="parameter.typeId != null">
+                and type_id	=	#{parameter.typeId}
+            </if>
+            <if test="parameter.code != null and parameter.code !='' ">
+                and code	=	#{parameter.code}
+            </if>
+            <if test="parameter.name != null and parameter.name !='' ">
+                and name	=	#{parameter.name}
+            </if>
+            <if test="parameter.note != null and parameter.note !='' ">
+                and note	=	#{parameter.note}
+            </if>
+            <if test="parameter.sort != null ">
+                and sort	=	#{parameter.sort}
+            </if>
+            <if test="parameter.deleted != null ">
+                and deleted	=	#{parameter.deleted}
+            </if>
+        </where>
+        <if test="start != null">
+            limit #{start} ,#{pageSize}
+        </if>
+    </select>
+
+
+    <!--字典项列表查询 模糊查询-->
+    <select id="getItemList" parameterType="PageParameter" resultType="DataDictionaryItem">
+        select * from
+        data_dictionary_item
+        <where>
+            <if test="parameter.id != null">
+                and id	=	#{parameter.id}
+            </if>
+            <if test="parameter.typeId != null">
+                and type_id	=	#{parameter.typeId}
+            </if>
+            <if test="parameter.code != null and parameter.code !='' ">
+                and code		like concat('%',#{parameter.code},'%')
+            </if>
+            <if test="parameter.name != null and parameter.name !='' ">
+                and name		like concat('%',#{parameter.name},'%')
+            </if>
+            <if test="parameter.note != null and parameter.note !='' ">
+                and note		like concat('%',#{parameter.note},'%')
+            </if>
+            <if test="parameter.sort != null ">
+                and sort	=	#{parameter.sort}
+            </if>
+            <if test="parameter.deleted != null ">
+                and deleted	=	#{parameter.deleted}
+            </if>
+        </where>
+        order by deleted asc,sort asc
+        <if test="start != null">
+            limit #{start} ,#{pageSize}
+        </if>
+    </select>
+
+    <select id="getItemListCount" resultType="int" parameterType="DataDictionaryItem">
+      select count(id) from
+        data_dictionary_item
+        <where>
+            <if test="parameter.id != null">
+                and id	=	#{parameter.id}
+            </if>
+            <if test="parameter.typeId != null">
+                and type_id	=	#{parameter.typeId}
+            </if>
+            <if test="parameter.code != null and parameter.code !='' ">
+                and code		like concat('%',#{parameter.code},'%')
+            </if>
+            <if test="parameter.name != null and parameter.name !='' ">
+                and name		like concat('%',#{parameter.name},'%')
+            </if>
+            <if test="parameter.note != null and parameter.note !='' ">
+                and note		like concat('%',#{parameter.note},'%')
+            </if>
+            <if test="parameter.sort != null ">
+                and sort	=	#{parameter.sort}
+            </if>
+            <if test="parameter.deleted != null ">
+                and deleted	=	#{parameter.deleted}
+            </if>
+        </where>
+    </select>
+
+    <sql id="itemKey">
+        <trim suffixOverrides=",">
+            <if test="id != null ">
+                id	,
+            </if>
+            <if test="typeId != null ">
+                type_id	,
+            </if>
+            <if test="code != null ">
+                code	,
+            </if>
+            <if test="name != null ">
+                name	,
+            </if>
+            <if test="note != null ">
+                note	,
+            </if>
+            <if test="sort != null ">
+                sort	,
+            </if>
+            <if test="deleted != null ">
+                deleted	,
+            </if>
+        </trim>
+    </sql>
+
+    <sql id="itemValues">
+        <trim suffixOverrides=",">
+            <if test="id != null ">
+                #{id}	,
+            </if>
+            <if test="typeId != null ">
+                #{typeId}	,
+            </if>
+            <if test="code != null ">
+                #{code}	,
+            </if>
+            <if test="name != null ">
+                #{name}	,
+            </if>
+            <if test="note != null ">
+                #{note}	,
+            </if>
+            <if test="sort != null ">
+                #{sort}	,
+            </if>
+            <if test="deleted != null ">
+                #{deleted}	,
+            </if>
+        </trim>
+    </sql>
+
+    <sql id="itemDuplicatUpdate">
+        <trim suffixOverrides=",">
+            <if test="id != null ">
+                id	=	values(id)	,
+            </if>
+            <if test="typeId != null ">
+                type_id	=	values(type_id)	,
+            </if>
+            <if test="code != null ">
+                code	=	values(code)	,
+            </if>
+            <if test="name != null ">
+                name	=	values(name)	,
+            </if>
+            <if test="note != null ">
+                note	=	values(note)	,
+            </if>
+            <if test="sort != null ">
+                sort	=	values(sort)	,
+            </if>
+            <if test="deleted != null ">
+                deleted	=	values(deleted)	,
+            </if>
+        </trim>
+    </sql>
+
+    <insert id="itemAdd" parameterType="DataDictionaryItem" keyProperty="id" useGeneratedKeys="true">
+        insert INTO
+        data_dictionary_item(
+        <include refid="itemKey" />
+        )
+        VALUES(
+        <include refid="itemValues"/>
+        )
+        on duplicate key UPDATE
+        <include refid="itemDuplicatUpdate"/>
+    </insert>
+
+</mapper>

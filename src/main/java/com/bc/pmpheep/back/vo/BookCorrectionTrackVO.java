@@ -77,6 +77,8 @@ public class BookCorrectionTrackVO implements Serializable {
      */
     @ExcelHeader(header = "主编回复")
     private String authorReply;
+	@ExcelHeader(header = "编辑回复")
+    private String editorReply;
     /**
      * 策划编辑是否回复
      */
@@ -106,7 +108,13 @@ public class BookCorrectionTrackVO implements Serializable {
      * 图书图片
      */
     private String imageUrl;
-    
+	/**
+	 * 是否前台展示 (当数据库字段gmt_show 大于 0000-00-00 00:00:00 时为true)
+	 */
+    private Boolean showFront;
+
+	@ExcelHeader(header = "是否前台展示")
+	private String showFrontStr;
     
 	public Timestamp getGmtCreate() {
 		return gmtCreate;
@@ -372,5 +380,30 @@ public class BookCorrectionTrackVO implements Serializable {
 
 	public void setIsbn(String isbn) {
 		this.isbn = isbn;
+	}
+
+	public Boolean getShowFront() {
+		return showFront;
+	}
+
+	public void setShowFront(Boolean showFront) {
+		this.showFront = showFront;
+		this.showFrontStr = showFront?"是":"否";
+	}
+
+	public String getShowFrontStr() {
+		return showFrontStr;
+	}
+
+	public void setShowFrontStr(String showFrontStr) {
+		this.showFrontStr = showFrontStr;
+	}
+
+	public String getEditorReply() {
+		return editorReply;
+	}
+
+	public void setEditorReply(String editorReply) {
+		this.editorReply = editorReply;
 	}
 }
