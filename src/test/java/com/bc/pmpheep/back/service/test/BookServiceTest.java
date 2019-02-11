@@ -138,7 +138,7 @@ public class BookServiceTest extends BaseTest {
 		// add 图书添加
 		Book book = bookService.add(new Book(null, "生理学", "1234", "1", "作者", "出版社", null, null, 1, 1L, null, null, 99D,
 				9D, "http:www.baidu.com", null, "d://ee", "d://aa", 0L, 0L, 0L, 0L, true, 999, null, true, 999, null,
-				true, 999, null, 0L, true, null, null, null, null, null));
+				true, 999, null, 0L, true, null, null, null, null, null,null,null));
 		return book;
 	}
 

@@ -50,4 +50,14 @@ public class WriterPointController {
 		pageParameter.setParameter(writerPoint);
 		return new ResponseBean(writerPointService.getListWriterPoint(pageParameter));
 	}
+	/**
+	 * 用户积分分页查询
+	 *
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "分页查询用户积分列表")
+	@RequestMapping(value = "/listAll", method = RequestMethod.GET)
+	public ResponseBean listAll(){
+		return new ResponseBean(writerPointService.getAllWriterPoint());
+	}
 }

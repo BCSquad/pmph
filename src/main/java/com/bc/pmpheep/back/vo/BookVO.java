@@ -3,7 +3,7 @@ package com.bc.pmpheep.back.vo;
 import java.io.Serializable;
 
 import org.apache.ibatis.type.Alias;
-
+@SuppressWarnings("serial")
 @Alias("BookVO")
 public class BookVO implements Serializable {
 

@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -274,4 +275,13 @@ public interface BookDao {
 	 * @return
 	 */
     Long getMaxSort();
+
+	List<Book> queryTscxReadList(PageParameter<Map<String, Object>> pageParameter);
+	List<Book> querySellwelList(PageParameter<Map<String, Object>> pageParameter);
+
+	int queryTscxReadListCount(PageParameter<Map<String, Object>> pageParameter);
+	Integer addSellwell(@Param("id") Long id);
+	void updateBookSellWell(List<Book> books);
+	int updateBookSellWellByid(@Param("id")Long id);
+
 }

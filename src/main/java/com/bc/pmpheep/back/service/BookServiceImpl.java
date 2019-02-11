@@ -711,4 +711,30 @@ public class BookServiceImpl extends BaseService implements BookService {
 		}
 	}
 
+	@Override
+	public List<Book> queryTscxReadList(PageParameter<Map<String, Object>> pageParameter) {
+		// TODO Auto-generated method stub
+		return this.bookDao.queryTscxReadList(pageParameter);
+	}
+
+	@Override
+	public int queryTscxReadListCount(PageParameter<Map<String, Object>> pageParameter) {
+		// TODO Auto-generated method stub
+		return this.bookDao.queryTscxReadListCount(pageParameter);
+	}
+
+	@Override
+	public String updataSellwell(List<Book> books) throws CheckedServiceException {
+		bookDao.updateBookSellWell(books);
+
+		return null;
+	}
+	@Override
+	public List<Book> querySellwelList(PageParameter<Map<String, Object>> pageParameter){
+		return bookDao.querySellwelList(pageParameter);
+	}
+	public int updateBookSellWellByid(Long id){
+		return bookDao.updateBookSellWellByid(id);
+	}
+
 }

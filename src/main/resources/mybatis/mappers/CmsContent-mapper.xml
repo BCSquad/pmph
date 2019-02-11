@@ -531,7 +531,7 @@
 				cc.`auth_status` = 2 and cc.is_published=1
 			</if>
 			<if test="parameter.authStatus == 4 ">
-				 cc.is_published=0
+				cc.`auth_status` = 2  and cc.is_published=0
 			</if>
 		</if>
 			<if test="parameter.isPublished !=null ">
@@ -598,7 +598,7 @@
 					`auth_status` = 2 and is_published=1
 				</if>
 				<if test="parameter.authStatus == 4 ">
-					is_published=0
+					`auth_status` = 2  and is_published=0
 				</if>
 			</if>
 				<if test="parameter.isPublished !=null ">
