@@ -28,6 +28,10 @@ public class CmsAdvertisementImage implements Serializable {
 	 * 图片id
 	 */
 	private String image;
+	/**
+	 * 图片转跳地址
+	 */
+	private String imageJumpUrl;
 
 	/**
 	 * 是否禁用
@@ -83,13 +87,14 @@ public class CmsAdvertisementImage implements Serializable {
 		super();
 	}
 	public CmsAdvertisementImage(Long id, Long advertId, String image, Boolean isDisabled, Timestamp gmtCreate,
-			Timestamp gmtUpdate) {
+			Timestamp gmtUpdate,String imageJumpUrl) {
 		this.id = id;
 		this.advertId = advertId;
 		this.image = image;
 		this.isDisabled = isDisabled;
 		this.gmtCreate = gmtCreate;
 		this.gmtUpdate = gmtUpdate;
+		this.imageJumpUrl = imageJumpUrl;;
 	}
 	@Override
 	public String toString() {
@@ -97,4 +102,11 @@ public class CmsAdvertisementImage implements Serializable {
 				+ isDisabled + ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
 	}
 
+	public String getImageJumpUrl() {
+		return imageJumpUrl;
+	}
+
+	public void setImageJumpUrl(String imageJumpUrl) {
+		this.imageJumpUrl = imageJumpUrl;
+	}
 }

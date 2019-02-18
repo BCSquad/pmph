@@ -265,9 +265,4 @@
 		limit 0,1
 	</select>
 
-	<select id="getSourceChainSortMax" resultType="java.lang.Long" parameterType="java.lang.Long">
-        select max(sort) from  activity_source_chain ac
-        where ac.activity_id=#{activityId};
-    </select>
-
 </mapper>

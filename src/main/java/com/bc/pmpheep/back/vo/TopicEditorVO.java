@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 
+import com.bc.pmpheep.annotation.ExcelHeader;
+import com.bc.pmpheep.back.util.Const;
 import org.apache.ibatis.type.Alias;
 
 /**
@@ -28,6 +30,9 @@ public class TopicEditorVO implements Serializable {
 	private Long id;
 	// 编辑Id
 	private Long userId;
+	// 选题名称
+	@ExcelHeader(header = "选题名称")
+	private String bookname;
 	/**
 	 * 主编姓名
 	 */
@@ -35,18 +40,26 @@ public class TopicEditorVO implements Serializable {
 	/**
 	 * 提交者姓名
 	 */
+	@ExcelHeader(header = "作者")
 	private String submitName;
+	/**
+	 * 提交者账号
+	 */
+	@ExcelHeader(header = "作者账号")
+	private String submitUser;
 	// 审核人姓名
 	private String editorName;
-	// 选题名称
-	private String bookname;
+
 	// 预计交稿时间
+	@ExcelHeader(header = "预计交稿日期")
 	private Timestamp deadline;
 	// 图书类别：0=专著，1=基础理论，2=论文集，3=科普，4=应用技术，5=工具书，6=其他
 	private Integer type;
 	// 图书类别
+	@ExcelHeader(header = "图书类别")
 	private String typeName;
 	// 提交时间
+	@ExcelHeader(header = "提交日期")
 	private Timestamp submitTime;
 	// 提交时间 查询起
 	private Timestamp submitTime1;
@@ -181,6 +194,11 @@ public class TopicEditorVO implements Serializable {
 
 	public void setType(Integer type) {
 		this.type = type;
+		if(type!=null && type>=0 && type < Const.TOPIC_TYPES.length){
+			this.typeName = Const.TOPIC_TYPES[type];
+		}else{
+			this.typeName = "";
+		}
 	}
 
 	public Timestamp getSubmitTime() {
@@ -229,5 +247,13 @@ public class TopicEditorVO implements Serializable {
 
 	public void setSubmitTime2(Timestamp submitTime2) {
 		this.submitTime2 = submitTime2;
+	}
+
+	public String getSubmitUser() {
+		return submitUser;
+	}
+
+	public void setSubmitUser(String submitUser) {
+		this.submitUser = submitUser;
 	}
 }

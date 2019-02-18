@@ -1,5 +1,8 @@
 package com.bc.pmpheep.back.controller;
 
+import com.bc.pmpheep.back.plugin.PageResult;
+import com.bc.pmpheep.back.po.Book;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +17,10 @@ import com.bc.pmpheep.back.vo.BookVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -219,9 +225,6 @@ public class BookController {
 	 * 
 	 * 功能描述：获取图书是否同步完成
 	 *
-	 * @param type
-	 * @return
-	 *
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取图书是否同步完成")
@@ -229,4 +232,56 @@ public class BookController {
 	public ResponseBean isEnd() {
 		return new ResponseBean(Const.AllSYNCHRONIZATION);
 	}
+
+
+	//查询某类下的图书畅销
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "根据获取图书销量查询列表")
+	@RequestMapping(value = "/sellWellList", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseBean searchTscxBook(Integer pageSize, Integer pageNumber, String name,Integer type) {
+		PageParameter<Map<String, Object>> pageParameter = new PageParameter<>(pageNumber, pageSize);
+		Map<String, Object> map = new HashMap<>();
+		//图书类型
+		map.put("type", type);
+		map.put("name",name);
+		pageParameter.setParameter(map);
+		List<Book> maps = bookService.queryTscxReadList(pageParameter);
+		PageResult<Book> pageResult = new PageResult<>();
+		pageResult.setRows(maps);
+		pageResult.setTotal(bookService.queryTscxReadListCount(pageParameter));
+		return new ResponseBean(pageResult);
+	}
+
+
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "添加图书畅销榜排序")
+	@RequestMapping(value = "/addSellwell", method = RequestMethod.POST)
+	public ResponseBean updataSellwell(@RequestBody List<Book> books) {
+		System.out.println(books);
+		return new ResponseBean(bookService.updataSellwell(books));
+	}
+
+	//查询某类下的图书畅销
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取图书畅销榜")
+	@RequestMapping(value = "/getsellWellList", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseBean getsellWellList(Integer pageSize, Integer pageNumber,Integer type) {
+		PageParameter<Map<String, Object>> pageParameter = new PageParameter<>(0, 6);
+		Map<String, Object> map = new HashMap<>();
+		//图书类型
+		map.put("type", type);
+		pageParameter.setParameter(map);
+		List<Book> maps = bookService.querySellwelList(pageParameter);
+		PageResult<Book> pageResult = new PageResult<>();
+		pageResult.setRows(maps);
+		return new ResponseBean(pageResult);
+	}
+
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除图书畅销")
+	@RequestMapping(value = "/delSellWellById", method = RequestMethod.GET)
+	public ResponseBean delectSellwell(Long id) {
+		return new ResponseBean(bookService.updateBookSellWellByid(id));
+	}
+
 }

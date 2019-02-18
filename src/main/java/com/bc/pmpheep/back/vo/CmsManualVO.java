@@ -35,6 +35,7 @@ public class CmsManualVO implements Serializable {
     private Long              userId;
     private Timestamp         gmtCreate;
     private String            userName;
+    private String            realname;
     private Integer           count;
 
     /**
@@ -163,4 +164,11 @@ public class CmsManualVO implements Serializable {
         this.count = count;
     }
 
+    public String getRealname() {
+        return realname;
+    }
+
+    public void setRealname(String realname) {
+        this.realname = realname;
+    }
 }

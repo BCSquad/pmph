@@ -101,4 +101,17 @@ public class WriterPointServiceImpl implements WriterPointService{
 		return writerPointDao.getWriterPointByUserId(userId);
 	}
 
+	@Override
+	public PageResult<WriterPointVO> getAllWriterPoint()
+			throws CheckedServiceException {
+		PageResult<WriterPointVO> pageResult = new PageResult<WriterPointVO>();
+		List<WriterPointVO> writerPointRuleVOs = writerPointDao.getAllWriterPoint();
+		if (CollectionUtil.isNotEmpty(writerPointRuleVOs)) {
+			Integer count = writerPointRuleVOs.get(0).getCount();
+			pageResult.setTotal(count);
+			pageResult.setRows(writerPointRuleVOs);
+		}
+		return pageResult;
+
+	}
 }

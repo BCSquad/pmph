@@ -352,6 +352,10 @@ public class CmsContentServiceImpl implements CmsContentService {
             && Const.CMS_AUTHOR_TYPE_2 == cmsContent.getAuthorType()) {
             String ruleName = "发表文章";
             writerPointLogService.addWriterPointLogByRuleName(ruleName, cmsContent.getAuthorId());
+            //原创
+            if(cmsContent.getIsOriginal() != null && cmsContent.getIsOriginal()){
+                writerPointLogService.addWriterPointLogByRuleName("原创文章", cmsContent.getAuthorId());
+            }
         }
         // 删除附件
         if (ArrayUtil.isNotEmpty(attachment)) {
@@ -419,7 +423,7 @@ public class CmsContentServiceImpl implements CmsContentService {
     }
 
     @Override
-    public Integer checkContentById(Long id, Short authStatus, Long categoryId, String sessionId)
+    public Integer checkContentById(Long id, Short authStatus, Long categoryId, String sessionId,Boolean isOriginal)
     throws CheckedServiceException {
         // 获取当前登陆用户
         PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
@@ -433,9 +437,18 @@ public class CmsContentServiceImpl implements CmsContentService {
         }
         Boolean isPublished = false;
         Boolean isStaging = false;
-        if (Const.CMS_AUTHOR_STATUS_2 == authStatus) { // 发布
-            isPublished = true;
+        if (Const.CMS_AUTHOR_STATUS_2 == authStatus) { // 审核通过
             isStaging = true;
+        }
+        //发布
+        if(3==authStatus){
+            isPublished = true;
+            authStatus=2;
+        }
+        //撤回
+        if(4==authStatus){
+            isPublished = false;
+            authStatus=2;
         }
         Integer count = 0;
         count =
@@ -446,7 +459,8 @@ public class CmsContentServiceImpl implements CmsContentService {
                                                       DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
                                                                                DateUtil.getCurrentTime()),
                                                       isPublished, isStaging,
-                                                      Const.MATERIAL_TYPE_ID));
+                                                      Const.MATERIAL_TYPE_ID
+                                                      ));
         CmsContent cmsContent = this.getCmsContentById(id);
         if (ObjectUtil.isNull(cmsContent)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
@@ -474,6 +488,10 @@ public class CmsContentServiceImpl implements CmsContentService {
             && Const.CMS_AUTHOR_TYPE_2 == cmsContent.getAuthorType()) {
             String ruleName = "发表文章";
             writerPointLogService.addWriterPointLogByRuleName(ruleName, cmsContent.getAuthorId());
+            //原创
+            if(cmsContent.getIsOriginal()!=null && cmsContent.getIsOriginal()){
+                writerPointLogService.addWriterPointLogByRuleName("原创文章", cmsContent.getAuthorId());
+            }
         }
         return count;
     }

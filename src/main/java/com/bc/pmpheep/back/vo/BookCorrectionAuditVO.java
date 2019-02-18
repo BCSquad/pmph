@@ -67,8 +67,13 @@ public class BookCorrectionAuditVO implements Serializable {
     /**
      * 提交者姓名
      */
-	@ExcelHeader(header = "提交者姓名")
+	//@ExcelHeader(header = "提交者姓名")
     private String realname;
+	/**
+	 * 提交者账号
+	 */
+	@ExcelHeader(header = "提交者账号")
+	private String username;
     /**
      * 提交时间
      */
@@ -324,5 +329,37 @@ public class BookCorrectionAuditVO implements Serializable {
 
 	public void setIsbn(String isbn) {
 		this.isbn = isbn;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public Boolean getAuthorReplied() {
+		return isAuthorReplied;
+	}
+
+	public void setAuthorReplied(Boolean authorReplied) {
+		isAuthorReplied = authorReplied;
+	}
+
+	public Boolean getEditorHandling() {
+		return isEditorHandling;
+	}
+
+	public void setEditorHandling(Boolean editorHandling) {
+		isEditorHandling = editorHandling;
+	}
+
+	public Boolean getEditorReplied() {
+		return isEditorReplied;
+	}
+
+	public void setEditorReplied(Boolean editorReplied) {
+		isEditorReplied = editorReplied;
 	}
 }

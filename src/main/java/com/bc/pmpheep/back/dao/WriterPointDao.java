@@ -65,5 +65,6 @@ public interface WriterPointDao {
 	 * @return
 	 */
 	WriterPoint getWriterPointByUserId(Long userId);
+	List<WriterPointVO> getAllWriterPoint();
 	
 }

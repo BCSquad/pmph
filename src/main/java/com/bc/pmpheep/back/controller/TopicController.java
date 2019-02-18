@@ -69,7 +69,7 @@ public class TopicController {
 	 *            当前页数
 	 * @param bookname
 	 *            选题名称
-	 * @param submitTime
+	 * submitTime
 	 *            提交时间
 	 * @return
 	 *
@@ -138,7 +138,7 @@ public class TopicController {
 	 *            当前页数
 	 * @param bookname
 	 *            选题名称
-	 * @param submitTime
+	 *submitTime
 	 *            提交时间
 	 * @return ResponseBean
 	 */
@@ -225,7 +225,7 @@ public class TopicController {
 	 *            当前页数
 	 * @param bookname
 	 *            选题名称
-	 * @param submitTime
+	 *  submitTime
 	 *            提交时间
 	 * @return ResponseBean
 	 */
@@ -335,7 +335,7 @@ public class TopicController {
 	 *            申报状态
 	 * @param bookname
 	 *            申报标题
-	 * @param submitTime
+	 *  submitTime
 	 *            提交日期
 	 * @param pageSize
 	 * @param pageNumber

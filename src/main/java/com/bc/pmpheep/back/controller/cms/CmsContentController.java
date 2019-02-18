@@ -60,7 +60,7 @@ public class CmsContentController {
      * @param pageNumber 当前页
      * @param pageSize 页面数据条数
      * @param cmsContentVO 
-     * @param sessionId
+     * @ sessionId
      * @return 分页数据集
      * </pre>
      */
@@ -96,8 +96,8 @@ public class CmsContentController {
      * @param files 上传附件数组
      * @param content 内容信息
      * @param scheduledTime 定时发布时间
-     * @param sessionId sessionId
-     * @param loginType 用户类型
+     * @ sessionId sessionId
+     * @ loginType 用户类型
      * @return CmsContent 对象
      * </pre>
      */
@@ -187,12 +187,14 @@ public class CmsContentController {
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "内容审核")
     @RequestMapping(value = "/content/check", method = RequestMethod.PUT)
     public ResponseBean check(@RequestParam("id") Long id,
-    @RequestParam("authStatus") Short authStatus, HttpServletRequest request) {
+                              @RequestParam("authStatus") Short authStatus,
+                              @RequestParam(value = "isOriginal",defaultValue = "false")Boolean isOriginal,
+                              HttpServletRequest request) {
         String sessionId = CookiesUtil.getSessionId(request);
         return new ResponseBean(cmsContentService.checkContentById(id,
                                                                    authStatus,
                                                                    Const.CMS_CATEGORY_ID_1,
-                                                                   sessionId));
+                                                                   sessionId,isOriginal));
     }
 
     /**
@@ -201,7 +203,7 @@ public class CmsContentController {
      * 功能描述：内容修改
      * 使用示范：
      *
-     * @param id 主键ID
+     *  id 主键ID
      * @return 影响行数
      * </pre>
      */
@@ -215,6 +217,7 @@ public class CmsContentController {
     @RequestParam(value="scheduledTime",required = false) String scheduledTime, HttpServletRequest request) {
         try {
             String sessionId = CookiesUtil.getSessionId(request);
+            cmsContent.setIsPublished(false);
             return new ResponseBean(cmsContentService.updateCmsContent(cmsContent,
                                                                        files,
                                                                        imgFile,

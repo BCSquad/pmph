@@ -98,6 +98,13 @@ public class BookFeedBack implements Serializable {
      */
 	@ExcelHeader(header = "提交时间")
     private Timestamp gmtCreate;
+	/**
+	 * 是否前台展示 (当数据库字段gmt_show 大于 0000-00-00 00:00:00 时为true)
+	 */
+	private Boolean showFront;
+
+	@ExcelHeader(header = "是否前台展示")
+	private String showFrontStr;
 
 	/**
 	 * 数据更新时间
@@ -247,5 +254,22 @@ public class BookFeedBack implements Serializable {
 
 	public void setAuthDateS(String authDateS) {
 		this.authDateS = authDateS;
+	}
+
+	public Boolean getShowFront() {
+		return showFront;
+	}
+
+	public void setShowFront(Boolean showFront) {
+		this.showFront = showFront;
+		this.showFrontStr = showFront?"是":"否";
+	}
+
+	public String getShowFrontStr() {
+		return showFrontStr;
+	}
+
+	public void setShowFrontStr(String showFrontStr) {
+		this.showFrontStr = showFrontStr;
 	}
 }

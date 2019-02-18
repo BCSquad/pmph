@@ -34,7 +34,7 @@ public class DecMonograph implements Serializable {
 	//个人资料id
 	private String perId;
 	//临床决策申报id
-	private String expertationId;
+	private Long expertationId;
 
 	public DecMonograph() {
 
@@ -148,11 +148,11 @@ public class DecMonograph implements Serializable {
 		isSelfPaid = selfPaid;
 	}
 
-	public String getExpertationId() {
+	public Long getExpertationId() {
 		return expertationId;
 	}
 
-	public void setExpertationId(String expertationId) {
+	public void setExpertationId(Long expertationId) {
 		this.expertationId = expertationId;
 	}
 }

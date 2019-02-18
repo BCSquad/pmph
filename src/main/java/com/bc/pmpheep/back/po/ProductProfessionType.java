@@ -16,6 +16,8 @@ public class ProductProfessionType implements Serializable {
     private Boolean isDeleted	;//附件名称	varchar
     private Long productId;
 
+    private Long expertationId;
+
     public ProductProfessionType() {
     }
 
@@ -58,5 +60,13 @@ public class ProductProfessionType implements Serializable {
 
     public void setProductId(Long productId) {
         this.productId = productId;
+    }
+
+    public Long getExpertationId() {
+        return expertationId;
+    }
+
+    public void setExpertationId(Long expertationId) {
+        this.expertationId = expertationId;
     }
 }

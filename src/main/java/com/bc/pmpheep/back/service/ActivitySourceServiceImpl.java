@@ -55,12 +55,8 @@ public class ActivitySourceServiceImpl implements ActivitySourceService {
                 }
                 activitySource.setSort(activitySourceDao.getMaxSort() + 1);
                 activitySource.setFileId(gridFSFileId);
-
-                long chainMax=0;
-                if(activitySourceDao.getSourceChainSortMax(activityId)!=null){
-                    chainMax= activitySourceDao.getSourceChainSortMax(activityId) + 1;
-                }
-                activitySourceDao.addActivitySourceChain(new ActivitySourceChain(activityId,activitySource.getId(),chainMax));
+                Integer sort=activitySourceDao.getChainSortMax(activityId).intValue() + 1;
+                activitySourceDao.addActivitySourceChain(new ActivitySourceChain(activityId,activitySource.getId(),sort.longValue()));
 
 
 
@@ -75,6 +71,49 @@ public class ActivitySourceServiceImpl implements ActivitySourceService {
             }
         }
         return activitySource;
+    }
+    @Override
+    public ActivitySource addSourceList(Long activityId,String[] files,String sessionId, HttpServletRequest request) throws IOException {
+        if (ArrayUtil.isNotEmpty(files)) {
+            for (int i = 0; i < files.length; i++) {
+                    ActivitySource activitySource = new ActivitySource();
+                    activitySource.setSourceName("default");
+                    PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+                    activitySource.setGmtUpload(DateUtil.getCurrentTime());
+                    activitySource.setUploaderId(pmphUser.getId());
+
+                    /*     activitySourceDao.addSource(activitySource);// 获取新增后的主键ID*/
+                    Long id = this.addSource(activitySource).getId();
+
+
+                byte[] fileByte = (byte[]) request.getSession(false).getAttribute(files[i]);
+                String fileName =
+                        (String) request.getSession(false).getAttribute("fileName_" + files[i]);
+                InputStream sbs = new ByteArrayInputStream(fileByte);
+                String gridFSFileId =
+                        fileService.save(sbs, fileName, FileType.CMS_ATTACHMENT, id);
+                if (StringUtil.isEmpty(gridFSFileId)) {
+                    throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                            CheckedExceptionResult.FILE_UPLOAD_FAILED,
+                            "文件上传失败!");
+                }
+                activitySource.setSourceName(fileName);
+                activitySource.setSort(activitySourceDao.getMaxSort()+1);
+                activitySource.setFileId(gridFSFileId);
+                Integer sort=activitySourceDao.getChainSortMax(activityId).intValue() + 1;
+
+                activitySourceDao.addActivitySourceChain(new ActivitySourceChain(activityId,activitySource.getId(),sort.longValue()));
+
+                // 保存对应数据
+                activitySourceDao.updateSource(activitySource);
+                if (ObjectUtil.isNull(activitySource.getId())) {
+                    throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                            CheckedExceptionResult.PO_ADD_FAILED,
+                            "CmsExtra对象新增失败");
+                }
+            }
+        }
+        return null;
     }
 
     @Override

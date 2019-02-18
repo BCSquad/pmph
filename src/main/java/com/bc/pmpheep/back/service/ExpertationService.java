@@ -7,6 +7,7 @@ import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.vo.ExpertationVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
+import java.util.List;
 import java.util.Map;
 
 public interface ExpertationService {
@@ -53,4 +54,6 @@ public interface ExpertationService {
      * @return
      */
     int changeStatus(Integer status,Long id,String sessionId);
+
+    List<ExpertationVO> getExpertationByIdList(List<Long> queryExpertationIdList);
 }

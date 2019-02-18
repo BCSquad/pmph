@@ -8,6 +8,9 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
+import com.bc.pmpheep.annotation.ExcelHeader;
+import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import org.apache.ibatis.type.Alias;
 
 /**
@@ -28,30 +31,52 @@ public class TopicDirectorVO implements Serializable {
 
 	// 主键
 	private Long id;
+	// 选题名称
+	@ExcelHeader(header = "选题名称")
+	private String bookname;
 	// 部门id
 	private Long departmentId;
 	/**
 	 * 提交选题申报用户姓名
 	 */
+	@ExcelHeader(header = "作者")
 	private String submitName;
+	/**
+	 * 提交选题申报用户名
+	 */
+	@ExcelHeader(header = "作者账号")
+	private String submitUser;
 	/**
 	 * 主编姓名
 	 */
 	private String realname;
-	// 选题名称
-	private String bookname;
+
 	// 预计交稿时间
+	@ExcelHeader(header = "预计交稿日期")
 	private Timestamp deadline;
 	// 图书类别：0=专著，1=基础理论，2=论文集，3=科普，4=应用技术，5=工具书，6=其他
 	private Integer type;
 	// 图书类别
+	@ExcelHeader(header = "图书类别")
 	private String typeName;
 	// 提交时间
+	@ExcelHeader(header = "提交日期")
 	private Timestamp submitTime;
 	// 提交时间 查询起
 	private Timestamp submitTime1;
 	// 提交时间 查询止
 	private Timestamp submitTime2;
+	/**
+	 * 是否被编辑退回
+	 */
+	private Boolean isRejectedByEditor;
+	@ExcelHeader(header = "是否退回")
+	private String rejectedExcel;
+	/**
+	 * 编辑退回原因
+	 */
+	@ExcelHeader(header = "退回理由")
+	private String reasonEditor;
 	/**
 	 * 选题申报状态
 	 */
@@ -149,14 +174,7 @@ public class TopicDirectorVO implements Serializable {
 		this.stateDeail = stateDeail;
 	}
 
-	/**
-	 * 是否被编辑退回
-	 */
-	private Boolean isRejectedByEditor;
-	/**
-	 * 编辑退回原因
-	 */
-	private String reasonEditor;
+
 
 	public Long getId() {
 		return id;
@@ -204,6 +222,11 @@ public class TopicDirectorVO implements Serializable {
 
 	public void setType(Integer type) {
 		this.type = type;
+		if(type!=null && type>=0 && type < Const.TOPIC_TYPES.length){
+			this.typeName = Const.TOPIC_TYPES[type];
+		}else{
+			this.typeName = "";
+		}
 	}
 
 	public Timestamp getSubmitTime() {
@@ -220,6 +243,7 @@ public class TopicDirectorVO implements Serializable {
 
 	public void setIsRejectedByEditor(Boolean isRejectedByEditor) {
 		this.isRejectedByEditor = isRejectedByEditor;
+		this.rejectedExcel = ObjectUtil.isNull(isRejectedByEditor)?"":(isRejectedByEditor?"已退回":"未退回");
 	}
 
 	public String getReasonEditor() {
@@ -262,4 +286,19 @@ public class TopicDirectorVO implements Serializable {
 		this.submitTime2 = submitTime2;
 	}
 
+	public String getSubmitUser() {
+		return submitUser;
+	}
+
+	public void setSubmitUser(String submitUser) {
+		this.submitUser = submitUser;
+	}
+
+	public String getRejectedExcel() {
+		return rejectedExcel;
+	}
+
+	public void setRejectedExcel(String rejectedExcel) {
+		this.rejectedExcel = rejectedExcel;
+	}
 }

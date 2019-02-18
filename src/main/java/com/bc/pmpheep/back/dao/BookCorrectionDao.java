@@ -160,4 +160,20 @@ public interface BookCorrectionDao {
 	 * @return
 	 */
 	List<BookCorrectionAuditVO> exportBookCheck(Map<String, Object> map);
+
+	/**
+	 * 翻转当前id的前台显示
+	 * @param id
+	 * @param showFront 为true时，修改为false
+	 * @return
+	 */
+	BookCorrectionTrackVO switchFrontShow(@Param("id") Long id,@Param("showFront") Boolean showFront);
+
+	/**
+	 * 翻转当前id的前台显示
+	 * @param id
+	 * @param showFront 为true时，修改为false
+	 * @return
+	 */
+	BookFeedBack switchFrontShowFeedBack(@Param("id") Long id,@Param("showFront") Boolean showFront);
 }

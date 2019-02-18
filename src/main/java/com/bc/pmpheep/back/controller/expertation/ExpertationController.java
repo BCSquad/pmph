@@ -29,6 +29,8 @@ import java.util.Map;
 @RequestMapping("/expertation")
 public class ExpertationController {
 
+    private static final String BUSSINESS_TYPE = "临床决策临床申报表";
+
     @Autowired
     ExpertationService expertationService;
 
@@ -40,6 +42,7 @@ public class ExpertationController {
      * @return
      */
     @RequestMapping("/list")
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查找临床决策申报列表")
     @ResponseBody
     public ResponseBean getExpertationList(
             HttpServletRequest request
@@ -66,6 +69,7 @@ public class ExpertationController {
      * @return
      */
     @RequestMapping("/changeStatus")
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "改变申报审核的状态")
     @ResponseBody
     public ResponseBean changeStatus(
             HttpServletRequest request
@@ -83,6 +87,7 @@ public class ExpertationController {
      * @return
      */
     @RequestMapping("/count/{ttype}/{ptype}")
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "结果统计")
     @ResponseBody
     public ResponseBean getCountListGroupByType(HttpServletRequest request,
                                                 @PathVariable("ttype")int ttype,
@@ -116,6 +121,7 @@ public class ExpertationController {
      * @return
      */
     @RequestMapping("/get")
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "申报详情")
     @ResponseBody
     public ResponseBean<ExpertationVO> getById(HttpServletRequest request,@RequestParam(value = "id",required = true) Long id){
 
@@ -138,7 +144,6 @@ public class ExpertationController {
         return responseBean;
     }
 
-    private final String       BUSSINESS_TYPE = "申报表审核";
     /**
      * 审核进度
      *
@@ -173,6 +178,7 @@ public class ExpertationController {
      */
 
     @RequestMapping("/showTabs")
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "产品类型显示控制")
     @ResponseBody
     public ResponseBean<Map> showTabs(HttpServletRequest request,@RequestParam(value = "productType",required = true) Long productType) {
 

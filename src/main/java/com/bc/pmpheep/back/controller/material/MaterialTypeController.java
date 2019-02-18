@@ -37,6 +37,7 @@ public class MaterialTypeController {
      * @return
      */
     @RequestMapping(value = "addbelow",method = RequestMethod.POST)
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增分类")
     @ResponseBody
     public ResponseBean addMarterialType(HttpServletRequest request
             ,@ModelAttribute MaterialType type){

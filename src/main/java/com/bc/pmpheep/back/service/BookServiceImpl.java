@@ -273,6 +273,9 @@ public class BookServiceImpl extends BaseService implements BookService {
 							book.setScore(9.0);
 							book.setType(1L);
 							bookDao.addBook(book);
+							//Q93
+							book.setIsNew(true);
+							bookDao.updateBook(book);
 							BookDetail bookDetail = new BookDetail(book.getId(), content);
 							bookDetailDao.addBookDetail(bookDetail);
 						} else {
@@ -706,6 +709,32 @@ public class BookServiceImpl extends BaseService implements BookService {
 				bookDao.addBookSupport(id, bookId);
 			}
 		}
+	}
+
+	@Override
+	public List<Book> queryTscxReadList(PageParameter<Map<String, Object>> pageParameter) {
+		// TODO Auto-generated method stub
+		return this.bookDao.queryTscxReadList(pageParameter);
+	}
+
+	@Override
+	public int queryTscxReadListCount(PageParameter<Map<String, Object>> pageParameter) {
+		// TODO Auto-generated method stub
+		return this.bookDao.queryTscxReadListCount(pageParameter);
+	}
+
+	@Override
+	public String updataSellwell(List<Book> books) throws CheckedServiceException {
+		bookDao.updateBookSellWell(books);
+
+		return null;
+	}
+	@Override
+	public List<Book> querySellwelList(PageParameter<Map<String, Object>> pageParameter){
+		return bookDao.querySellwelList(pageParameter);
+	}
+	public int updateBookSellWellByid(Long id){
+		return bookDao.updateBookSellWellByid(id);
 	}
 
 }

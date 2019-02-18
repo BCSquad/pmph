@@ -445,7 +445,7 @@ public class ExcelHelper {
 	 *            要生成的Excel表名（非文件名）
 	 * @return Excel工作簿
 	 */
-	public Workbook fromBusinessObjectList(List dataSource, String sheetName)
+	public Workbook fromBusinessObjectList(List dataSource, String sheetName,String... alias)
 			throws CheckedServiceException, IllegalArgumentException, IllegalAccessException {
 		if (null == dataSource || dataSource.isEmpty()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
@@ -453,7 +453,7 @@ public class ExcelHelper {
 		}
 		Workbook workbook = new HSSFWorkbook();
 		Sheet sheet = workbook.createSheet(sheetName);
-		sheet = generateHeader(sheet, dataSource.get(0).getClass()); // 生成表头
+		sheet = generateHeader(sheet, dataSource.get(0).getClass(),alias); // 生成表头
 		headerStyleSetup(workbook, 1); // 设置表头样式
 		Field[] fields = dataSource.get(0).getClass().getDeclaredFields();
 
@@ -477,7 +477,7 @@ public class ExcelHelper {
 
 				if (field.isAnnotationPresent(ExcelHeader.class)) {
 					ExcelHeader excelHeader = (ExcelHeader) field.getAnnotation(ExcelHeader.class);
-					String headerName = excelHeader.header();
+					String headerName = getHeaderName(excelHeader, alias);
 					String cellType = excelHeader.cellType();
 					if (StringUtil.notEmpty(headerName)) {
 						Object o = field.get(object);
@@ -519,6 +519,30 @@ public class ExcelHelper {
 		sheet.setForceFormulaRecalculation(true);
 		/* 样式调整 */
 		return dataStyleSetup(workbook, 1, rowCount, columnProperties);
+	}
+
+	/**
+	 * 获取表头，默认无别名既为header
+	 * @param excelHeader
+	 * @param alias
+	 * @return
+	 */
+	private String getHeaderName(ExcelHeader excelHeader, String[] alias) {
+		String headerName = "";
+		if(alias != null && alias.length >0){
+            if("0".equals(alias[0])){
+                headerName = excelHeader.alias_0();
+            }else if("1".equals(alias[0])){
+                headerName = excelHeader.alias_1();
+            }else if("2".equals(alias[0])){
+                headerName = excelHeader.alias_2();
+            }else if("3".equals(alias[0])){
+                headerName = excelHeader.alias_3();
+            }
+        }else{
+            headerName = excelHeader.header();
+        }
+		return headerName;
 	}
 
 
@@ -915,7 +939,7 @@ public class ExcelHelper {
 		return cellStyle;
 	}
 
-	private Sheet generateHeader(Sheet sheet, Class clazz) {
+	private Sheet generateHeader(Sheet sheet, Class clazz,String... alias) {
 		Field[] fields = clazz.getDeclaredFields();
 		/* 获取Excel首行，利用反射设置表头 */
 		Row row = sheet.createRow(0);
@@ -927,7 +951,7 @@ public class ExcelHelper {
 			/* 仅查找与ExcelHeader注解匹配的表头 */
 			if (field.isAnnotationPresent(ExcelHeader.class)) {
 				ExcelHeader excelHeader = (ExcelHeader) field.getAnnotation(ExcelHeader.class);
-				String headerName = excelHeader.header();
+				String headerName = getHeaderName(excelHeader, alias);
 				if (StringUtil.notEmpty(headerName)) {
 					Cell cell = row.createCell(count);
 					sheet.setColumnWidth(count, (headerName.length() + 1) * 512);// 设置基本列宽度
@@ -2971,6 +2995,7 @@ public class ExcelHelper {
 					"用于导出Excel的数据源为空");
 		}
 		Workbook workbook = new HSSFWorkbook();
+		sheetName = sheetName.replaceAll("-\\d{4}-\\d{2}-\\d{2}-\\d{2}：\\d{2}：\\d{2}","");
 		Sheet sheet = workbook.createSheet(sheetName);
 		sheet = generateExpertationHeader(dataSource,product, sheet); // 生成表头
 		headerStyleSetup(workbook, 2); // 设置表头样式

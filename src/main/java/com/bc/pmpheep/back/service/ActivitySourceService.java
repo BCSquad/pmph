@@ -23,6 +23,7 @@ public interface ActivitySourceService {
      * @throws IOException
      */
     ActivitySource addSource(Long activityId,String[] files, ActivitySource activitySource,String sessionId, HttpServletRequest request) throws IOException;
+    ActivitySource addSourceList(Long activityId,String[] files,String sessionId, HttpServletRequest request) throws IOException;
 
     /**
      * 获取文件资源列表
