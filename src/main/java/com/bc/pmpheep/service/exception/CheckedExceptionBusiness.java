@@ -93,4 +93,6 @@ public class CheckedExceptionBusiness {
 	public final static String WECHAT_ARTICLE = "微信公众号文章同步";
 
 	public final static String CLINICAL_DECISION = "临床决策";
+
+	public final static String DATA_DICTIONARY = "数据字典";
 }

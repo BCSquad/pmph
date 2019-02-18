@@ -787,7 +787,7 @@
 			separator="," close=")">
 			#{item}
 		</foreach>
-		ORDER BY dp.chosen_position desc,dp.rank asc
+		ORDER BY t.sort asc ,convert(t.textbook_name using gbk)  asc,dp.chosen_position desc,dp.rank asc
 	</select>
 	<!-- 角色遴选页面批量导出主编/副主编 -->
 	<select id="getExcelDecByMaterialId" resultType="com.bc.pmpheep.back.bo.DecPositionBO">

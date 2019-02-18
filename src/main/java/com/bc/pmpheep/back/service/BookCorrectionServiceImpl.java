@@ -270,6 +270,19 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 		return rows;
 
 	}
+
+	@Override
+	public BookCorrectionTrackVO switchFrontShow(Long id, Boolean showFront) {
+		BookCorrectionTrackVO result = bookCorrectionDao.switchFrontShow(id,showFront);
+		return result;
+	}
+
+	@Override
+	public BookFeedBack switchFrontShowFeedBack(Long id, Boolean showFront) {
+		BookFeedBack result = bookCorrectionDao.switchFrontShowFeedBack(id,showFront);
+		return result;
+	}
+
 	@Override
 	public PageResult<BookFeedBack> bookFeedBaskList(HttpServletRequest request, Integer pageNumber, Integer pageSize, Boolean result) {
 		if (null == request.getSession(false)) {

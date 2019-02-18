@@ -74,6 +74,7 @@ public class PmphPermissionController {
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE , logRemark = "跳转到添加权限的页面")
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public ResponseBean add() {
 		return new ResponseBean(new PmphPermission());
@@ -91,6 +92,7 @@ public class PmphPermissionController {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE , logRemark = "添加权限")
 	@RequestMapping(value = "/add/pmphpermission", method = RequestMethod.POST)
 	public ResponseBean add(PmphPermission pmphPermission) {
 		logger.debug(pmphPermission.toString());
@@ -110,6 +112,7 @@ public class PmphPermissionController {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE , logRemark = "跳转到更新权限的页面")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseBean update(@PathVariable("id") Long id) {
 		PmphPermission resource = pmphPermissionService.get(id);
@@ -128,6 +131,7 @@ public class PmphPermissionController {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE , logRemark = "更新权限")
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	public ResponseBean update(PmphPermission pmphPermission) {
 		logger.debug(pmphPermission.toString());

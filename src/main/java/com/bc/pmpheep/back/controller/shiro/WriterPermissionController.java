@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.controller.shiro;
 
 import java.util.List;
 
+import com.bc.pmpheep.annotation.LogDetail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,9 @@ public class WriterPermissionController {
     @Autowired
     WriterPermissionService writerPermissionService;
 
+    // 当前业务类型
+    private static final String BUSSINESS_TYPE = "个人用户权限";
+
     /**
      * 
      * <pre>
@@ -51,6 +55,7 @@ public class WriterPermissionController {
      * </pre>
      */
     @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询列表")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ResponseBean list() {
         // 查询到所有的权限列表
@@ -69,6 +74,7 @@ public class WriterPermissionController {
      * </pre>
      */
     @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "跳转到添加权限的页面")
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public ResponseBean add() {
         return new ResponseBean(new WriterPermission());
@@ -85,6 +91,7 @@ public class WriterPermissionController {
      * </pre>
      */
     @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "添加")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public ResponseBean add(WriterPermission writerPermission) {
         logger.debug(writerPermission.toString());
@@ -103,6 +110,7 @@ public class WriterPermissionController {
      * </pre>
      */
     @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "跳转到更新权限的页面")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseBean update(@PathVariable("id") Long id) {
         WriterPermission resource = writerPermissionService.get(id);
@@ -120,6 +128,7 @@ public class WriterPermissionController {
      * </pre>
      */
     @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "更新")
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseBean update(WriterPermission writerPermission) {
         logger.debug(writerPermission.toString());

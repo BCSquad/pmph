@@ -50,6 +50,7 @@ public class AreaController {
 	 * @return
 	 */
 	@RequestMapping(value = "/areatree", method = RequestMethod.GET)
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "通过parentId获取树")
 	@ResponseBody
 	public ResponseBean getAreaTree(Long parentId) {
 		return new ResponseBean(areaService.getAreaTreeVO(parentId));
@@ -65,6 +66,7 @@ public class AreaController {
 	 * @return
 	 */
 	@RequestMapping(value = "/add/area", method = RequestMethod.POST)
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "添加area 对应前台的添加节点（子节点和根节点）")
 	@ResponseBody
 	public ResponseBean addArea(Area area) {
 		return new ResponseBean(areaService.addArea(area));
@@ -80,6 +82,7 @@ public class AreaController {
 	 * @return
 	 */
 	@RequestMapping(value = "/delete/areabatch", method = RequestMethod.DELETE)
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "根据id删除当前area和他下面的area")
 	@ResponseBody
 	public ResponseBean deleteAreaBatch(Long id) {
 		return new ResponseBean(areaService.deleteAreaBatch(id));
@@ -94,6 +97,7 @@ public class AreaController {
 	 * @return
 	 */
 	@RequestMapping(value = "/update/area", method = RequestMethod.PUT)
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "更新Area")
 	@ResponseBody
 	public ResponseBean updateArea(Area area) {
 		return new ResponseBean(areaService.updateArea(area));
