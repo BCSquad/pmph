@@ -61,6 +61,22 @@ public class ActivitySourceController {
 
     }
     /**
+
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增资源")
+    @RequestMapping(value = "/newSourceList", method = RequestMethod.POST)
+    public ResponseBean newSourceList(@RequestParam("fileList") String[] fileList, @RequestParam("activityId") Long activityId,HttpServletRequest request) throws IOException {
+
+
+
+        String sessionId = CookiesUtil.getSessionId(request);
+        return new ResponseBean(activitySourceService.addSourceList(activityId,fileList,
+                sessionId,
+                request));
+
+    }
+    /**
      * 功能描述: 根据id排序移动
      *
      */
