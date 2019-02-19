@@ -137,19 +137,19 @@
 				SELECT
 					ca.*,
 					CONCAT(
-							'{id:',
+							'{"id":',
 							cai.id,
 							',',
-							'image:"',
+							'"image":"',
 							CONCAT( '/pmpheep/image/', cai.image ),
 							'",',
-							'advertId:',
+							'"advertId":',
 							cai.advert_id,
 							',',
-							'imageJumpUrl:',
+							'"imageJumpUrl":"',
 							cai.image_jump_url,
-							',',
-							'isDisabled:',
+							'",',
+							'"isDisabled":',
 							IF
 								( cai.is_disabled, 'true', 'false' ),
 
