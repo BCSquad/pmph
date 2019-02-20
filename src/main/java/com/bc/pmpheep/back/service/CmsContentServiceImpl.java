@@ -450,6 +450,11 @@ public class CmsContentServiceImpl implements CmsContentService {
             isPublished = false;
             authStatus=2;
         }
+        if(5==authStatus){
+            isStaging = true;
+            isPublished = true;
+            authStatus=2;
+        }
         Integer count = 0;
         count =
         cmsContentDao.checkContentById(new CmsContent(
