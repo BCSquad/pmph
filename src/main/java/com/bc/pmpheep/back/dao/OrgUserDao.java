@@ -28,6 +28,12 @@ public interface OrgUserDao {
      * @return 影响行数
      */
     Integer addOrgUser(OrgUser orgUser);
+    /**
+     *
+     * @param orgUser 实体对象
+     * @return 影响行数
+     */
+    Integer addOrgUserToWriterUser(OrgUser orgUser);
 
     /**
      * 根据主键Id查询对象

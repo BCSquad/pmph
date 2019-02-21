@@ -151,6 +151,136 @@
 			</if>
 		</trim>
 	</sql>
+	<sql id="writerKey">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="username != null and username !=''">
+				username,
+			</if>
+			<if test="password != null and password !=''">
+				password,
+			</if>
+			<if test="isDisabled != null">
+				is_disabled,
+			</if>
+			<if test="orgId != null and orgId !=''">
+				org_id,
+			</if>
+
+			<if test="realname != null ">
+				realname,
+			</if>
+			<if test="sex != null and sex !=''">
+				sex,
+			</if>
+			<if test="position != null and position !=''">
+				position,
+			</if>
+			<if test="title != null and title !=''">
+				title,
+			</if>
+			<if test="fax != null and fax !=''">
+				fax,
+			</if>
+			<if test="handphone != null and handphone !=''">
+				handphone,
+			</if>
+			<if test="telephone != null and telephone !=''">
+				telephone,
+			</if>
+			<if test="idcard != null and idcard !=''">
+				idcard,
+			</if>
+			<if test="email != null and email != '' ">
+				email,
+			</if>
+			<if test="address != null and address !=''">
+				address,
+			</if>
+			<if test="postcode != null and postcode !=''">
+				postcode,
+			</if>
+			<if test="avatar !=null and avatar !=''">
+				avatar,
+			</if>
+			<if test="note != null and note !=''">
+				note,
+			</if>
+			<if test="sort != null and sort !=''">
+				sort,
+			</if>
+			<if test="isDeleted != null">
+				is_deleted,
+			</if>
+			is_org_user
+		</trim>
+	</sql>
+	<sql id="writerValue">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="username != null and username !=''">
+				#{username},
+			</if>
+			<if test="password != null and password !=''">
+				#{password},
+			</if>
+			<if test="isDisabled != null">
+				#{isDisabled},
+			</if>
+			<if test="orgId != null and orgId !=''">
+				#{orgId},
+			</if>
+			<if test="realname != null ">
+				#{realname},
+			</if>
+			<if test="sex != null and sex !=''">
+				#{sex},
+			</if>
+			<if test="position != null and position !=''">
+				#{position},
+			</if>
+			<if test="title != null and title !=''">
+				#{title},
+			</if>
+			<if test="fax != null and fax !=''">
+				#{fax},
+			</if>
+			<if test="handphone != null and handphone !=''">
+				#{handphone},
+			</if>
+			<if test="telephone != null and telephone !=''">
+				#{telephone},
+			</if>
+			<if test="idcard != null and idcard !=''">
+				#{idcard},
+			</if>
+			<if test="email != null and email != ''">
+				#{email},
+			</if>
+			<if test="address != null and address !=''">
+				#{address},
+			</if>
+			<if test="postcode != null and postcode !=''">
+				#{postcode},
+			</if>
+			<if test="avatar !=null and avatar !=''">
+				#{avatar},
+			</if>
+			<if test="note != null and note !=''">
+				#{note},
+			</if>
+			<if test="sort != null and sort !=''">
+				#{sort},
+			</if>
+			<if test="isDeleted != null">
+				#{isDeleted},
+			</if>
+			 1
+		</trim>
+	</sql>
+
+
+
 	<!-- 新增OrgUser -->
 	<insert id="addOrgUser" parameterType="OrgUser">
 		<selectKey resultType="java.lang.Long" order="AFTER"
@@ -163,6 +293,21 @@
 		values(
 		<include refid="value" />
 		) ;
+	</insert>
+	<insert id="addOrgUserToWriterUser" parameterType="OrgUser">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+				   keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into writer_user (
+		<include refid="writerKey" />
+		)
+		values(
+		<include refid="writerValue" />
+		) ;
+
+
+
 	</insert>
 
 	<!-- 根据id删除一个OrgUser -->
