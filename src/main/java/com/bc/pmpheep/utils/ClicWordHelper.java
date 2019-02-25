@@ -163,9 +163,9 @@ public class ClicWordHelper {
 			}
 			/* 申报单位 */
 			String chosenOrgName = bo.getDeclare_name();
-			if (StringUtil.notEmpty(chosenOrgName)) {
-				xwpfParagraphs.get(i).createRun().setText(chosenOrgName);
-			}
+            if (StringUtil.notEmpty(chosenOrgName)) {
+                xwpfParagraphs.get(i+2).createRun().setText(chosenOrgName);
+            }
 			//填充勾选的数据
 			fillDeclarationData(tables.get(0),bo);
 			fillDecEduExpData(tables.get(1),bo.getDecEduExpList()); // 学习经历
