@@ -168,6 +168,7 @@
 		(select CONCAT(pge.display_name,':',pgm.msg_content) msg_content
 		from pmph_group_message pgm LEFT JOIN  pmph_group_member  pge on pgm.member_id=pge.id
 		where pgm.group_id=g.id and pgm.member_id >0 ORDER BY pgm.gmt_create desc LIMIT 0,1) as msg_content,
+		if(g.gmt_create>IFNULL(g.gmt_last_message,0) ,g.gmt_create,gmt_last_message)as gmtOrder,
 		COUNT(f.id) files
 		FROM
 		pmph_group g
@@ -182,8 +183,7 @@
 		</if>
 		GROUP BY g.id
 		order by
-		gmt_last_message desc
-		, group_Name ;
+		gmtOrder desc
 	</select>
 
 	<!-- 根据小组名称获取PmphGroup -->
