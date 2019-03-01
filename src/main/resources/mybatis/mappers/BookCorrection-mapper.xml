@@ -347,6 +347,7 @@
 			a.content ,
 			a.attachment,
 			a.attachment_name,
+		    d.username,
 			d.realname,
 			a.gmt_create ,
 			a.is_author_replied,
