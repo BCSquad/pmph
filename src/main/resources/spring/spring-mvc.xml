@@ -53,6 +53,7 @@
                         <value>/oauth2url/**</value>
                         <value>/oauth2wx/**</value>
                         <value>/oauth2me/**</value>
+                        <value>/bookSync/**</value>
                     </list>
                 </property>
             </bean>	

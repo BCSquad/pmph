@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.BookSyncDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="bookname != null and bookname !=''">
+				bookname,
+			</if>
+			<if test="isbn != null and isbn !=''">
+				isbn,
+			</if>
+			<if test="sn != null and sn !=''">
+				sn,
+			</if>
+			<if test="vn != null and vn !=''">
+				vn,
+			</if>
+			<if test="author != null and author !=''">
+				author,
+			</if>
+			<if test="publisher != null and publisher !=''">
+				publisher,
+			</if>
+			<if test="lang != null and lang !=''">
+				lang,
+			</if>
+			<if test="revision != null">
+				revision,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="publishDate != null ">
+				publish_date,
+			</if>
+			<if test="reader != null and reader !=''">
+				reader,
+			</if>
+			<if test="price != null">
+				price,
+			</if>
+			<if test="score != null">
+				score,
+			</if>
+			<if test="buyUrl != null and buyUrl !=''">
+				buy_url,
+			</if>
+			<if test="imageUrl != null and imageUrl !=''">
+				image_url,
+			</if>
+			<if test="pdfUrl != null and pdfUrl !=''">
+				pdf_url,
+			</if>
+
+			<if test="isStick != null ">
+				is_stick,
+			</if>
+			<if test="sort != null">
+				sort,
+			</if>
+			<if test="deadlineStick != null">
+				deadline_stick,
+			</if>
+			<if test="isNew != null">
+				is_new,
+			</if>
+			<if test="sortNew != null">
+				sort_new,
+			</if>
+			<if test="deadlineNew != null">
+				deadline_new,
+			</if>
+			<if test="isPromote != null">
+				is_promote,
+			</if>
+			<if test="sortPromote != null">
+				sort_promote,
+			</if>
+			<if test="deadlinePromote != null">
+				deadline_promote,
+			</if>
+			<if test="sales != null">
+				sales,
+			</if>
+			<if test="isOnSale != null">
+				is_on_sale,
+			</if>
+			<if test="gmtCreate != null">
+				gmt_create,
+			</if>
+			<if test="gmtUpdate != null ">
+				gmt_update,
+			</if>
+			  <if test="content != null and content !='' ">
+				  contents,
+			  </if>
+			<if test="logId !=null">
+					log_id,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="bookname != null and bookname !=''">
+				#{bookname},
+			</if>
+			<if test="isbn != null and isbn !=''">
+				#{isbn},
+			</if>
+			<if test="sn != null and sn !=''">
+				#{sn},
+			</if>
+			<if test="vn != null and vn !=''">
+				#{vn},
+			</if>
+			<if test="author != null and author !=''">
+				#{author},
+			</if>
+			<if test="publisher != null and publisher !=''">
+				#{publisher},
+			</if>
+			<if test="lang != null and lang !=''">
+				#{lang},
+			</if>
+			<if test="revision != null">
+				#{revision},
+			</if>
+			<if test="type != null">
+				#{type},
+			</if>
+			<if test="publishDate != null ">
+				#{publishDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="reader != null and reader !=''">
+				#{reader},
+			</if>
+			<if test="price != null">
+				#{price},
+			</if>
+			<if test="score != null">
+				#{score},
+			</if>
+			<if test="buyUrl != null and buyUrl !=''">
+				#{buyUrl},
+			</if>
+			<if test="imageUrl != null and imageUrl !=''">
+				#{imageUrl},
+			</if>
+			<if test="pdfUrl != null and pdfUrl !=''">
+				#{pdfUrl},
+			</if>
+			<if test="isStick != null">
+				#{isStick},
+			</if>
+			<if test="sort != null">
+				#{sort},
+			</if>
+			<if test="deadlineStick != null ">
+				#{deadlineStick},
+			</if>
+			<if test="isNew != null">
+				#{isNew},
+			</if>
+			<if test="sortNew != null">
+				#{sortNew},
+			</if>
+			<if test="deadlineNew != null">
+				#{deadlineNew},
+			</if>
+			<if test="isPromote != null">
+				#{isPromote},
+			</if>
+			<if test="sortPromote != null">
+				#{sortPromote},
+			</if>
+			<if test="deadlinePromote != null">
+				#{deadlinePromote},
+			</if>
+			<if test="sales != null">
+				#{sales},
+			</if>
+			<if test="isOnSale != null">
+				#{isOnSale},
+			</if>
+			<if test="gmtCreate != null">
+				#{gmtCreate},
+			</if>
+			<if test="gmtUpdate != null">
+				#{gmtUpdate},
+			</if>
+			<if test="content != null and content !='' ">
+				#{content},
+			</if>
+			<if test="logId !=null">
+				#{logId},
+			</if>
+		</trim>
+	</sql>
+
+
+	<insert id="addSyncLog" parameterType="BookSyncLog">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+				   keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into book_sync_log(
+		<trim suffixOverrides=",">
+		<if test="id != null">
+			id,
+		</if>
+		<if test="increment != null">
+			increment,
+		</if>
+		<if test="synchronizationType != null and synchronizationType !=''">
+			synchronization_type,
+		</if>
+		<if test="syncGmt != null">
+			sync_gmt,
+		</if>
+		</trim>
+		)values(
+		<trim suffixOverrides=",">
+		<if test="id != null">
+			#{id},
+		</if>
+		<if test="increment != null">
+			#{increment},
+		</if>
+		<if test="synchronizationType != null and synchronizationType !=''">
+			#{synchronizationType},
+		</if>
+		<if test="syncGmt != null">
+			${syncGmt}
+		</if>
+		</trim>
+		)
+
+	</insert>
+
+
+	<!-- 新增Book -->
+	<insert id="addBookSynConfirm" parameterType="BookSyncConfirm">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into book_sync_confirm (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		) ;
+	</insert>
+
+
+	<!-- 更新Book -->
+	<update id="updateBookSynConfirm" parameterType="BookSyncLog">
+		update book b
+		<if test=" isStick != null ">
+			,(select max(sort)+1 max_sort from book) max_sort
+		</if>
+		<if test=" isNew != null ">
+			,(select max(sort_new)+1 max_sort_new from book) max_sort_new
+		</if>
+		<if test=" isPromote != null ">
+			,(select max(sort_promote)+1 max_sort_promote from book) max_sort_promote
+		</if>
+		<if test=" isKey != null ">
+			,(select max(sort_key)+1 max_sort_key from book) max_sort_key
+		</if>
+		<set>
+			<if test="id != null and id !=''">
+				b.id=#{id},
+			</if>
+			<if test="bookname != null and bookname !=''">
+				b.bookname=#{bookname},
+			</if>
+			<if test=" isbn != null and isbn !=''">
+				b.isbn=#{isbn},
+			</if>
+			<if test="sn != null and sn !=''">
+				b.sn=#{sn},
+			</if>
+			<if test="author != null and author !=''">
+				b.author=#{author},
+			</if>
+			<if test="publisher != null and publisher !=''">
+				b.publisher=#{publisher},
+			</if>
+			<if test="lang != null and lang !=''">
+				b.lang=#{lang},
+			</if>
+			<if test="revision != null and revision !=''">
+				b.revision=#{revision},
+			</if>
+			<if test="type != null ">
+				b.type=#{type},
+			</if>
+			<if test="publishDate != null ">
+				b.publish_date=#{publishDate},
+			</if>
+			<if test="reader != null and reader !=''">
+				b.reader=#{reader},
+			</if>
+			<if test=" price != null and price !=''">
+				b.price=#{price},
+			</if>
+			<if test="score != null and score !=''">
+				b.score=#{score},
+			</if>
+			<if test="buyUrl != null and buyUrl !=''">
+				b.buy_url=#{buyUrl},
+			</if>
+			<if test=" imageUrl != null and imageUrl !=''">
+				b.image_url =#{imageUrl},
+			</if>
+			<if test="pdfUrl != null and pdfUrl !=''">
+				b.pdf_url=#{pdfUrl},
+			</if>
+			<if test=" isStick != null ">
+				b.is_stick=#{isStick},
+				b.sort = max_sort.max_sort,
+			</if>
+			<!--<if test=" sort != null and sort !=''">
+				b.sort=#{sort},
+			</if>-->
+			<if test="deadlineStick != null">
+				b.deadline_stick=#{deadlineStick},
+			</if>
+			<if test="isNew != null ">
+				b.is_new=#{isNew},
+				b.sort_new=max_sort_new.max_sort_new,
+			</if>
+			<!--<if test=" sortNew != null and sortNew !=''">
+				b.sort_new=#{sortNew},
+			</if>-->
+			<if test="deadlineNew != null ">
+				b.deadline_new=#{deadlineNew},
+			</if>
+			<if test=" isPromote != null ">
+				b.is_promote=#{isPromote},
+				b.sort_promote=max_sort_promote.max_sort_promote,
+			</if>
+			<!--<if test="sortPromote != null and sortPromote !=''">
+				b.sort_promote=#{sortPromote},
+			</if>-->
+			<if test="deadlinePromote != null ">
+				b.deadline_promote=#{deadlinePromote},
+			</if>
+
+			<if test=" sales != null and sales !=''">
+				b.sales=#{sales},
+			</if>
+			<if test=" isOnSale != null ">
+				b.is_on_sale=#{isOnSale},
+			</if>
+			<if test="materialId != null">
+				b.material_id=#{materialId}
+			</if>
+			<if test="content != null and content !='' ">
+				content=#{content},
+			</if>
+			<if test="editorId != null">
+				editor_id=#{editorId},
+			</if>
+			<if test="confirmStatus != null">
+				confirm_status=#{confirmStatus},
+			</if>
+			<if test="isDeleted != null">
+				is_deleted=#{isDeleted},
+			</if>
+			<if test="logId != null">
+				log_id=#{logId},
+			</if>
+		</set>
+		where
+		b.id=#{id} ;
+	</update>
+
+
+</mapper>
