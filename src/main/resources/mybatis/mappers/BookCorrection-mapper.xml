@@ -552,7 +552,7 @@
 			a.editor_reply,
 			a.is_editor_replied,
 			b.author,
-			wu.realname correctionName,
+			wu.username correctionName,
 			b.image_url,
 			a.gmt_create,
 			b.publish_date,

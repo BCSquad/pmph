@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.BookCourseDao">
+
+    <sql id="courseSql">
+        select cb.book_id,o.id as org_id ,c.id as course_id,c.teacher_id,cb.id as course_book_id,count(cbs.id) stuCount
+        from
+        course_book cb
+        join course c on cb.course_id = c.id
+        join writer_user t on t.id = c.teacher_id
+        join org o on o.id = t.org_id
+        left join course_book_student cbs on cbs.course_book_id = cb.id
+        where
+        c.published > 0
+        <if test="parameter.orgName != null and parameter.orgName != '' ">
+            and o.org_name like concat('%',#{parameter.orgName},'%')
+        </if>
+        <if test="parameter.teacherName != null and parameter.teacherName != '' ">
+            and t.realname like concat('%',#{parameter.teacherName},'%')
+        </if>
+        <if test="parameter.courseName != null and parameter.courseName != '' ">
+            and c.name like concat('%',#{parameter.courseName},'%')
+        </if>
+        <if test="parameter.startTime !=null and parameter.startTime !='' ">
+            and c.`gmt_create` &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d %H:%i:%s')
+        </if>
+        <if test="parameter.endTime !=null and parameter.endTime !='' ">
+            and c.`gmt_create` &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d %H:%i:%s')
+        </if>
+        <if test="parameter.orderPlaced != null ">
+            and c.order_placed = #{parameter.orderPlaced}
+        </if>
+        <if test="parameter.paid != null ">
+            and c.paid = #{parameter.paid}
+        </if>
+        group by cb.book_id,o.id  ,c.id ,c.teacher_id,cb.id
+    </sql>
+    
+    <select id="getBookCourseCountList" resultType="BookCourseCountVO" parameterType="PageParameter">
+        select b.bookname,b.isbn,t.orgCount ,t1.teacherCount,t2.courseCount,t3.studentCount
+        from
+        (
+            select * from book
+            <where>
+                <if test="parameter.bookname != null and parameter.bookname != '' ">
+                    and bookname like concat('%',#{parameter.bookname},'%')
+                </if>
+                <if test="parameter.isbn != null and parameter.isbn != '' ">
+                    and isbn like concat('%',#{parameter.isbn},'%')
+                </if>
+            </where>
+        )b
+        left join
+        (select count(t.org_id)as orgCount,t.book_id  from (select t.org_id,t.book_id from (<include refid="courseSql" />)t group by t.org_id,t.book_id)t group by book_id)t
+        on t.book_id =b.id
+        left join
+        (select count(t.teacher_id)as teacherCount,t.book_id  from (select t.teacher_id,t.book_id from (<include refid="courseSql" />)t group by t.teacher_id,t.book_id)t group by book_id)t1
+        on t1.book_id =b.id
+        left join
+        (select count(t.course_id)as courseCount,t.book_id  from (select t.course_id,t.book_id from (<include refid="courseSql" />)t group by t.course_id,t.book_id)t group by book_id)t2
+        on t2.book_id =b.id
+        left join
+        (select sum(t.stuCount)as studentCount,t.book_id from (<include refid="courseSql" />)t group by t.book_id)t3
+        on t3.book_id =b.id
+        order by t.orgCount desc,t1.teacherCount desc,t2.courseCount desc,t3.studentCount desc
+
+        <if test="start != null">
+            limit #{start},#{pageSize}
+        </if>
+        ;
+    </select>
+
+    <select id="getBookCourseCountListTotal" parameterType="PageParameter" resultType="int">
+        select count(id) from book
+        <where>
+            <if test="parameter.bookname != null and parameter.bookname != '' ">
+                and bookname like concat('%',#{parameter.bookname},'%')
+            </if>
+            <if test="parameter.isbn != null and parameter.isbn != '' ">
+                and isbn like concat('%',#{parameter.isbn},'%')
+            </if>
+        </where>
+    </select>
+</mapper>

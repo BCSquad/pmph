@@ -134,6 +134,13 @@ public class FileDownLoadController {
 	WriterPointService writerPointService;
 	@Autowired
 	TopicService topicService;
+	@Autowired
+	BookCorrectTrackWordHelper bookCorrectTrackWordHelper;
+	@Autowired
+	BookCorrectWordHelper bookCorrectWordHelper;
+	@Autowired
+	BookCorrectionDao bookCorrectionDao;
+
 
 	// 当前业务类型
 	private static final String BUSSINESS_TYPE = "文件下载";
@@ -1224,6 +1231,44 @@ public class FileDownLoadController {
 		String id = String.valueOf(System.currentTimeMillis()).concat(String.valueOf(RandomUtil.getRandomNum()));
 		taskExecutor.execute(new TopicSpringThread(zipHelper, topicWordHelper,topicId,sessionId,
 				topicService,id));
+		return '"' + id + '"';
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "图书纠错跟踪导出word")
+	@RequestMapping(value = "/word/bookCorrection/listTrack", method = RequestMethod.GET)
+	public String bookCorrectionListTrackWord(HttpServletRequest request,
+											  @RequestParam(value = "bookname",   required = false)	String bookname ,
+											  @RequestParam(value = "isEditorReplied",     required = false)	Boolean isEditorReplied,
+											  @RequestParam(value = "result",     required = false)	Boolean result
+											  ) {
+		String sessionId = CookiesUtil.getSessionId(request);
+		String id = String.valueOf(System.currentTimeMillis()).concat(String.valueOf(RandomUtil.getRandomNum()));
+		taskExecutor.execute(new BookCorrectTrackSpringThread(zipHelper, bookCorrectTrackWordHelper,bookCorrectionService,bookname,isEditorReplied,sessionId,result,request,
+				id));
+		return '"' + id + '"';
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "图书纠错审核导出word")
+	@RequestMapping(value = "/word/bookCorrection/list", method = RequestMethod.GET)
+	public String bookCorrectionListWord(HttpServletRequest request,
+											  @RequestParam(value = "bookname",   required = false)	String bookname ,
+											  @RequestParam(value = "isEditorReplied",     required = false)	Boolean isEditorReplied,
+											  @RequestParam(value = "result",     required = false)	Boolean result
+	) {
+		String sessionId = CookiesUtil.getSessionId(request);
+		String id = String.valueOf(System.currentTimeMillis()).concat(String.valueOf(RandomUtil.getRandomNum()));
+		taskExecutor.execute(new BookCorrectSpringThread(zipHelper, bookCorrectWordHelper,bookCorrectionService,bookname,isEditorReplied,sessionId,result,request,
+				id));
 		return '"' + id + '"';
 	}
 
