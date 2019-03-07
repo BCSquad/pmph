@@ -57,6 +57,11 @@ public class BookCorrectionTrackVO implements Serializable {
      */
     @ExcelHeader(header = "检查结果")
     private String   resultString ;
+	/**
+	 * 提交者账号
+	 */
+	@ExcelHeader(header = "提交者账号")
+	private String correctionName;
     /**
      * 页码
      */
@@ -92,10 +97,7 @@ public class BookCorrectionTrackVO implements Serializable {
      * 图书作者
      */
     private String author;
-    /**
-     * 提交者姓名
-     */
-    private String correctionName;
+
     /**
      * 创建时间
      */

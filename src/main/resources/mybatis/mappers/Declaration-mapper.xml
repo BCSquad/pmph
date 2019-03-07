@@ -797,7 +797,9 @@
 			</if>
 		</if>
 		<!-- 排序和分页条件 -->
-		ORDER BY ifNull(a.auth_date,a.commit_date) desc,
+		ORDER BY
+		(a.online_progress=3 or a.org_id=0) desc,
+		ifNull(a.auth_date,a.commit_date) desc,
 		CONVERT ( f.org_name USING gbk ) ASC
 		limit #{start},#{pageSize}
 	</select>
