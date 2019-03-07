@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.service;
 
 import com.bc.pmpheep.back.plugin.PageResult;
 
+import com.bc.pmpheep.back.po.Book;
 import com.bc.pmpheep.back.vo.BookSource;
 import com.bc.pmpheep.back.vo.BookSourceVO;
 
@@ -49,5 +50,7 @@ public interface BookSourceService {
      * @return
      */
     PageResult<BookSourceVO> getSourceList(Integer pageSize, Integer pageNumber, String bookName, Integer state, String upLoadTimeStart, String upLoadTimeEnd);
+
+
 
 }

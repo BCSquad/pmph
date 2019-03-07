@@ -17,6 +17,7 @@ public interface BookDetailDao {
 	 */
 	Integer addBookDetail(BookDetail bookDetail);
 
+
 	/**
 	 * ɾ��BookDetail ͨ������id
 	 * 
@@ -52,7 +53,7 @@ public interface BookDetailDao {
 	 * @return BookDetail
 	 */
 	BookDetail getBookDetailById(Long id);
-
+	BookDetail getBookDetailByBookId(Long id);
 	/**
 	 * 
 	 * 

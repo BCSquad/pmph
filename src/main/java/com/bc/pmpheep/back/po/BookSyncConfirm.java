@@ -54,6 +54,7 @@ public class BookSyncConfirm implements Serializable {
 	 * 语言
 	 */
 	private String lang;
+
 	/**
 	 * 版次
 	 */

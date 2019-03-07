@@ -205,5 +205,9 @@ public interface BookService {
 	public int queryTscxReadListCount(PageParameter<Map<String, Object>> pageParameter);
 	String updataSellwell(List<Book> books) throws CheckedServiceException;
 	public int updateBookSellWellByid(Long id);
-
+	Book getBookByIsbn(String isbn);
+	BookDetail getBookDetailByBookId(Long id);
+	BookDetail addBookDetail(BookDetail bookDetail);
+	Integer updateBook(Book book);
+	Integer updateBookDetail(BookDetail book);
 }

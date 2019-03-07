@@ -176,6 +176,15 @@ public class Book implements Serializable {
 	private Integer sortKey;
 	private Boolean  isSellWell;
 	private Integer sortSellWell;
+	private Boolean isDelected;
+
+	public Boolean getIsDelected() {
+		return isDelected;
+	}
+
+	public void setIsDelected(Boolean delected) {
+		isDelected = delected;
+	}
 
 	public Boolean getIsSellWell() {
 		return isSellWell;

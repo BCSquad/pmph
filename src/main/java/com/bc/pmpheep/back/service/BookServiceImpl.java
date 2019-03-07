@@ -737,4 +737,36 @@ public class BookServiceImpl extends BaseService implements BookService {
 		return bookDao.updateBookSellWellByid(id);
 	}
 
+	@Override
+	public Book getBookByIsbn(String isbn) {
+		return bookDao.getBookByIsbn(isbn);
+	}
+
+	@Override
+	public BookDetail getBookDetailByBookId(Long id) {
+		return bookDetailDao.getBookDetailById(id);
+	}
+
+	@Override
+	public BookDetail addBookDetail(BookDetail bookDetail) {
+
+		bookDetailDao.addBookDetail(bookDetail);
+		return bookDetail;
+	}
+
+	@Override
+	public Integer updateBook(Book book) throws CheckedServiceException {
+		if (null == book.getId()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM, "id为空");
+		}
+		return bookDao.updateBook(book);
+	}
+	@Override
+	public Integer updateBookDetail(BookDetail detail) throws CheckedServiceException {
+		if (null == detail.getId()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM, "id为空");
+		}
+		return bookDetailDao.updateBookDetail(detail);
+	}
+
 }
