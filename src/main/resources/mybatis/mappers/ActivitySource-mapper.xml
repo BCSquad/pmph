@@ -230,7 +230,7 @@
     </delete>
 
 	<select id="getChainSortMax" resultType="java.lang.Long" parameterType="Long">
-		 select MAX(sort) from activity_source_chain where activity_id=#{activityId}
+		 select ifnull(MAX(sort),0) from activity_source_chain where activity_id=#{activityId}
 	</select>
 
 
