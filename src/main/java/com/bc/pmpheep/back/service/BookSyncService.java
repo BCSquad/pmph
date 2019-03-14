@@ -22,7 +22,7 @@ public interface BookSyncService {
                                                            String syncTimeStart,
                                                            String syncTimeEnd,
     Boolean confirm);
-    BookSyncConfirm getBookSyncConfirmByid(Long id);
+    BookSyncConfirmVO getBookSyncConfirmByid(Long id);
 
     int addBookSynBak(BookSyncBak bookSyncBak);
     int updateBookSynConfirm(BookSyncConfirm bookSyncConfirm);

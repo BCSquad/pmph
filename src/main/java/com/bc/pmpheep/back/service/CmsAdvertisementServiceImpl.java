@@ -148,7 +148,7 @@ public class CmsAdvertisementServiceImpl implements CmsAdvertisementService {
 			for (int i = 0; i < imageId.length; i++) {
 				cmsAdvertisementImage.setId(imageId[i]);
 				cmsAdvertisementImage.setIsDisabled((Boolean) cmsAdvertisementOrImageVO.getIsDisplay());
-				cmsAdvertisementImage.setImageJumpUrl(imageJumpUrl[i]);
+				cmsAdvertisementImage.setImageJumpUrl(imageJumpUrl.length>0?imageJumpUrl[i]:null);
 				// 修改图片为显示
 				cmsAdvertisementImageDao.updateCmsAdvertisementImage(cmsAdvertisementImage);
 			}

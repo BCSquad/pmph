@@ -85,7 +85,7 @@ public class BookSyncServiceImpl implements BookSyncService {
     }
 
     @Override
-    public BookSyncConfirm getBookSyncConfirmByid(Long id) {
+    public BookSyncConfirmVO getBookSyncConfirmByid(Long id) {
 
         return bookSyncDao.getBookSyncConfirmByid(id);
     }

@@ -211,7 +211,7 @@
 		from book_video a LEFT JOIN book b on b.id =
 		a.book_id
 		where a.is_deleted = false and b.id is not null
-		<if test="bookName != null">
+		<if test="bookName != null and bookName != '' ">
 			and b.bookname like #{bookName}
 		</if>
 		<if test="state != null">
@@ -243,7 +243,7 @@
 		b.bookname bookName,
 		a.orig_file_name origFileName,
 		a.path path,
-		if(a.user_id=0,d.realname,c.realname) userName,
+		if(a.user_id=0,d.username,c.username) userName,
 		a.gmt_create gmtCreate,
 		a.file_size fileSize,
 		if(a.auth_user_id is null,null,a.is_auth) isAuth,
@@ -261,7 +261,7 @@
 		a.auth_user_id
 		where a.is_deleted = false
 		and b.id is not null
-		<if test="bookName != null">
+		<if test="bookName != null and bookName!=''">
 			and b.bookname like #{bookName}
 		</if>
 		<if test="state != null">
@@ -285,6 +285,60 @@
 		</if>
 		ORDER BY a.gmt_create desc limit #{start} ,#{pageSize}
 	</select>
+
+	<!-- 获取微视频列表 -->
+	<select id="getVideoTrackList" resultType="BookVideoTrackVO">
+		select a.id id,
+		a.book_id bookId,
+		a.title title,
+		b.bookname bookName,
+		a.orig_file_name origFileName,
+		a.path path,
+		if(a.user_id=0,d.username,c.username) userName,
+		a.gmt_create gmtCreate,
+		a.file_size fileSize,
+		if(a.auth_user_id is null,"否",a.is_auth) isAuth,
+		(case
+		when a.auth_user_id is null then 1
+		when a.auth_user_id is not null
+		and a.is_auth = false then 2
+		when a.auth_user_id is not null and
+		a.is_auth = true then 3
+		else 1 end) as state
+		from book_video a LEFT JOIN
+		book b on b.id = a.book_id
+		LEFT JOIN writer_user c on c.id= a.user_id
+		LEFT JOIN pmph_user d on d.id=
+		a.auth_user_id
+		where a.is_deleted = false
+		and b.id is not null
+		<if test="bookName != null and bookName!=''">
+			and b.bookname like #{bookName}
+		</if>
+		<if test="state != null">
+			<if test="state == 1">
+				and a.auth_user_id is null
+			</if>
+			<if test="state == 2">
+				and a.auth_user_id is not null and a.is_auth = false
+			</if>
+			<if test="state == 3">
+				and a.auth_user_id is not null and a.is_auth = true
+			</if>
+		</if>
+		<if test="startTime != null">
+			and a.gmt_create  <![CDATA[ >= ]]>
+			#{startTime}
+		</if>
+		<if test="endTime != null">
+			and a.gmt_create  <![CDATA[ <= ]]>
+			#{endTime}
+		</if>
+		ORDER BY a.gmt_create desc
+	</select>
+
+
+
 	<!--根据书籍id删除BookVideo -->
 	<delete id="deleteBookVideoByBookIds">
 		delete from book_video

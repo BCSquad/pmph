@@ -363,4 +363,7 @@ public interface PmphUserService {
      * @return
      */
     String getUserId(Long id);
+
+    //获取系统管理员的对象
+    List<PmphUser> getPmphUserByRole();
 }

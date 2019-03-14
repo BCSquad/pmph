@@ -5,22 +5,26 @@
 package com.bc.pmpheep.utils;
 
 import com.bc.pmpheep.annotation.ExcelHeader;
+import com.bc.pmpheep.back.po.DecExtension;
 import com.bc.pmpheep.back.po.TopicSimilarBook;
 import com.bc.pmpheep.back.po.TopicWriter;
 import com.bc.pmpheep.back.util.*;
 import com.bc.pmpheep.back.vo.BookCorrectionTrackVO;
+import com.bc.pmpheep.back.vo.ExpertationVO;
 import com.bc.pmpheep.back.vo.TopicTextVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 import org.apache.poi.xwpf.usermodel.*;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
+import org.apache.xmlbeans.XmlCursor;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.lang.reflect.Field;
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -103,47 +107,40 @@ public class BookCorrectTrackWordHelper {
 
 		Object object = (Object)bo;
 
-		try {
-			is = new FileInputStream(path);
-			document = new XWPFDocument(is);
-		} catch (IOException ex) {
-			logger.error("读取Word模板文件'BookCorrectionTrackTemplate.docx'时出现错误：{}", ex.getMessage());
-			throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION,
-					CheckedExceptionResult.FILE_CREATION_FAILED, "未找到模板文件");
-		}
-		if (StringUtil.notEmpty(word_name)) {
-			List<XWPFRun> runs = document.getParagraphs().get(0).getRuns();
-			runs.get(0).setText(word_name.concat("纠错跟踪"), 0);
-		}
-		//标题
-		List<XWPFParagraph> xwpfParagraphs = document.getParagraphs();
-		Field[] fields = bo.getClass().getDeclaredFields();
-		int i = 1;
-		for (Field field : fields) {
-			field.setAccessible(true);// 可访问性设置
-
-			if (field.isAnnotationPresent(ExcelHeader.class)) {
-				ExcelHeader excelHeader = (ExcelHeader) field.getAnnotation(ExcelHeader.class);
-				String headerName = getHeaderName(excelHeader, null);
-				String cellType = excelHeader.cellType();
-				if (StringUtil.notEmpty(headerName)) {
-					Object o = null;
-					try {
-						o = field.get(object);
-					} catch (IllegalAccessException e) {
-						e.printStackTrace();
-					}
-					document.createParagraph().createRun().setText(headerName+":  ");
-					document.getParagraphs().get(i).getRuns().get(0).setBold(true);
-					document.getParagraphs().get(i).createRun().setText(ObjectUtil.notNull(o)?o.toString():"-");
-					document.createParagraph();
-					i += 2;
-				}
+			try {
+				is = new FileInputStream(path);
+				document = new XWPFDocument(is);
+			} catch (IOException ex) {
+				logger.error("读取Word模板文件'ClicResumeTemplate.docx'时出现错误：{}", ex.getMessage());
+				throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION,
+						CheckedExceptionResult.FILE_CREATION_FAILED, "未找到模板文件");
 			}
-		}
-		String filename = generateFileName(bo,""/*(++decSequese)+"."*/);
+			if (StringUtil.notEmpty(word_name)) {
+				List<XWPFRun> runs = document.getParagraphs().get(0).getRuns();
+				runs.get(0).setText(word_name.concat("图书纠错"), 0);
+			}
+			List<XWPFParagraph> xwpfParagraphs = document.getParagraphs();
+			List<XWPFTable> tables = document.getTables();
+			String filename = generateFileName(bo,(++decSequese)+".");
+			XWPFTable xwpfTable = tables.get(0);
+			xwpfTable.getRow(0).getTableCells().get(1).setText(bo.getIsbn());
+			xwpfTable.getRow(0).getCell(3).setText(bo.getBookname()==null?"":bo.getBookname());
+			xwpfTable.getRow(0).getCell(5).setText(bo.getRevision()==null?"":bo.getRevision().toString());
+			xwpfTable.getRow(1).getCell(1).setText(bo.getDutyName()==null?"":bo.getDutyName() );
+			xwpfTable.getRow(1).getCell(3).setText(bo.getRealname()==null?"":bo.getRealname());
+			xwpfTable.getRow(1).getCell(5).setText(bo.getDigitalName()==null?"":bo.getDigitalName());
+			xwpfTable.getRow(2).getCell(1).setText(bo.getCorrectionName()==null?"":bo.getCorrectionName() );
+			xwpfTable.getRow(2).getCell(3).setText(bo.getGmtCreate()==null?"":bo.getGmtCreate().toString());
+			xwpfTable.getRow(2).getCell(5).setText(bo.getReplyDate()==null?"":bo.getReplyDate().toString());
+			xwpfTable.getRow(3).getCell(1).setText(bo.getPage()==null?"":bo.getPage().toString());
+			xwpfTable.getRow(4).getCell(1).setText(bo.getLine()==null?"":bo.getLine().toString());
+			xwpfTable.getRow(5).getCell(1).setText(bo.getContent()==null?"":bo.getContent());
+			xwpfTable.getRow(6).getCell(1).setText(bo.getAuthorReply()==null?"":bo.getAuthorReply());
+			xwpfTable.getRow(7).getCell(1).setText(bo.getResult()==null?"":bo.getResult()?"是":"否");
 
-		map.put(filename, document);
+		/*	map.put(filename, removeEmptyTables(document, filter));*/
+			map.put(filename, document);
+
 
 		return map;
 	}

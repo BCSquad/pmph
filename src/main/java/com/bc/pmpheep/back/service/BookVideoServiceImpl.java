@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.bc.pmpheep.back.vo.BookVideoTrackVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.plugin.PageResult;
@@ -83,6 +85,43 @@ public class BookVideoServiceImpl implements BookVideoService {
             BookVideoVO2lst.setRows(bookVideoDao.getVideoList(map));
         }
         BookVideoVO2lst.setTotal(total);
+        return BookVideoVO2lst;
+    }
+
+    @Override
+    public List<BookVideoTrackVO> getVideoTrackList(Integer pageSize, Integer pageNumber, String bookName, Integer state,
+                                                        String upLoadTimeStart, String upLoadTimeEnd) {
+        Map<String, Object> map = new HashMap<String, Object>(3);
+
+
+        if (null != bookName&&""==bookName) {
+            map.put("bookName", bookName);
+        }
+        if (null != state && 0 != state.intValue()) {//all
+            map.put("state", state);
+        }
+        //yyyy-MM-dd
+        Timestamp startTime = null;
+        if (StringUtil.notEmpty(upLoadTimeStart)) {
+            startTime = DateUtil.str2Timestam(upLoadTimeStart);
+            map.put("startTime", startTime);
+        }
+        if (StringUtil.notEmpty(upLoadTimeEnd)) {
+            Timestamp endTime = DateUtil.str2Timestam(upLoadTimeEnd);
+            if (ObjectUtil.notNull(startTime)) {
+                if (startTime.compareTo(endTime) == 0) {
+                    endTime.setTime(startTime.getTime() + 24 * 60 * 60 * 1000);
+                }
+                map.put("endTime", endTime);
+            }
+        }
+        List<BookVideoTrackVO> BookVideoVO2lst = new ArrayList<BookVideoTrackVO>();
+
+        Integer total = bookVideoDao.getVideoListTotal(map);
+        if (null != total && total > 0) {
+            BookVideoVO2lst=bookVideoDao.getVideoTrackList(map);
+        }
+
         return BookVideoVO2lst;
     }
 

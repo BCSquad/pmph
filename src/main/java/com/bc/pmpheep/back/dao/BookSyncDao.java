@@ -16,7 +16,7 @@ public interface BookSyncDao {
     void addBookSynConfirm(BookSyncConfirm bookSyncConfirm);
     List<BookSyncConfirmVO> queryBookSyncConfirmList(Map<String,Object> Parameter);
     int queryBookSyncConfirmListcount(Map<String,Object> Parameter);
-    BookSyncConfirm getBookSyncConfirmByid(Long id);
+    BookSyncConfirmVO getBookSyncConfirmByid(Long id);
     int addBookSynBak(BookSyncBak bookSyncBak);
     int updateBookSyncConfirm(BookSyncConfirm bookSyncConfirm);
     int delectBooksyncConfirm(Long id);

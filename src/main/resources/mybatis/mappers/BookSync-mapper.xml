@@ -291,16 +291,13 @@
             and bsl.sync_gmt  <![CDATA[ <= ]]>
             #{endTime}
         </if>
-        <if test="isDeleted != null">
-            and bsl.is_deleted =#{isDeleted}
-        </if>
-
+            and bsc.is_deleted =0 and bsl.increment=1
         limit #{start} ,#{pageSize}
 
     </select>
 
-    <select id="getBookSyncConfirmByid" parameterType="long" resultType="BookSyncConfirm">
-        select * from book_sync_confirm where id=#{id}
+    <select id="getBookSyncConfirmByid" parameterType="long" resultType="BookSyncConfirmVO">
+        select bsc.*,bsl.synchronization_type from book_sync_confirm bsc left join book_sync_log bsl on bsl.id=bsc.log_id  where bsc.id=#{id}
 
 
     </select>

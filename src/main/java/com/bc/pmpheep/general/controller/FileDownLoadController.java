@@ -140,6 +140,8 @@ public class FileDownLoadController {
 	BookCorrectWordHelper bookCorrectWordHelper;
 	@Autowired
 	BookCorrectionDao bookCorrectionDao;
+	@Autowired
+	BookVideoService bookVideoService;
 
 
 	// 当前业务类型
@@ -1681,6 +1683,57 @@ public class FileDownLoadController {
 			logger.warn("数据表格化的时候失败");
 		}
 		String fileName = returnFileName(request, "纠错跟踪" + DateUtil.getTime() + ".xls");
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		response.setHeader("Content-disposition", String.format("attachment; filename=\"%s\"", fileName));
+		try (OutputStream out = response.getOutputStream()) {
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常：{}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
+
+
+
+	/**
+	 * 导出纠错信息
+	 *
+	 * @introduction
+	 * @author Mryang
+	 * @createDate 2017年12月20日 下午5:01:53
+	 * @param request
+	 * @param response
+	 * @param bookname
+	 * @param isEditorReplied
+	 * @throws CheckedServiceException
+	 * @throws Exception
+	 */
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出微视频信息")
+	@RequestMapping(value = "/bookMicVideo/exportExcel", method = RequestMethod.GET)
+	public void exportExcel(HttpServletRequest request, HttpServletResponse response,
+							@RequestParam(value = "bookname", required = false) String bookname,
+							@RequestParam(value = "state", required = false) Integer state,
+							@RequestParam(value ="upLoadTimeStart", required=false)String upLoadTimeStart,
+							@RequestParam(value="upLoadTimeEnd",required=false)String upLoadTimeEnd)
+			throws CheckedServiceException, Exception {
+		Workbook workbook = null;
+		List<BookVideoTrackVO> list = null;
+		try {
+			list=bookVideoService.getVideoTrackList(null, null, bookname, state, upLoadTimeStart, upLoadTimeEnd);
+
+			if (list.size() == 0) {
+				// 设置表头 ，放置初始化表出错
+				list.add(new BookVideoTrackVO());
+			}
+			workbook = excelHelper.fromBusinessObjectList(list, "sheet1");
+		} catch (CheckedServiceException | IllegalArgumentException e) {
+			logger.warn("数据表格化的时候失败");
+		}
+		String fileName = returnFileName(request, "微视频" + DateUtil.getTime() + ".xls");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		response.setHeader("Content-disposition", String.format("attachment; filename=\"%s\"", fileName));

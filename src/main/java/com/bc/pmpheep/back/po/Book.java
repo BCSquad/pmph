@@ -173,10 +173,19 @@ public class Book implements Serializable {
 	/**
 	 * 重点学科显示顺序
 	 */
+	private Long  editorId;
 	private Integer sortKey;
 	private Boolean  isSellWell;
 	private Integer sortSellWell;
 	private Boolean isDelected;
+
+	public Long getEditorId() {
+		return editorId;
+	}
+
+	public void setEditorId(Long editorId) {
+		this.editorId = editorId;
+	}
 
 	public Boolean getIsDelected() {
 		return isDelected;

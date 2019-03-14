@@ -26,63 +26,92 @@ public class BookCorrectionTrackVO implements Serializable {
      */
     @ExcelHeader(header = "图书名称")
     private String    bookname;
+	/**
+	 * 图书版次
+	 */
+	@ExcelHeader(header = "版次")
+    private Integer revision;
     @ExcelHeader(header = "ISBN")
     private String isbn;
-    /**
-     * 编辑部门 
-     */
-    @ExcelHeader(header = "编辑部门")
-    private String    dpName;
-    /**
-     * 分类
-     */
-    @ExcelHeader(header = "分类")
-    private String    typeName ;
-    /**
-     * 策划编辑名字
-     */
-    @ExcelHeader(header = "策划编辑")
-    private String    realname ;
-    /**
-     * 责任编辑名字
-     */
-    @ExcelHeader(header = "责任编辑名")
-    private String dutyName;
-    /**
-     * 检查结构 
-     */
-    private Boolean   result ;
-    /**
-     * 检查结构（转成的字符串） 
-     */
-    @ExcelHeader(header = "检查结果")
-    private String   resultString ;
+	@ExcelHeader(header = "主编")
+    private String author;
+	/**
+	 * 策划编辑名字
+	 */
+
+	@ExcelHeader(header = "策划编辑")
+	private String    realname ;
+
+	/**
+	 * 责任编辑名字
+	 */
+	@ExcelHeader(header = "责任编辑名")
+	private String dutyName;
+
+	/**
+	 * 责任编辑名字
+	 */
+	@ExcelHeader(header = "数字编辑")
+	private String digitalName;
+
+	@ExcelHeader(header = "页码")
+	private Integer page;
+	/**
+	 * 行数
+	 */
+	@ExcelHeader(header = "行数")
+	private Integer line;
+
+	/**
+	 * 纠错内容
+	 */
+	@ExcelHeader(header = "纠错内容")
+	private String content ;
+
 	/**
 	 * 提交者账号
 	 */
 	@ExcelHeader(header = "提交者账号")
 	private String correctionName;
+
+
+
+	/**
+	 * 提交者账号
+	 */
+	@ExcelHeader(header = "提交时间")
+	private Timestamp gmtCreate;
+	/**
+	 * 主编回复
+	 */
+	@ExcelHeader(header = "第一主编回复内容")
+	private String authorReply;
+
+	/**
+	 * 检查结构（转成的字符串）
+	 */
+	@ExcelHeader(header = "是否勘误")
+	private String   resultString ;
+
+	/**
     /**
-     * 页码
+	 *
+     * 编辑部门
      */
-    @ExcelHeader(header = "页码")
-    private Integer page;
+    private String    dpName;
     /**
-     * 行数
+     * 分类
      */
-    @ExcelHeader(header = "行数")
-    private Integer line;
+
+    private String    typeName ;
+
     /**
-     * 纠错内容
+     * 检查结构 
      */
-    @ExcelHeader(header = "纠错内容")
-    private String content ;
-    /**
-     * 主编回复 
-     */
-    @ExcelHeader(header = "主编回复")
-    private String authorReply;
-	@ExcelHeader(header = "编辑回复")
+    private Boolean   result ;
+
+
+	@ExcelHeader(header = "策划编辑回复内容")
     private String editorReply;
     /**
      * 策划编辑是否回复
@@ -91,17 +120,10 @@ public class BookCorrectionTrackVO implements Serializable {
     /**
      * 策划编辑是否回复(转换成显示字符串)
      */
-    @ExcelHeader(header = "是否回复")
-    private String   isEditorRepliedString ;
-    /**
-     * 图书作者
-     */
-    private String author;
 
-    /**
-     * 创建时间
-     */
-    private Timestamp gmtCreate;
+    private String   isEditorRepliedString ;
+
+
     /**
      * 图书出版时间
      */
@@ -115,14 +137,35 @@ public class BookCorrectionTrackVO implements Serializable {
 	 */
     private Boolean showFront;
 
-	@ExcelHeader(header = "是否前台展示")
+
 	private String showFrontStr;
+
+	/**
+	 * 最终回复时间
+	 */
+	private Timestamp replyDate;
     
 	public Timestamp getGmtCreate() {
 		return gmtCreate;
 	}
 
 
+	public String getDigitalName() {
+		return digitalName;
+	}
+
+
+	public void setDigitalName(String digitalName) {
+		this.digitalName = digitalName;
+	}
+
+	public Timestamp getReplyDate() {
+		return replyDate;
+	}
+
+	public void setReplyDate(Timestamp replyDate) {
+		this.replyDate = replyDate;
+	}
 
 	public void setGmtCreate(Timestamp gmtCreate) {
 		this.gmtCreate = gmtCreate;
@@ -325,7 +368,7 @@ public class BookCorrectionTrackVO implements Serializable {
 		if(null != this.result && null != this.isEditorReplied && this.isEditorReplied){
 			resultString = this.result?"图书勘误":"内容无误";
 		}
-		
+
 	}
 
 	
@@ -365,6 +408,13 @@ public class BookCorrectionTrackVO implements Serializable {
 	}
 
 
+	public Integer getRevision() {
+		return revision;
+	}
+
+	public void setRevision(Integer revision) {
+		this.revision = revision;
+	}
 
 	@Override
 	public String toString() {
