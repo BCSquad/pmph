@@ -236,7 +236,7 @@ public class BookController {
 
 	//查询某类下的图书畅销
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "根据获取图书销量查询列表")
-	@RequestMapping(value = "/sellWellList", method = RequestMethod.GET)
+	@RequestMapping(value = "/getBookListByManage", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseBean searchTscxBook(Integer pageSize, Integer pageNumber, String name,Integer type) {
 		PageParameter<Map<String, Object>> pageParameter = new PageParameter<>(pageNumber, pageSize);
@@ -255,21 +255,23 @@ public class BookController {
 
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "添加图书畅销榜排序")
-	@RequestMapping(value = "/addSellwell", method = RequestMethod.POST)
-	public ResponseBean updataSellwell(@RequestBody List<Book> books) {
+	@RequestMapping(value = "/updataBookByManage", method = RequestMethod.POST)
+	public ResponseBean updataBookBymanage(@RequestBody List<Book> books) {
 		System.out.println(books);
 		return new ResponseBean(bookService.updataSellwell(books));
 	}
 
+
 	//查询某类下的图书畅销
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取图书畅销榜")
-	@RequestMapping(value = "/getsellWellList", method = RequestMethod.GET)
+	@RequestMapping(value = "/getManageList", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseBean getsellWellList(Integer pageSize, Integer pageNumber,Integer type) {
+	public ResponseBean getManageList(Integer pageSize, Integer pageNumber,Integer type,Integer flag) {
 		PageParameter<Map<String, Object>> pageParameter = new PageParameter<>(0, 6);
 		Map<String, Object> map = new HashMap<>();
 		//图书类型
 		map.put("type", type);
+		map.put("flag", flag);
 		pageParameter.setParameter(map);
 		List<Book> maps = bookService.querySellwelList(pageParameter);
 		PageResult<Book> pageResult = new PageResult<>();

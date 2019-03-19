@@ -13,18 +13,22 @@ public class BookSyncLog implements Serializable {
     private Boolean increment;
     private String synchronizationType ;
     private Timestamp syncGmt;
+    private Boolean confirmStatus;
 
-    public BookSyncLog(Boolean increment, String synchronizationType, Timestamp syncGmt) {
-        this.increment = increment;
-        this.synchronizationType = synchronizationType;
-        this.syncGmt = syncGmt;
+    public Boolean getConfirmStatus() {
+        return confirmStatus;
     }
 
-    public BookSyncLog(Long id, Boolean increment, String synchronizationType, Timestamp syncGmt) {
+    public void setConfirmStatus(Boolean confirmStatus) {
+        this.confirmStatus = confirmStatus;
+    }
+
+    public BookSyncLog(Long id, Boolean increment, String synchronizationType, Timestamp syncGmt, Boolean confirmStatus) {
         this.id = id;
         this.increment = increment;
         this.synchronizationType = synchronizationType;
         this.syncGmt = syncGmt;
+        this.confirmStatus = confirmStatus;
     }
 
     public BookSyncLog() {

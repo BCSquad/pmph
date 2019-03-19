@@ -146,6 +146,9 @@
 		<if test="bookName != null">
 			and b.bookname like #{bookName}
 		</if>
+		<if test="sourceName != null">
+			and a.source_name like #{sourceName}
+		</if>
 		<if test="state != null">
 			<if test="state == 1">
 				and a.auth_id is null
@@ -193,6 +196,9 @@
 		and b.id is not null
 		<if test="bookName != null">
 			and b.bookname like #{bookName}
+		</if>
+		<if test="sourceName != null">
+			and a.source_name like #{sourceName}
 		</if>
 		<if test="state != null">
 			<if test="state == 1">

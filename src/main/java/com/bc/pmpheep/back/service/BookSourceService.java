@@ -49,7 +49,7 @@ public interface BookSourceService {
      * @createDate 2018年2月6日 下午3:29:39
      * @return
      */
-    PageResult<BookSourceVO> getSourceList(Integer pageSize, Integer pageNumber, String bookName, Integer state, String upLoadTimeStart, String upLoadTimeEnd);
+    PageResult<BookSourceVO> getSourceList(Integer pageSize, Integer pageNumber, String bookName,String sourcename, Integer state, String upLoadTimeStart, String upLoadTimeEnd);
 
 
 

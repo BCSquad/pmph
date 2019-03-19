@@ -150,6 +150,16 @@ public class BookSyncConfirmVO implements Serializable {
     private String synchronizationType;
     private Timestamp syncGmt;
     private Boolean increment;
+    private Long confirmUser;
+
+    public Long getConfirmUser() {
+        return confirmUser;
+    }
+
+    public void setConfirmUser(Long confirmUser) {
+        this.confirmUser = confirmUser;
+    }
+
 
     public Boolean getIncrement() {
         return increment;

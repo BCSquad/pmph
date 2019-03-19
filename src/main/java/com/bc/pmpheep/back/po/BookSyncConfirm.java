@@ -158,8 +158,17 @@ public class BookSyncConfirm implements Serializable {
 
 	private Boolean isDeleted;
 	private Long logId;
+	private Long confirmUser;
 
 	public BookSyncConfirm() {
+	}
+
+	public Long getConfirmUser() {
+		return confirmUser;
+	}
+
+	public void setConfirmUser(Long confirmUser) {
+		this.confirmUser = confirmUser;
 	}
 
 	public BookSyncConfirm(Long id, String vn, String bookname, String isbn, String sn, String author, String publisher, String lang, Integer revision, Long type, Date publishDate, String reader, Double price, Double score, String buyUrl, Long materialId, String imageUrl, String pdfUrl, Boolean isStick, Integer sort, Timestamp deadlineStick, Boolean isNew, Integer sortNew, Timestamp deadlineNew, Boolean isPromote, Integer sortPromote, Timestamp deadlinePromote, Long sales, Boolean isOnSale, String content, Timestamp gmtCreate, Timestamp gmtUpdate, Long editorId, Boolean confirmStatus, Boolean isDeleted, Long logId) {

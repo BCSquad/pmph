@@ -29,4 +29,7 @@ public interface BookSyncService {
     int delectBooksyncConfirm(Long id);
     BookSyncBak getBookSyncBak(Long id);
     Integer updateBookSyncConfirmStatus(Map<String,Object> params);
+    BookSyncLog getFullBookSyncLogBySyncTime();
+    List<BookSyncConfirm> getBookConfirmsByLogId(Long id);
+    int updateSyncBookLogConfirmStatusById(Map<String,Object> map);
 }

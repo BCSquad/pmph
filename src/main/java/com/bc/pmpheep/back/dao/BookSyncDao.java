@@ -22,4 +22,7 @@ public interface BookSyncDao {
     int delectBooksyncConfirm(Long id);
     BookSyncBak getBookSyncBak(Long id);
     Integer updateBookSyncConfirmStatus(Map<String,Object> params);
+    BookSyncLog getFullBookSyncLogBySyncTime();
+    List<BookSyncConfirm> getBookSyncConfirmsByLogId(Long id);
+    int updateSyncBookLogConfirmStatusById(Map<String,Object> map);
 }

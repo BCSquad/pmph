@@ -44,7 +44,7 @@ public class BookSourceController {
     private BookSourceService bookSourceService;
 
     /**
-     * 查询书籍视频
+     * 查询书籍资源文件
      *
      * @introduction
      * @author Mryang
@@ -56,18 +56,19 @@ public class BookSourceController {
      */
     @ResponseBody
     @RequestMapping(value = "/getSourceList", method = RequestMethod.GET)
-    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询微视频列表")
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询图书资源列表")
     public ResponseBean<PageResult<BookSourceVO>> getVideoList(
             Integer pageSize,
             Integer pageNumber,
             String bookName,
+            String sourceName,
             Integer state,
             String upLoadTimeStart,
             String upLoadTimeEnd) {
         pageSize = (pageSize == null || pageSize <= 0) ? 5 : pageSize;
         pageNumber = (pageNumber == null || pageNumber <= 0) ? 1 : pageNumber;
         return new ResponseBean<PageResult<BookSourceVO>>(
-                bookSourceService.getSourceList(pageSize, pageNumber, bookName, state, upLoadTimeStart, upLoadTimeEnd));
+                bookSourceService.getSourceList(pageSize, pageNumber, bookName,sourceName, state, upLoadTimeStart, upLoadTimeEnd));
     }
 
 

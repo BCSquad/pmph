@@ -43,17 +43,22 @@ public class BookSourceServiceImpl implements BookSourceService {
     private WriterUserService writerUserService;
 
     @Override
-    public PageResult<BookSourceVO> getSourceList(Integer pageSize, Integer pageNumber, String bookName, Integer state,
+    public PageResult<BookSourceVO> getSourceList(Integer pageSize, Integer pageNumber, String bookName,String sourceName, Integer state,
             String upLoadTimeStart, String upLoadTimeEnd) {
         Map<String, Object> map = new HashMap<String, Object>(3);
         map.put("start", ((pageNumber - 1) * pageSize));
         map.put("pageSize", pageSize);
         bookName = StringUtil.toAllCheck(bookName);
+
+        sourceName = StringUtil.toAllCheck(sourceName);
         if (null != bookName) {
             map.put("bookName", bookName);
         }
         if (null != state && 0 != state.intValue()) {//all
             map.put("state", state);
+        }
+        if(null != sourceName){
+            map.put("sourceName", sourceName);
         }
         //yyyy-MM-dd
         Timestamp startTime = null;

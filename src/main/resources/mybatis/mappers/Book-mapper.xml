@@ -867,7 +867,15 @@
 		as decimal(9,2)
 		)
 		from material_type where id = cast('${parameter.type}' as decimal(9,2)))),'-',-1) = '${parameter.type}'
+		<if test="parameter.flage==1">
 		where b.is_on_sale = 1 and b.is_sell_well=1
+		</if>
+		<if test="parameter.flage==1">
+			where b.is_on_sale = 1 and b.is_sell_well=1
+		</if>
+		<if test="parameter.flage==1">
+			where b.is_on_sale = 1 and b.is_sell_well=1
+		</if>
 		ORDER BY b.sort_sell_well  LIMIT #{start},#{pageSize}
 	</select>
 

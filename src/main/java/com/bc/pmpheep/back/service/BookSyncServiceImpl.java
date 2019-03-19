@@ -115,4 +115,19 @@ public class BookSyncServiceImpl implements BookSyncService {
         return bookSyncDao.updateBookSyncConfirmStatus(params);
     }
 
+    @Override
+    public BookSyncLog getFullBookSyncLogBySyncTime() {
+        return bookSyncDao.getFullBookSyncLogBySyncTime();
+    }
+
+    @Override
+    public List<BookSyncConfirm> getBookConfirmsByLogId(Long id) {
+        return bookSyncDao.getBookSyncConfirmsByLogId(id);
+    }
+
+    @Override
+    public int updateSyncBookLogConfirmStatusById(Map<String, Object> map) {
+        return bookSyncDao.updateSyncBookLogConfirmStatusById(map);
+    }
+
 }
