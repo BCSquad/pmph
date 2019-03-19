@@ -112,29 +112,52 @@ public class BookSyncController {
         /*解析图书为实体类*/
         List<BookSyncConfirm> books = JSONArray.parseArray(bookinfo.toString(), BookSyncConfirm.class);
         int count=1;
+        Boolean flag=false;
+
+        StringBuilder sb=new StringBuilder();
+
         for (BookSyncConfirm book : books) {
         if(StringUtil.isEmpty(book.getIsbn())){
-            responseBean.setMsg("图书参数"+count+":的ISBN号不能为空");
+            flag=true;
+            sb.append("图书参数"+count+":的ISBN号不能为空---");
             responseBean.setCode(0);
         }
         if(StringUtil.isEmpty(book.getBookname())){
-            responseBean.setMsg("图书参数"+count+":的图书名称不能为空");
-            responseBean.setCode(0);
+            flag=true;
+            sb.append("图书参数"+count+":的图书名称不能为空---");
+
         }
             if(StringUtil.isEmpty(book.getAuthor())){
-                responseBean.setMsg("图书参数"+count+":的图书作者不能为空");
-                responseBean.setCode(0);
+                flag=true;
+                sb.append("图书参数"+count+":的图书作者不能为空---");
+
             }
             if(StringUtil.isEmpty(book.getPublisher())){
-                responseBean.setMsg("图书参数"+count+":的出版社不能为空");
-                responseBean.setCode(0);
+                flag=true;
+                sb.append("图书参数"+count+":的出版社不能为空---");
+
             }
 
-            if(StringUtil.isEmpty(book.getBookname())){
-                responseBean.setMsg("图书参数"+count+":的图书名称不能为空");
-                responseBean.setCode(0);
-            }
+            if(ObjectUtil.isNull(book.getRevision())){
+                flag=true;
+                sb.append("图书参数"+count+":的图书版次不能为空---");
 
+            }
+            if(ObjectUtil.isNull(book.getOnSale())){
+                flag=true;
+                sb.append("图书参数"+count+":的是否上架不能为空---");
+
+            }
+            if(ObjectUtil.isNull(book.getPublishDate())){
+                flag=true;
+                sb.append("图书参数"+count+":的图书出版日期不能为空---");
+
+            }
+            if(flag){
+                responseBean.setMsg(sb.toString());
+                responseBean.setCode(0);
+                return  responseBean;
+            }
 
             book.setLogId(logId);
             bookSyncService.addBookSyncConfirm(book);
