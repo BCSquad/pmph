@@ -66,13 +66,14 @@ public class BookSyncController {
     public ResponseBean syncBook(ServletRequest request, @RequestBody String json) throws IOException {
         /*解析图书信息*/
         String appkey = request.getParameter("app_key");
-
+        ResponseBean<Object> responseBean = new ResponseBean<>();
 
         String decrypt = decrypt(appkey);
         String appKeyString = "bookSync";
 
         JSONObject jsonObject = JSON.parseObject(json);
-        Object bookinfo = jsonObject.get("bookinfo");
+
+        Object bookinfo = jsonObject.get("bookInfo");
 
         /*是否增量更新*/
         Boolean increment = jsonObject.getBoolean("increment");
@@ -96,6 +97,7 @@ public class BookSyncController {
                     "同步类型参数为空参数为空");
 
         }
+
         //写入接口日志表
         BookSyncLog bookSyncLog = new BookSyncLog();
 
@@ -109,7 +111,31 @@ public class BookSyncController {
 
         /*解析图书为实体类*/
         List<BookSyncConfirm> books = JSONArray.parseArray(bookinfo.toString(), BookSyncConfirm.class);
+        int count=1;
         for (BookSyncConfirm book : books) {
+        if(StringUtil.isEmpty(book.getIsbn())){
+            responseBean.setMsg("图书参数"+count+":的ISBN号不能为空");
+            responseBean.setCode(0);
+        }
+        if(StringUtil.isEmpty(book.getBookname())){
+            responseBean.setMsg("图书参数"+count+":的图书名称不能为空");
+            responseBean.setCode(0);
+        }
+            if(StringUtil.isEmpty(book.getAuthor())){
+                responseBean.setMsg("图书参数"+count+":的图书作者不能为空");
+                responseBean.setCode(0);
+            }
+            if(StringUtil.isEmpty(book.getPublisher())){
+                responseBean.setMsg("图书参数"+count+":的出版社不能为空");
+                responseBean.setCode(0);
+            }
+
+            if(StringUtil.isEmpty(book.getBookname())){
+                responseBean.setMsg("图书参数"+count+":的图书名称不能为空");
+                responseBean.setCode(0);
+            }
+
+
             book.setLogId(logId);
             bookSyncService.addBookSyncConfirm(book);
         }
