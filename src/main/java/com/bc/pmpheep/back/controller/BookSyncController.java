@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import sun.misc.BASE64Decoder;
+
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.servlet.ServletRequest;
@@ -40,10 +41,9 @@ import java.security.SecureRandom;
 import java.util.*;
 
 @Controller
-@RequestMapping(value = "/apitest")
-@SuppressWarnings({ "rawtypes", "unchecked" })
+@RequestMapping(value = "/aiptest")
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class BookSyncController {
-
 
     @Autowired
     BookSyncService bookSyncService;
@@ -57,13 +57,8 @@ public class BookSyncController {
     @Autowired
     private UserMessageService userMessageService;
 
-
-
-
     private static final String BUSSINESS_TYPE = "图书同步";
     private static final String KEY = "bookSync";
-
-
 
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "图书同步接口")
@@ -74,7 +69,7 @@ public class BookSyncController {
 
 
         String decrypt = decrypt(appkey);
-        String appKeyString="bookSync";
+        String appKeyString = "bookSync";
 
         JSONObject jsonObject = JSON.parseObject(json);
         Object bookinfo = jsonObject.get("bookinfo");
@@ -82,21 +77,21 @@ public class BookSyncController {
         /*是否增量更新*/
         Boolean increment = jsonObject.getBoolean("increment");
         String synchronizationType = jsonObject.getString("synchronizationType");
-        if(appkey==null &&appkey ==""){
+        if (appkey == null && appkey == "") {
             throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
                     "app_key参数为空");
         }
-        if(!KEY.equals(decrypt)){
+        if (!KEY.equals(decrypt)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.ILLEGAL_PARAM,
                     "app_key错误");
         }
-        if(increment==null){
+        if (increment == null) {
             throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
                     "是否增量同步参数为空参数为空");
 
         }
 
-        if(synchronizationType==null &&synchronizationType ==""){
+        if (synchronizationType == null && synchronizationType == "") {
             throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
                     "同步类型参数为空参数为空");
 
@@ -108,20 +103,19 @@ public class BookSyncController {
         bookSyncLog.setSynchronizationType(synchronizationType);
         bookSyncService.addBookSyncLog(bookSyncLog);
 
-
         Long logId = bookSyncLog.getId();
 
 
 
         /*解析图书为实体类*/
         List<BookSyncConfirm> books = JSONArray.parseArray(bookinfo.toString(), BookSyncConfirm.class);
-        for(BookSyncConfirm book:books){
+        for (BookSyncConfirm book : books) {
             book.setLogId(logId);
             bookSyncService.addBookSyncConfirm(book);
         }
 
         List<PmphUser> pmphUserByRole = pmphUserService.getPmphUserByRole();
-        for(PmphUser p:pmphUserByRole){
+        for (PmphUser p : pmphUserByRole) {
 
             String msgContent = "商城同步了图书,请在图书同步管理中确认";// 退回
             // 存入消息主体
@@ -136,8 +130,8 @@ public class BookSyncController {
 
         /*解析图书为实体类*/
         Map<String, Object> objectObjectHashMap = new HashMap<>();
-        objectObjectHashMap.put("appkey",appkey);
-        objectObjectHashMap.put("jsonInfo",jsonObject);
+        objectObjectHashMap.put("appkey", appkey);
+        objectObjectHashMap.put("jsonInfo", jsonObject);
 
         return new ResponseBean(objectObjectHashMap);
     }
@@ -186,6 +180,7 @@ public class BookSyncController {
 
     /**
      * 获取列表
+     *
      * @param pageSize
      * @param pageNumber
      * @param bookName
@@ -199,99 +194,91 @@ public class BookSyncController {
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取图书同步管理列表")
     @RequestMapping(value = "/getList", method = RequestMethod.GET)
-    public ResponseBean<PageResult<BookSyncConfirmVO>> syncBook(Integer pageSize,
-                                                           Integer pageNumber,
-                                                           String bookName,
-                                                           String synchronizationType,
-                                                           String syncTimeStart,
-                                                           String syncTimeEnd,
-    Boolean confirm) throws IOException {
+    public ResponseBean<PageResult<BookSyncConfirmVO>> syncBook(Integer pageSize, Integer pageNumber, String bookName,
+                                                                String synchronizationType, String syncTimeStart, String syncTimeEnd, Boolean confirm) throws IOException {
         PageParameter<BookSyncConfirmVO> parameter = new PageParameter<>();
 
         parameter.setPageSize(pageSize);
         parameter.setPageNumber(pageNumber);
 
-        return new ResponseBean<>(bookSyncService.queryBookSyncConfirmList(pageSize, pageNumber, bookName, synchronizationType,
-                syncTimeStart, syncTimeEnd,confirm));
+        return new ResponseBean<>(bookSyncService.queryBookSyncConfirmList(pageSize, pageNumber, bookName,
+                synchronizationType, syncTimeStart, syncTimeEnd, confirm));
     }
-
 
     @ResponseBody
     @RequestMapping(value = "/delectBookSyncConfirm", method = RequestMethod.GET)
     public ResponseBean delBookSyncConfirm(Long id) throws IOException {
-        return new ResponseBean<>( bookSyncService.delectBooksyncConfirm(id));
+        return new ResponseBean<>(bookSyncService.delectBooksyncConfirm(id));
     }
 
     @ResponseBody
     @RequestMapping(value = "/batchdel", method = RequestMethod.GET)
     public ResponseBean batchDel(Long[] ids) throws IOException {
         ResponseBean<Object> objectResponseBean = new ResponseBean<>();
-        int code=0;
-        for(Long id:ids){
+        int code = 0;
+        for (Long id : ids) {
             code = bookSyncService.delectBooksyncConfirm(id);
         }
-        if(code==0){
+        if (code == 0) {
             objectResponseBean.setCode(0);
         }
 
-       return objectResponseBean;
+        return objectResponseBean;
     }
-
 
     @ResponseBody
     @RequestMapping(value = "/batchConfirm", method = RequestMethod.GET)
-    public ResponseBean batchConfirm(Long[] ids,HttpServletRequest request) throws IOException {
-         ResponseBean<Object> objectResponseBean = new ResponseBean<>();
-        for(Long id:ids){
+    public ResponseBean batchConfirm(Long[] ids, HttpServletRequest request) throws IOException {
+        ResponseBean<Object> objectResponseBean = new ResponseBean<>();
+        for (Long id : ids) {
             BookSyncConfirmVO bookSyncConfirmByid = bookSyncService.getBookSyncConfirmByid(id);
 
             String synchronizationType = bookSyncConfirmByid.getSynchronizationType();
 
-
-            //获取当前用户
+            // 获取当前用户
             PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(request.getSession().getId());
             if (ObjectUtil.isNull(pmphUser) || ObjectUtil.isNull(pmphUser.getId())) {
-                throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
-                        CheckedExceptionResult.NULL_PARAM, "用户为空");
+                throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM,
+                        "用户为空");
             }
-            //获取待确认的图书
-            BookSyncConfirmVO bookSyncConfirm= bookSyncService.getBookSyncConfirmByid(id);
+            // 获取待确认的图书
+            BookSyncConfirmVO bookSyncConfirm = bookSyncService.getBookSyncConfirmByid(id);
 
-            //根据isbn获取是否已存在该图书
+            // 根据isbn获取是否已存在该图书
             Book bookByIsbn = bookService.getBookByIsbn(bookSyncConfirm.getIsbn());
 
-            //获取图书详情
-            BookDetail bookDetail=new BookDetail() ;
-            if(bookByIsbn!=null){
-                bookDetail= bookService.getBookDetailByBookId(bookByIsbn.getId());
+            // 获取图书详情
+            BookDetail bookDetail = new BookDetail();
+            if (bookByIsbn != null) {
+                bookDetail = bookService.getBookDetailByBookId(bookByIsbn.getId());
             }
-            //判断同步类型
-            switch (synchronizationType){
-                //如果类型为增加
+            // 判断同步类型
+            switch (synchronizationType) {
+                // 如果类型为增加
                 case "add":
 
-                    //如果本地不存在该图书
-                    if(ObjectUtil.isNull(bookByIsbn)){
-                        //创建图书对象
+                    // 如果本地不存在该图书
+                    if (ObjectUtil.isNull(bookByIsbn)) {
+                        // 创建图书对象
                         Book newBook = new Book();
-                        //从待确认复制到图书对象
-                        BeanUtils.copyProperties(bookSyncConfirm,newBook);
-                        //清除id
+                        // 从待确认复制到图书对象
+                        BeanUtils.copyProperties(bookSyncConfirm, newBook);
+                        // 清除id
                         newBook.setId(null);
-                        //设置图书类型
-                       /* newBook.setType(nodeId);*/
-                        //图书默认评分为10
+                        // 设置图书类型
+                        /* newBook.setType(nodeId); */
+                        // 图书默认评分为10
                         newBook.setScore(10.0);
 
-                        //同步书籍到本地
+                        // 同步书籍到本地
                         Book add = bookService.add(newBook);
-                        //同步图书详情到本地
-                        BookDetail newBookDetail = new BookDetail(add.getId(),bookSyncConfirm.getContent());
+                        // 同步图书详情到本地
+                        BookDetail newBookDetail = new BookDetail(add.getId(), bookSyncConfirm.getContent());
                         bookService.addBookDetail(newBookDetail);
 
-                        //备份新增的图书信息
+                        // 备份新增的图书信息
                         BookSyncBak bookSyncBak = new BookSyncBak();
-                        BeanUtils.copyProperties(add,bookSyncBak);
+                        BeanUtils.copyProperties(add, bookSyncBak);
                         bookSyncBak.setConfirmGmt(DateUtil.getCurrentTime());
                         bookSyncBak.setConfirmUser(pmphUser.getId());
                         bookSyncBak.setBookSyncConfirmId(bookSyncConfirm.getId());
@@ -299,33 +286,33 @@ public class BookSyncController {
                         bookSyncBak.setSynchronizationType("add");
                         bookSyncService.addBookSynBak(bookSyncBak);
 
-                        //更新待确认信息
-                        bookSyncConfirm.setEditorId(pmphUser.getId());
+                        // 更新待确认信息
+                        bookSyncConfirm.setConfirmUser(pmphUser.getId());
                         bookSyncConfirm.setConfirmStatus(true);
 
                         BookSyncConfirm bookSyncConfirm1 = new BookSyncConfirm();
                         BeanUtils.copyProperties(bookSyncConfirm, bookSyncConfirm1);
                         bookSyncService.updateBookSynConfirm(bookSyncConfirm1);
-                    }else{
+                    } else {
 
-                        //如果不为空 且图书是删除状态 恢复该图书
-                        if(bookByIsbn.getIsDelected()){
+                        // 如果不为空 且图书是删除状态 恢复该图书
+                        if (bookByIsbn.getIsDelected()) {
                             bookByIsbn.setIsDelected(false);
                             bookService.updateBook(bookByIsbn);
-                        }else{
+                        } else {
                             objectResponseBean.setCode(2);
                             objectResponseBean.setMsg("需要添加图书已存在");
                         }
 
                     }
                     break;
-                //类型是更新
+                // 类型是更新
                 case "update":
-                    if(ObjectUtil.notNull(bookByIsbn)){
+                    if (ObjectUtil.notNull(bookByIsbn)) {
                         Book book = new Book();
-                        //更新图书信息
-                        BeanUtils.copyProperties(bookByIsbn,book);
-                     /*   book.setType(nodeId);*/
+                        // 更新图书信息
+                        BeanUtils.copyProperties(bookByIsbn, book);
+                        /* book.setType(nodeId); */
                         book.setAuthor(bookSyncConfirm.getAuthor());
                         book.setPublisher(bookSyncConfirm.getPublisher());
                         book.setLang(bookSyncConfirm.getLang());
@@ -345,17 +332,16 @@ public class BookSyncController {
                         book.setVn(bookSyncConfirm.getVn());
                         book.setContent(bookSyncConfirm.getContent());
                         bookService.updateBook(book);
-                        //更新图书详情
+                        // 更新图书详情
                         bookDetail.setBookId(book.getId());
                         bookDetail.setDetail(bookSyncConfirm.getContent());
                         bookService.updateBookDetail(bookDetail);
 
-
                         BookSyncBak bookSyncBak = bookSyncService.getBookSyncBak(id);
 
-                        if(ObjectUtil.isNull(bookSyncBak)){
+                        if (ObjectUtil.isNull(bookSyncBak)) {
                             BookSyncBak newBookSyncBak = new BookSyncBak();
-                            BeanUtils.copyProperties(bookByIsbn,newBookSyncBak);
+                            BeanUtils.copyProperties(bookByIsbn, newBookSyncBak);
                             newBookSyncBak.setConfirmGmt(DateUtil.getCurrentTime());
                             newBookSyncBak.setConfirmUser(pmphUser.getId());
                             newBookSyncBak.setBookSyncConfirmId(bookSyncConfirm.getId());
@@ -364,34 +350,34 @@ public class BookSyncController {
                             bookSyncService.addBookSynBak(newBookSyncBak);
                         }
 
-                        //更新待确认信息
-                        bookSyncConfirm.setEditorId(pmphUser.getId());
+                        // 更新待确认信息
+                        bookSyncConfirm.setConfirmUser(pmphUser.getId());
                         bookSyncConfirm.setConfirmStatus(true);
 
                         BookSyncConfirm bookSyncConfirm1 = new BookSyncConfirm();
                         BeanUtils.copyProperties(bookSyncConfirm, bookSyncConfirm1);
                         bookSyncService.updateBookSynConfirm(bookSyncConfirm1);
-                    }else{
+                    } else {
                         objectResponseBean.setCode(2);
                         objectResponseBean.setMsg("需要更新的图书不存在");
                     }
                     break;
-                //类型为上架
+                // 类型为上架
                 case "shelf":
-                    if(ObjectUtil.notNull(bookByIsbn)){
+                    if (ObjectUtil.notNull(bookByIsbn)) {
                         Book book = new Book();
-                        //更新图书信息
-                        BeanUtils.copyProperties(bookByIsbn,book);
-                       /* book.setType(nodeId);*/
+                        // 更新图书信息
+                        BeanUtils.copyProperties(bookByIsbn, book);
+                        /* book.setType(nodeId); */
                         book.setIsOnSale(bookSyncConfirm.getOnSale());
                         book.setGmtUpdate(bookSyncConfirm.getGmtUpdate());
                         bookService.updateBook(book);
                         BookSyncBak bookSyncBak = bookSyncService.getBookSyncBak(id);
 
-                        if(ObjectUtil.isNull(bookSyncBak)){
-                            //备份图书信息
+                        if (ObjectUtil.isNull(bookSyncBak)) {
+                            // 备份图书信息
                             BookSyncBak newBookSyncBak = new BookSyncBak();
-                            BeanUtils.copyProperties(bookByIsbn,newBookSyncBak);
+                            BeanUtils.copyProperties(bookByIsbn, newBookSyncBak);
                             newBookSyncBak.setConfirmGmt(DateUtil.getCurrentTime());
                             newBookSyncBak.setConfirmUser(pmphUser.getId());
                             newBookSyncBak.setBookSyncConfirmId(bookSyncConfirm.getId());
@@ -399,32 +385,32 @@ public class BookSyncController {
                             newBookSyncBak.setBookId(book.getId());
                             bookSyncService.addBookSynBak(newBookSyncBak);
                         }
-                        //更新待确认信息
-                        bookSyncConfirm.setEditorId(pmphUser.getId());
+                        // 更新待确认信息
+                        bookSyncConfirm.setConfirmUser(pmphUser.getId());
                         bookSyncConfirm.setConfirmStatus(true);
 
                         BookSyncConfirm bookSyncConfirm1 = new BookSyncConfirm();
                         BeanUtils.copyProperties(bookSyncConfirm, bookSyncConfirm1);
                         bookSyncService.updateBookSynConfirm(bookSyncConfirm1);
 
-                    }else{
+                    } else {
                         objectResponseBean.setCode(2);
                         objectResponseBean.setMsg("需要上架的图书不存在");
                     }
                     break;
                 case "obtained":
-                    if(ObjectUtil.notNull(bookByIsbn)){
+                    if (ObjectUtil.notNull(bookByIsbn)) {
                         Book book = new Book();
-                        BeanUtils.copyProperties(bookByIsbn,book);
-                       /* book.setType(nodeId);*/
+                        BeanUtils.copyProperties(bookByIsbn, book);
+                        /* book.setType(nodeId); */
                         book.setIsOnSale(bookSyncConfirm.getOnSale());
                         book.setGmtUpdate(bookSyncConfirm.getGmtUpdate());
                         bookService.updateBook(book);
                         BookSyncBak bookSyncBak = bookSyncService.getBookSyncBak(id);
 
-                        if(ObjectUtil.isNull(bookSyncBak)){
+                        if (ObjectUtil.isNull(bookSyncBak)) {
                             BookSyncBak newBookSyncBak = new BookSyncBak();
-                            BeanUtils.copyProperties(bookByIsbn,newBookSyncBak);
+                            BeanUtils.copyProperties(bookByIsbn, newBookSyncBak);
                             newBookSyncBak.setConfirmGmt(DateUtil.getCurrentTime());
                             newBookSyncBak.setConfirmUser(pmphUser.getId());
                             newBookSyncBak.setBookSyncConfirmId(bookSyncConfirm.getId());
@@ -432,80 +418,78 @@ public class BookSyncController {
                             newBookSyncBak.setBookId(book.getId());
                             bookSyncService.addBookSynBak(newBookSyncBak);
                         }
-                        //更新待确认信息
-                        bookSyncConfirm.setEditorId(pmphUser.getId());
+                        // 更新待确认信息
+                        bookSyncConfirm.setConfirmUser(pmphUser.getId());
                         bookSyncConfirm.setConfirmStatus(true);
 
                         BookSyncConfirm bookSyncConfirm1 = new BookSyncConfirm();
                         BeanUtils.copyProperties(bookSyncConfirm, bookSyncConfirm1);
                         bookSyncService.updateBookSynConfirm(bookSyncConfirm1);
 
-                    }else{
+                    } else {
                         objectResponseBean.setCode(2);
                         objectResponseBean.setMsg("需要下架的图书不存在");
                     }
                     break;
             }
 
-
-
-
-
         }
         return objectResponseBean;
     }
 
-
     @ResponseBody
     @RequestMapping(value = "/showDetail", method = RequestMethod.GET)
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查看图书同步详情")
-    public ResponseBean showDateil(Long id,String type) throws IOException {
+    public ResponseBean showDateil(Long id, String type) throws IOException {
         BookSyncConfirmVO bookSyncConfirm = bookSyncService.getBookSyncConfirmByid(id);
         Book bookByIsbn = bookService.getBookByIsbn(bookSyncConfirm.getIsbn());
-        if(bookByIsbn==null){
-            bookByIsbn=new Book();
+        if (bookByIsbn == null) {
+            bookByIsbn = new Book();
         }
-        List<Map<String, Object>> list= new ArrayList();
-        list.add(addRES("图书名称",bookByIsbn.getBookname(),bookSyncConfirm.getBookname()));
-        list.add(addRES("ISBN号",bookByIsbn.getIsbn(),bookSyncConfirm.getIsbn()));
-        list.add(addRES("作者",bookByIsbn.getAuthor(),bookSyncConfirm.getAuthor()));
-        list.add(addRES("出版社",bookByIsbn.getPublisher(),bookSyncConfirm.getPublisher()));
-        list.add(addRES("语言",bookByIsbn.getLang(),bookSyncConfirm.getLang()));
-        list.add(addRES("版次",bookByIsbn.getRevision(),bookSyncConfirm.getRevision()));
-        list.add(addRES("出版日期",bookByIsbn.getPublishDate(),bookSyncConfirm.getPublishDate()));
-        list.add(addRES("读者对象",bookByIsbn.getReader(),bookSyncConfirm.getReader()));
-        list.add(addRES("价格",bookByIsbn.getPrice(),bookSyncConfirm.getPrice()));
-        list.add(addRES("购买地址",bookByIsbn.getBuyUrl(),bookSyncConfirm.getBuyUrl()));
-        list.add(addRES("是否新书",bookByIsbn.getIsNew()==null?null:bookByIsbn.getIsNew()?"是":"否",bookSyncConfirm.getNew()==null?null:bookSyncConfirm.getNew()?"是":"否"));
-        list.add(addRES("是否上架",bookByIsbn.getIsOnSale()==null?null:bookByIsbn.getIsOnSale()?"是":"否",bookSyncConfirm.getOnSale()==null?null:bookSyncConfirm.getOnSale()?"是":"否"));
-        list.add(addRES("本版号",bookByIsbn.getVn(),bookSyncConfirm.getVn()));
+        List<Map<String, Object>> list = new ArrayList();
+        list.add(addRES("图书名称", bookByIsbn.getBookname(), bookSyncConfirm.getBookname()));
+        list.add(addRES("ISBN号", bookByIsbn.getIsbn(), bookSyncConfirm.getIsbn()));
+        list.add(addRES("作者", bookByIsbn.getAuthor(), bookSyncConfirm.getAuthor()));
+        list.add(addRES("出版社", bookByIsbn.getPublisher(), bookSyncConfirm.getPublisher()));
+        list.add(addRES("语言", bookByIsbn.getLang(), bookSyncConfirm.getLang()));
+        list.add(addRES("版次", bookByIsbn.getRevision(), bookSyncConfirm.getRevision()));
+        list.add(addRES("出版日期", bookByIsbn.getPublishDate(), bookSyncConfirm.getPublishDate()));
+        list.add(addRES("读者对象", bookByIsbn.getReader(), bookSyncConfirm.getReader()));
+        list.add(addRES("价格", bookByIsbn.getPrice(), bookSyncConfirm.getPrice()));
+        list.add(addRES("购买地址", bookByIsbn.getBuyUrl(), bookSyncConfirm.getBuyUrl()));
+        list.add(addRES("是否新书", bookByIsbn.getIsNew() == null ? null : bookByIsbn.getIsNew() ? "是" : "否",
+                bookSyncConfirm.getNew() == null ? null : bookSyncConfirm.getNew() ? "是" : "否"));
+        list.add(addRES("是否上架", bookByIsbn.getIsOnSale() == null ? null : bookByIsbn.getIsOnSale() ? "是" : "否",
+                bookSyncConfirm.getOnSale() == null ? null : bookSyncConfirm.getOnSale() ? "是" : "否"));
+        list.add(addRES("本版号", bookByIsbn.getVn(), bookSyncConfirm.getVn()));
         return new ResponseBean<>(list);
     }
 
-    public Object ifnull(Object obj){
-        return obj==null?"------":obj;
+    public Object ifnull(Object obj) {
+        return obj == null ? "------" : obj;
 
     }
-    public Map<String,Object>  addRES(String name,Object oldBook,Object newBook){
+
+    public Map<String, Object> addRES(String name, Object oldBook, Object newBook) {
         Map<String, Object> res = new HashMap<>();
         res.put("name", name);
-        res.put("oldBook",ifnull(oldBook));
-        res.put("newBook",ifnull(newBook));
-        Boolean equals=true;
+        res.put("oldBook", ifnull(oldBook));
+        res.put("newBook", ifnull(newBook));
+        Boolean equals = true;
 
-        if(oldBook!=null){
-            if(!oldBook.toString().equals(newBook.toString())){
-                equals=false;
+        if (oldBook != null) {
+            if (!oldBook.toString().equals(newBook.toString())) {
+                equals = false;
 
             }
         }
-        res.put("equals",equals);
+        res.put("equals", equals);
         return res;
     }
 
-
     /**
      * 撤回确认操作
+     *
      * @param id
      * @param synchronizationType
      * @return
@@ -514,33 +498,32 @@ public class BookSyncController {
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "撤回已确认图书同步")
     @RequestMapping(value = "/revokeBookSyncComfirm", method = RequestMethod.GET)
-    public ResponseBean revokeBookSyncComfirm(Long id,String synchronizationType
-    ) throws IOException {
-            BookSyncBak bookSyncBak = bookSyncService.getBookSyncBak(id);
+    public ResponseBean revokeBookSyncComfirm(Long id, String synchronizationType) throws IOException {
+        BookSyncBak bookSyncBak = bookSyncService.getBookSyncBak(id);
         Book book = new Book();
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("id",id);
-        params.put("confirm",false);
-        switch (synchronizationType){
+        params.put("id", id);
+        params.put("confirm", false);
+        switch (synchronizationType) {
             case "add":
-                BeanUtils.copyProperties(bookSyncBak,book);
+                BeanUtils.copyProperties(bookSyncBak, book);
                 book.setIsDelected(true);
                 book.setId(bookSyncBak.getBookId());
                 bookService.updateBook(book);
                 break;
             case "update":
-                BeanUtils.copyProperties(bookSyncBak,book);
+                BeanUtils.copyProperties(bookSyncBak, book);
                 book.setId(bookSyncBak.getBookId());
                 bookService.updateBook(book);
 
                 break;
             case "shelf":
-                BeanUtils.copyProperties(bookSyncBak,book);
+                BeanUtils.copyProperties(bookSyncBak, book);
                 book.setId(bookSyncBak.getBookId());
                 bookService.updateBook(book);
                 break;
             case "obtained":
-                BeanUtils.copyProperties(bookSyncBak,book);
+                BeanUtils.copyProperties(bookSyncBak, book);
                 book.setId(bookSyncBak.getBookId());
                 bookService.updateBook(book);
                 break;
@@ -549,8 +532,181 @@ public class BookSyncController {
         return new ResponseBean<>(bookSyncService.updateBookSyncConfirmStatus(params));
     }
 
+
+    Integer flag = 0;
+    Integer speed = 0;
+    Integer count = 0;
+
+    /**
+     * 全量更新图书
+     *
+     * @param id
+     * @param synchronizationType
+     * @return
+     * @throws IOException
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "全量更新图书")
+    @RequestMapping(value = "/syncFullBooks", method = RequestMethod.GET)
+    public ResponseBean syncFullBooks(HttpServletRequest request) throws IOException {
+
+        ResponseBean<Object> responseBean = new ResponseBean<>();
+        BookSyncLog bookSyncLog = bookSyncService.getFullBookSyncLogBySyncTime();
+        // 获取当前用户
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(request.getSession().getId());
+        if (ObjectUtil.isNull(pmphUser) || ObjectUtil.isNull(pmphUser.getId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "用户为空");
+        }
+
+        if (ObjectUtil.isNull(bookSyncLog)) {
+            responseBean.setCode(2);
+            responseBean.setMsg("未发现可同步的数据");
+            return responseBean;
+
+        } else {
+            if (!bookSyncLog.getConfirmStatus()) {
+                responseBean.setCode(2);
+                responseBean.setMsg("未发现可同步的数据");
+                return responseBean;
+
+            }
+        }
+
+
+        List<BookSyncConfirm> bookSyncConfirms = bookSyncService.getBookConfirmsByLogId(bookSyncLog.getId());
+
+        if (ObjectUtil.isNull(bookSyncConfirms)) {
+            responseBean.setCode(2);
+            responseBean.setMsg("未发现可同步的数据");
+            return responseBean;
+
+        }
+
+
+        flag = bookSyncConfirms.size() / 100;
+
+        for (BookSyncConfirm bookSyncConfirm : bookSyncConfirms) {
+            count++;
+
+            // 获取图书详情
+            BookDetail bookDetail = new BookDetail();
+            Book bookByIsbn = bookService.getBookByIsbn(bookSyncConfirm.getIsbn());
+            if (bookByIsbn != null) {
+                bookDetail = bookService.getBookDetailByBookId(bookByIsbn.getId());
+            }
+            if (ObjectUtil.notNull(bookByIsbn)) {
+
+                Book book = new Book();
+                // 更新图书信息
+                BeanUtils.copyProperties(bookByIsbn, book);
+
+                book.setAuthor(bookSyncConfirm.getAuthor());
+                book.setPublisher(bookSyncConfirm.getPublisher());
+                book.setLang(bookSyncConfirm.getLang());
+                book.setPublishDate(bookSyncConfirm.getPublishDate());
+                book.setReader(bookSyncConfirm.getReader());
+                book.setPrice(bookSyncConfirm.getPrice());
+                book.setScore(bookSyncConfirm.getScore());
+                book.setBuyUrl(bookSyncConfirm.getBuyUrl());
+                book.setMaterialId(bookSyncConfirm.getMaterialId());
+                book.setImageUrl(bookSyncConfirm.getImageUrl());
+                book.setPdfUrl(bookSyncConfirm.getPdfUrl());
+                book.setIsNew(bookSyncConfirm.getNew());
+                book.setSales(bookSyncConfirm.getSales());
+                book.setIsOnSale(bookSyncConfirm.getOnSale());
+                book.setGmtCreate(bookSyncConfirm.getGmtCreate());
+                book.setGmtUpdate(bookSyncConfirm.getGmtUpdate());
+                book.setVn(bookSyncConfirm.getVn());
+                book.setContent(bookSyncConfirm.getContent());
+                bookService.updateBook(book);
+                // 更新图书详情
+                bookDetail.setBookId(book.getId());
+                bookDetail.setDetail(bookSyncConfirm.getContent());
+                bookService.updateBookDetail(bookDetail);
+
+                BookSyncBak bookSyncBak = bookSyncService.getBookSyncBak(bookSyncConfirm.getId());
+
+                if (ObjectUtil.isNull(bookSyncBak)) {
+                    BookSyncBak newBookSyncBak = new BookSyncBak();
+                    BeanUtils.copyProperties(bookByIsbn, newBookSyncBak);
+                    newBookSyncBak.setConfirmGmt(DateUtil.getCurrentTime());
+                    newBookSyncBak.setConfirmUser(pmphUser.getId());
+                    newBookSyncBak.setBookSyncConfirmId(bookSyncConfirm.getId());
+                    newBookSyncBak.setSynchronizationType("update");
+                    newBookSyncBak.setBookId(book.getId());
+                    bookSyncService.addBookSynBak(newBookSyncBak);
+                }
+                // 更新待确认信息
+                bookSyncConfirm.setConfirmUser(pmphUser.getId());
+                bookSyncConfirm.setConfirmStatus(true);
+
+                BookSyncConfirm bookSyncConfirm1 = new BookSyncConfirm();
+                BeanUtils.copyProperties(bookSyncConfirm, bookSyncConfirm1);
+                bookSyncService.updateBookSynConfirm(bookSyncConfirm1);
+
+            } else {
+                // 创建图书对象
+                Book newBook = new Book();
+                // 从待确认复制到图书对象
+                BeanUtils.copyProperties(bookSyncConfirm, newBook);
+                // 清除id
+                newBook.setId(null);
+                // 图书默认评分为10
+                newBook.setScore(10.0);
+
+                // 同步书籍到本地
+                Book add = bookService.add(newBook);
+                // 同步图书详情到本地
+                BookDetail newBookDetail = new BookDetail(add.getId(), bookSyncConfirm.getContent());
+                bookService.addBookDetail(newBookDetail);
+
+                // 备份新增的图书信息
+                BookSyncBak bookSyncBak = new BookSyncBak();
+                BeanUtils.copyProperties(add, bookSyncBak);
+                bookSyncBak.setConfirmGmt(DateUtil.getCurrentTime());
+                bookSyncBak.setConfirmUser(pmphUser.getId());
+                bookSyncBak.setBookSyncConfirmId(bookSyncConfirm.getId());
+                bookSyncBak.setBookId(add.getId());
+                bookSyncBak.setSynchronizationType("add");
+                bookSyncService.addBookSynBak(bookSyncBak);
+
+                // 更新待确认信息
+                bookSyncConfirm.setConfirmUser(pmphUser.getId());
+                bookSyncConfirm.setConfirmStatus(true);
+
+                BookSyncConfirm bookSyncConfirm1 = new BookSyncConfirm();
+                BeanUtils.copyProperties(bookSyncConfirm, bookSyncConfirm1);
+                bookSyncService.updateBookSynConfirm(bookSyncConfirm1);
+
+            }
+            if (count % flag == 0 && speed < 100) {
+                speed++;
+            }
+
+        }
+        Map<String, Object> params = new HashMap<>();
+        params.put("confirm", true);
+        params.put("id", bookSyncLog.getId());
+        bookSyncService.updateSyncBookLogConfirmStatusById(params);
+        speed = 100;
+        return responseBean;
+    }
+
+
+    /**
+     * 功能描述：获取图书同步进度
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取图书同步进度")
+    @RequestMapping(value = "/getSpeed", method = RequestMethod.GET)
+    public ResponseBean getSpeed() {
+        return new ResponseBean(speed);
+    }
+
+
     /**
      * 确认导入图书
+     *
      * @param synchronizationType
      * @param bookId
      * @param nodeId
@@ -562,53 +718,53 @@ public class BookSyncController {
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "确认图书同步")
     @RequestMapping(value = "/confirmBook", method = RequestMethod.GET)
-    public ResponseBean confirmBookSync(String synchronizationType, Long bookId, Long nodeId, HttpServletRequest request) throws IOException {
-         System.out.println(bookId);
+    public ResponseBean confirmBookSync(String synchronizationType, Long bookId, Long nodeId,
+                                        HttpServletRequest request) throws IOException {
+        System.out.println(bookId);
         ResponseBean<Object> objectResponseBean = new ResponseBean<>();
-        //获取当前用户
+        // 获取当前用户
         PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(request.getSession().getId());
         if (ObjectUtil.isNull(pmphUser) || ObjectUtil.isNull(pmphUser.getId())) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
-                    CheckedExceptionResult.NULL_PARAM, "用户为空");
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "用户为空");
         }
-        //获取待确认的图书
-        BookSyncConfirmVO bookSyncConfirm= bookSyncService.getBookSyncConfirmByid(bookId);
+        // 获取待确认的图书
+        BookSyncConfirmVO bookSyncConfirm = bookSyncService.getBookSyncConfirmByid(bookId);
 
-        //根据isbn获取是否已存在该图书
+        // 根据isbn获取是否已存在该图书
         Book bookByIsbn = bookService.getBookByIsbn(bookSyncConfirm.getIsbn());
 
-        //获取图书详情
-        BookDetail bookDetail=new BookDetail() ;
-        if(bookByIsbn!=null){
-            bookDetail= bookService.getBookDetailByBookId(bookByIsbn.getId());
+        // 获取图书详情
+        BookDetail bookDetail = new BookDetail();
+        if (bookByIsbn != null) {
+            bookDetail = bookService.getBookDetailByBookId(bookByIsbn.getId());
         }
-        //判断同步类型
-        switch (synchronizationType){
-            //如果类型为增加
+        // 判断同步类型
+        switch (synchronizationType) {
+            // 如果类型为增加
             case "add":
 
-                //如果本地不存在该图书
-                if(ObjectUtil.isNull(bookByIsbn)){
-                    //创建图书对象
+                // 如果本地不存在该图书
+                if (ObjectUtil.isNull(bookByIsbn)) {
+                    // 创建图书对象
                     Book newBook = new Book();
-                    //从待确认复制到图书对象
-                    BeanUtils.copyProperties(bookSyncConfirm,newBook);
-                    //清除id
+                    // 从待确认复制到图书对象
+                    BeanUtils.copyProperties(bookSyncConfirm, newBook);
+                    // 清除id
                     newBook.setId(null);
-                    //设置图书类型
+                    // 设置图书类型
                     newBook.setType(nodeId);
-                    //图书默认评分为10
+                    // 图书默认评分为10
                     newBook.setScore(10.0);
 
-                    //同步书籍到本地
+                    // 同步书籍到本地
                     Book add = bookService.add(newBook);
-                    //同步图书详情到本地
-                    BookDetail newBookDetail = new BookDetail(add.getId(),bookSyncConfirm.getContent());
+                    // 同步图书详情到本地
+                    BookDetail newBookDetail = new BookDetail(add.getId(), bookSyncConfirm.getContent());
                     bookService.addBookDetail(newBookDetail);
 
-                    //备份新增的图书信息
+                    // 备份新增的图书信息
                     BookSyncBak bookSyncBak = new BookSyncBak();
-                    BeanUtils.copyProperties(add,bookSyncBak);
+                    BeanUtils.copyProperties(add, bookSyncBak);
                     bookSyncBak.setConfirmGmt(DateUtil.getCurrentTime());
                     bookSyncBak.setConfirmUser(pmphUser.getId());
                     bookSyncBak.setBookSyncConfirmId(bookSyncConfirm.getId());
@@ -616,32 +772,41 @@ public class BookSyncController {
                     bookSyncBak.setSynchronizationType("add");
                     bookSyncService.addBookSynBak(bookSyncBak);
 
-                    //更新待确认信息
-                    bookSyncConfirm.setEditorId(pmphUser.getId());
+                    // 更新待确认信息
+                    bookSyncConfirm.setConfirmUser(pmphUser.getId());
                     bookSyncConfirm.setConfirmStatus(true);
 
                     BookSyncConfirm bookSyncConfirm1 = new BookSyncConfirm();
                     BeanUtils.copyProperties(bookSyncConfirm, bookSyncConfirm1);
                     bookSyncService.updateBookSynConfirm(bookSyncConfirm1);
-                }else{
+                } else {
 
-                    //如果不为空 且图书是删除状态 恢复该图书
-                    if(bookByIsbn.getIsDelected()){
+                    // 如果不为空 且图书是删除状态 恢复该图书
+                    if (bookByIsbn.getIsDelected()) {
                         bookByIsbn.setIsDelected(false);
                         bookService.updateBook(bookByIsbn);
-                    }else{
+                        // 更新待确认信息
+                        bookSyncConfirm.setConfirmUser(pmphUser.getId());
+                        bookSyncConfirm.setConfirmStatus(true);
+
+                        BookSyncConfirm bookSyncConfirm1 = new BookSyncConfirm();
+                        BeanUtils.copyProperties(bookSyncConfirm, bookSyncConfirm1);
+                        bookSyncService.updateBookSynConfirm(bookSyncConfirm1);
+
+
+                    } else {
                         objectResponseBean.setCode(2);
                         objectResponseBean.setMsg("需要添加图书已存在");
                     }
 
                 }
                 break;
-                //类型是更新
+            // 类型是更新
             case "update":
-                if(ObjectUtil.notNull(bookByIsbn)){
+                if (ObjectUtil.notNull(bookByIsbn)) {
                     Book book = new Book();
-                    //更新图书信息
-                    BeanUtils.copyProperties(bookByIsbn,book);
+                    // 更新图书信息
+                    BeanUtils.copyProperties(bookByIsbn, book);
                     book.setType(nodeId);
                     book.setAuthor(bookSyncConfirm.getAuthor());
                     book.setPublisher(bookSyncConfirm.getPublisher());
@@ -662,17 +827,16 @@ public class BookSyncController {
                     book.setVn(bookSyncConfirm.getVn());
                     book.setContent(bookSyncConfirm.getContent());
                     bookService.updateBook(book);
-                    //更新图书详情
+                    // 更新图书详情
                     bookDetail.setBookId(book.getId());
                     bookDetail.setDetail(bookSyncConfirm.getContent());
                     bookService.updateBookDetail(bookDetail);
 
-
                     BookSyncBak bookSyncBak = bookSyncService.getBookSyncBak(bookId);
 
-                    if(ObjectUtil.isNull(bookSyncBak)){
+                    if (ObjectUtil.isNull(bookSyncBak)) {
                         BookSyncBak newBookSyncBak = new BookSyncBak();
-                        BeanUtils.copyProperties(bookByIsbn,newBookSyncBak);
+                        BeanUtils.copyProperties(bookByIsbn, newBookSyncBak);
                         newBookSyncBak.setConfirmGmt(DateUtil.getCurrentTime());
                         newBookSyncBak.setConfirmUser(pmphUser.getId());
                         newBookSyncBak.setBookSyncConfirmId(bookSyncConfirm.getId());
@@ -680,35 +844,35 @@ public class BookSyncController {
                         newBookSyncBak.setBookId(book.getId());
                         bookSyncService.addBookSynBak(newBookSyncBak);
                     }
-                    //更新待确认信息
-                    bookSyncConfirm.setEditorId(pmphUser.getId());
+                    // 更新待确认信息
+                    bookSyncConfirm.setConfirmUser(pmphUser.getId());
                     bookSyncConfirm.setConfirmStatus(true);
 
                     BookSyncConfirm bookSyncConfirm1 = new BookSyncConfirm();
                     BeanUtils.copyProperties(bookSyncConfirm, bookSyncConfirm1);
                     bookSyncService.updateBookSynConfirm(bookSyncConfirm1);
 
-                }else{
+                } else {
                     objectResponseBean.setCode(2);
                     objectResponseBean.setMsg("需要更新的图书不存在");
                 }
                 break;
-            //类型为上架
+            // 类型为上架
             case "shelf":
-                if(ObjectUtil.notNull(bookByIsbn)){
+                if (ObjectUtil.notNull(bookByIsbn)) {
                     Book book = new Book();
-                    //更新图书信息
-                    BeanUtils.copyProperties(bookByIsbn,book);
+                    // 更新图书信息
+                    BeanUtils.copyProperties(bookByIsbn, book);
                     book.setType(nodeId);
                     book.setIsOnSale(bookSyncConfirm.getOnSale());
                     book.setGmtUpdate(bookSyncConfirm.getGmtUpdate());
                     bookService.updateBook(book);
                     BookSyncBak bookSyncBak = bookSyncService.getBookSyncBak(bookId);
 
-                    if(ObjectUtil.isNull(bookSyncBak)){
-                        //备份图书信息
+                    if (ObjectUtil.isNull(bookSyncBak)) {
+                        // 备份图书信息
                         BookSyncBak newBookSyncBak = new BookSyncBak();
-                        BeanUtils.copyProperties(bookByIsbn,newBookSyncBak);
+                        BeanUtils.copyProperties(bookByIsbn, newBookSyncBak);
                         newBookSyncBak.setConfirmGmt(DateUtil.getCurrentTime());
                         newBookSyncBak.setConfirmUser(pmphUser.getId());
                         newBookSyncBak.setBookSyncConfirmId(bookSyncConfirm.getId());
@@ -716,31 +880,31 @@ public class BookSyncController {
                         newBookSyncBak.setBookId(book.getId());
                         bookSyncService.addBookSynBak(newBookSyncBak);
                     }
-                    //更新待确认信息
-                    bookSyncConfirm.setEditorId(pmphUser.getId());
+                    // 更新待确认信息
+                    bookSyncConfirm.setConfirmUser(pmphUser.getId());
                     bookSyncConfirm.setConfirmStatus(true);
 
                     BookSyncConfirm bookSyncConfirm1 = new BookSyncConfirm();
                     BeanUtils.copyProperties(bookSyncConfirm, bookSyncConfirm1);
                     bookSyncService.updateBookSynConfirm(bookSyncConfirm1);
-                }else{
+                } else {
                     objectResponseBean.setCode(2);
                     objectResponseBean.setMsg("需要上架的图书不存在");
                 }
                 break;
             case "obtained":
-                if(ObjectUtil.notNull(bookByIsbn)){
+                if (ObjectUtil.notNull(bookByIsbn)) {
                     Book book = new Book();
-                    BeanUtils.copyProperties(bookByIsbn,book);
+                    BeanUtils.copyProperties(bookByIsbn, book);
                     book.setType(nodeId);
                     book.setIsOnSale(bookSyncConfirm.getOnSale());
                     book.setGmtUpdate(bookSyncConfirm.getGmtUpdate());
                     bookService.updateBook(book);
                     BookSyncBak bookSyncBak = bookSyncService.getBookSyncBak(bookId);
 
-                    if(ObjectUtil.isNull(bookSyncBak)){
+                    if (ObjectUtil.isNull(bookSyncBak)) {
                         BookSyncBak newBookSyncBak = new BookSyncBak();
-                        BeanUtils.copyProperties(bookByIsbn,newBookSyncBak);
+                        BeanUtils.copyProperties(bookByIsbn, newBookSyncBak);
                         newBookSyncBak.setConfirmGmt(DateUtil.getCurrentTime());
                         newBookSyncBak.setConfirmUser(pmphUser.getId());
                         newBookSyncBak.setBookSyncConfirmId(bookSyncConfirm.getId());
@@ -748,29 +912,22 @@ public class BookSyncController {
                         newBookSyncBak.setBookId(book.getId());
                         bookSyncService.addBookSynBak(newBookSyncBak);
                     }
-                    //更新待确认信息
-                    bookSyncConfirm.setEditorId(pmphUser.getId());
+                    // 更新待确认信息
+                    bookSyncConfirm.setConfirmUser(pmphUser.getId());
                     bookSyncConfirm.setConfirmStatus(true);
 
                     BookSyncConfirm bookSyncConfirm1 = new BookSyncConfirm();
                     BeanUtils.copyProperties(bookSyncConfirm, bookSyncConfirm1);
                     bookSyncService.updateBookSynConfirm(bookSyncConfirm1);
 
-                }else{
+                } else {
                     objectResponseBean.setCode(2);
                     objectResponseBean.setMsg("需要下架的图书不存在");
                 }
-               break;
+                break;
         }
 
-
-
-
-       return objectResponseBean;
+        return objectResponseBean;
     }
-
-
-
-
 
 }
