@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.controller;
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -18,8 +19,9 @@ import com.bc.pmpheep.general.service.MessageService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
-import com.fasterxml.jackson.databind.util.BeanUtil;
-import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections4.ListUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,8 +36,8 @@ import javax.crypto.KeyGenerator;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.security.Key;
 import java.security.SecureRandom;
 import java.util.*;
@@ -60,10 +62,12 @@ public class BookSyncController {
     private static final String BUSSINESS_TYPE = "图书同步";
     private static final String KEY = "bookSync";
 
+
+
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "图书同步接口")
     @RequestMapping(value = "/syncBook", method = RequestMethod.POST)
-    public ResponseBean syncBook(ServletRequest request, @RequestBody String json) throws IOException {
+    public ResponseBean syncBook(ServletRequest request, @RequestBody String json) throws Exception {
         /*解析图书信息*/
         String appkey = request.getParameter("app_key");
         ResponseBean<Object> responseBean = new ResponseBean<>();
@@ -74,6 +78,33 @@ public class BookSyncController {
         JSONObject jsonObject = JSON.parseObject(json);
 
         Object bookinfo = jsonObject.get("bookInfo");
+        JSONArray objects =JSONArray.parseArray(bookinfo.toString());
+
+        List<BookSyncConfirm> bookSyncConfirms=new ArrayList<>();
+        for(int i=0;i<objects.size();i++){
+            JSONObject jsonObject1 = JSON.parseObject(objects.get(i).toString());
+            BookSyncConfirm bookSyncConfirm = new BookSyncConfirm();
+            bookSyncConfirm.setIsbn(jsonObject1.getString("isbn")==null?null:jsonObject1.getString("isbn"));
+            bookSyncConfirm.setBookname(jsonObject1.getString("bookname")==null?null:jsonObject1.getString("bookname"));
+            bookSyncConfirm.setAuthor(jsonObject1.getString("author")==null?null:jsonObject1.getString("author"));
+            bookSyncConfirm.setPublisher(jsonObject1.getString("publisher")==null?null:jsonObject1.getString("publisher"));
+            bookSyncConfirm.setLang(jsonObject1.getString("lang")==null?null:jsonObject1.getString("lang"));
+            bookSyncConfirm.setRevision(jsonObject.getInteger("version")==null?null:jsonObject.getInteger("version"));
+            bookSyncConfirm.setPublishDate(jsonObject1.getDate("publishDate")==null?null:jsonObject1.getDate("publishDate"));
+            bookSyncConfirm.setReader(jsonObject1.getString("reader")==null?null:jsonObject1.getString("reader"));
+            bookSyncConfirm.setPrice(jsonObject1.getDouble("price")==null?null:jsonObject1.getDouble("price"));
+            bookSyncConfirm.setBuyUrl(jsonObject1.getString("buyUrl")==null?null:jsonObject1.getString("buyUrl"));
+            bookSyncConfirm.setImageUrl(jsonObject1.getString("imageUrl")==null?null:jsonObject1.getString("imageUrl"));
+            bookSyncConfirm.setPdfUrl(jsonObject1.getString("pdfUrl")==null?null:jsonObject1.getString("pdfUrl"));
+            bookSyncConfirm.setNew(jsonObject1.getBoolean("isNew")==null?null:jsonObject1.getBoolean("isNew"));
+            bookSyncConfirm.setIsOnSale(jsonObject1.getBoolean("isOnSale")==null?null:jsonObject1.getBoolean("isOnSale"));
+            bookSyncConfirm.setGmtCreate(jsonObject1.getTimestamp("gmtCreate")==null?null:jsonObject1.getTimestamp("gmtCreate"));
+            bookSyncConfirm.setGmtUpdate(jsonObject1.getTimestamp("gmtUpdate")==null?null:jsonObject1.getTimestamp("gmtUpdate"));
+            bookSyncConfirm.setVn(jsonObject1.getString("vn")==null?null:jsonObject1.getString("vn"));
+            bookSyncConfirm.setContent(jsonObject1.getString("content")==null?null:jsonObject1.getString("content"));
+            bookSyncConfirms.add(bookSyncConfirm);
+        }
+
 
         /*是否增量更新*/
         Boolean increment = jsonObject.getBoolean("increment");
@@ -106,17 +137,19 @@ public class BookSyncController {
         bookSyncService.addBookSyncLog(bookSyncLog);
 
         Long logId = bookSyncLog.getId();
-
-
-
         /*解析图书为实体类*/
+
+
+
+
+
         List<BookSyncConfirm> books = JSONArray.parseArray(bookinfo.toString(), BookSyncConfirm.class);
         int count=1;
         Boolean flag=false;
 
         StringBuilder sb=new StringBuilder();
 
-        for (BookSyncConfirm book : books) {
+        for (BookSyncConfirm book : bookSyncConfirms) {
         if(StringUtil.isEmpty(book.getIsbn())){
             flag=true;
             sb.append("图书参数"+count+":的ISBN号不能为空---");
@@ -138,11 +171,11 @@ public class BookSyncController {
 
             }
 
-            if(ObjectUtil.isNull(book.getRevision())){
+           /* if(ObjectUtil.isNull(book.getRevision())){
                 flag=true;
                 sb.append("图书参数"+count+":的图书版次不能为空---");
 
-            }
+            }*/
             if(ObjectUtil.isNull(book.getOnSale())){
                 flag=true;
                 sb.append("图书参数"+count+":的是否上架不能为空---");
