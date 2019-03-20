@@ -163,52 +163,6 @@ public class BookSyncConfirm implements Serializable {
 	public BookSyncConfirm() {
 	}
 
-	public Long getConfirmUser() {
-		return confirmUser;
-	}
-
-	public void setConfirmUser(Long confirmUser) {
-		this.confirmUser = confirmUser;
-	}
-
-	public BookSyncConfirm(Long id, String vn, String bookname, String isbn, String sn, String author, String publisher, String lang, Integer revision, Long type, Date publishDate, String reader, Double price, Double score, String buyUrl, Long materialId, String imageUrl, String pdfUrl, Boolean isStick, Integer sort, Timestamp deadlineStick, Boolean isNew, Integer sortNew, Timestamp deadlineNew, Boolean isPromote, Integer sortPromote, Timestamp deadlinePromote, Long sales, Boolean isOnSale, String content, Timestamp gmtCreate, Timestamp gmtUpdate, Long editorId, Boolean confirmStatus, Boolean isDeleted, Long logId) {
-		this.id = id;
-		this.vn = vn;
-		this.bookname = bookname;
-		this.isbn = isbn;
-		this.sn = sn;
-		this.author = author;
-		this.publisher = publisher;
-		this.lang = lang;
-		this.revision = revision;
-		this.type = type;
-		this.publishDate = publishDate;
-		this.reader = reader;
-		this.price = price;
-		this.score = score;
-		this.buyUrl = buyUrl;
-		this.materialId = materialId;
-		this.imageUrl = imageUrl;
-		this.pdfUrl = pdfUrl;
-		this.isStick = isStick;
-		this.sort = sort;
-		this.deadlineStick = deadlineStick;
-		this.isNew = isNew;
-		this.sortNew = sortNew;
-		this.deadlineNew = deadlineNew;
-		this.isPromote = isPromote;
-		this.sortPromote = sortPromote;
-		this.deadlinePromote = deadlinePromote;
-		this.sales = sales;
-		this.isOnSale = isOnSale;
-		this.content = content;
-		this.gmtCreate = gmtCreate;
-		this.gmtUpdate = gmtUpdate;
-		this.editorId = editorId;
-		this.confirmStatus = confirmStatus;
-		this.isDeleted = isDeleted;
-		this.logId = logId;
-	}
 
 	public Long getId() {
 		return id;
@@ -434,6 +388,15 @@ public class BookSyncConfirm implements Serializable {
 		this.sales = sales;
 	}
 
+	public Boolean getIsOnSale() {
+		return isOnSale;
+	}
+
+	public void setIsOnSale(Boolean isonSale) {
+		isOnSale = isonSale;
+	}
+
+
 	public Boolean getOnSale() {
 		return isOnSale;
 	}
@@ -496,5 +459,13 @@ public class BookSyncConfirm implements Serializable {
 
 	public void setLogId(Long logId) {
 		this.logId = logId;
+	}
+
+	public Long getConfirmUser() {
+		return confirmUser;
+	}
+
+	public void setConfirmUser(Long confirmUser) {
+		this.confirmUser = confirmUser;
 	}
 }

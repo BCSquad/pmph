@@ -870,13 +870,15 @@
 		<if test="parameter.flage==1">
 		where b.is_on_sale = 1 and b.is_sell_well=1
 		</if>
-		<if test="parameter.flage==1">
-			where b.is_on_sale = 1 and b.is_sell_well=1
+		<if test="parameter.flage==2">
+			where b.is_on_sale = 1 and b.is_new_book=1
 		</if>
-		<if test="parameter.flage==1">
-			where b.is_on_sale = 1 and b.is_sell_well=1
+		<if test="parameter.flage==3">
+			where b.is_on_sale = 1 and b.is_highly=1
+            ORDER BY
+            b.sort_highly
 		</if>
-		ORDER BY b.sort_sell_well  LIMIT #{start},#{pageSize}
+		  LIMIT #{start},#{pageSize}
 	</select>
 
 
