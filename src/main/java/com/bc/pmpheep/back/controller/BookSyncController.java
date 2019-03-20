@@ -143,7 +143,7 @@ public class BookSyncController {
 
 
 
-        List<BookSyncConfirm> books = JSONArray.parseArray(bookinfo.toString(), BookSyncConfirm.class);
+       /* List<BookSyncConfirm> books = JSONArray.parseArray(bookinfo.toString(), BookSyncConfirm.class);*/
         int count=1;
         Boolean flag=false;
 
