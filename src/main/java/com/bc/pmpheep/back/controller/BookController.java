@@ -1,7 +1,12 @@
 package com.bc.pmpheep.back.controller;
 
+import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Book;
+import com.bc.pmpheep.back.util.HttpUtil;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +23,8 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -258,7 +265,7 @@ public class BookController {
 	@RequestMapping(value = "/updataBookByManage", method = RequestMethod.POST)
 	public ResponseBean updataBookBymanage(@RequestBody List<Book> books) {
 		System.out.println(books);
-		return new ResponseBean(bookService.updataSellwell(books));
+		return null;
 	}
 
 
