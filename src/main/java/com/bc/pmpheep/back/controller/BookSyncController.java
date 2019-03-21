@@ -182,12 +182,7 @@ public class BookSyncController {
             }*/
 
             book.setLogId(logId);
-
-            try {
-                bookSyncService.addBookSyncConfirm(book);
-            }catch (Exception e){
-                responseBean.setCode(0);
-            }
+            bookSyncService.addBookSyncConfirm(book);
 
         }
 
