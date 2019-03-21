@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import sun.misc.BASE64Decoder;
-
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.servlet.ServletRequest;
@@ -67,7 +66,7 @@ public class BookSyncController {
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "图书同步接口")
     @RequestMapping(value = "/syncBook", method = RequestMethod.POST)
-    public ResponseBean syncBook(ServletRequest request, @RequestBody String json) throws Exception {
+    public ResponseBean syncBook(ServletRequest request, @RequestBody String json) {
         /*解析图书信息*/
         String appkey = request.getParameter("app_key");
         ResponseBean<Object> responseBean = new ResponseBean<>();
@@ -139,10 +138,6 @@ public class BookSyncController {
         Long logId = bookSyncLog.getId();
         /*解析图书为实体类*/
 
-
-
-
-
        /* List<BookSyncConfirm> books = JSONArray.parseArray(bookinfo.toString(), BookSyncConfirm.class);*/
         int count=1;
         Boolean flag=false;
@@ -153,14 +148,13 @@ public class BookSyncController {
         if(StringUtil.isEmpty(book.getIsbn())){
             flag=true;
             sb.append("图书参数"+count+":的ISBN号不能为空---");
-            responseBean.setCode(0);
         }
         if(StringUtil.isEmpty(book.getBookname())){
             flag=true;
             sb.append("图书参数"+count+":的图书名称不能为空---");
 
         }
-            if(StringUtil.isEmpty(book.getAuthor())){
+            /*if(StringUtil.isEmpty(book.getAuthor())){
                 flag=true;
                 sb.append("图书参数"+count+":的图书作者不能为空---");
 
@@ -169,14 +163,14 @@ public class BookSyncController {
                 flag=true;
                 sb.append("图书参数"+count+":的出版社不能为空---");
 
-            }
+            }*/
 
            /* if(ObjectUtil.isNull(book.getRevision())){
                 flag=true;
                 sb.append("图书参数"+count+":的图书版次不能为空---");
 
             }*/
-            if(ObjectUtil.isNull(book.getOnSale())){
+           /* if(ObjectUtil.isNull(book.getOnSale())){
                 flag=true;
                 sb.append("图书参数"+count+":的是否上架不能为空---");
 
@@ -185,15 +179,16 @@ public class BookSyncController {
                 flag=true;
                 sb.append("图书参数"+count+":的图书出版日期不能为空---");
 
-            }
-            if(flag){
-                responseBean.setMsg(sb.toString());
-                responseBean.setCode(0);
-                return  responseBean;
-            }
+            }*/
 
             book.setLogId(logId);
-            bookSyncService.addBookSyncConfirm(book);
+
+            try {
+                bookSyncService.addBookSyncConfirm(book);
+            }catch (Exception e){
+                responseBean.setCode(0);
+            }
+
         }
 
         List<PmphUser> pmphUserByRole = pmphUserService.getPmphUserByRole();
@@ -207,7 +202,6 @@ public class BookSyncController {
             UserMessage userMessage = new UserMessage(msg_id, "系统消息", new Short("0"), 0L, new Short("0"),
                     p.getId(), new Short("1"), null);
             userMessageService.addUserMessage(userMessage);
-
         }
 
         /*解析图书为实体类*/
@@ -215,7 +209,11 @@ public class BookSyncController {
         objectObjectHashMap.put("appkey", appkey);
         objectObjectHashMap.put("jsonInfo", jsonObject);
 
-        return new ResponseBean(objectObjectHashMap);
+        if(flag){
+            responseBean.setMsg(sb.toString());
+        }
+
+        return new ResponseBean(responseBean);
     }
 
     /**

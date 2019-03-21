@@ -204,6 +204,25 @@ public class ActivityManagementController {
     }
 
     /**
+     * 功能描述: 更新活动信息
+     *
+     *
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除活动")
+    @RequestMapping(value = "/delectActivity", method = RequestMethod.GET)
+    public ResponseBean delectActivity(HttpServletRequest request) {
+
+        Long id = Long.parseLong(request.getParameter("id"));
+        Activity activityById = activityManagementService.getActivityById(id);
+        activityById.setIsDelected(true);
+
+        return new ResponseBean(activityManagementService.updateActivity(activityById));
+
+    }
+
+
+    /**
      * 功能描述 :查询教材列表
      *
      */

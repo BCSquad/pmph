@@ -201,6 +201,7 @@
 		SELECT * FROM activity
 		where id=#{id}
 	</select>
+
 	<select id="listCmsContent" parameterType="PageParameter" resultType="ActivityInfoExpressVO">
 		SELECT * FROM
 		(
@@ -240,10 +241,15 @@
 	</select>
 
 	<select id="checkedActivityByName"  parameterType="java.lang.String"  resultType="java.lang.Integer">
-		select count(*) from activity where activity_name=#{activityName}
+		select count(*) from activity where activity_name=#{activityName} and is_deleted=0;
 	</select>
 	<select id="getActivityByName"  parameterType="java.lang.String"  resultType="Activity">
-		select * from activity where activity_name=#{activityName}
+		select * from activity where activity_name=#{activityName} and is_deleted=0;
 	</select>
 
+
+	<update id="delectedActivity" parameterType="long">
+		update activity set is_deleted=1 where id=#{id}
+
+	</update>
 </mapper>

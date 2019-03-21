@@ -50,6 +50,8 @@ public interface ActivityManagementService {
      */
     Integer updateActivity(Activity activity, String content, String sessionId, HttpServletRequest request);
 
+    Integer updateActivity(Activity activity);
+
     /**
      * 更新状态
      * @param activity
@@ -68,4 +70,6 @@ public interface ActivityManagementService {
     public Integer checkedActivityByName(String activityName);
 
     List<Activity> getActivityByName(String activityName);
+
+    Activity  getActivityById(Long id);
 }

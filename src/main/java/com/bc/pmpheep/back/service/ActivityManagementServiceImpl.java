@@ -200,6 +200,11 @@ public class ActivityManagementServiceImpl implements ActivityManagementService 
     }
 
     @Override
+    public Integer updateActivity(Activity activity) {
+        return  activityManagementDao.delectedActivity(activity.getId());
+    }
+
+    @Override
     public void setActivityStatus(Activity activity) {
         activityManagementDao.updateActivityStatusById(activity);
     }
@@ -243,6 +248,12 @@ public class ActivityManagementServiceImpl implements ActivityManagementService 
     public List<Activity> getActivityByName(String activityName) {
         return activityManagementDao.getActivityByName(activityName);
     }
+
+    @Override
+    public Activity getActivityById(Long id) {
+        return activityManagementDao.getActivityById(id);
+    }
+
 
 
 }

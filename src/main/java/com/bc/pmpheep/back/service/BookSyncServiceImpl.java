@@ -1,16 +1,19 @@
 package com.bc.pmpheep.back.service;
 
+import com.bc.pmpheep.back.dao.BookDao;
 import com.bc.pmpheep.back.dao.BookSyncDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
-import com.bc.pmpheep.back.po.BookSyncBak;
-import com.bc.pmpheep.back.po.BookSyncConfirm;
-import com.bc.pmpheep.back.po.BookSyncConfirmVO;
-import com.bc.pmpheep.back.po.BookSyncLog;
+import com.bc.pmpheep.back.po.*;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.ActivitySourceVO;
+import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
+import com.bc.pmpheep.service.exception.CheckedExceptionResult;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
+import jdk.jfr.events.ThrowablesEvent;
+import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +26,9 @@ import java.util.Map;
 public class BookSyncServiceImpl implements BookSyncService {
     @Autowired
     BookSyncDao bookSyncDao;
+
+    @Autowired
+    BookDao bookDao;
 
 
     @Override
@@ -128,6 +134,28 @@ public class BookSyncServiceImpl implements BookSyncService {
     @Override
     public int updateSyncBookLogConfirmStatusById(Map<String, Object> map) {
         return bookSyncDao.updateSyncBookLogConfirmStatusById(map);
+    }
+
+    @Override
+    public int updateBookSaleByVns(List<Map<String, Object>> maps) {
+        int res=1;
+        for(Map<String,Object> map: maps){
+            String vn = MapUtils.getString(map,"vn");
+            Book bookByBookVn = bookDao.getBookByBookVn(vn);
+            if(ObjectUtil.notNull(bookByBookVn)){
+                bookByBookVn.setSales(MapUtils.getLong(map,"sale"));
+                try {
+                    bookDao.updateBook(bookByBookVn);
+                }catch (Exception e){
+                    e.printStackTrace();
+                    res=0;
+                }
+            }else{
+                throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
+                        "销量同步参数vn号未找到");
+            }
+        }
+        return res;
     }
 
 }
