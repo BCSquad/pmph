@@ -1106,5 +1106,10 @@ public class PmphUserServiceImpl implements PmphUserService {
         return pmphUserDao.getUserId(id);
     }
 
+    @Override
+    public List<PmphUser> getPmphUserByRole() {
+        return pmphUserDao.getPmphUserByRole();
+    }
+
 
 }

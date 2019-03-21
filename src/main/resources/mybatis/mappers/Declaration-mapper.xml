@@ -672,7 +672,7 @@
 		a.position,
 		a.title,
 		a.handphone,
-		a.commit_date,
+		ifNull(a.auth_date,a.commit_date) as commit_date,
 		a.email,
 		GROUP_CONCAT(
 		CONCAT(d.textbook_name,'-',
@@ -797,7 +797,10 @@
 			</if>
 		</if>
 		<!-- 排序和分页条件 -->
-		order by a.realname
+		ORDER BY
+		(a.online_progress=3 or a.org_id=0) desc,
+		ifNull(a.auth_date,a.commit_date) desc,
+		CONVERT ( f.org_name USING gbk ) ASC
 		limit #{start},#{pageSize}
 	</select>
 

@@ -273,4 +273,5 @@ public interface PmphUserDao {
      * @return
      */
     List<FollowingProduntAuditor> getFollowingProductAuditorList(Long userId);
+    public List<PmphUser> getPmphUserByRole();
 }

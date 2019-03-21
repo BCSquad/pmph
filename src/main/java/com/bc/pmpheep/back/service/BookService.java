@@ -12,6 +12,7 @@ import com.bc.pmpheep.back.vo.BookPreferenceAnalysisVO;
 import com.bc.pmpheep.back.vo.BookVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
+import java.util.List;
 import java.util.Map;
 
 public interface BookService {
@@ -199,4 +200,14 @@ public interface BookService {
 	PageResult<BookVO> recommendlist(PageParameter<BookVO> pageParameter);
 
     Boolean recommendcheck(Long currentBookId,int selectType,Long recommendBookId,Boolean ischeckteachbook,Boolean ischeckxgcommend,Boolean ischeckrwcommend);
+	public List<Book> queryTscxReadList(PageParameter<Map<String, Object>> pageParameter);
+	public List<Book> querySellwelList(PageParameter<Map<String, Object>> pageParameter);
+	public int queryTscxReadListCount(PageParameter<Map<String, Object>> pageParameter);
+	String updataSellwell(List<Book> books) throws CheckedServiceException;
+	public int updateBookSellWellByid(Long id);
+	Book getBookByIsbn(String isbn);
+	BookDetail getBookDetailByBookId(Long id);
+	BookDetail addBookDetail(BookDetail bookDetail);
+	Integer updateBook(Book book);
+	Integer updateBookDetail(BookDetail book);
 }

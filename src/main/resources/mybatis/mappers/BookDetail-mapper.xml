@@ -94,5 +94,11 @@
 		select * from book_detail where id=#{id} ;
 	</select>
 
+	<!-- 根据id查询一个BookDetail -->
+	<select id="getBookDetailByBookId" parameterType="java.lang.Long"
+			resultType="BookDetail">
+		select * from book_detail where book_id=#{bookid} ;
+	</select>
+
 
 </mapper>

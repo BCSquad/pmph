@@ -50,6 +50,7 @@ public class ProductTypeController {
      * @return
      */
     @RequestMapping("/{ptype}/{ttype}/list")
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询产品分类")
     @ResponseBody
     public ResponseBean getSubjectList(HttpServletRequest request
                                     , @PathVariable("ptype")Long ptype
@@ -116,6 +117,7 @@ public class ProductTypeController {
 
 
     @RequestMapping("/{type}/delete")
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除分类")
     @ResponseBody
     public ResponseBean deleteType(HttpServletRequest request
             , @PathVariable("type")String pathType

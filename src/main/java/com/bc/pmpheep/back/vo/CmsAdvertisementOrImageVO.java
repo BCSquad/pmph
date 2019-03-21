@@ -5,6 +5,10 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.alibaba.druid.support.json.JSONParser;
+import com.alibaba.druid.support.json.JSONUtils;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.apache.ibatis.type.Alias;
 
 import com.bc.pmpheep.back.po.CmsAdvertisementImage;
@@ -138,9 +142,19 @@ public class CmsAdvertisementOrImageVO implements Serializable {
 			this.image = new ArrayList<>();
 			return;
 		}
-		Gson gson = new Gson();
-		this.image = gson.fromJson(image, new TypeToken<ArrayList<CmsAdvertisementImage>>() {
-		}.getType());
+
+		Object parse = JSONUtils.parse(image);
+		JSONArray jsonArray = JSONArray.fromObject(parse);
+		List<CmsAdvertisementImage> cmsAdvertisementImages = com.alibaba.fastjson.JSONArray.parseArray(image, CmsAdvertisementImage.class);
+		for(int i=0;i<jsonArray.size();i++){
+			Object o = jsonArray.get(i);
+			JSONObject jsonObject = JSONObject.fromObject(o);
+			boolean isDisabled = jsonObject.getBoolean("isDisabled");
+			cmsAdvertisementImages.get(i).setIsDisabled(isDisabled);
+		}
+		this.image=cmsAdvertisementImages;
+		/*this.image = gson.fromJson(image, new TypeToken<ArrayList<CmsAdvertisementImage>>() {
+		}.getType());*/
 
 	}
 

@@ -8,6 +8,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.bc.pmpheep.back.dao.BookDao;
+import com.bc.pmpheep.back.po.*;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.vo.BookFeedBack;
 import org.apache.commons.lang.ObjectUtils;
@@ -17,13 +19,6 @@ import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.BookCorrectionDao;
 import com.bc.pmpheep.back.plugin.PageResult;
-import com.bc.pmpheep.back.po.BookCorrection;
-import com.bc.pmpheep.back.po.PmphRole;
-import com.bc.pmpheep.back.po.PmphUser;
-import com.bc.pmpheep.back.po.WriterPoint;
-import com.bc.pmpheep.back.po.WriterPointLog;
-import com.bc.pmpheep.back.po.WriterPointRule;
-import com.bc.pmpheep.back.po.WriterUserTrendst;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
@@ -56,6 +51,8 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 	WriterPointLogService writerPointLogService;
 	@Autowired
 	WriterPointService writerPointService;
+	@Autowired
+	BookDao bookDao;
 
 	@Override
 	public Integer updateToAcceptancing(Long id) throws CheckedServiceException {
@@ -100,7 +97,8 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 		}
 		BookCorrection bookCorrection = this.getBookCorrectionById(id);
 		Long bookId = bookCorrection.getBookId();
-		Long submitUserId = bookCorrection.getUserId();
+        Book book = bookDao.getBookById(bookId);
+        Long submitUserId = bookCorrection.getUserId();
 		if (!bookCorrection.getIsAuthorReplied()) {
 			// throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION,
 			// CheckedExceptionResult.NULL_PARAM, "请先主编审核");
@@ -138,7 +136,7 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 		if (result) {// 有问题
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("title", CheckedExceptionBusiness.BOOKCORRECTION);
-			map.put("content", "您提交的纠错信息已回复。");
+			map.put("content", "您提交图书("+book.getBookname()+")的纠错信息已回复。");
 			map.put("img", 1);
 			detail = new Gson().toJson(map);
 			// 更新评论数
@@ -147,7 +145,7 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 		} else {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("title", CheckedExceptionBusiness.BOOKCORRECTION);
-			map.put("content", "您提交的纠错信息已回复。");
+			map.put("content", "您提交图书("+book.getBookname()+")的纠错信息已回复。");
 			map.put("img", 2);
 			detail = new Gson().toJson(map);
 		}
@@ -270,6 +268,19 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 		return rows;
 
 	}
+
+	@Override
+	public BookCorrectionTrackVO switchFrontShow(Long id, Boolean showFront) {
+		BookCorrectionTrackVO result = bookCorrectionDao.switchFrontShow(id,showFront);
+		return result;
+	}
+
+	@Override
+	public BookFeedBack switchFrontShowFeedBack(Long id, Boolean showFront) {
+		BookFeedBack result = bookCorrectionDao.switchFrontShowFeedBack(id,showFront);
+		return result;
+	}
+
 	@Override
 	public PageResult<BookFeedBack> bookFeedBaskList(HttpServletRequest request, Integer pageNumber, Integer pageSize, Boolean result) {
 		if (null == request.getSession(false)) {

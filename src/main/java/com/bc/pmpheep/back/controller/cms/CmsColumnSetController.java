@@ -72,6 +72,7 @@ public class CmsColumnSetController {
      */
     @ResponseBody
     @RequestMapping(value = "/set/new", method = RequestMethod.POST)
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "保存栏目类型")
     public ResponseBean saveCmsCategory(CmsCategory cmsCategory,
     @RequestParam("permissionId") List<Long> permissionId,
     @RequestParam("authRoleId") List<Long> authRoleId) {
@@ -92,6 +93,7 @@ public class CmsColumnSetController {
      */
     @ResponseBody
     @RequestMapping(value = "/set/detail", method = RequestMethod.GET)
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询栏目类型详情")
     public ResponseBean getCmsCategoryDetail(@RequestParam("categoryId") Long categoryId) {
         return new ResponseBean(cmsCategoryService.getCmsCategoryDetail(categoryId));
     }
@@ -108,6 +110,7 @@ public class CmsColumnSetController {
      */
     @ResponseBody
     @RequestMapping(value = "/set/update", method = RequestMethod.PUT)
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "更新栏目类型")
     public ResponseBean updateCmsCategoryAndCategoryRole(CmsCategory cmsCategory,
     @RequestParam("permissionId") List<Long> permissionId,
     @RequestParam("authRoleId") List<Long> authRoleId) {
@@ -127,6 +130,7 @@ public class CmsColumnSetController {
      * </pre>
      */
     @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除栏目类型")
     @RequestMapping(value = "/set/{id}/category", method = RequestMethod.DELETE)
     public ResponseBean deleteCmsCategoryById(@PathVariable("id") Long id) {
         return new ResponseBean(cmsCategoryService.deleteCmsCategoryById(id));
@@ -143,6 +147,7 @@ public class CmsColumnSetController {
      * </pre>
      */
     @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量删除栏目类型")
     @RequestMapping(value = "/set/category", method = RequestMethod.DELETE)
     public ResponseBean deleteCmsCategoryByIds(@RequestParam("ids") List<Long> ids) {
         return new ResponseBean(cmsCategoryService.deleteCmsCategoryByIds(ids));

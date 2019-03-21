@@ -65,12 +65,14 @@ public class UserMessageController {
     public ResponseBean message(@RequestParam("pageNumber") Integer pageNumber,
     @RequestParam("pageSize") Integer pageSize, @RequestParam("title") String title,
                                 @RequestParam("receiverFilterType") Short receiverFilterType,
+                                @RequestParam("manualOnly") Boolean manualOnly,
                                 HttpServletRequest request) {
         PageParameter<UserMessageVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
         UserMessageVO userMessageVO = new UserMessageVO();
         if (StringUtil.notEmpty(title)) {
             userMessageVO.setTitle(title.replaceAll(" ", ""));// 去除空格
         }
+        userMessageVO.setManualOnly(manualOnly);
         userMessageVO.setReceiverFilterType(receiverFilterType);
         pageParameter.setParameter(userMessageVO);
         String sessionId = CookiesUtil.getSessionId(request);

@@ -50,14 +50,10 @@ public class ActivitySourceChain implements Serializable {
     public ActivitySourceChain() {
     }
 
-    public ActivitySourceChain(Long activityId, Long activitySourceId) {
+    public ActivitySourceChain(Long activityId, Long activitySourceId,Long sort) {
         this.activityId = activityId;
         this.activitySourceId = activitySourceId;
+        this.sort=sort;
     }
 
-    public ActivitySourceChain(Long activityId, Long activitySourceId, Long sort) {
-        this.activityId = activityId;
-        this.activitySourceId = activitySourceId;
-        this.sort = sort;
-    }
 }

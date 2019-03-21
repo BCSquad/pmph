@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.BookVideo;
+import com.bc.pmpheep.back.vo.BookVideoTrackVO;
 import com.bc.pmpheep.back.vo.PastBookVideoVO;
 import com.bc.pmpheep.back.vo.BookVideoVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -55,5 +56,14 @@ public interface BookVideoService {
      * @return
      */
     PageResult<BookVideoVO> getVideoList(Integer pageSize, Integer pageNumber, String bookName, Integer state, String upLoadTimeStart, String upLoadTimeEnd);
+    /**
+     * 获取书籍视频列表2
+     *
+     * @introduction
+     * @author Mryang
+     * @createDate 2018年2月6日 下午3:29:39
+     * @return
+     */
+    List<BookVideoTrackVO> getVideoTrackList(Integer pageSize, Integer pageNumber, String bookName, Integer state, String upLoadTimeStart, String upLoadTimeEnd);
 
 }

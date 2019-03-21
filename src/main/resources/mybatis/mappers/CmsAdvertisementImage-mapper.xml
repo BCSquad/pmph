@@ -64,14 +64,17 @@
 		) ;
 	</insert>
 	<!-- 通过id修改图片 信息-->
-	<update id="updateCmsAdvertisementImage" parameterType="Long">
+	<update id="updateCmsAdvertisementImage">
 		update cms_advertisement_image 
 			<set>
 				<if test="image != null and image!=''">
 					image=#{image},
 				</if>
 				<if test="isDisabled != null">
-					is_disabled=#{isDisabled}
+					is_disabled=#{isDisabled},
+				</if>
+				<if test="imageJumpUrl != null and imageJumpUrl !=''">
+					image_jump_url=#{imageJumpUrl}
 				</if>
 			</set>
 		where id=#{id}

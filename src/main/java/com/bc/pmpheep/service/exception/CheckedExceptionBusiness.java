@@ -38,6 +38,7 @@ public class CheckedExceptionBusiness {
 	public final static String BOOKCORRECTION = "图书纠错";
 	
 	public final static String BOOK_VEDIO = "图书微视频";
+	public final static String BOOK_SOURCE = "图书资源";
 
 	public final static String MATERIAL = "教材申报";
 
@@ -58,6 +59,10 @@ public class CheckedExceptionBusiness {
 	public final static String AREA = "区域";
 
 	public final static String SENSITIVE = "敏感词";
+
+	public final static String SearchKeyword = "搜索关键词";
+
+	public final static String SiteLink = "友情链接";
 
 	public final static String BOOK = "图书";
 
@@ -88,4 +93,6 @@ public class CheckedExceptionBusiness {
 	public final static String WECHAT_ARTICLE = "微信公众号文章同步";
 
 	public final static String CLINICAL_DECISION = "临床决策";
+
+	public final static String DATA_DICTIONARY = "数据字典";
 }

@@ -53,6 +53,7 @@ public class OrgTypeController {
 	 * 
 	 */
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增机构类型")
 	@RequestMapping(value = "/add/orgtype", method = RequestMethod.POST)
 	public ResponseBean addOrgType(OrgType orgType) {
 		return new ResponseBean(orgTypeService.addOrgType(orgType));
@@ -69,6 +70,7 @@ public class OrgTypeController {
 	 * 
 	 */
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除机构类型")
 	@RequestMapping(value = "/delete/orgtype", method = RequestMethod.DELETE)
 	public ResponseBean deleteOrgType(Long id) {
 		return new ResponseBean(orgTypeService.deleteOrgTypeById(id));

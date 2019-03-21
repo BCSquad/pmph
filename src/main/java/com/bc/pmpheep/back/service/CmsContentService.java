@@ -164,7 +164,7 @@ public interface CmsContentService {
      * @throws CheckedServiceException
      * </pre>
      */
-    Integer checkContentById(Long id, Short authStatus, Long categoryId, String sessionId)
+    Integer checkContentById(Long id, Short authStatus, Long categoryId, String sessionId,Boolean isOriginal)
     throws CheckedServiceException;
 
     /**
@@ -292,7 +292,7 @@ public interface CmsContentService {
      * 功能描述：根据教材id逻辑删除
      * 使用示范：
      *
-     * @param id 主键ID
+     * @ id 主键ID
      * @return 影响行数
      * @throws CheckedServiceException
      * </pre>

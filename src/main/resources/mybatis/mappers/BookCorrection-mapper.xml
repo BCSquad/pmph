@@ -272,6 +272,10 @@
 		pu.realname as authorname,
 		bc.author_reply,
 		bc.auth_date,
+		case
+		when bc.gmt_show > '0000-00-00 00:00:00' then TRUE
+		else FALSE
+		end as showFront,
 		DATE_FORMAT(bc.gmt_create,'%Y-%m-%d %H:%i:%S') as gmt_create
 		FROM
 		book AS b
@@ -284,7 +288,7 @@
 		<if test="result != null ">
 			AND bc.is_auth = #{result}
 		</if>
-		order by bc.gmt_create desc
+		order by bc.gmt_show desc,bc.is_auth asc,bc.gmt_create desc
 		<if test="start != null and  pageSize !=null">
 		limit ${start},${pageSize}
 		</if>
@@ -343,6 +347,7 @@
 			a.content ,
 			a.attachment,
 			a.attachment_name,
+		    d.username,
 			d.realname,
 			a.gmt_create ,
 			a.is_author_replied,
@@ -378,6 +383,7 @@
 			concat('/file/download/',a.attachment) attachment,
 			a.attachment_name,
 			d.realname,
+			d.username,
 			a.gmt_create ,
 			a.is_author_replied,
 			a.author_reply ,
@@ -457,6 +463,7 @@
 		concat('/file/download/',a.attachment) attachment,
 		a.attachment_name,
 		d.realname,
+		d.username,
 		a.gmt_create ,
 		a.is_author_replied,
 		a.author_reply ,
@@ -533,22 +540,32 @@
 		SELECT
 			a.id ,
 			b.bookname,
+			b.revision,
 			b.isbn,
-			e.dp_name ,
-			f.type_name ,
+			b.author,
 			d.realname ,
 			g.realname dutyName,
-			a.result ,
+			""	digitalName,
+			a.reply_date,
+			e.dp_name ,
 			a.page,
 			a.line,
 			a.content,
+			wu.realname correctionName,
+			a.gmt_create,
 			a.author_reply,
+			a.result ,
+			a.editor_reply,
+			f.type_name ,
 			a.is_editor_replied,
 			b.author,
-			wu.realname correctionName,
 			b.image_url,
-			a.gmt_create,
-			b.publish_date
+			b.publish_date,
+			case
+			when a.gmt_show > '0000-00-00 00:00:00' then TRUE
+			else FALSE
+			end as showFront
+
 			FROM
 			book_correction a
 			LEFT JOIN
@@ -584,10 +601,56 @@
 			and a.result = #{result}
 		</if>
 		ORDER BY
-		a.gmt_create desc
+		a.gmt_show desc,a.gmt_create desc
 		limit #{start} ,#{pageSize}
 	</select>
 	<delete id="deleteBookCoorrectionTrackByBookIds">
 		delete from book_correction 
 	</delete>
+
+	<!--翻转当前id的前台显示-->
+	<select id="switchFrontShow" resultType="BookCorrectionTrackVO">
+		update
+		book_correction
+		set
+		<choose>
+			<when test="showFront == true">
+				gmt_show = '0000-00-00 00:00:00'
+			</when>
+			<otherwise>
+				gmt_show = now()
+			</otherwise>
+		</choose>
+		where id = #{id};
+
+		select id ,
+			case
+			when gmt_show > '0000-00-00 00:00:00' then TRUE
+			else FALSE
+			end as showFront
+		  from book_correction where id = #{id};
+	</select>
+
+	<!--翻转当前id的前台显示-->
+	<select id="switchFrontShowFeedBack" resultType="BookFeedBack">
+		update
+		book_user_feedback
+		set
+		<choose>
+			<when test="showFront == true">
+				gmt_show = '0000-00-00 00:00:00'
+			</when>
+			<otherwise>
+				gmt_show = now()
+			</otherwise>
+		</choose>
+		where id = #{id};
+
+		select id ,
+		case
+		when gmt_show > '0000-00-00 00:00:00' then TRUE
+		else FALSE
+		end as showFront
+		from book_user_feedback where id = #{id};
+	</select>
 </mapper>

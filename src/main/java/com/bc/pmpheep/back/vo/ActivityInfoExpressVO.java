@@ -1,7 +1,10 @@
 package com.bc.pmpheep.back.vo;
 
-import java.sql.Timestamp;
+import org.apache.ibatis.type.Alias;
 
+import java.sql.Timestamp;
+@SuppressWarnings("serial")
+@Alias("ActivityInfoExpressVO")
 public class ActivityInfoExpressVO {
     private Long id;
     private String title;

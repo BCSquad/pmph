@@ -439,7 +439,7 @@
 	<!-- 运维人员获取可以操作的选题 -->
 	<select id="listOpts" resultType="TopicOPtsManagerVO">
 		SELECT
-		t.*,w.realname submitName
+		t.*,w.realname submitName ,w.username submitUser
 		FROM
 		topic t
 		LEFT JOIN pmph_user_role r ON r.role_id
@@ -469,8 +469,9 @@
 			TO_DAYS(t.submit_time) &lt;= TO_DAYS(#{submitTime2})
 		</if>
 		ORDER BY t.submit_time desc
-		LIMIT
-		#{start},#{pageSize}
+		<if test="start != null and pageSize != null ">
+			LIMIT #{start},#{pageSize}
+		</if>
 	</select>
 	<select id="get" parameterType="java.lang.Long" resultType="Topic">
 		select * from topic where id = #{id}
@@ -512,7 +513,7 @@
 	<!-- 系统管理员获取可以操作的选题 -->
 	<select id="list" resultType="TopicOPtsManagerVO">
 		SELECT
-		t.*,w.realname submitName
+		t.*,w.realname submitName,w.username submitUser
 		FROM
 		topic t
 		LEFT JOIN
@@ -537,8 +538,9 @@
 			TO_DAYS(t.submit_time) &lt;= TO_DAYS(#{submitTime2})
 		</if>
 		ORDER BY t.submit_time DESC
-		LIMIT
-		#{start},#{pageSize}
+		<if test="start != null and pageSize != null ">
+			LIMIT #{start},#{pageSize}
+		</if>
 	</select>
 
 	<!-- 系统管理员可以操作的数量 -->
@@ -798,7 +800,7 @@
 
 	<select id="listCheckTopic" resultType="TopicDeclarationVO">
 		SELECT
-		w.realname,p.realname editorName,t.*
+		w.realname,w.username submitUser,p.realname editorName,t.*
 		FROM
 		topic t
 		LEFT JOIN
@@ -843,8 +845,9 @@
 			TO_DAYS(t.submit_time) &lt;= TO_DAYS(#{submitTime2})
 		</if>
 		ORDER BY t.submit_time DESC
-		limit
-		#{start},#{pageSize}
+		<if test="start != null and pageSize != null ">
+			LIMIT #{start},#{pageSize}
+		</if>
 	</select>
 
 	<select id="listCheckTopicTotal" resultType="java.lang.Integer">
@@ -889,7 +892,7 @@
 	</select>
 	<!-- 获取主任可以操作的选题 -->
 	<select id="listTopicDirectorVOs" resultType="TopicDirectorVO">
-		SELECT a.*,c.realname submitName
+		SELECT a.*,c.realname submitName,c.username submitUser
 		FROM topic a LEFT JOIN pmph_user b ON
 		a.department_id = b.department_id
 		LEFT JOIN writer_user c ON a.user_id
@@ -915,8 +918,9 @@
 			TO_DAYS(a.submit_time) &lt;= TO_DAYS(#{submitTime2})
 		</if>
 		ORDER BY a.submit_time DESC
-		LIMIT
-		#{start},#{pageSize}
+		<if test="start != null and pageSize != null ">
+			LIMIT #{start},#{pageSize}
+		</if>
 	</select>
 
 	<!-- 计算主任可以操作的选题数 -->
@@ -954,7 +958,7 @@
 
 	<!-- 获取编辑可以操作的申报选题 -->
 	<select id="listTopicEditorVOs" resultType="TopicEditorVO">
-		SELECT a.*,c.realname submitName,b.realname editorName
+		SELECT a.*,c.realname submitName,c.username submitUser,b.realname editorName
 		FROM topic a
 		LEFT JOIN
 		pmph_user b ON a.editor_id
@@ -982,8 +986,9 @@
 			TO_DAYS(a.submit_time) &lt;= TO_DAYS(#{submitTime2})
 		</if>
 		ORDER BY a.submit_time DESC
-		LIMIT
-		#{start},#{pageSize}
+		<if test="start != null and pageSize != null ">
+			LIMIT #{start},#{pageSize}
+		</if>
 	</select>
 
 	<!-- 计算编辑可以操作的选题数 -->
@@ -1020,7 +1025,7 @@
 
 	<!-- 系统管理员查询选题申报（主任界面） -->
 	<select id="listDirectorView" resultType="TopicDirectorVO">
-		SELECT a.*,b.realname submitName
+		SELECT a.*,b.realname submitName,b.username submitUser
 		FROM topic a
 		LEFT JOIN writer_user b ON a.user_id
 		= b.id
@@ -1042,8 +1047,9 @@
 			TO_DAYS(a.submit_time) &lt;= TO_DAYS(#{submitTime2})
 		</if>
 		ORDER BY a.submit_time DESC
-		LIMIT
-		#{start},#{pageSize}
+		<if test="start != null and pageSize != null ">
+			LIMIT #{start},#{pageSize}
+		</if>
 	</select>
 
 	<!-- 系统管路员查询的选题申报数（主任界面） -->
@@ -1072,7 +1078,7 @@
 
 	<!-- 系统管理员查询选题申报（编辑界面） -->
 	<select id="listEditorView" resultType="TopicEditorVO">
-		SELECT a.*,b.realname submitName,c.realname editorName
+		SELECT a.*,b.realname submitName ,b.username submitUser,c.realname editorName
 		FROM topic a
 		LEFT JOIN
 		writer_user b ON a.user_id
@@ -1098,8 +1104,9 @@
 			TO_DAYS(a.submit_time) &lt;= TO_DAYS(#{submitTime2})
 		</if>
 		ORDER BY a.submit_time DESC
-		LIMIT
-		#{start},#{pageSize}
+		<if test="start != null and pageSize != null ">
+			LIMIT #{start},#{pageSize}
+		</if>
 	</select>
 
 	<!-- 系统管理员查询选题申报数（编辑界面） -->
@@ -1290,7 +1297,7 @@
 	</select>
 	<!-- 查询当前用户相关的选题申报 -->
 	<select id="listMyTopic" resultType="TopicDeclarationVO">
-	SELECT a.*,b.realname submitName,c.realname editorName
+	SELECT a.*,b.realname submitName, b.username submitUser,c.realname editorName
 		FROM topic a
 		LEFT JOIN
 		writer_user b ON a.user_id= b.id
@@ -1320,8 +1327,9 @@
 			and	a.editor_id=#{editorId}
 		</if>
 		ORDER BY a.submit_time
-		limit
-		#{start},#{pageSize}
+		<if test="start != null and pageSize != null ">
+			LIMIT #{start},#{pageSize}
+		</if>
 	</select>
 	
 	<!-- 主任受理 总数-->
@@ -1341,7 +1349,7 @@
 	</select>
 	<!-- 主任受理 -->
 	<select id="listIsDirectorTopic" resultType="TopicDirectorVO">
-		SELECT a.*,c.realname submitName
+		SELECT a.*,c.realname submitName ,c.username submitUser
 		FROM topic a 
 		LEFT JOIN pmph_user b ON	a.department_id = b.department_id
 		LEFT JOIN writer_user c ON a.user_id= c.id
@@ -1352,12 +1360,13 @@
 		-- AND a.auth_progress in(1,2,3)  客户要求 只显示 待审核
 		AND a.auth_progress in(1)
 		ORDER BY a.submit_time DESC
-		LIMIT
-		#{start},#{pageSize}
+		<if test="start != null and pageSize != null ">
+			LIMIT #{start},#{pageSize}
+		</if>
 	</select>
 	<!--运维受理 -->
 	<select id="listIsOptsTopic" resultType="TopicOPtsManagerVO">
-		SELECT  t.*,w.realname submitName
+		SELECT  t.*,w.realname submitName ,w.username submitUser
 		FROM topic t
 		LEFT JOIN pmph_user_role r ON r.role_id =t.opts_role_id
 		LEFT JOIN pmph_user u ON u.id = r.user_id
@@ -1368,8 +1377,9 @@
 		-- AND .auth_progress in(1,2,3)  客户要求 只显示 待审核
 		AND t.auth_progress in(1)
 		ORDER BY t.submit_time desc
-		LIMIT
-		#{start},#{pageSize}
+		<if test="start != null and pageSize != null ">
+			LIMIT #{start},#{pageSize}
+		</if>
 	</select>
 	<!-- 运维受理 总数 -->
 	<select id="listIsOptsTopicTotal" resultType="Integer">
@@ -1387,7 +1397,7 @@
 	</select>
 	<!-- 编辑受理 -->
 	<select id="listIsEditor" resultType="TopicEditorVO">
-		SELECT a.*,c.realname submitName,b.realname editorName
+		SELECT a.*,c.realname submitName,c.username submitUser,b.realname editorName
 		FROM topic a
 		LEFT JOIN
 		pmph_user b ON a.editor_id= b.id
@@ -1398,8 +1408,9 @@
 		-- AND a.auth_progress in(1,2,3)
 		AND a.auth_progress in(1)
 		ORDER BY a.submit_time DESC
-		LIMIT
-		#{start},#{pageSize}
+		<if test="start != null and pageSize != null ">
+			LIMIT #{start},#{pageSize}
+		</if>
 	</select>
 	<select id="listIsEditorTotal" resultType="Integer">
 		SELECT count(*) FROM (SELECT a.* FROM topic a

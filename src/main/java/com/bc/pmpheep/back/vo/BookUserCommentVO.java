@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.vo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import com.bc.pmpheep.annotation.ExcelHeader;
 import org.apache.ibatis.type.Alias;
 
 /**
@@ -37,13 +38,25 @@ public class BookUserCommentVO implements Serializable {
 	 */
 	private Boolean isLong;
 	/**
+	 * 用户名称
+	 */
+	@ExcelHeader(header = "用户名")
+	private String writerName;
+	/**
 	 * 书籍名称
 	 */
+	@ExcelHeader(header = "书籍名称")
 	private String bookname;
 	/**
 	 * isbn
 	 */
+	@ExcelHeader(header = "ISBN")
 	private String isbn;
+	/**
+	 * 评论时间
+	 */
+	@ExcelHeader(header = "评论时间")
+	private Timestamp gmtCreate;
 	/**
 	 * isbn/书籍名称
 	 */
@@ -56,18 +69,13 @@ public class BookUserCommentVO implements Serializable {
 	 * 用户id
 	 */
 	private Long writerId;
-	/**
-	 * 用户名称
-	 */
-	private String writerName;
+
 	/**
 	 * 评分
 	 */
+	@ExcelHeader(header = "评分")
 	private Double score;
-	/**
-	 * 评价内容
-	 */
-	private String content;
+
 	/**
 	 * 是否热门
 	 */
@@ -77,6 +85,8 @@ public class BookUserCommentVO implements Serializable {
 	 * 是否置顶
 	 */
 	private Boolean isStick;
+	@ExcelHeader(header = "是否置顶")
+	private String isStickStr;
 	/**
 	 * 热门显示顺序
 	 */
@@ -98,6 +108,11 @@ public class BookUserCommentVO implements Serializable {
 	 */
 	private Integer isAuth;
 	/**
+	 * 审核状态文字
+	 */
+	@ExcelHeader(header = "审核状态")
+	private String state ;
+	/**
 	 * 审核通过时间
 	 */
 	private Timestamp authDate;
@@ -105,10 +120,13 @@ public class BookUserCommentVO implements Serializable {
 	 * 是否逻辑删除
 	 */
 	private Boolean isDeleted;
+
 	/**
-	 * 评论时间
+	 * 评价内容
 	 */
-	private Timestamp gmtCreate;
+	@ExcelHeader(header = "评价内容")
+	private String content;
+
 
 	public Long getId() {
 		return id;
@@ -240,6 +258,7 @@ public class BookUserCommentVO implements Serializable {
 
 	public void setIsStick(Boolean isStick) {
 		this.isStick = isStick;
+		this.isStickStr = isStick?"是":"否";
 	}
 
 	public void setIsHot(Boolean isHot) {
@@ -278,4 +297,67 @@ public class BookUserCommentVO implements Serializable {
 		this.isLong = isLong;
 	}
 
+	public Boolean getLong() {
+		return isLong;
+	}
+
+	public void setLong(Boolean aLong) {
+		isLong = aLong;
+	}
+
+	public Boolean getHot() {
+		return isHot;
+	}
+
+	public void setHot(Boolean hot) {
+		isHot = hot;
+	}
+
+	public Boolean getStick() {
+		return isStick;
+	}
+
+	public void setStick(Boolean stick) {
+		isStick = stick;
+	}
+
+	public Boolean getPromote() {
+		return isPromote;
+	}
+
+	public void setPromote(Boolean promote) {
+		isPromote = promote;
+	}
+
+	public Boolean getHide() {
+		return isHide;
+	}
+
+	public void setHide(Boolean hide) {
+		isHide = hide;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public Boolean getDeleted() {
+		return isDeleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		isDeleted = deleted;
+	}
+
+	public String getIsStickStr() {
+		return isStickStr;
+	}
+
+	public void setIsStickStr(String isStickStr) {
+		this.isStickStr = this.isStickStr;
+	}
 }

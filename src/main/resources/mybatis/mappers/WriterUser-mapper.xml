@@ -944,4 +944,108 @@
 	<update id="isTop" >
 		update writer_user set is_top = !#{isTop} where id = #{id}
 	</update>
+
+	<!--专家资料库 诸表-->
+
+	<!-- 学习经历 -->
+	<select id="queryPerStu" resultType="java.util.Map" parameterType="java.util.Map">
+		select e.*, REPLACE(e.date_begin,'-','.') as dbegin,REPLACE(e.date_end,'-','.') as dend
+		from per_edu_exp  e where e.user_id = #{user_id} ORDER BY e.sort
+	</select>
+
+	<!-- 工作经历 -->
+	<select id="queryPerWork" resultType="java.util.Map" parameterType="java.util.Map">
+		select e.*, REPLACE(e.date_begin,'-','.') as dbegin,REPLACE(e.date_end,'-','.') as dend
+		from per_work_exp  e where e.user_id = #{user_id} ORDER BY e.sort
+	</select>
+
+	<!--教学经历-->
+	<select id="queryPerStea" resultType="java.util.Map" parameterType="java.util.Map">
+		select e.*, REPLACE(e.date_begin,'-','.') as dbegin,REPLACE(e.date_end,'-','.') as dend
+		from per_teach_exp  e where e.user_id = #{user_id} ORDER BY e.sort
+	</select>
+
+	<!-- //作家学术 -->
+	<select id="queryPerZjxs" resultType="java.util.Map" parameterType="java.util.Map">
+		select * from per_acade where user_id = #{user_id} ORDER BY sort
+	</select>
+
+	<!--上版教材编辑-->
+	<select id="queryPerJcbj" resultType="java.util.Map" parameterType="java.util.Map">
+		select id,user_id,material_name,position,is_digital_editor*1 is_digital_editor,note,sort,publisher,publish_date,REPLACE(publish_date,'-','.') as  publishdate from per_last_position where user_id = #{user_id} ORDER BY sort
+	</select>
+
+	<!-- 精品课程建设 -->
+	<select id="queryPerGjkcjs" resultType="java.util.Map" parameterType="java.util.Map">
+		select * from per_course_construction where user_id = #{user_id} ORDER BY sort
+	</select>
+
+	<!-- 作家主编国家级规划教材情况 -->
+	<select id="queryPerGjghjc" resultType="java.util.Map" parameterType="java.util.Map">
+		select * from per_national_plan where user_id = #{user_id} ORDER BY sort
+	</select>
+
+	<!-- 其他社教材编写情况 -->
+	<select id="queryPerJcbx" resultType="java.util.Map" parameterType="java.util.Map">
+		select id,user_id,material_name,rank,position,
+		is_digital_editor*1 is_digital_editor, publisher,publish_date,REPLACE(publish_date,'-','.') as publishdate,isbn,note,sort
+		from per_textbook where user_id = #{user_id}
+		ORDER BY sort
+	</select>
+
+	<!-- 人卫社教材编写情况 -->
+	<select id="queryPerRwsjc" resultType="java.util.Map" parameterType="java.util.Map">
+		select id,user_id,material_name,rank,position,
+		is_digital_editor*1 is_digital_editor,publish_date,REPLACE(publish_date,'-','.') as publishdate,isbn,note,sort
+		from per_textbook_pmph where user_id = #{user_id}
+		ORDER BY sort
+	</select>
+
+	<!-- //作家科研情况表 -->
+	<select id="queryPerZjkyqk" resultType="java.util.Map" parameterType="java.util.Map">
+		select * from per_research where user_id = #{user_id} ORDER BY sort
+	</select>
+
+	<!-- //个人成就 -->
+	<select id="queryPerAchievement" resultType="java.util.Map" parameterType="java.util.Map">
+		select * from per_achievement where user_id = #{user_id}  limit 0,1
+	</select>
+
+	<!-- //主编学术专著情况 -->
+	<select id="queryPerMonograph" resultType="java.util.Map" parameterType="java.util.Map">
+		select id,user_id,monograph_name,monograph_date,REPLACE(monograph_date,'-','.') as monographdate,is_self_paid*1 is_self_paid,publisher,publish_date,REPLACE(publish_date,'-','.') as publishdate,note,sort from per_monograph where user_id = #{user_id} ORDER BY sort
+	</select>
+
+	<!-- //出版行业获奖情况 -->
+	<select id="queryPerPublish" resultType="java.util.Map" parameterType="java.util.Map">
+		select r.*, REPLACE(r.reward_date ,'-','.') as rewarddate  from per_publish_reward  r where r.user_id = #{user_id} ORDER BY r.sort
+	</select>
+
+	<!-- //SCI论文投稿及影响因子 -->
+	<select id="queryPerSci" resultType="java.util.Map" parameterType="java.util.Map">
+		select s.*,REPLACE(s.publish_date,'-','.') as publishdate from per_sci  s where s.user_id = #{user_id} ORDER BY s.sort
+	</select>
+
+	<!-- //临床医学获奖情况 -->
+	<select id="queryPerClinicalreward" resultType="java.util.Map" parameterType="java.util.Map">
+		select r.*,REPLACE(r.reward_date,'-','.') as rewarddate from per_clinical_reward  r where r.user_id = #{user_id} ORDER BY r.sort
+	</select>
+
+	<!-- //学术荣誉授予情况 -->
+	<select id="queryPerAcadereward" resultType="java.util.Map" parameterType="java.util.Map">
+		select r.*,REPLACE(r.reward_date,'-','.') as rewarddate from per_acade_reward r where r.user_id = #{user_id} ORDER BY r.sort
+	</select>
+
+	<!--主编或参编图书情况-->
+	<select id="queryPerEditor" resultType="java.util.Map" parameterType="java.util.Map">
+		select r.*,REPLACE(r.publish_date,'-','.') as publishdate from per_editor_book r where r.user_id = #{user_id} ORDER BY r.sort
+	</select>
+
+	<!--查看个人信息-->
+	<select id="queryUserInfo" resultType="java.util.Map" parameterType="java.lang.Long">
+		select * from writer_user where id = #{user_id}
+	</select>
+
+
+
 </mapper>

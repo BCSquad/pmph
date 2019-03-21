@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import com.bc.pmpheep.annotation.ExcelHeader;
+import com.bc.pmpheep.back.util.DateUtil;
 import org.apache.ibatis.type.Alias;
 
 import com.bc.pmpheep.back.po.MaterialContact;
@@ -14,13 +16,29 @@ public class MaterialListVO implements Serializable {
 	// 主键
 	private Long id;
 	// 教材名称
+	@ExcelHeader(header = "教材名称")
 	private String materialName;
+	// 显示报名截止日期 导出格式
+	@ExcelHeader(header = "显示报名截止日期")
+	private String excelDeadline;
 	// 显示报名截止日期
 	private Date deadline;
+	// 实际报名截止日期 导出格式
+	@ExcelHeader(header = "实际报名截止日期")
+	private String excelActualDeadline;
 	// 实际报名截止日期
 	private Date actualDeadline;
+	//发布日期 导出格式
+	@ExcelHeader(header = "发布日期")
+	private String excelGmtCreate;
 	//发布日期
 	private Date gmtCreate;
+	// 创建者姓名
+	@ExcelHeader(header = "创建人")
+	private String founderName;
+	//部门名称
+	@ExcelHeader(header = "创建部门")
+	private String dpName;
 	// 联系人
 	private List<MaterialContact> contacts;
 	// 联系人名称（用于查询）
@@ -47,8 +65,7 @@ public class MaterialListVO implements Serializable {
 	private Boolean isFounder;
 	// 创建者id
 	private Long founderId;
-	// 创建者姓名
-	private String founderName;
+
 	// 消息id
 	private String msgId;
 	// 创建到 哪个步骤
@@ -59,8 +76,7 @@ public class MaterialListVO implements Serializable {
 	private Integer projectPermission;
 	// 策划编辑权限
 	private Integer planPermission;
-	//部门名称
-	private String dpName;
+
 
 	public Long getId() {
 		return id;
@@ -84,6 +100,7 @@ public class MaterialListVO implements Serializable {
 
 	public void setDeadline(Date deadline) {
 		this.deadline = deadline;
+		this.excelDeadline = DateUtil.date2Str(deadline,"yyyy-MM-dd");
 	}
 
 	public Date getActualDeadline() {
@@ -92,6 +109,7 @@ public class MaterialListVO implements Serializable {
 
 	public void setActualDeadline(Date actualDeadline) {
 		this.actualDeadline = actualDeadline;
+		this.excelActualDeadline = DateUtil.date2Str(actualDeadline,"yyyy-MM-dd");
 	}
 
 	public List<MaterialContact> getContacts() {
@@ -253,6 +271,7 @@ public class MaterialListVO implements Serializable {
 
 	public void setGmtCreate(Date gmtCreate) {
 		this.gmtCreate = gmtCreate;
+		this.excelGmtCreate = DateUtil.date2Str(gmtCreate,"yyyy-MM-dd");
 	}
 
 	public String getDpName() {
@@ -261,5 +280,81 @@ public class MaterialListVO implements Serializable {
 
 	public void setDpName(String dpName) {
 		this.dpName = dpName;
+	}
+
+	public String getExcelDeadline() {
+		return excelDeadline;
+	}
+
+	public void setExcelDeadline(String excelDeadline) {
+		this.excelDeadline = excelDeadline;
+	}
+
+	public String getExcelActualDeadline() {
+		return excelActualDeadline;
+	}
+
+	public void setExcelActualDeadline(String excelActualDeadline) {
+		this.excelActualDeadline = excelActualDeadline;
+	}
+
+	public String getExcelGmtCreate() {
+		return excelGmtCreate;
+	}
+
+	public void setExcelGmtCreate(String excelGmtCreate) {
+		this.excelGmtCreate = excelGmtCreate;
+	}
+
+	public Boolean getMy() {
+		return isMy;
+	}
+
+	public void setMy(Boolean my) {
+		isMy = my;
+	}
+
+	public Boolean getForceEnd() {
+		return isForceEnd;
+	}
+
+	public void setForceEnd(Boolean forceEnd) {
+		isForceEnd = forceEnd;
+	}
+
+	public Boolean getDeleted() {
+		return isDeleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		isDeleted = deleted;
+	}
+
+	public Boolean getPublished() {
+		return isPublished;
+	}
+
+	public void setPublished(Boolean published) {
+		isPublished = published;
+	}
+
+	public Boolean getAllTextbookPublished() {
+		return isAllTextbookPublished;
+	}
+
+	public void setAllTextbookPublished(Boolean allTextbookPublished) {
+		isAllTextbookPublished = allTextbookPublished;
+	}
+
+	public void setDirector(Boolean director) {
+		isDirector = director;
+	}
+
+	public Boolean getFounder() {
+		return isFounder;
+	}
+
+	public void setFounder(Boolean founder) {
+		isFounder = founder;
 	}
 }

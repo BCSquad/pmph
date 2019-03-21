@@ -98,7 +98,7 @@ public class MigrationStageTen {
         category3 = cmsCategoryService.addCmsCategory(category3);
         long pk = category3.getId();
         JdbcHelper.updateNewPrimaryKey(tableName, pk, "colid", "1005");//更新旧表中new_pk字
-        CmsCategory category2 = new CmsCategory(0L, "0", "快报管理", true);
+        CmsCategory category2 = new CmsCategory(0L, "0", "信息快报", true);
         category2.setIsClicksVisible(true);
         category2.setId(2L);
         category2 = cmsCategoryService.addCmsCategory(category2);

@@ -345,7 +345,7 @@
     </select>
 
     <select id="getVideoChainSortMax" resultType="java.lang.Long" parameterType="java.lang.Long">
-        select max(sort) from  activity_source_chain ac
+        select ifNull(MAX(sort),0) from  activity_video_chain ac
         where ac.activity_id=#{activityId};
     </select>
 

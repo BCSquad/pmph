@@ -71,6 +71,8 @@ public class UserMessageVO implements Serializable {
    private List<Long> senderIds;
     //接收者筛选类型
     private Short receiverFilterType;
+    //搜索条件 仅查找人为发送的 msg_type 为 1
+    private Boolean manualOnly;
     
     
     public Long getId() {
@@ -209,5 +211,13 @@ public class UserMessageVO implements Serializable {
 
     public void setReceiverFilterType(Short receiverFilterType) {
         this.receiverFilterType = receiverFilterType;
+    }
+
+    public Boolean getManualOnly() {
+        return manualOnly;
+    }
+
+    public void setManualOnly(Boolean manualOnly) {
+        this.manualOnly = manualOnly;
     }
 }

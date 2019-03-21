@@ -152,4 +152,8 @@ public interface BookCorrectionService {
 	 * @return
 	 */
 	List<BookCorrectionAuditVO> exportBookCheck(String bookname);
+
+	BookCorrectionTrackVO switchFrontShow(Long id, Boolean showFront);
+
+	BookFeedBack switchFrontShowFeedBack(Long id, Boolean showFront);
 }

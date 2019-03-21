@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.controller.teacherTraining;
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.dao.ActivityVideoDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
@@ -7,6 +8,7 @@ import com.bc.pmpheep.back.po.*;
 import com.bc.pmpheep.back.service.ActivityVideoService;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.JsonUtil;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.ActivitySourceVO;
 import com.bc.pmpheep.back.vo.ActivityVideoVO;
@@ -15,13 +17,28 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
+// import jdk.nashorn.internal.runtime.JSONListAdapter;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections.map.ListOrderedMap;
+import org.apache.commons.lang3.ObjectUtils;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.json.JsonArray;
 import javax.servlet.http.HttpServletRequest;
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,6 +93,48 @@ public class ActivityVideoController {
         activityVideo.setFileName(fileName);
         activityVideo.setFileSize(fileSize);
         return new ResponseBean(activityVideoService.addActivityVideo(activityId,sessionId, activityVideo, cover));
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/addMultiActivityVideo", method = RequestMethod.POST)
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "保存微视频信息")
+    public ResponseBean<Integer> addMultiActivityVideo(HttpServletRequest request,Long activityId,
+                                                        String transCoding,
+                                                       @RequestParam("cover") MultipartFile cover) throws Exception {
+        String sessionId = CookiesUtil.getSessionId(request);
+        if (StringUtil.isEmpty(sessionId)) {
+            return new ResponseBean(new CheckedServiceException(CheckedExceptionBusiness.BOOK_VEDIO,
+                    CheckedExceptionResult.USER_SESSION, "尚未登录或session已过期"));
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        JSONArray jsonArray = JSONArray.fromObject(transCoding);
+
+
+        List<Map<String,Object>> mapListJson = (List)jsonArray;
+        boolean flag=true;
+        for (Map<String,Object> m:mapListJson) {
+            ActivityVideo activityVideo = new ActivityVideo();
+            activityVideo.setTitle(m.get("origFileName").toString());
+            activityVideo.setOrigPath(m.get("origPath").toString());
+            activityVideo.setOrigFileName(m.get("origFileName").toString());
+            activityVideo.setOrigFileSize(Long.parseLong(m.get("origFileSize").toString()));
+            activityVideo.setPath(m.get("path").toString());
+            activityVideo.setFileName(m.get("fileName").toString());
+            activityVideo.setFileSize( Long.parseLong(m.get("fileSize").toString()));
+
+            Integer integer = activityVideoService.addActivityVideo(activityId, sessionId, activityVideo, cover);
+            if(integer==null){
+                flag=false;
+            }
+        }
+        ResponseBean responseBean = new ResponseBean();
+        if(flag){
+            responseBean.setCode(1);
+        }else{
+            responseBean.setCode(0);
+        }
+
+        return responseBean;
     }
 
 

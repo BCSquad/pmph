@@ -4,14 +4,9 @@ import com.bc.pmpheep.back.dao.ExpertationDao;
 import com.bc.pmpheep.back.dao.ProductDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
-import com.bc.pmpheep.back.po.PmphDepartment;
-import com.bc.pmpheep.back.po.PmphRole;
-import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.po.*;
 import com.bc.pmpheep.back.service.common.SystemMessageService;
-import com.bc.pmpheep.back.util.Const;
-import com.bc.pmpheep.back.util.ObjectUtil;
-import com.bc.pmpheep.back.util.SessionUtil;
-import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.util.*;
 import com.bc.pmpheep.back.vo.*;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -241,7 +236,8 @@ public class ExpertationServiceImpl implements ExpertationService{
     @Override
     public ExpertationVO getExpertationById(Long id) {
 
-        //TODO 需要一次性把数据拿到再在service拼接，当前以下方法请求次数过多，速度慢，有超时隐患
+        //如果是循环遍历此方法 需要一次性把数据拿到再在service拼接，当前以下方法请求次数过多，速度慢，有超时隐患
+        //获取list用getExpertationByIdList
 
         ExpertationVO expertationVO = expertationDao.getExpertationById(id);
 
@@ -263,6 +259,159 @@ public class ExpertationServiceImpl implements ExpertationService{
 
         expertationVO.setProductProfessionTypeList(expertationDao.queryProfession(id));
         return expertationVO;
+    }
+
+    public List<ExpertationVO> getExpertationByIdList(List<Long> queryExpertationIdList){
+
+        List<ExpertationVO> list = expertationDao.getExpertationByIdList(queryExpertationIdList);
+
+        List<DecAcade> DecAcade = expertationDao.queryDecAcadeByIds(queryExpertationIdList);
+
+        List<DecEduExp> decEduExp = expertationDao.queryDecEduExpByIds(queryExpertationIdList);
+
+        List<DecWorkExp> decWorkExp = expertationDao.queryDecWorkExpByIds(queryExpertationIdList);
+
+        List<DecMonograph> decMonograph = expertationDao.queryDecMonographByIds(queryExpertationIdList);
+
+        List<DecTextbookPmph> decTextbookPmph = expertationDao.queryDecTextbookPmphByIds(queryExpertationIdList);
+
+        List<DecEditorBook> decEditorBook = expertationDao.queryDecEditorBookByIds(queryExpertationIdList);
+
+        List<DecArticlePublished> decArticlePublished = expertationDao.queryDecArticlePublishedByIds(queryExpertationIdList);
+
+        List<DecProfessionAward> decProfessionAward = expertationDao.queryDecProfessionAwardByIds(queryExpertationIdList);
+
+        List<ProductProfessionType> profession = expertationDao.queryProfessionByIds(queryExpertationIdList);
+
+        for(ExpertationVO experationV:list){
+            //对获取到的数据 进行数据转换
+            experationV.setSex("2".equals(experationV.getSex())?"女":"男");
+            if(!ObjectUtil.isNull(experationV.getIdtype())){
+                switch (experationV.getIdtype()){
+                    case 0:experationV.setIdTypeName("身份证");
+                    case 1:experationV.setIdTypeName("护照");
+                    case 2:experationV.setIdTypeName("军官证");
+                    default:
+                        experationV.setIdTypeName("");
+                }
+            }
+            if(!ObjectUtil.isNull(experationV.getEducation())){
+                switch (experationV.getEducation()){
+                    case 0:experationV.setEducationName("专科");
+                    case 1:experationV.setEducationName("本科");
+                    case 2:experationV.setEducationName("硕士");
+                    case 3:experationV.setEducationName("博士后");
+                    case 4:experationV.setEducationName("博士");
+                    default:
+                        experationV.setIdTypeName("");
+                }
+            }
+
+            experationV.setDecAcadeList(CollectionUtil.isNotEmpty(experationV.getDecAcadeList())?experationV.getDecAcadeList():new ArrayList<com.bc.pmpheep.back.po.DecAcade>());
+            experationV.setDecEduExpList(CollectionUtil.isNotEmpty(experationV.getDecEduExpList())?experationV.getDecEduExpList():new ArrayList<DecEduExp>());
+            experationV.setDecWorkExpList(CollectionUtil.isNotEmpty(experationV.getDecWorkExpList())?experationV.getDecWorkExpList():new ArrayList<DecWorkExp>());
+            experationV.setDecMonographList(CollectionUtil.isNotEmpty(experationV.getDecMonographList())?experationV.getDecMonographList():new ArrayList<DecMonograph>());
+            experationV.setDecTextbookPmphList(CollectionUtil.isNotEmpty(experationV.getDecTextbookPmphList())?experationV.getDecTextbookPmphList():new ArrayList<DecTextbookPmph>());
+            experationV.setDecEditorBookList(CollectionUtil.isNotEmpty(experationV.getDecEditorBookList())?experationV.getDecEditorBookList():new ArrayList<DecEditorBook>());
+            experationV.setDecArticlePublishedList(CollectionUtil.isNotEmpty(experationV.getDecArticlePublishedList())?experationV.getDecArticlePublishedList():new ArrayList<DecArticlePublished>());
+            experationV.setDecProfessionAwardList(CollectionUtil.isNotEmpty(experationV.getDecProfessionAwardList())?experationV.getDecProfessionAwardList():new ArrayList<DecProfessionAward>());
+            experationV.setProductProfessionTypeList(CollectionUtil.isNotEmpty(experationV.getProductProfessionTypeList())?experationV.getProductProfessionTypeList():new ArrayList<ProductProfessionType>());
+
+            for(DecAcade decAcade :DecAcade){
+                if(ObjectUtil.notNull(decAcade) && experationV.getId().equals(decAcade.getExpertationId())){
+                    if(!ObjectUtil.isNull(decAcade.getRank())){
+                        switch (decAcade.getRank()){
+                            case 1:decAcade.setRankName("国际");
+                            case 2:decAcade.setRankName("国家");
+                            case 3:decAcade.setRankName("省部");
+                            case 4:decAcade.setRankName("市级");
+                            default:
+                                decAcade.setRankName("无");
+                        }
+                    }
+                    experationV.getDecAcadeList().add(decAcade);
+                }
+            }
+
+            for(DecEduExp d :decEduExp){
+                if(ObjectUtil.notNull(d) && experationV.getId().equals(d.getExpertationId())){
+                    experationV.getDecEduExpList().add(d);
+                }
+            }
+
+            for(DecWorkExp d :decWorkExp){
+                if(ObjectUtil.notNull(d) && experationV.getId().equals(d.getExpertationId())){
+                    experationV.getDecWorkExpList().add(d);
+                }
+            }
+
+            for(DecMonograph d :decMonograph){
+                if(ObjectUtil.notNull(d) && experationV.getId().equals(d.getExpertationId())){
+                    experationV.getDecMonographList().add(d);
+                }
+            }
+
+            for(DecTextbookPmph d :decTextbookPmph){
+                if(ObjectUtil.notNull(d) && experationV.getId().equals(d.getExpertationId())){
+                    if(!ObjectUtil.isNull(d.getRank())) {
+                        switch (d.getRank()) {
+                            case 1:
+                                d.setRankName("国家");
+                            case 2:
+                                d.setRankName("省部");
+                            case 3:
+                                d.setRankName("协编");
+                            case 4:
+                                d.setRankName("校本");
+                            case 5:
+                                d.setRankName("其他");
+                            case 6:
+                                d.setRankName("教育部规划");
+                            case 7:
+                                d.setRankName("卫计委规划");
+                            case 8:
+                                d.setRankName("区域规划");
+                            case 9:
+                                d.setRankName("创新教材");
+                            default:
+                                d.setRankName("无");
+                        }
+                    }
+                    experationV.getDecTextbookPmphList().add(d);
+                }
+            }
+
+            for(DecEditorBook d :decEditorBook){
+                if(ObjectUtil.notNull(d) && experationV.getId().equals(d.getExpertationId())){
+                    experationV.getDecEditorBookList().add(d);
+                }
+            }
+
+
+            for(DecArticlePublished d :decArticlePublished){
+                if(ObjectUtil.notNull(d) && experationV.getId().equals(d.getExpertationId())){
+                    experationV.getDecArticlePublishedList().add(d);
+                }
+            }
+
+            for(DecProfessionAward d :decProfessionAward){
+                if(ObjectUtil.notNull(d) && experationV.getId().equals(d.getExpertationId())){
+                    experationV.getDecProfessionAwardList().add(d);
+                }
+            }
+
+            for(ProductProfessionType d :profession){
+                if(ObjectUtil.notNull(d) && experationV.getId().equals(d.getExpertationId())){
+                    experationV.getProductProfessionTypeList().add(d);
+                }
+            }
+
+            //TODONE 将上述各子列表 循环遍历给主列表
+
+        }
+
+        return list;
+
     }
 
     @Override

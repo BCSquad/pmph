@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.bc.pmpheep.back.vo.BookVideoTrackVO;
 import org.apache.ibatis.annotations.Param;
 
 import com.bc.pmpheep.back.po.BookVideo;
@@ -43,8 +44,13 @@ public interface BookVideoDao {
 	 * @return
 	 */
 	List<BookVideoVO> getVideoList(Map<String, Object> map);
-
 	/**
+	 * 获取微视频列表
+	 *
+	 * @return
+	 */
+	List<BookVideoTrackVO> getVideoTrackList(Map<String, Object> map);
+										/**
 	 * 获取vedio根据书籍id
 	 *
 	 * @introduction

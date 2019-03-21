@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.bc.pmpheep.annotation.LogDetail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,9 @@ public class WriterLoginController {
 	@Autowired
 	WriterPermissionService writerPermissionService;
 
+	// 当前业务类型
+	private static final String BUSSINESS_TYPE = "个人用户-Shiro登录";
+
 	/**
 	 * 
 	 * <pre>
@@ -68,6 +72,7 @@ public class WriterLoginController {
 	 * </pre>
 	 */
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "登录")
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public ResponseBean login(@RequestParam("username") String username, @RequestParam("password") String password,
 			HttpServletRequest request) {
@@ -107,6 +112,7 @@ public class WriterLoginController {
 	 * </pre>
 	 */
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "退出")
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public ResponseBean logout(HttpServletRequest request, @RequestParam("loginType") Short loginType) {
 		String sessionId = CookiesUtil.getSessionId(request);
@@ -131,6 +137,7 @@ public class WriterLoginController {
 	 * </pre>
 	 */
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "提示无权限")
 	@RequestMapping(value = "/unAuthorization", method = RequestMethod.GET)
 	public ResponseBean unAuthorization() {
 		ResponseBean<Object> responseBean = new ResponseBean<Object>();

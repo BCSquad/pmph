@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.BookSourceDao">
+
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id != null ">
+				#{id},
+			</if>
+			<if test="bookId != null ">
+				#{bookId},
+			</if>
+			<if test="sourceName != null and sourceName != ''  ">
+				#{sourceName},
+			</if>
+
+			<if test=" clicks != null ">
+				#{clicks},
+			</if>
+			<if test=" userId != null ">
+				#{userId},
+			</if>
+			<if test=" isAuth != null ">
+				#{isAuth},
+			</if>
+			<if test=" authId != null ">
+				#{authId},
+			</if>
+			<if test=" authDate != null ">
+				#{authDate},
+			</if>
+			<if test=" fileId != null ">
+				#{fileId},
+			</if>
+
+		</trim>
+	</sql>
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id != null ">
+				id,
+			</if>
+			<if test="bookId != null ">
+				book_id,
+			</if>
+			<if test="sourceName != null and sourceName != ''  ">
+				source_name,
+			</if>
+			<if test=" clicks != null ">
+				clicks,
+			</if>
+			<if test=" userId != null ">
+				user_id,
+			</if>
+			<if test=" isAuth != null ">
+				is_auth,
+			</if>
+			<if test=" authId != null ">
+				auth_id,
+			</if>
+			<if test=" authDate != null ">
+				auth_date,
+			</if>
+			<if test=" fileId != null and fileId != '' ">
+				file_Id,
+			</if>
+		</trim>
+	</sql>
+
+	<!-- 新增BookVideo -->
+	<insert id="addBookSource" parameterType="BookSource">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+				   keyProperty="id">
+			<!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into book_source (
+		<include refid="key" />
+		) values(
+		<include refid="value" />
+		) ;
+	</insert>
+
+	<!--根据文件id删除BookSource -->
+	<delete id="deleteBookSourceByIds">
+		delete from book_source where id in
+		<foreach collection="ids" item="id" open="(" separator=","
+			close=")" index="index">
+			#{id}
+		</foreach>
+	</delete>
+
+	<!-- 获取vedio根据书籍id -->
+	<select id="getBookSourceByBookIds" resultType="BookSource">
+		select * from book_source where book_id in
+		<foreach collection="bookIds" item="bookId" open="("
+			separator="," close=")" index="index">
+			#{bookId}
+		</foreach>
+	</select>
+
+	<!-- 动态更新 -->
+	<update id="updateBookSource">
+		update book_source set
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="bookId != null ">
+				book_id =#{bookId},
+			</if>
+			<if test="sourceName != null and sourceName != ''  ">
+				source_name =#{sourceName},
+			</if>
+			<if test=" clicks != null ">
+				clicks =#{clicks},
+			</if>
+			<if test=" userId != null ">
+				user_id =#{userId},
+			</if>
+			<if test=" isAuth != null ">
+				is_auth =#{isAuth},
+			</if>
+			<if test=" authId != null ">
+				auth_id =#{authId},
+			</if>
+			<if test=" authDate != null ">
+				auth_date =#{authDate},
+			</if>
+			<if test=" fileId != null and fileId != '' ">
+				file_id =#{fileId},
+			</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<!-- 获取微视频列表总数 -->
+	<select id="getSourceListTotal" resultType="java.lang.Integer">
+		select
+		COUNT(a.id)
+		from book_source a LEFT JOIN book b on b.id =
+		a.book_id
+		where a.is_deleted = false and b.id is not null
+		<if test="bookName != null">
+			and b.bookname like #{bookName}
+		</if>
+		<if test="sourceName != null">
+			and a.source_name like #{sourceName}
+		</if>
+		<if test="state != null">
+			<if test="state == 1">
+				and a.auth_id is null
+			</if>
+			<if test="state == 2">
+				and a.auth_id is not null and a.is_auth = false
+			</if>
+			<if test="state == 3">
+				and a.auth_id is not null and a.is_auth = true
+			</if>
+		</if>
+		<if test="startTime != null">
+			and a.gmt_create  <![CDATA[ >= ]]>
+			#{startTime}
+		</if>
+		<if test="endTime != null">
+			and a.gmt_create  <![CDATA[ <= ]]>
+			#{endTime}
+		</if>
+	</select>
+
+	<!-- 获取微视频列表 -->
+	<select id="getSourceList" resultType="BookSourceVO">
+		select a.id id,
+		a.book_id bookId,
+		a.file_id as fileId,
+		a.source_name sourceName,
+		b.bookname bookName,
+		if(a.user_id=0,d.realname,c.realname) userName,
+		a.gmt_create gmtCreate,
+		if(a.auth_id is null,null,a.is_auth) isAuth,
+		(case
+		when a.auth_id is null then 1
+		when a.auth_id is not null
+		and a.is_auth = false then 2
+		when a.auth_id is not null and
+		a.is_auth = true then 3
+		else 1 end) as state
+		from book_source a LEFT JOIN
+		book b on b.id = a.book_id
+		LEFT JOIN writer_user c on c.id= a.user_id
+		LEFT JOIN pmph_user d on d.id=
+		a.auth_id
+		where a.is_deleted = false
+		and b.id is not null
+		<if test="bookName != null">
+			and b.bookname like #{bookName}
+		</if>
+		<if test="sourceName != null">
+			and a.source_name like #{sourceName}
+		</if>
+		<if test="state != null">
+			<if test="state == 1">
+				and a.auth_id is null
+			</if>
+			<if test="state == 2">
+				and a.auth_id is not null and a.is_auth = false
+			</if>
+			<if test="state == 3">
+				and a.auth_id is not null and a.is_auth = true
+			</if>
+		</if>
+		<if test="startTime != null">
+			and a.gmt_create  <![CDATA[ >= ]]>
+			#{startTime}
+		</if>
+		<if test="endTime != null">
+			and a.gmt_create  <![CDATA[ <= ]]>
+			#{endTime}
+		</if>
+		ORDER BY a.gmt_create desc limit #{start} ,#{pageSize}
+	</select>
+	<!--根据书籍id删除BookSource -->
+	<delete id="deleteBookSourceByBookIds">
+		delete from book_source
+	</delete>
+</mapper>

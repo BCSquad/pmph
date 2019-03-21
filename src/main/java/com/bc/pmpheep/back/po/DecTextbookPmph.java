@@ -37,6 +37,8 @@ public class DecTextbookPmph implements Serializable {
  	private Integer sort;
  	//个人资料id
  	private String perId;
+
+ 	private Long expertationId;
  	
  	// 构造器
  	public DecTextbookPmph(){
@@ -137,14 +139,7 @@ public class DecTextbookPmph implements Serializable {
 		this.sort = sort;
 	}
 
-	@Override
-	public String toString() {
-		return "DecTextbookPmph [id=" + id + ", declarationId=" + declarationId
-				+ ", materialName=" + materialName + ", rank=" + rank
-				+ ", position=" + position + ", isDigitalEditor="
-				+ isDigitalEditor + ", publishDate=" + publishDate + ", isbn="
-				+ isbn + ", note=" + note + ", sort=" + sort + "]";
-	}
+
 
 
 	public String getPerId() {
@@ -169,5 +164,41 @@ public class DecTextbookPmph implements Serializable {
 
 	public void setPositionName(String positionName) {
 		this.positionName = positionName;
+	}
+
+	public Boolean getDigitalEditor() {
+		return isDigitalEditor;
+	}
+
+	public void setDigitalEditor(Boolean digitalEditor) {
+		isDigitalEditor = digitalEditor;
+	}
+
+	public Long getExpertationId() {
+		return expertationId;
+	}
+
+	public void setExpertationId(Long expertationId) {
+		this.expertationId = expertationId;
+	}
+
+	@Override
+	public String toString() {
+		return "DecTextbookPmph{" +
+				"id=" + id +
+				", declarationId=" + declarationId +
+				", materialName='" + materialName + '\'' +
+				", rank=" + rank +
+				", rankName='" + rankName + '\'' +
+				", position=" + position +
+				", positionName='" + positionName + '\'' +
+				", isDigitalEditor=" + isDigitalEditor +
+				", publishDate=" + publishDate +
+				", isbn='" + isbn + '\'' +
+				", note='" + note + '\'' +
+				", sort=" + sort +
+				", perId='" + perId + '\'' +
+				", expertationId=" + expertationId +
+				'}';
 	}
 }

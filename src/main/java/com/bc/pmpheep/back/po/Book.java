@@ -19,6 +19,7 @@ import org.apache.ibatis.type.Alias;
  * @修改人 ：曾庆峰
  * 
  */
+@SuppressWarnings("serial")
 @Alias("Book")
 public class Book implements Serializable {
 	/**
@@ -172,8 +173,44 @@ public class Book implements Serializable {
 	/**
 	 * 重点学科显示顺序
 	 */
+	private Long  editorId;
 	private Integer sortKey;
-	
+	private Boolean  isSellWell;
+	private Integer sortSellWell;
+	private Boolean isDelected;
+
+	public Long getEditorId() {
+		return editorId;
+	}
+
+	public void setEditorId(Long editorId) {
+		this.editorId = editorId;
+	}
+
+	public Boolean getIsDelected() {
+		return isDelected;
+	}
+
+	public void setIsDelected(Boolean delected) {
+		isDelected = delected;
+	}
+
+	public Boolean getIsSellWell() {
+		return isSellWell;
+	}
+
+	public void setIsSellWell(Boolean isSellWell) {
+		this.isSellWell = isSellWell;
+	}
+
+	public Integer getSortSellWell() {
+		return sortSellWell;
+	}
+
+	public void setSortSellWell(Integer sortSellWell) {
+		this.sortSellWell = sortSellWell;
+	}
+
 	public Book() {
 		super();
 	}
@@ -538,7 +575,7 @@ public class Book implements Serializable {
 			Long bookmarks, Boolean isStick, Integer sort, Timestamp deadlineStick, Boolean isNew, Integer sortNew,
 			Timestamp deadlineNew, Boolean isPromote, Integer sortPromote, Timestamp deadlinePromote, Long sales,
 			Boolean isOnSale, String content, Timestamp gmtCreate, Timestamp gmtUpdate, Boolean isKey,
-			Integer sortKey) {
+			Integer sortKey,Boolean isSellWell,Integer sortSellWell) {
 		this.id = id;
 		this.vn = vn;
 		this.bookname = bookname;
@@ -577,6 +614,8 @@ public class Book implements Serializable {
 		this.gmtUpdate = gmtUpdate;
 		this.isKey = isKey;
 		this.sortKey = sortKey;
+		this.isSellWell=isSellWell;
+		this.sortSellWell=sortSellWell;
 	}
 
 	@Override

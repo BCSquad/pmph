@@ -3,7 +3,7 @@ package com.bc.pmpheep.back.vo;
 import java.io.Serializable;
 
 import org.apache.ibatis.type.Alias;
-
+@SuppressWarnings("serial")
 @Alias("BookVO")
 public class BookVO implements Serializable {
 
@@ -20,7 +20,7 @@ public class BookVO implements Serializable {
 	/**
 	 * 封面图片
 	 */
-//	private String imageUrl;
+	private String imageUrl;
 	/**
 	 * ISBN号
 	 */
@@ -77,11 +77,6 @@ public class BookVO implements Serializable {
 	private Boolean ischeckxgcommend;
 
 	private Boolean ischeckrwcommend;
-
-	/**
-	 * 封面图片地址
-	 */
-	private String imageUrl;
 
 	public Long getId() {
 		return id;

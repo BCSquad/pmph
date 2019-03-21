@@ -136,6 +136,28 @@ public class BookCorrectionController {
 			@RequestParam(value = "result",     required = false)	Boolean result) {
 		return new ResponseBean(bookCorrectionService.listBookCorrectionTrack(request,pageNumber,pageSize,bookname ,isEditorReplied,result));
 	}
+
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "图书纠错切换前台是否显示")
+	@RequestMapping(value = "/switchFrontShow", method = RequestMethod.GET)
+	public ResponseBean switchFrontShow(HttpServletRequest request,
+								  Long id ,Boolean showFront
+								  ) {
+
+		return new ResponseBean(bookCorrectionService.switchFrontShow(id ,showFront));
+	}
+
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "读者反馈切换前台是否显示")
+	@RequestMapping(value = "/switchFrontShowFeedBack", method = RequestMethod.GET)
+	public ResponseBean switchFrontShowFeedBack(HttpServletRequest request,
+										Long id ,Boolean showFront
+	) {
+
+		return new ResponseBean(bookCorrectionService.switchFrontShowFeedBack(id ,showFront));
+	}
+
+
 	
 	/**
 	 * 回复作家用户

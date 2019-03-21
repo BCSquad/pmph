@@ -6,7 +6,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bc.pmpheep.back.dao.WriterUserDao;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.vo.WriterUserManagerVO;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.OfficeXmlFileException;
@@ -454,6 +456,10 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService, A
 		result = "FAIL";
 		if (num > 0) {
 			result = "SUCCESS";
+			Integer integer = orgUserDao.addOrgUserToWriterUser(orgUser);
+			if(integer==0){
+				result = "FAIL";
+			}
 		}
 		return result;
 	}

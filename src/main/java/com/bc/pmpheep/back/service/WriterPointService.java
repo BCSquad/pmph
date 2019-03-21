@@ -20,7 +20,7 @@ public interface WriterPointService {
 	 * @throws CheckedServiceException
 	 */
 	PageResult<WriterPointVO> getListWriterPoint(PageParameter<WriterPointVO> pageParameter) throws CheckedServiceException;
-	
+	PageResult<WriterPointVO> getAllWriterPoint() throws CheckedServiceException;
 	/**
 	 * 添加用户积分
 	 * @param writerPoint

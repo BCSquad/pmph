@@ -20,4 +20,5 @@ public interface ActivityManagementDao {
     List<ActivityInfoExpressVO> listCmsContent(PageParameter<ActivityInfoExpressVO> pageParameter);
     Integer checkedActivityByName(String activityName);
     List<Activity> getActivityByName(String activityName);
+    Integer delectedActivity(Long id);
 }

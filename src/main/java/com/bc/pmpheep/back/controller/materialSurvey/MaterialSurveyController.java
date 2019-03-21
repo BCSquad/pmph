@@ -67,6 +67,7 @@ public class MaterialSurveyController {
      * </pre>
      */
     @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询调研列表")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ResponseBean list(SurveyVO surveyVO,
                              @RequestParam("pageNumber") Integer pageNumber, @RequestParam("pageSize") Integer pageSize) {
@@ -188,6 +189,7 @@ public class MaterialSurveyController {
 
 
     @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "切换调研的激活状态")
     @RequestMapping(value = "/switchActive",method = RequestMethod.GET)
     public ResponseBean switchActive(@RequestParam(value = "id" ,required =true) Long id
             ,@RequestParam(value = "status",defaultValue = "1")Short status){
@@ -198,6 +200,7 @@ public class MaterialSurveyController {
     }
 
     @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询调研表结果列表")
     @RequestMapping(value = "/toAnswerList",method = RequestMethod.GET)
     public ResponseBean toAnswerList(MaterialSurveyCountAnswerVO materialSurveyCountAnswerVO,
                                      @RequestParam(value = "pageNumber",defaultValue = "1") Integer pageNumber,
@@ -211,6 +214,7 @@ public class MaterialSurveyController {
     }
 
     @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取调研表（调查对象）分类")
     @RequestMapping(value = "/typeList",method = RequestMethod.GET)
     public ResponseBean typeList(HttpServletRequest request){
 
@@ -220,6 +224,7 @@ public class MaterialSurveyController {
     }
 
     @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取调研表名称和模板id")
     @RequestMapping(value = "/getTitleAndTemplateId",method = RequestMethod.GET)
     public ResponseBean getTitleAndTemplateId(HttpServletRequest request){
 

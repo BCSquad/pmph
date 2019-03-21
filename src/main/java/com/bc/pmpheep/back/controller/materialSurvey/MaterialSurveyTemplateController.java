@@ -70,6 +70,7 @@ public class MaterialSurveyTemplateController {
      * </pre>
      */
     @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询教材调研模版列表")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ResponseBean list(SurveyTemplateListVO surveyTemplateListVO,
     @RequestParam("pageNumber") Integer pageNumber, @RequestParam("pageSize") Integer pageSize) {
@@ -142,6 +143,7 @@ public class MaterialSurveyTemplateController {
     }
 
     @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "切换模板激活状态")
     @RequestMapping(value = "/switchActive",method = RequestMethod.GET)
     public ResponseBean switchActive(@RequestParam(value = "templateId" ,required =true) Long templateId
             ,@RequestParam(value = "isActive",defaultValue = "true")Boolean isActive){
@@ -158,6 +160,7 @@ public class MaterialSurveyTemplateController {
      * @return
      */
     @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取已存在的模板名称")
     @RequestMapping(value = "/getTemplateName",method = RequestMethod.GET)
     public ResponseBean getTemplateNameList(HttpServletRequest request){
         List<SurveyTemplateListVO> result = surveyTemplateService.getTemplateNameList();

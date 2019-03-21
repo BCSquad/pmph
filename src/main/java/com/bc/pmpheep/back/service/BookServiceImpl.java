@@ -273,6 +273,9 @@ public class BookServiceImpl extends BaseService implements BookService {
 							book.setScore(9.0);
 							book.setType(1L);
 							bookDao.addBook(book);
+							//Q93
+							book.setIsNew(true);
+							bookDao.updateBook(book);
 							BookDetail bookDetail = new BookDetail(book.getId(), content);
 							bookDetailDao.addBookDetail(bookDetail);
 						} else {
@@ -706,6 +709,64 @@ public class BookServiceImpl extends BaseService implements BookService {
 				bookDao.addBookSupport(id, bookId);
 			}
 		}
+	}
+
+	@Override
+	public List<Book> queryTscxReadList(PageParameter<Map<String, Object>> pageParameter) {
+		// TODO Auto-generated method stub
+		return this.bookDao.queryTscxReadList(pageParameter);
+	}
+
+	@Override
+	public int queryTscxReadListCount(PageParameter<Map<String, Object>> pageParameter) {
+		// TODO Auto-generated method stub
+		return this.bookDao.queryTscxReadListCount(pageParameter);
+	}
+
+	@Override
+	public String updataSellwell(List<Book> books) throws CheckedServiceException {
+		bookDao.updateBookSellWell(books);
+
+		return null;
+	}
+	@Override
+	public List<Book> querySellwelList(PageParameter<Map<String, Object>> pageParameter){
+		return bookDao.querySellwelList(pageParameter);
+	}
+	public int updateBookSellWellByid(Long id){
+		return bookDao.updateBookSellWellByid(id);
+	}
+
+	@Override
+	public Book getBookByIsbn(String isbn) {
+		return bookDao.getBookByIsbn(isbn);
+	}
+
+	@Override
+	public BookDetail getBookDetailByBookId(Long id) {
+		return bookDetailDao.getBookDetailById(id);
+	}
+
+	@Override
+	public BookDetail addBookDetail(BookDetail bookDetail) {
+
+		bookDetailDao.addBookDetail(bookDetail);
+		return bookDetail;
+	}
+
+	@Override
+	public Integer updateBook(Book book) throws CheckedServiceException {
+		if (null == book.getId()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM, "id为空");
+		}
+		return bookDao.updateBook(book);
+	}
+	@Override
+	public Integer updateBookDetail(BookDetail detail) throws CheckedServiceException {
+		if (null == detail.getId()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM, "id为空");
+		}
+		return bookDetailDao.updateBookDetail(detail);
 	}
 
 }
