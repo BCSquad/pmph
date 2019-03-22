@@ -26,9 +26,13 @@ public class SiteLinkServiceImpl extends BaseService implements SiteLinkService 
 			throw new CheckedServiceException(CheckedExceptionBusiness.SiteLink, CheckedExceptionResult.NULL_PARAM,
 					"参数为空");
 		}
-		if (SiteLink.getName().length() > 10) {
+		if (SiteLink.getName().length() > 25) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.SiteLink, CheckedExceptionResult.ILLEGAL_PARAM,
-					"链接太长了，请控制在10个字以内");
+					"名称太长了，请控制在25个字以内");
+		}
+		if (!ObjectUtil.isNull(SiteLink.getHref())&&SiteLink.getHref().length()>200) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.SiteLink, CheckedExceptionResult.NULL_PARAM,
+					"站点地址长度不可超过200字符。");
 		}
 		if (!StringUtil.isEmpty(SiteLink.getNote())) {
 			if (SiteLink.getNote().length() > 100) {
@@ -65,6 +69,10 @@ public class SiteLinkServiceImpl extends BaseService implements SiteLinkService 
 		if (!ObjectUtil.isNull(SiteLink.getHref())&&SiteLink.getHref().length()>200) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.SiteLink, CheckedExceptionResult.NULL_PARAM,
 					"站点地址长度不可超过200字符。");
+		}
+		if (SiteLink.getName().length() > 25) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.SiteLink, CheckedExceptionResult.ILLEGAL_PARAM,
+					"名称太长了，请控制在25个字以内");
 		}
 		if (StringUtil.notEmpty(SiteLink.getNote())) {
 			if (SiteLink.getNote().length() > 100) {

@@ -733,13 +733,18 @@ public class BookServiceImpl extends BaseService implements BookService {
 	public List<Book> querySellwelList(PageParameter<Map<String, Object>> pageParameter){
 		return bookDao.querySellwelList(pageParameter);
 	}
-	public int updateBookSellWellByid(Long id){
-		return bookDao.updateBookSellWellByid(id);
+	public int updateBookSellWellByid(Map<String,Object> params){
+		return bookDao.updateBookSellWellByid(params);
 	}
 
 	@Override
 	public Book getBookByIsbn(String isbn) {
 		return bookDao.getBookByIsbn(isbn);
+	}
+
+	@Override
+	public Book getBookById(Long id) {
+		return bookDao.getBookById(id);
 	}
 
 	@Override

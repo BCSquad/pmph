@@ -25,4 +25,5 @@ public interface BookSyncDao {
     BookSyncLog getFullBookSyncLogBySyncTime();
     List<BookSyncConfirm> getBookSyncConfirmsByLogId(Long id);
     int updateSyncBookLogConfirmStatusById(Map<String,Object> map);
+    BookSyncConfirm  getBookSyncConfirmByISBN(String isbn);
 }

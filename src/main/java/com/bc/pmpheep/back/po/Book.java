@@ -7,17 +7,17 @@ import java.util.Date;
 import org.apache.ibatis.type.Alias;
 
 /**
- * 
- * 
+ *
+ *
  * 功能描述：出版图书表实体类
- * 
- * 
+ *
+ *
  * @author (作者) 曾庆峰
- * 
+ *
  * @since (该版本支持的JDK版本) ：JDK 1.6或以上
  * @date (开发日期) 2017年10月24日
  * @修改人 ：曾庆峰
- * 
+ *
  */
 @SuppressWarnings("serial")
 @Alias("Book")
@@ -173,18 +173,55 @@ public class Book implements Serializable {
 	/**
 	 * 重点学科显示顺序
 	 */
-	private Long  editorId;
 	private Integer sortKey;
 	private Boolean  isSellWell;
 	private Integer sortSellWell;
 	private Boolean isDelected;
+	private Boolean isNewBook;
+	private Integer sortNewBook;
+	private Boolean isHighly;
+	private Integer sortHighly;
+	private Integer flag;
 
-	public Long getEditorId() {
-		return editorId;
+
+	public Integer getFlag() {
+		return flag;
 	}
 
-	public void setEditorId(Long editorId) {
-		this.editorId = editorId;
+	public void setFlag(Integer flag) {
+		this.flag = flag;
+	}
+
+	public Boolean getIsNewBook() {
+		return isNewBook;
+	}
+
+	public void setIsNewBook(Boolean newBook) {
+		isNewBook = newBook;
+	}
+
+	public Integer getSortNewBook() {
+		return sortNewBook;
+	}
+
+	public void setSortNewBook(Integer sortNewBook) {
+		this.sortNewBook = sortNewBook;
+	}
+
+	public Boolean getIsHighly() {
+		return isHighly;
+	}
+
+	public void setIsHighly(Boolean isHighly) {
+		isHighly = isHighly;
+	}
+
+	public Integer getSortHighly() {
+		return sortHighly;
+	}
+
+	public void setSortHighly(Integer sortHighly) {
+		this.sortHighly = sortHighly;
 	}
 
 	public Boolean getIsDelected() {
@@ -222,11 +259,11 @@ public class Book implements Serializable {
 	}
 
 	public Book(String bookname, String isbn, String sn, String author, String publisher, String lang, Integer revision,
-			Long type, Date publishDate, String reader, Double price, Double score, String buyUrl, String imageUrl,
-			String pdfUrl, Long clicks, Long comments, Long likes, Long bookmarks, Boolean isStick, Integer sort,
-			Timestamp deadlineStick, Boolean isNew, Integer sortNew, Timestamp deadlineNew, Boolean isPromote,
-			Integer sortPromote, Timestamp deadlinePromote, Boolean isKey, Integer sortKey, Long sales, Boolean isOnSale,
-			Timestamp gmtCreate, Timestamp gmtUpdate) {
+				Long type, Date publishDate, String reader, Double price, Double score, String buyUrl, String imageUrl,
+				String pdfUrl, Long clicks, Long comments, Long likes, Long bookmarks, Boolean isStick, Integer sort,
+				Timestamp deadlineStick, Boolean isNew, Integer sortNew, Timestamp deadlineNew, Boolean isPromote,
+				Integer sortPromote, Timestamp deadlinePromote, Boolean isKey, Integer sortKey, Long sales, Boolean isOnSale,
+				Timestamp gmtCreate, Timestamp gmtUpdate) {
 		super();
 		this.bookname = bookname;
 		this.isbn = isbn;
@@ -567,15 +604,15 @@ public class Book implements Serializable {
 	public void setSortKey(Integer sortKey) {
 		this.sortKey = sortKey;
 	}
-	
-	
+
+
 	public Book(Long id, String vn, String bookname, String isbn, String sn, String author, String publisher,
-			String lang, Integer revision, Long type, Date publishDate, String reader, Double price, Double score,
-			String buyUrl, Long materialId, String imageUrl, String pdfUrl, Long clicks, Long comments, Long likes,
-			Long bookmarks, Boolean isStick, Integer sort, Timestamp deadlineStick, Boolean isNew, Integer sortNew,
-			Timestamp deadlineNew, Boolean isPromote, Integer sortPromote, Timestamp deadlinePromote, Long sales,
-			Boolean isOnSale, String content, Timestamp gmtCreate, Timestamp gmtUpdate, Boolean isKey,
-			Integer sortKey,Boolean isSellWell,Integer sortSellWell) {
+				String lang, Integer revision, Long type, Date publishDate, String reader, Double price, Double score,
+				String buyUrl, Long materialId, String imageUrl, String pdfUrl, Long clicks, Long comments, Long likes,
+				Long bookmarks, Boolean isStick, Integer sort, Timestamp deadlineStick, Boolean isNew, Integer sortNew,
+				Timestamp deadlineNew, Boolean isPromote, Integer sortPromote, Timestamp deadlinePromote, Long sales,
+				Boolean isOnSale, String content, Timestamp gmtCreate, Timestamp gmtUpdate, Boolean isKey,
+				Integer sortKey,Boolean isSellWell,Integer sortSellWell) {
 		this.id = id;
 		this.vn = vn;
 		this.bookname = bookname;
@@ -632,5 +669,5 @@ public class Book implements Serializable {
 				+ ", gmtUpdate=" + gmtUpdate + ", isKey=" + isKey + ", sortKey=" + sortKey + "]";
 	}
 
-	
+
 }

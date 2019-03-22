@@ -302,6 +302,12 @@
 
 
     </select>
+
+    <select id="getBookSyncConfirmByISBN" parameterType="String" resultType="BookSyncConfirm">
+        select * from book_sync_confirm where isbn=#{isbn}
+
+
+    </select>
     <update id="updateBookSyncConfirmStatus" parameterType="map">
         update book_sync_confirm set confirm_status=#{confirm} where id=#{id}
     </update>
