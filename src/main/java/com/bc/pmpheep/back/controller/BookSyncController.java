@@ -178,6 +178,7 @@ public class BookSyncController {
                       if(ObjectUtil.isNull(bookSyncConfirmByISBN)){
                           sb.append("未找到该isbn的图书---");
                       }else{
+                          newBookS.setId(null);
                           newBookS.setIsOnSale(bookByIsbn.getIsOnSale());
                           newBookS.setLogId(logId);
                           BeanUtils.copyProperties(bookSyncConfirmByISBN, newBookS);
@@ -185,7 +186,7 @@ public class BookSyncController {
                       }
 
                    }else{
-
+                       newBookS.setId(null);
                        newBookS.setIsOnSale(bookByIsbn.getIsOnSale());
                        newBookS.setLogId(logId);
                        BeanUtils.copyProperties(bookByIsbn, newBookS);
