@@ -77,7 +77,7 @@
 	</sql>
 	<!-- 新增SiteLink -->
 	<insert id="add" parameterType="SiteLink">
-		select @newSort := (max(sort) +1) from site_link;
+		select @newSort := (ifnull(max(sort),0) +1) from site_link;
 		<selectKey resultType="java.lang.Long" order="AFTER"
 			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
 			SELECT LAST_INSERT_ID()
