@@ -177,6 +177,52 @@ public class Book implements Serializable {
 	private Boolean  isSellWell;
 	private Integer sortSellWell;
 	private Boolean isDelected;
+	private Boolean isNewBook;
+	private Integer sortNewBook;
+	private Boolean isHighly;
+	private Integer sortHighly;
+	private Integer flag;
+
+
+	public Integer getFlag() {
+		return flag;
+	}
+
+	public void setFlag(Integer flag) {
+		this.flag = flag;
+	}
+
+	public Boolean getIsNewBook() {
+		return isNewBook;
+	}
+
+	public void setIsNewBook(Boolean newBook) {
+		isNewBook = newBook;
+	}
+
+	public Integer getSortNewBook() {
+		return sortNewBook;
+	}
+
+	public void setSortNewBook(Integer sortNewBook) {
+		this.sortNewBook = sortNewBook;
+	}
+
+	public Boolean getIsHighly() {
+		return isHighly;
+	}
+
+	public void setIsHighly(Boolean isHighly) {
+		isHighly = isHighly;
+	}
+
+	public Integer getSortHighly() {
+		return sortHighly;
+	}
+
+	public void setSortHighly(Integer sortHighly) {
+		this.sortHighly = sortHighly;
+	}
 
 	public Boolean getIsDelected() {
 		return isDelected;

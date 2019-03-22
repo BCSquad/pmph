@@ -52,6 +52,13 @@ public interface BookSyncService {
     BookSyncConfirmVO getBookSyncConfirmByid(Long id);
 
     /**
+     * 根据待确认isbn获取待确认对象
+     * @param id
+     * @return
+     */
+    BookSyncConfirm getBookSyncConfirmByISBN(String isbn);
+
+    /**
      * 添加图书备份
      * @param bookSyncBak
      * @return

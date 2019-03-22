@@ -76,33 +76,6 @@ public class BookSyncController {
 
         JSONObject jsonObject = JSON.parseObject(json);
 
-        Object bookinfo = jsonObject.get("bookInfo");
-        JSONArray objects =JSONArray.parseArray(bookinfo.toString());
-
-        List<BookSyncConfirm> bookSyncConfirms=new ArrayList<>();
-        for(int i=0;i<objects.size();i++){
-            JSONObject jsonObject1 = JSON.parseObject(objects.get(i).toString());
-            BookSyncConfirm bookSyncConfirm = new BookSyncConfirm();
-            bookSyncConfirm.setIsbn(jsonObject1.getString("isbn")==null?null:jsonObject1.getString("isbn"));
-            bookSyncConfirm.setBookname(jsonObject1.getString("bookname")==null?null:jsonObject1.getString("bookname"));
-            bookSyncConfirm.setAuthor(jsonObject1.getString("author")==null?null:jsonObject1.getString("author"));
-            bookSyncConfirm.setPublisher(jsonObject1.getString("publisher")==null?null:jsonObject1.getString("publisher"));
-            bookSyncConfirm.setLang(jsonObject1.getString("lang")==null?null:jsonObject1.getString("lang"));
-            bookSyncConfirm.setRevision(jsonObject.getInteger("version")==null?null:jsonObject.getInteger("version"));
-            bookSyncConfirm.setPublishDate(jsonObject1.getDate("publishDate")==null?null:jsonObject1.getDate("publishDate"));
-            bookSyncConfirm.setReader(jsonObject1.getString("reader")==null?null:jsonObject1.getString("reader"));
-            bookSyncConfirm.setPrice(jsonObject1.getDouble("price")==null?null:jsonObject1.getDouble("price"));
-            bookSyncConfirm.setBuyUrl(jsonObject1.getString("buyUrl")==null?null:jsonObject1.getString("buyUrl"));
-            bookSyncConfirm.setImageUrl(jsonObject1.getString("imageUrl")==null?null:jsonObject1.getString("imageUrl"));
-            bookSyncConfirm.setPdfUrl(jsonObject1.getString("pdfUrl")==null?null:jsonObject1.getString("pdfUrl"));
-            bookSyncConfirm.setNew(jsonObject1.getBoolean("isNew")==null?null:jsonObject1.getBoolean("isNew"));
-            bookSyncConfirm.setIsOnSale(jsonObject1.getBoolean("isOnSale")==null?null:jsonObject1.getBoolean("isOnSale"));
-            bookSyncConfirm.setGmtCreate(jsonObject1.getTimestamp("gmtCreate")==null?null:jsonObject1.getTimestamp("gmtCreate"));
-            bookSyncConfirm.setGmtUpdate(jsonObject1.getTimestamp("gmtUpdate")==null?null:jsonObject1.getTimestamp("gmtUpdate"));
-            bookSyncConfirm.setVn(jsonObject1.getString("vn")==null?null:jsonObject1.getString("vn"));
-            bookSyncConfirm.setContent(jsonObject1.getString("content")==null?null:jsonObject1.getString("content"));
-            bookSyncConfirms.add(bookSyncConfirm);
-        }
 
 
         /*是否增量更新*/
@@ -128,63 +101,132 @@ public class BookSyncController {
 
         }
 
+
+
+        Object bookinfo = jsonObject.get("bookInfo");
+        JSONArray objects =JSONArray.parseArray(bookinfo.toString());
+
+        //解析实体类
+        List<BookSyncConfirm> bookSyncConfirms=new ArrayList<>();
+        parsejson(objects,bookSyncConfirms);
+
         //写入接口日志表
         BookSyncLog bookSyncLog = new BookSyncLog();
 
+
         bookSyncLog.setIncrement(increment);
         bookSyncLog.setSynchronizationType(synchronizationType);
+
+
         bookSyncService.addBookSyncLog(bookSyncLog);
 
         Long logId = bookSyncLog.getId();
-        /*解析图书为实体类*/
 
-       /* List<BookSyncConfirm> books = JSONArray.parseArray(bookinfo.toString(), BookSyncConfirm.class);*/
         int count=1;
         Boolean flag=false;
 
         StringBuilder sb=new StringBuilder();
 
-        for (BookSyncConfirm book : bookSyncConfirms) {
-        if(StringUtil.isEmpty(book.getIsbn())){
-            flag=true;
-            sb.append("图书参数"+count+":的ISBN号不能为空---");
-        }
-        if(StringUtil.isEmpty(book.getBookname())){
-            flag=true;
-            sb.append("图书参数"+count+":的图书名称不能为空---");
+       switch (synchronizationType){
 
-        }
-            /*if(StringUtil.isEmpty(book.getAuthor())){
-                flag=true;
-                sb.append("图书参数"+count+":的图书作者不能为空---");
+           case "add":
 
-            }
-            if(StringUtil.isEmpty(book.getPublisher())){
-                flag=true;
-                sb.append("图书参数"+count+":的出版社不能为空---");
+               for (BookSyncConfirm book : bookSyncConfirms) {
+                   if (StringUtil.isEmpty(book.getIsbn())) {
+                       flag = true;
+                       sb.append("图书参数" + count + ":的ISBN号不能为空---");
+                   }
+                   if (StringUtil.isEmpty(book.getBookname())) {
+                       flag = true;
+                       sb.append("图书参数" + count + ":的图书名称不能为空---");
 
-            }*/
+                   }
+                   book.setLogId(logId);
+                   bookSyncService.addBookSyncConfirm(book);
+               }
+               break;
+           case "update":
+               for (BookSyncConfirm book : bookSyncConfirms) {
+                   if(StringUtil.isEmpty(book.getIsbn())){
+                       flag=true;
+                       sb.append("图书参数"+count+":的ISBN号不能为空---");
+                   }
+                   if(StringUtil.isEmpty(book.getBookname())){
+                       flag=true;
+                       sb.append("图书参数"+count+":的图书名称不能为空---");
 
-           /* if(ObjectUtil.isNull(book.getRevision())){
-                flag=true;
-                sb.append("图书参数"+count+":的图书版次不能为空---");
+                   }
+                   book.setLogId(logId);
+                   bookSyncService.addBookSyncConfirm(book);
+               }
+               break;
+           case "shelf":
 
-            }*/
-           /* if(ObjectUtil.isNull(book.getOnSale())){
-                flag=true;
-                sb.append("图书参数"+count+":的是否上架不能为空---");
+               for (BookSyncConfirm book : bookSyncConfirms) {
+                   if(StringUtil.isEmpty(book.getIsbn())){
+                       flag=true;
+                       sb.append("图书参数"+count+":的ISBN号不能为空---");
+                   }
+                   if(StringUtil.isEmpty(book.getBookname())){
+                       flag=true;
+                       sb.append("图书参数"+count+":的图书名称不能为空---");
+                   }
+                   BookSyncConfirm newBookS = new BookSyncConfirm();
+                   Book bookByIsbn = bookService.getBookByIsbn(book.getIsbn());
+                   if(ObjectUtil.isNull(bookByIsbn)){
+                      BookSyncConfirm bookSyncConfirmByISBN = bookSyncService.getBookSyncConfirmByISBN(bookByIsbn.getIsbn());
+                      if(ObjectUtil.isNull(bookSyncConfirmByISBN)){
+                          sb.append("未找到该isbn的图书---");
+                      }else{
+                          newBookS.setIsOnSale(bookByIsbn.getIsOnSale());
+                          newBookS.setLogId(logId);
+                          BeanUtils.copyProperties(bookSyncConfirmByISBN, newBookS);
+                          bookSyncService.addBookSyncConfirm(newBookS);
+                      }
 
-            }
-            if(ObjectUtil.isNull(book.getPublishDate())){
-                flag=true;
-                sb.append("图书参数"+count+":的图书出版日期不能为空---");
+                   }else{
 
-            }*/
+                       newBookS.setIsOnSale(bookByIsbn.getIsOnSale());
+                       newBookS.setLogId(logId);
+                       BeanUtils.copyProperties(bookByIsbn, newBookS);
+                       bookSyncService.addBookSyncConfirm(newBookS);
+                   }
+               }
 
-            book.setLogId(logId);
-            bookSyncService.addBookSyncConfirm(book);
+               break;
+           case"obtained":
+               for (BookSyncConfirm book : bookSyncConfirms) {
+                   BookSyncConfirm newBookS = new BookSyncConfirm();
+                   Book bookByIsbn = bookService.getBookByIsbn(book.getIsbn());
+                   if(ObjectUtil.isNull(bookByIsbn)){
+                       BookSyncConfirm bookSyncConfirmByISBN = bookSyncService.getBookSyncConfirmByISBN(bookByIsbn.getIsbn());
+                       if(ObjectUtil.isNull(bookSyncConfirmByISBN)){
+                           sb.append("未找到该isbn的图书---");
+                       }else{
+                           newBookS.setIsOnSale(bookByIsbn.getIsOnSale());
+                           newBookS.setLogId(logId);
+                           BeanUtils.copyProperties(bookSyncConfirmByISBN, newBookS);
+                           bookSyncService.addBookSyncConfirm(newBookS);
+                       }
 
-        }
+                   }else{
+
+                       newBookS.setIsOnSale(bookByIsbn.getIsOnSale());
+                       newBookS.setLogId(logId);
+                       BeanUtils.copyProperties(bookByIsbn, newBookS);
+                       bookSyncService.addBookSyncConfirm(newBookS);
+                   }
+               }
+
+               break;
+       }
+
+
+
+
+
+       /* List<BookSyncConfirm> books = JSONArray.parseArray(bookinfo.toString(), BookSyncConfirm.class);*/
+
 
         List<PmphUser> pmphUserByRole = pmphUserService.getPmphUserByRole();
         for (PmphUser p : pmphUserByRole) {
@@ -210,6 +252,36 @@ public class BookSyncController {
 
         return new ResponseBean(responseBean);
     }
+
+
+
+    public void parsejson(JSONArray objects,List<BookSyncConfirm> bookSyncConfirms){
+        for(int i=0;i<objects.size();i++){
+            JSONObject jsonObject1 = JSON.parseObject(objects.get(i).toString());
+            BookSyncConfirm bookSyncConfirm = new BookSyncConfirm();
+            bookSyncConfirm.setIsbn(jsonObject1.getString("isbn")==null?null:jsonObject1.getString("isbn"));
+            bookSyncConfirm.setBookname(jsonObject1.getString("bookname")==null?null:jsonObject1.getString("bookname"));
+            bookSyncConfirm.setAuthor(jsonObject1.getString("author")==null?null:jsonObject1.getString("author"));
+            bookSyncConfirm.setPublisher(jsonObject1.getString("publisher")==null?null:jsonObject1.getString("publisher"));
+            bookSyncConfirm.setLang(jsonObject1.getString("lang")==null?null:jsonObject1.getString("lang"));
+            bookSyncConfirm.setRevision(jsonObject1.getInteger("version")==null?null:jsonObject1.getInteger("version"));
+            bookSyncConfirm.setPublishDate(jsonObject1.getDate("publishDate")==null?null:jsonObject1.getDate("publishDate"));
+            bookSyncConfirm.setReader(jsonObject1.getString("reader")==null?null:jsonObject1.getString("reader"));
+            bookSyncConfirm.setPrice(jsonObject1.getDouble("price")==null?null:jsonObject1.getDouble("price"));
+            bookSyncConfirm.setBuyUrl(jsonObject1.getString("buyUrl")==null?null:jsonObject1.getString("buyUrl"));
+            bookSyncConfirm.setImageUrl(jsonObject1.getString("imageUrl")==null?null:jsonObject1.getString("imageUrl"));
+            bookSyncConfirm.setPdfUrl(jsonObject1.getString("pdfUrl")==null?null:jsonObject1.getString("pdfUrl"));
+            bookSyncConfirm.setNew(jsonObject1.getBoolean("isNew")==null?null:jsonObject1.getBoolean("isNew"));
+            bookSyncConfirm.setIsOnSale(jsonObject1.getBoolean("isOnSale")==null?null:jsonObject1.getBoolean("isOnSale"));
+            bookSyncConfirm.setGmtCreate(jsonObject1.getTimestamp("gmtCreate")==null?null:jsonObject1.getTimestamp("gmtCreate"));
+            bookSyncConfirm.setGmtUpdate(jsonObject1.getTimestamp("gmtUpdate")==null?null:jsonObject1.getTimestamp("gmtUpdate"));
+            bookSyncConfirm.setVn(jsonObject1.getString("vn")==null?null:jsonObject1.getString("vn"));
+            bookSyncConfirm.setContent(jsonObject1.getString("content")==null?null:jsonObject1.getString("content"));
+            bookSyncConfirms.add(bookSyncConfirm);
+        }
+    }
+
+
 
     /**
      * 根据密钥对指定的密文cipherText进行解密.

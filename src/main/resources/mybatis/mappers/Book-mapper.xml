@@ -840,19 +840,39 @@
 		<foreach collection="list" item="item" index="index" open="" close="" separator=";">
 			update book
 			<set>
-					is_sell_well=#{item.isSellWell},
-					sort_sell_well=#{item.sortSellWell},
-
+				<if test="item.flag==1">
+				is_sell_well=#{item.isSellWell},
+				sort_sell_well=#{item.sortSellWell},
+                </if>
+				<if test="item.flag==2">
+				is_new_book=#{item.isNewBook},
+				sort_new_book=#{item.sortNewBook},
+				</if>
+				<if test="item.flag==3">
+				is_highly=#{item.ishighly},
+				sort_highly=#{item.sorthighly},
+				</if>
 			</set>
 			where id = ${item.id}
 		</foreach>
 
 	</update>
-		<update id="updateBookSellWellByid" parameterType="java.lang.Long">
+		<update id="updateBookSellWellByid" parameterType="map">
 			update book
-			<set>
+			<if test="flag==1">
 				is_sell_well=null,
 				sort_sell_well=null,
+			</if>
+			<if test="flag==2">
+				is_new_book=null,
+				sort_new_book=null,
+			</if>
+			<if test="flag==3">
+				is_highly=null,
+				sort_highly=null,
+			</if>
+			<set>
+
 			</set>
 			where id = ${id}
 	</update>
@@ -867,13 +887,17 @@
 		as decimal(9,2)
 		)
 		from material_type where id = cast('${parameter.type}' as decimal(9,2)))),'-',-1) = '${parameter.type}'
-		<if test="parameter.flage==1">
+		<if test="parameter.flag==1">
 		where b.is_on_sale = 1 and b.is_sell_well=1
+			ORDER BY
+			b.sort_sell_well
 		</if>
-		<if test="parameter.flage==2">
+		<if test="parameter.flag==2">
 			where b.is_on_sale = 1 and b.is_new_book=1
+			ORDER BY
+			b.sort_new_book
 		</if>
-		<if test="parameter.flage==3">
+		<if test="parameter.flag==3">
 			where b.is_on_sale = 1 and b.is_highly=1
             ORDER BY
             b.sort_highly

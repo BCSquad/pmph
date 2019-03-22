@@ -97,6 +97,11 @@ public class BookSyncServiceImpl implements BookSyncService {
     }
 
     @Override
+    public BookSyncConfirm getBookSyncConfirmByISBN(String isbn) {
+        return  bookSyncDao.getBookSyncConfirmByISBN(isbn);
+    }
+
+    @Override
     public int addBookSynBak(BookSyncBak bookSyncBak) {
         return bookSyncDao.addBookSynBak(bookSyncBak);
     }
