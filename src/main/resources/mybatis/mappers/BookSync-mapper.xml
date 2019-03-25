@@ -293,6 +293,8 @@
             #{endTime}
         </if>
             and bsc.is_deleted =0 and bsl.increment=1
+            order by bsl.sync_gmt desc
+
         limit #{start} ,#{pageSize}
 
     </select>
@@ -304,7 +306,7 @@
     </select>
 
     <select id="getBookSyncConfirmByISBN" parameterType="String" resultType="BookSyncConfirm">
-        select * from book_sync_confirm where isbn=#{isbn}
+        select * from book_sync_confirm  bsc left join book_sync_log bsl on bsl.id=bsc.log_id   where isbn=#{isbn}  order by bsl.sync_gmt desc limit 1
 
 
     </select>
