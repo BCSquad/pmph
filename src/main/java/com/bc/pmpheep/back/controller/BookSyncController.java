@@ -176,20 +176,21 @@ public class BookSyncController {
                    if(ObjectUtil.isNull(bookByIsbn)){
                       BookSyncConfirm bookSyncConfirmByISBN = bookSyncService.getBookSyncConfirmByISBN(bookByIsbn.getIsbn());
                       if(ObjectUtil.isNull(bookSyncConfirmByISBN)){
+                          flag=true;
                           sb.append("未找到该isbn的图书---");
                       }else{
-                          newBookS.setId(null);
                           newBookS.setIsOnSale(bookByIsbn.getIsOnSale());
                           newBookS.setLogId(logId);
                           BeanUtils.copyProperties(bookSyncConfirmByISBN, newBookS);
+                          newBookS.setId(null);
                           bookSyncService.addBookSyncConfirm(newBookS);
                       }
 
                    }else{
-                       newBookS.setId(null);
                        newBookS.setIsOnSale(bookByIsbn.getIsOnSale());
                        newBookS.setLogId(logId);
                        BeanUtils.copyProperties(bookByIsbn, newBookS);
+                       newBookS.setId(null);
                        bookSyncService.addBookSyncConfirm(newBookS);
                    }
                }
@@ -207,14 +208,15 @@ public class BookSyncController {
                            newBookS.setIsOnSale(bookByIsbn.getIsOnSale());
                            newBookS.setLogId(logId);
                            BeanUtils.copyProperties(bookSyncConfirmByISBN, newBookS);
+                           newBookS.setId(null);
                            bookSyncService.addBookSyncConfirm(newBookS);
                        }
 
                    }else{
-
                        newBookS.setIsOnSale(bookByIsbn.getIsOnSale());
                        newBookS.setLogId(logId);
                        BeanUtils.copyProperties(bookByIsbn, newBookS);
+                       newBookS.setId(null);
                        bookSyncService.addBookSyncConfirm(newBookS);
                    }
                }
@@ -223,33 +225,28 @@ public class BookSyncController {
        }
 
 
-
-
-
        /* List<BookSyncConfirm> books = JSONArray.parseArray(bookinfo.toString(), BookSyncConfirm.class);*/
-
-
-        List<PmphUser> pmphUserByRole = pmphUserService.getPmphUserByRole();
-        for (PmphUser p : pmphUserByRole) {
-
-            String msgContent = "商城同步了图书,请在图书同步管理中确认";// 退回
-            // 存入消息主体
-            Message message = new Message(msgContent);
-            message = messageService.add(message);
-            String msg_id = message.getId();
-            UserMessage userMessage = new UserMessage(msg_id, "系统消息", new Short("0"), 0L, new Short("0"),
-                    p.getId(), new Short("1"), null);
-            userMessageService.addUserMessage(userMessage);
-        }
-
-        /*解析图书为实体类*/
-        Map<String, Object> objectObjectHashMap = new HashMap<>();
-        objectObjectHashMap.put("appkey", appkey);
-        objectObjectHashMap.put("jsonInfo", jsonObject);
 
         if(flag){
             responseBean.setMsg(sb.toString());
+        }else{
+            List<PmphUser> pmphUserByRole = pmphUserService.getPmphUserByRole();
+            for (PmphUser p : pmphUserByRole) {
+
+                String msgContent = "商城同步了图书,请在图书同步管理中确认";// 退回
+                // 存入消息主体
+                Message message = new Message(msgContent);
+                message = messageService.add(message);
+                String msg_id = message.getId();
+                UserMessage userMessage = new UserMessage(msg_id, "系统消息", new Short("0"), 0L, new Short("0"),
+                        p.getId(), new Short("1"), null);
+                userMessageService.addUserMessage(userMessage);
+            }
+            Map<String, Object> objectObjectHashMap = new HashMap<>();
+            objectObjectHashMap.put("appkey", appkey);
+            objectObjectHashMap.put("jsonInfo", jsonObject);
         }
+
 
         return new ResponseBean(responseBean);
     }
