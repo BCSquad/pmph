@@ -849,8 +849,8 @@
 				sort_new_book=#{item.sortNewBook},
 				</if>
 				<if test="item.flag==3">
-				is_highly=#{item.ishighly},
-				sort_highly=#{item.sorthighly},
+				is_highly=#{item.isHighly},
+				sort_highly=#{item.sortHighly},
 				</if>
 			</set>
 			where id = ${item.id}

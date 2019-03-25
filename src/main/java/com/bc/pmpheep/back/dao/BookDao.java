@@ -281,7 +281,7 @@ public interface BookDao {
 
 	int queryTscxReadListCount(PageParameter<Map<String, Object>> pageParameter);
 	Integer addSellwell(@Param("id") Long id);
-	void updateBookSellWell(List<Book> books);
+	int updateBookSellWell(List<Book> books);
 	int updateBookSellWellByid(Map<String,Object> params);
 
 }

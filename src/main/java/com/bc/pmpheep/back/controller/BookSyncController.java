@@ -174,7 +174,7 @@ public class BookSyncController {
                    BookSyncConfirm newBookS = new BookSyncConfirm();
                    Book bookByIsbn = bookService.getBookByIsbn(book.getIsbn());
                    if(ObjectUtil.isNull(bookByIsbn)){
-                      BookSyncConfirm bookSyncConfirmByISBN = bookSyncService.getBookSyncConfirmByISBN(bookByIsbn.getIsbn());
+                      BookSyncConfirm bookSyncConfirmByISBN = bookSyncService.getBookSyncConfirmByISBN(book.getIsbn());
                       if(ObjectUtil.isNull(bookSyncConfirmByISBN)){
                           flag=true;
                           sb.append("未找到该isbn的图书---");
@@ -201,7 +201,7 @@ public class BookSyncController {
                    BookSyncConfirm newBookS = new BookSyncConfirm();
                    Book bookByIsbn = bookService.getBookByIsbn(book.getIsbn());
                    if(ObjectUtil.isNull(bookByIsbn)){
-                       BookSyncConfirm bookSyncConfirmByISBN = bookSyncService.getBookSyncConfirmByISBN(bookByIsbn.getIsbn());
+                       BookSyncConfirm bookSyncConfirmByISBN = bookSyncService.getBookSyncConfirmByISBN(book.getIsbn());
                        if(ObjectUtil.isNull(bookSyncConfirmByISBN)){
                            sb.append("未找到该isbn的图书---");
                        }else{

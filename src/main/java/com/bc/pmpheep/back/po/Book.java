@@ -212,8 +212,8 @@ public class Book implements Serializable {
 		return isHighly;
 	}
 
-	public void setIsHighly(Boolean isHighly) {
-		isHighly = isHighly;
+	public void setIsHighly(Boolean IsHighly) {
+		isHighly = IsHighly;
 	}
 
 	public Integer getSortHighly() {

@@ -423,7 +423,7 @@ public class BookController {
 	@RequestMapping(value = "/getManageList", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseBean getManageList(Integer pageSize, Integer pageNumber,Integer type,Integer flag) {
-		PageParameter<Map<String, Object>> pageParameter = new PageParameter<>(0, 6);
+		PageParameter<Map<String, Object>> pageParameter = new PageParameter<>(0, 10);
 		Map<String, Object> map = new HashMap<>();
 		//图书类型
 		map.put("type", type);

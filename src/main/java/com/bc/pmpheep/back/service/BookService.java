@@ -203,7 +203,7 @@ public interface BookService {
 	public List<Book> queryTscxReadList(PageParameter<Map<String, Object>> pageParameter);
 	public List<Book> querySellwelList(PageParameter<Map<String, Object>> pageParameter);
 	public int queryTscxReadListCount(PageParameter<Map<String, Object>> pageParameter);
-	String updataSellwell(List<Book> books) throws CheckedServiceException;
+	int updataSellwell(List<Book> books) throws CheckedServiceException;
 	public int updateBookSellWellByid(Map<String,Object> params);
 	Book getBookByIsbn(String isbn);
 	Book getBookById(Long id);
