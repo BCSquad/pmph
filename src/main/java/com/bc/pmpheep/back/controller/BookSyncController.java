@@ -228,6 +228,7 @@ public class BookSyncController {
        /* List<BookSyncConfirm> books = JSONArray.parseArray(bookinfo.toString(), BookSyncConfirm.class);*/
 
         if(flag){
+            responseBean.setCode(0);
             responseBean.setMsg(sb.toString());
         }else{
             List<PmphUser> pmphUserByRole = pmphUserService.getPmphUserByRole();
