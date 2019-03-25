@@ -151,25 +151,15 @@ public class BookSyncController {
                        flag=true;
                        sb.append("图书参数"+count+":的ISBN号不能为空---");
                    }
-                   if(StringUtil.isEmpty(book.getBookname())){
-                       flag=true;
-                       sb.append("图书参数"+count+":的图书名称不能为空---");
-
-                   }
                    book.setLogId(logId);
                    bookSyncService.addBookSyncConfirm(book);
                }
                break;
            case "shelf":
-
                for (BookSyncConfirm book : bookSyncConfirms) {
                    if(StringUtil.isEmpty(book.getIsbn())){
                        flag=true;
                        sb.append("图书参数"+count+":的ISBN号不能为空---");
-                   }
-                   if(StringUtil.isEmpty(book.getBookname())){
-                       flag=true;
-                       sb.append("图书参数"+count+":的图书名称不能为空---");
                    }
                    BookSyncConfirm newBookS = new BookSyncConfirm();
                    Book bookByIsbn = bookService.getBookByIsbn(book.getIsbn());
@@ -230,7 +220,10 @@ public class BookSyncController {
         if(flag){
             responseBean.setCode(0);
             responseBean.setMsg(sb.toString());
+
+
         }else{
+
             List<PmphUser> pmphUserByRole = pmphUserService.getPmphUserByRole();
             for (PmphUser p : pmphUserByRole) {
 
