@@ -248,7 +248,7 @@ public class BookSyncController {
         }
 
 
-        return new ResponseBean(responseBean);
+        return responseBean;
     }
 
 
