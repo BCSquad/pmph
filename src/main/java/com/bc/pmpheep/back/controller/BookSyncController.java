@@ -195,17 +195,17 @@ public class BookSyncController {
                        if(ObjectUtil.isNull(bookSyncConfirmByISBN)){
                            sb.append("未找到该isbn的图书---");
                        }else{
-                           newBookS.setIsOnSale(bookByIsbn.getIsOnSale());
-                           newBookS.setLogId(logId);
                            BeanUtils.copyProperties(bookSyncConfirmByISBN, newBookS);
+                           newBookS.setIsOnSale(book.getIsOnSale());
+                           newBookS.setLogId(logId);
                            newBookS.setId(null);
                            bookSyncService.addBookSyncConfirm(newBookS);
                        }
 
                    }else{
-                       newBookS.setIsOnSale(bookByIsbn.getIsOnSale());
-                       newBookS.setLogId(logId);
                        BeanUtils.copyProperties(bookByIsbn, newBookS);
+                       newBookS.setIsOnSale(book.getIsOnSale());
+                       newBookS.setLogId(logId);
                        newBookS.setId(null);
                        bookSyncService.addBookSyncConfirm(newBookS);
                    }
