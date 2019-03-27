@@ -80,6 +80,12 @@ public interface BookSyncService {
     int delectBooksyncConfirm(Long id);
 
     /**
+     * 删除待确认信息
+     * @param id
+     * @return
+     */
+    int delectBooksyncConfirmByIsbn(String Isbn);
+    /**
      * 获取图书备份对象
      * @param id
      * @return

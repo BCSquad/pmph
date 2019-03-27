@@ -730,6 +730,10 @@
         update book_sync_confirm set is_deleted=1 where id=#{id}
     </update>
 
+    <update id="delectBoolsyncConfirmByIsbn" parameterType="long">
+        update book_sync_confirm set is_deleted=1 where isbn=#{isbn}
+    </update>
+
 
 
 </mapper>

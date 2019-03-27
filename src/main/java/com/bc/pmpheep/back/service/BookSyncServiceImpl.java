@@ -117,6 +117,11 @@ public class BookSyncServiceImpl implements BookSyncService {
     }
 
     @Override
+    public int delectBooksyncConfirmByIsbn(String isbn) {
+        return bookSyncDao.delectBoolsyncConfirmByIsbn(isbn);
+    }
+
+    @Override
     public BookSyncBak getBookSyncBak(Long id) {
         return bookSyncDao.getBookSyncBak(id);
     }
