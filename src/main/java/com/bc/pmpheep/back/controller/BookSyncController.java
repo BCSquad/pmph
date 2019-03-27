@@ -163,26 +163,29 @@ public class BookSyncController {
                    }
                    BookSyncConfirm newBookS = new BookSyncConfirm();
                    Book bookByIsbn = bookService.getBookByIsbn(book.getIsbn());
-                   if(ObjectUtil.isNull(bookByIsbn)){
-                      BookSyncConfirm bookSyncConfirmByISBN = bookSyncService.getBookSyncConfirmByISBN(book.getIsbn());
-                      if(ObjectUtil.isNull(bookSyncConfirmByISBN)){
-                          flag=true;
-                          sb.append("未找到该isbn的图书---");
-                      }else{
-                          newBookS.setIsOnSale(bookByIsbn.getIsOnSale());
-                          newBookS.setLogId(logId);
-                          BeanUtils.copyProperties(bookSyncConfirmByISBN, newBookS);
-                          newBookS.setId(null);
-                          bookSyncService.addBookSyncConfirm(newBookS);
-                      }
-
-                   }else{
-                       newBookS.setIsOnSale(bookByIsbn.getIsOnSale());
-                       newBookS.setLogId(logId);
+                   BookSyncConfirm bookSyncConfirmByISBN = bookSyncService.getBookSyncConfirmByISBN(book.getIsbn());
+                   if(ObjectUtil.notNull(bookByIsbn)){
                        BeanUtils.copyProperties(bookByIsbn, newBookS);
+                       newBookS.setIsOnSale(book.getIsOnSale());
+                       newBookS.setLogId(logId);
                        newBookS.setId(null);
                        bookSyncService.addBookSyncConfirm(newBookS);
+                       if(bookSyncConfirmByISBN!=null){
+                           bookSyncService.delectBooksyncConfirmByIsbn(bookSyncConfirmByISBN.getIsbn());
+                       }
                    }
+                   if(ObjectUtil.notNull(bookSyncConfirmByISBN)){
+                       BeanUtils.copyProperties(bookSyncConfirmByISBN, newBookS);
+                       newBookS.setIsOnSale(book.getIsOnSale());
+                       newBookS.setLogId(logId);
+                       newBookS.setId(null);
+                       bookSyncService.delectBooksyncConfirmByIsbn(bookSyncConfirmByISBN.getIsbn());
+                       bookSyncService.addBookSyncConfirm(newBookS);
+                   }else{
+                       flag=true;
+                       sb.append("未找到该isbn的图书---");
+                   }
+
                }
 
                break;
@@ -190,24 +193,29 @@ public class BookSyncController {
                for (BookSyncConfirm book : bookSyncConfirms) {
                    BookSyncConfirm newBookS = new BookSyncConfirm();
                    Book bookByIsbn = bookService.getBookByIsbn(book.getIsbn());
-                   if(ObjectUtil.isNull(bookByIsbn)){
-                       BookSyncConfirm bookSyncConfirmByISBN = bookSyncService.getBookSyncConfirmByISBN(book.getIsbn());
-                       if(ObjectUtil.isNull(bookSyncConfirmByISBN)){
-                           sb.append("未找到该isbn的图书---");
-                       }else{
-                           BeanUtils.copyProperties(bookSyncConfirmByISBN, newBookS);
-                           newBookS.setIsOnSale(book.getIsOnSale());
-                           newBookS.setLogId(logId);
-                           newBookS.setId(null);
-                           bookSyncService.addBookSyncConfirm(newBookS);
-                       }
-
-                   }else{
+                   BookSyncConfirm bookSyncConfirmByISBN = bookSyncService.getBookSyncConfirmByISBN(book.getIsbn());
+                   if(ObjectUtil.notNull(bookByIsbn)){
                        BeanUtils.copyProperties(bookByIsbn, newBookS);
                        newBookS.setIsOnSale(book.getIsOnSale());
                        newBookS.setLogId(logId);
                        newBookS.setId(null);
                        bookSyncService.addBookSyncConfirm(newBookS);
+                       if(bookSyncConfirmByISBN!=null){
+                           bookSyncService.delectBooksyncConfirmByIsbn(bookSyncConfirmByISBN.getIsbn());
+                       }
+
+                   }
+
+                   if(ObjectUtil.isNull(bookSyncConfirmByISBN)){
+                       sb.append("未找到该isbn的图书---");
+                   }else{
+                       BeanUtils.copyProperties(bookSyncConfirmByISBN, newBookS);
+                       newBookS.setIsOnSale(book.getIsOnSale());
+                       newBookS.setLogId(logId);
+                       newBookS.setId(null);
+                       bookSyncService.delectBooksyncConfirmByIsbn(bookSyncConfirmByISBN.getIsbn());
+                       bookSyncService.addBookSyncConfirm(newBookS);
+
                    }
                }
 
