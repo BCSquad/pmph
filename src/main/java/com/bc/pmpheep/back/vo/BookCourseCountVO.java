@@ -4,6 +4,7 @@ package com.bc.pmpheep.back.vo;
  * 图书课程选用情况统计 实体类
  */
 public class BookCourseCountVO {
+    private Long bookId;
 
     private String courseName;
 
@@ -37,6 +38,13 @@ public class BookCourseCountVO {
     public BookCourseCountVO() {
     }
 
+    public Long getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(Long bookId) {
+        this.bookId = bookId;
+    }
 
     public String getCourseName() {
         return courseName;

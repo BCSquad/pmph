@@ -54,6 +54,10 @@
 		) ;
 	</insert>
 
+	<update id="updateCmsManual" parameterType="CmsManual">
+		update cms_manual set manual_name =#{manualName},attachment=#{attachment},note=#{note},user_id=#{userId} where id=#{id}
+	</update>
+
 	<!-- 根据id删除一个 CmsExtra-->
 	<delete id="deleteCmsManualById" parameterType="java.lang.Long">
 		delete from cms_manual where id=#{id};
@@ -114,6 +118,15 @@
 			limit #{start},#{pageSize}
 		</if>
 	</select>
+
+
+	<!--CmsManualVO模糊查询获取帮助列表 -->
+	<select id="cmsManualById" parameterType="long" resultType="CmsManual">
+		SELECT * FROM  `cms_manual` t WHERE
+		id=#{id}
+
+	</select>
+
 	<!-- 帮助管理-操作手册按标题查询 -->
 	<select id="listCmsManualByManualName" parameterType="java.lang.String" resultType="CmsManual">
 		SELECT * FROM  `cms_manual` t WHERE  t.`manual_name`=#{manualName}

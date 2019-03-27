@@ -79,6 +79,14 @@ public class CmsManualController {
         return new ResponseBean(cmsManualService.listCmsManual(pageParameter, sessionId));
     }
 
+
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "根据id查询操作手册")
+    @GetMapping(value = "/manual/getManual")
+    public ResponseBean getManualById(Long id,HttpServletRequest request) {
+        String sessionId = request.getSession().getId();
+        return new ResponseBean(cmsManualService.cmsManualById(id, sessionId));
+    }
+
     /**
      * 
      * <pre>
@@ -97,6 +105,23 @@ public class CmsManualController {
         return new ResponseBean(cmsManualService.addCmsManual(cmsManual, sessionId));
     }
 
+    /**
+     *
+     * <pre>
+     * 功能描述：新增操作手册
+     * 使用示范：
+     *
+     * @param cmsManual CmsManual对象
+     * @param request
+     * @return
+     * </pre>
+     */
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增操作手册")
+    @PostMapping(value = "/update/manual")
+    public ResponseBean updateManual(CmsManual cmsManual, HttpServletRequest request) {
+        String sessionId = CookiesUtil.getSessionId(request);
+        return new ResponseBean(cmsManualService.updateCmsManual(cmsManual, sessionId));
+    }
     /**
      * 
      * <pre>
