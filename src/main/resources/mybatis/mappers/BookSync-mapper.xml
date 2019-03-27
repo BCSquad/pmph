@@ -730,10 +730,8 @@
         update book_sync_confirm set is_deleted=1 where id=#{id}
     </update>
 
-    <update id="delectBoolsyncConfirmByIsbn" parameterType="long">
-        update book_sync_confirm set is_deleted=1 where isbn=#{isbn}
+    <update id="delectBoolsyncConfirmByIsbn" parameterType="string">
+        update  book_sync_confirm bsc left join book_sync_log bsl on bsc.log_id=bsl.id set bsc.is_deleted=1  where bsc.isbn=#{isbn} and  bsl.synchronization_type &lt;&gt;'add'  and bsl.synchronization_type &lt;&gt; 'update'
     </update>
-
-
 
 </mapper>
