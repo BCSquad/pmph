@@ -2,6 +2,8 @@ package com.bc.pmpheep.back.service;
 
 import java.util.List;
 
+import com.bc.pmpheep.back.dao.WriterPointActivityDao;
+import com.bc.pmpheep.back.po.WriterPointActivity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,9 @@ public class WriterPointServiceImpl implements WriterPointService{
 	
 	@Autowired
 	WriterPointDao writerPointDao;
+
+	@Autowired
+	WriterPointActivityDao writerPointActivityDao;
 	
 	@Override
 	public PageResult<WriterPointVO> getListWriterPoint(PageParameter<WriterPointVO> pageParameter)
@@ -99,6 +104,29 @@ public class WriterPointServiceImpl implements WriterPointService{
 					CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
 		return writerPointDao.getWriterPointByUserId(userId);
+	}
+
+	@Override
+	public PageResult<WriterPointActivity> getListWriterPointActivity( PageParameter<WriterPointActivity> pageParameter) throws CheckedServiceException {
+		PageResult<WriterPointActivity> pageResult = new PageResult<WriterPointActivity>();
+		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+		List<WriterPointActivity> writerPointActivities = writerPointActivityDao.queryList(pageParameter);
+		if (CollectionUtil.isNotEmpty(writerPointActivities)) {
+			Integer count =  writerPointActivityDao.queryListCount(pageParameter);
+			pageResult.setTotal(count);
+			pageResult.setRows(writerPointActivities);
+		}
+		return pageResult;
+	}
+
+	@Override
+	public int addWriterPointActivity( WriterPointActivity writerPointActivity,String session) throws CheckedServiceException {
+		return writerPointActivityDao.insert(writerPointActivity);
+	}
+
+	@Override
+	public int updateWriterPointActivity( WriterPointActivity writerPointActivity, final String session) throws CheckedServiceException {
+		return writerPointActivityDao.updateById(writerPointActivity);
 	}
 
 	@Override

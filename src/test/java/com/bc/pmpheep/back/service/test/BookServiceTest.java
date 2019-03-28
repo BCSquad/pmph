@@ -2,6 +2,21 @@ package com.bc.pmpheep.back.service.test;
 
 import javax.annotation.Resource;
 
+import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.bc.pmpheep.back.service.BookSyncService;
+import com.bc.pmpheep.back.util.*;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.CharArrayBuffer;
+import org.apache.http.util.EntityUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -19,6 +34,14 @@ import com.bc.pmpheep.back.vo.BookVO;
 import com.bc.pmpheep.test.BaseTest;
 import org.springframework.test.annotation.Rollback;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * 图书单元测试
  * 
@@ -31,6 +54,242 @@ public class BookServiceTest extends BaseTest {
 
 	@Resource
 	private BookService bookService;
+	@Resource
+	private BookSyncService bookSyncService;
+
+	@Test
+	public void SyncBookSellWell() throws UnsupportedEncodingException {
+		Map<String,Object> api=new HashMap<String,Object>();
+		api.put("app_key","nmkt8v9NkWbQ9WPFl3l6lFNsyThsfcep");
+		api.put("format","json");
+		api.put("method","com.ai.ecp.pmph.order.saleRank");
+		api.put("session","MDzjI012CaqX4HG1HbOj35ps1yOYxJ7KfL1ezjKT89OLZZe0f22S6LY6eZ4DleBR");
+		api.put("sign_method","md5");
+		api.put("timestamp", DateUtil.formatTimeStamp("yyy-MM-dd HH:mm:ss",DateUtil.getCurrentTime()));
+		api.put("v","1.0");
+		String sign = DigestUtil.digest(api, "hbP5YsbmiWnkOP4IPtXE126JiIaFRCWD4gpfrcULPbs5hytCw06T2SooKfcUnc2g");
+		String params = SyncUtils.getUrlApi(api);
+		params+="&sign="+sign;
+		params+="&biz_content="+ CodecUtil.encodeURL("{\"num:\"2}");
+		/* params=CodecUtil.encodeURL(params);*/
+		String url="http://192.168.2.11/route/rest";
+
+		String urlapi=url+"?"+params;
+		String s1 = HttpUtil.doGet(url+"?"+params);
+		JSONObject jsonObject = JSON.parseObject(s1);
+		Integer code = jsonObject.getInteger("code");
+		List<Map<String,Object>> sales= new ArrayList<Map<String, Object>>();
+		if(code==0){
+			String msg = jsonObject.getString("msg");
+			JSONArray goodsList = jsonObject.getJSONArray("goodsList");
+			for(Object o:goodsList){
+				Map<String,Object> saleMap=new HashMap<>();
+				JSONObject jso = JSON.parseObject(o.toString());
+				String vn = jso.getString("bb_code");
+				String sale = jso.getString("trade_amount");
+				saleMap.put("vn", vn);
+				saleMap.put("sale",sale);
+				sales.add(saleMap);
+			}
+			int i = bookSyncService.updateBookSaleByVns(sales);
+
+
+		}
+
+		System.out.println(s1);
+
+
+	}
+
+
+	@Test
+	public void SyncBookS() throws UnsupportedEncodingException {
+		String url="http://localhost:11000/pmpheep//aiptest/syncBook?app_key=VGFeV8wXQ3tWJw7MwYyZCA==?";
+		/*String url="";*/
+
+		Map<String,Object> jsonMap=new HashMap<String,Object>();
+		jsonMap.put("increment",true);
+		jsonMap.put("synchronizationType","add");
+
+		Map<String,Object> bookinfo=new HashMap<String,Object>();
+		bookinfo.put("bookname","测试书籍333");
+
+		bookinfo.put("isbn","testIsbn333");
+		bookinfo.put("author","testauthor");
+		bookinfo.put("publisher","test");
+		bookinfo.put("lang","中文");
+		bookinfo.put("version","20190226");
+		bookinfo.put("publishDate","20190226");
+		bookinfo.put("reader","学生");
+		bookinfo.put("price","19.99");
+		bookinfo.put("buyUrl","http://www.pmphmall.com/gdsdetail/613520-288118");
+		bookinfo.put("imageUrl","http://www.pmphmall.com/gdsdetail/613520-288118");
+		bookinfo.put("pdfUrl","http://www.pmphmall.com/gdsdetail/613520-288118");
+		bookinfo.put("isNew",true);
+		bookinfo.put("isPromote",true);
+		bookinfo.put("isOnSale",true);
+		bookinfo.put("gmtCreate","20190226");
+		bookinfo.put("gmtUpdate","20190226");
+		bookinfo.put("vn","20190226");
+		bookinfo.put("content","这是新书的详情");
+
+
+		jsonMap.put("bookinfo",bookinfo);
+
+		String jsonStr = JSONUtils.toJSONString(jsonMap);
+		String Jsons="{\"increment\":true,\"synchronizationType\":\"obtained\",\"bookInfo\":[{\"isbn\":\"20190327003\",\"isOnSale\":false}]}";
+
+		String s1 = SyncUtils.postJson(url, Jsons);
+		System.out.println(s1);
+
+
+	}
+
+	@Test
+	public void ShoppingCart(){
+
+		Map<String,String> api=new HashMap<String,String>();
+		api.put("app_key","nmkt8v9NkWbQ9WPFl3l6lFNsyThsfcep");
+		api.put("format","json");
+		api.put("method","com.ai.ecp.pmph.order.cartAdd");
+		api.put("session","MDzjI012CaqX4HG1HbOj35ps1yOYxJ7KfL1ezjKT89OLZZe0f22S6LY6eZ4DleBR");
+		api.put("sign_method","md5");
+		api.put("timestamp", DateUtil.formatTimeStamp("yyy-MM-dd HH:mm:ss",DateUtil.getCurrentTime()));
+		api.put("v","1.0");
+		String sign = DigestUtil.digest(api, "hbP5YsbmiWnkOP4IPtXE126JiIaFRCWD4gpfrcULPbs5hytCw06T2SooKfcUnc2g");
+
+		String params = SyncUtils.getUrlApi(api);
+		params+="&sign="+sign;
+
+		params+="&biz_content="+ CodecUtil.encodeURL("{\"staff_code\":\"notalike000\",\"gds_detail\":[{\"bb_code\":\"2006002846\",\"order_amount\":\"2\"}]}");
+
+		String url="http://192.168.2.11/route/rest";
+
+		String urlapi=url+"?"+params;
+		String s1 = HttpUtil.doGet(url+"?"+params);
+		JSONObject jsonObject = JSON.parseObject(s1);
+
+		int code=0;
+		if(code==0){
+
+
+		}
+
+
+
+
+
+	}
+	@Test
+	public void redeem(){
+
+		Map<String,String> api=new HashMap<String,String>();
+		api.put("app_key","nmkt8v9NkWbQ9WPFl3l6lFNsyThsfcep");
+		api.put("format","json");
+		api.put("method","com.ai.ecp.pmph.staff.scoreCal");
+		api.put("session","MDzjI012CaqX4HG1HbOj35ps1yOYxJ7KfL1ezjKT89OLZZe0f22S6LY6eZ4DleBR");
+		api.put("sign_method","md5");
+		api.put("timestamp", DateUtil.formatTimeStamp("yyy-MM-dd HH:mm:ss",DateUtil.getCurrentTime()));
+		api.put("v","1.0");
+		String sign = DigestUtil.digest(api, "hbP5YsbmiWnkOP4IPtXE126JiIaFRCWD4gpfrcULPbs5hytCw06T2SooKfcUnc2g");
+
+		String params = SyncUtils.getUrlApi(api);
+		params+="&sign="+sign;
+
+		params+="&biz_content="+ CodecUtil.encodeURL("{\"staff_code\":\"notalike000\",\"score\":\"100\"}");
+
+		String url="http://192.168.2.11/route/rest";
+
+		String urlapi=url+"?"+params;
+		String s1 = HttpUtil.doGet(url+"?"+params);
+		JSONObject jsonObject = JSON.parseObject(s1);
+
+		int code=0;
+		if(code==0){
+
+
+		}
+
+
+
+
+
+	}
+
+
+
+
+
+
+
+	/**
+	 * post请求，参数为json字符串
+	 * @param url 请求地址
+	 * @param jsonString json字符串
+	 * @return 响应
+	 */
+	public static String postJson(String url,String jsonString)
+	{
+		String result = null;
+		CloseableHttpClient httpClient = HttpClients.createDefault();
+		HttpPost post = new HttpPost(url);
+		CloseableHttpResponse response = null;
+		try {
+			StringEntity stringEntity = new StringEntity(jsonString, "UTF-8");// 解决中文乱码问题
+			stringEntity.setContentEncoding("UTF-8");
+			stringEntity.setContentType("application/json");
+			post.setEntity(stringEntity);
+			response = httpClient.execute(post);
+			if(response != null && response.getStatusLine().getStatusCode() == 200)
+			{
+				HttpEntity entity = response.getEntity();
+				result = entityToString(entity);
+			}
+			return result;
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				httpClient.close();
+				if(response != null)
+				{
+					response.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+
+	}
+	public static  String entityToString(HttpEntity entity) throws IOException {
+		String result = null;
+		if(entity != null)
+		{
+			long lenth = entity.getContentLength();
+			if(lenth != -1 && lenth < 2048)
+			{
+				result = EntityUtils.toString(entity,"UTF-8");
+			}else {
+				InputStreamReader reader1 = new InputStreamReader(entity.getContent(), "UTF-8");
+				CharArrayBuffer buffer = new CharArrayBuffer(2048);
+				char[] tmp = new char[1024];
+				int l;
+				while((l = reader1.read(tmp)) != -1) {
+					buffer.append(tmp, 0, l);
+				}
+				result = buffer.toString();
+			}
+		}
+		return result;
+	}
+
+
+
 
 	@Test
 	public void testAddBook() {
