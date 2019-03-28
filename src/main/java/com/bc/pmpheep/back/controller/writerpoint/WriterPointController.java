@@ -59,8 +59,12 @@ public class WriterPointController {
 	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "分页查询用户积分列表")
 	@RequestMapping(value = "/listActivity", method = RequestMethod.GET)
 	public ResponseBean listActivity(@RequestParam("pageSize") Integer pageSize,
-							 @RequestParam("pageNumber") Integer pageNumber){
+							 @RequestParam("pageNumber") Integer pageNumber,
+		@RequestParam("name") String name){
 		PageParameter<WriterPointActivity> pageParameter=new PageParameter<WriterPointActivity>(pageNumber, pageSize);
+		WriterPointActivity writerPointActivity = new WriterPointActivity();
+		writerPointActivity.setName(name);
+		pageParameter.setParameter(writerPointActivity);
 		return new ResponseBean(writerPointService.getListWriterPointActivity(pageParameter));
 	}
 

@@ -126,64 +126,26 @@
 
         where deleted=0
 
-       <!-- <if test="parameter !=null ">
+
             <if test="parameter.name != null and parameter.name != ''">
-                and 'name'=#{parameter.name}
+                and wpa.name like  concat('%',#{parameter.name},'%')
             </if>
 
-            <if test="parameter.startGmt != null">
-                and start_gmt=#{parameter.startGmt}
-            </if>
-
-            <if test=" parameter.startGmt != null">
-                and start_gmt &gt; #{parameter.startGmt}
-            </if>
-
-            <if test="parameter.endGmt != null">
-                and end_gmt &lt; #{parameter.endGmt}
-            </if>
-            <if test=" parameter.status != null">
-                and status=#{parameter.status}
-            </if>
-
-            <if test=" parameter.status != null">
-                and status=#{parameter.status}
-            </if>
 
             <if test="start !=null">
                 limit #{start},#{pageSize}
             </if>
-        </if>
--->
+
     </select>
 
     <!-- 用户积分表分页列表（同时查询分页数据和总条数） -->
     <select id="queryListCount" parameterType="PageParameter" resultType="int">
-        select count(id) from writer_point_activity where deleted=0
-        <!--<if test="parameter !=null ">
-            <if test="parameter.name != null and parameter.name != ''">
-                and 'name'=#{parameter.name}
-            </if>
+        select count(id) from writer_point_activity  where deleted=0
 
-            <if test="parameter.startGmt != null">
-                and start_gmt=#{parameter.startGmt}
-            </if>
+        <if test="parameter.name != null and parameter.name != ''">
+            and name like  concat('%',#{parameter.name},'%')
+        </if>
 
-            <if test=" parameter.startGmt != null">
-                and start_gmt &gt; #{parameter.startGmt}
-            </if>
-
-            <if test="parameter.endGmt != null">
-                and end_gmt &lt; #{parameter.endGmt}
-            </if>
-            <if test=" parameter.status != null">
-                and status=#{parameter.status}
-            </if>
-
-            <if test=" parameter.status != null">
-                and status=#{parameter.status}
-            </if>
-        </if>-->
     </select>
 
 </mapper>
