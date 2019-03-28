@@ -12,6 +12,7 @@ import com.bc.pmpheep.back.service.BookService;
 import com.bc.pmpheep.back.service.BookSyncService;
 import com.bc.pmpheep.back.service.PmphUserService;
 import com.bc.pmpheep.back.service.UserMessageService;
+import com.bc.pmpheep.back.sessioncontext.SessionContext;
 import com.bc.pmpheep.back.util.*;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.general.po.Message;
@@ -34,6 +35,7 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -66,9 +68,10 @@ public class BookSyncController {
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "图书同步接口")
     @RequestMapping(value = "/syncBook", method = RequestMethod.POST)
-    public ResponseBean syncBook(ServletRequest request, @RequestBody String json) {
+    public ResponseBean syncBook(HttpServletRequest request, @RequestBody String json) {
         /*解析图书信息*/
         String appkey = request.getParameter("app_key");
+        request.getSession().setMaxInactiveInterval(1800);
         ResponseBean<Object> responseBean = new ResponseBean<>();
 
         String decrypt = decrypt(appkey);
@@ -127,100 +130,121 @@ public class BookSyncController {
 
         StringBuilder sb=new StringBuilder();
 
-       switch (synchronizationType){
+        if(increment){
+            switch (synchronizationType){
 
-           case "add":
+                case "add":
 
-               for (BookSyncConfirm book : bookSyncConfirms) {
-                   if (StringUtil.isEmpty(book.getIsbn())) {
-                       flag = true;
-                       sb.append("图书参数" + count + ":的ISBN号不能为空---");
-                   }
-                   if (StringUtil.isEmpty(book.getBookname())) {
-                       flag = true;
-                       sb.append("图书参数" + count + ":的图书名称不能为空---");
+                    for (BookSyncConfirm book : bookSyncConfirms) {
+                        if (StringUtil.isEmpty(book.getIsbn())) {
+                            flag = true;
+                            sb.append("图书参数" + count + ":的ISBN号不能为空---");
+                        }
+                        if (StringUtil.isEmpty(book.getBookname())) {
+                            flag = true;
+                            sb.append("图书参数" + count + ":的图书名称不能为空---");
 
-                   }
-                   book.setLogId(logId);
-                   bookSyncService.addBookSyncConfirm(book);
-               }
-               break;
-           case "update":
-               for (BookSyncConfirm book : bookSyncConfirms) {
-                   if(StringUtil.isEmpty(book.getIsbn())){
-                       flag=true;
-                       sb.append("图书参数"+count+":的ISBN号不能为空---");
-                   }
-                   book.setLogId(logId);
-                   bookSyncService.addBookSyncConfirm(book);
-               }
-               break;
-           case "shelf":
-               for (BookSyncConfirm book : bookSyncConfirms) {
-                   if(StringUtil.isEmpty(book.getIsbn())){
-                       flag=true;
-                       sb.append("图书参数"+count+":的ISBN号不能为空---");
-                   }
-                   BookSyncConfirm newBookS = new BookSyncConfirm();
-                   Book bookByIsbn = bookService.getBookByIsbn(book.getIsbn());
-                   BookSyncConfirm bookSyncConfirmByISBN = bookSyncService.getBookSyncConfirmByISBN(book.getIsbn());
-                   if(ObjectUtil.notNull(bookByIsbn)){
-                       BeanUtils.copyProperties(bookByIsbn, newBookS);
-                       newBookS.setIsOnSale(book.getIsOnSale());
-                       newBookS.setLogId(logId);
-                       newBookS.setId(null);
-                       bookSyncService.addBookSyncConfirm(newBookS);
-                       if(bookSyncConfirmByISBN!=null){
-                           bookSyncService.delectBooksyncConfirmByIsbn(bookSyncConfirmByISBN.getIsbn());
-                       }
-                   }
-                   if(ObjectUtil.notNull(bookSyncConfirmByISBN)){
-                       BeanUtils.copyProperties(bookSyncConfirmByISBN, newBookS);
-                       newBookS.setIsOnSale(book.getIsOnSale());
-                       newBookS.setLogId(logId);
-                       newBookS.setId(null);
-                       bookSyncService.delectBooksyncConfirmByIsbn(bookSyncConfirmByISBN.getIsbn());
-                       bookSyncService.addBookSyncConfirm(newBookS);
-                   }else{
-                       flag=true;
-                       sb.append("未找到该isbn的图书---");
-                   }
+                        }
+                        book.setLogId(logId);
+                        bookSyncService.addBookSyncConfirm(book);
+                    }
+                    break;
+                case "update":
+                    for (BookSyncConfirm book : bookSyncConfirms) {
+                        if(StringUtil.isEmpty(book.getIsbn())){
+                            flag=true;
+                            sb.append("图书参数"+count+":的ISBN号不能为空---");
+                        }
+                        book.setLogId(logId);
+                        bookSyncService.addBookSyncConfirm(book);
+                    }
+                    break;
+                case "shelf":
+                    for (BookSyncConfirm book : bookSyncConfirms) {
+                        if(StringUtil.isEmpty(book.getIsbn())){
+                            flag=true;
+                            sb.append("图书参数"+count+":的ISBN号不能为空---");
+                        }
+                        BookSyncConfirm newBookS = new BookSyncConfirm();
+                        Book bookByIsbn = bookService.getBookByIsbn(book.getIsbn());
+                        BookSyncConfirm bookSyncConfirmByISBN = bookSyncService.getBookSyncConfirmByISBN(book.getIsbn());
+                        if(ObjectUtil.notNull(bookByIsbn)){
+                            BeanUtils.copyProperties(bookByIsbn, newBookS);
+                            newBookS.setIsOnSale(book.getIsOnSale());
+                            newBookS.setLogId(logId);
+                            newBookS.setId(null);
+                            bookSyncService.addBookSyncConfirm(newBookS);
+                            if(bookSyncConfirmByISBN!=null){
+                                bookSyncService.delectBooksyncConfirmByIsbn(bookSyncConfirmByISBN.getIsbn());
+                            }
+                        }
+                        if(ObjectUtil.notNull(bookSyncConfirmByISBN)){
+                            BeanUtils.copyProperties(bookSyncConfirmByISBN, newBookS);
+                            newBookS.setIsOnSale(book.getIsOnSale());
+                            newBookS.setLogId(logId);
+                            newBookS.setId(null);
+                            bookSyncService.delectBooksyncConfirmByIsbn(bookSyncConfirmByISBN.getIsbn());
+                            bookSyncService.addBookSyncConfirm(newBookS);
+                        }else{
+                            flag=true;
+                            sb.append("未找到该isbn的图书---");
+                        }
 
-               }
+                    }
 
-               break;
-           case"obtained":
-               for (BookSyncConfirm book : bookSyncConfirms) {
-                   BookSyncConfirm newBookS = new BookSyncConfirm();
-                   Book bookByIsbn = bookService.getBookByIsbn(book.getIsbn());
-                   BookSyncConfirm bookSyncConfirmByISBN = bookSyncService.getBookSyncConfirmByISBN(book.getIsbn());
-                   if(ObjectUtil.notNull(bookByIsbn)){
-                       BeanUtils.copyProperties(bookByIsbn, newBookS);
-                       newBookS.setIsOnSale(book.getIsOnSale());
-                       newBookS.setLogId(logId);
-                       newBookS.setId(null);
-                       bookSyncService.addBookSyncConfirm(newBookS);
-                       if(bookSyncConfirmByISBN!=null){
-                           bookSyncService.delectBooksyncConfirmByIsbn(bookSyncConfirmByISBN.getIsbn());
-                       }
+                    break;
+                case"obtained":
+                    for (BookSyncConfirm book : bookSyncConfirms) {
+                        BookSyncConfirm newBookS = new BookSyncConfirm();
+                        Book bookByIsbn = bookService.getBookByIsbn(book.getIsbn());
+                        BookSyncConfirm bookSyncConfirmByISBN = bookSyncService.getBookSyncConfirmByISBN(book.getIsbn());
+                        if(ObjectUtil.notNull(bookByIsbn)){
+                            BeanUtils.copyProperties(bookByIsbn, newBookS);
+                            newBookS.setIsOnSale(book.getIsOnSale());
+                            newBookS.setLogId(logId);
+                            newBookS.setId(null);
+                            bookSyncService.addBookSyncConfirm(newBookS);
+                            if(bookSyncConfirmByISBN!=null){
+                                bookSyncService.delectBooksyncConfirmByIsbn(bookSyncConfirmByISBN.getIsbn());
+                            }
 
-                   }
+                        }
 
-                   if(ObjectUtil.isNull(bookSyncConfirmByISBN)){
-                       sb.append("未找到该isbn的图书---");
-                   }else{
-                       BeanUtils.copyProperties(bookSyncConfirmByISBN, newBookS);
-                       newBookS.setIsOnSale(book.getIsOnSale());
-                       newBookS.setLogId(logId);
-                       newBookS.setId(null);
-                       bookSyncService.delectBooksyncConfirmByIsbn(bookSyncConfirmByISBN.getIsbn());
-                       bookSyncService.addBookSyncConfirm(newBookS);
+                        if(ObjectUtil.isNull(bookSyncConfirmByISBN)){
+                            sb.append("未找到该isbn的图书---");
+                        }else{
+                            BeanUtils.copyProperties(bookSyncConfirmByISBN, newBookS);
+                            newBookS.setIsOnSale(book.getIsOnSale());
+                            newBookS.setLogId(logId);
+                            newBookS.setId(null);
+                            bookSyncService.delectBooksyncConfirmByIsbn(bookSyncConfirmByISBN.getIsbn());
+                            bookSyncService.addBookSyncConfirm(newBookS);
 
-                   }
-               }
+                        }
+                    }
 
-               break;
-       }
+                    break;
+            }
+
+        }else{
+            try {
+            for (BookSyncConfirm book : bookSyncConfirms) {
+                if (StringUtil.isEmpty(book.getIsbn())) {
+                    flag = true;
+                    sb.append("图书参数" + count + ":的ISBN号不能为空---");
+                }
+                if (StringUtil.isEmpty(book.getBookname())) {
+                    flag = true;
+                    sb.append("图书参数" + count + ":的图书名称不能为空---");
+
+                }
+                book.setLogId(logId);
+                bookSyncService.addBookSyncConfirm(book);
+            }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
 
 
        /* List<BookSyncConfirm> books = JSONArray.parseArray(bookinfo.toString(), BookSyncConfirm.class);*/
