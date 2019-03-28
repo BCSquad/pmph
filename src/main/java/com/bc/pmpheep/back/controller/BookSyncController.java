@@ -71,7 +71,7 @@ public class BookSyncController {
     public ResponseBean syncBook(HttpServletRequest request, @RequestBody String json) {
         /*解析图书信息*/
         String appkey = request.getParameter("app_key");
-        request.getSession().setMaxInactiveInterval(1800);
+        request.getSession().setMaxInactiveInterval(1800*2);
         ResponseBean<Object> responseBean = new ResponseBean<>();
 
         String decrypt = decrypt(appkey);
