@@ -19,6 +19,8 @@ public interface CmsManualService {
 
     CmsManual addCmsManual(CmsManual cmsManual, String sessionId) throws CheckedServiceException;
 
+    Integer updateCmsManual(CmsManual cmsManual, String sessionId) throws CheckedServiceException;
+
     /**
      * 删除CmsManual 通过主键id
      * 
@@ -41,6 +43,9 @@ public interface CmsManualService {
      */
     PageResult<CmsManualVO> listCmsManual(PageParameter<CmsManualVO> pageParameter, String sessionId)
     throws CheckedServiceException;
+
+    CmsManual cmsManualById(Long id,String sessionId)
+            throws CheckedServiceException;
 
     /**
      * 

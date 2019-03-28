@@ -42,7 +42,7 @@ import java.security.SecureRandom;
 import java.util.*;
 
 @Controller
-@RequestMapping(value = "/aiptest")
+@RequestMapping(value = "/aip")
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class BookSyncController {
 
@@ -151,46 +151,41 @@ public class BookSyncController {
                        flag=true;
                        sb.append("图书参数"+count+":的ISBN号不能为空---");
                    }
-                   if(StringUtil.isEmpty(book.getBookname())){
-                       flag=true;
-                       sb.append("图书参数"+count+":的图书名称不能为空---");
-
-                   }
                    book.setLogId(logId);
                    bookSyncService.addBookSyncConfirm(book);
                }
                break;
            case "shelf":
-
                for (BookSyncConfirm book : bookSyncConfirms) {
                    if(StringUtil.isEmpty(book.getIsbn())){
                        flag=true;
                        sb.append("图书参数"+count+":的ISBN号不能为空---");
                    }
-                   if(StringUtil.isEmpty(book.getBookname())){
-                       flag=true;
-                       sb.append("图书参数"+count+":的图书名称不能为空---");
-                   }
                    BookSyncConfirm newBookS = new BookSyncConfirm();
                    Book bookByIsbn = bookService.getBookByIsbn(book.getIsbn());
-                   if(ObjectUtil.isNull(bookByIsbn)){
-                      BookSyncConfirm bookSyncConfirmByISBN = bookSyncService.getBookSyncConfirmByISBN(bookByIsbn.getIsbn());
-                      if(ObjectUtil.isNull(bookSyncConfirmByISBN)){
-                          sb.append("未找到该isbn的图书---");
-                      }else{
-                          newBookS.setIsOnSale(bookByIsbn.getIsOnSale());
-                          newBookS.setLogId(logId);
-                          BeanUtils.copyProperties(bookSyncConfirmByISBN, newBookS);
-                          bookSyncService.addBookSyncConfirm(newBookS);
-                      }
-
-                   }else{
-
-                       newBookS.setIsOnSale(bookByIsbn.getIsOnSale());
-                       newBookS.setLogId(logId);
+                   BookSyncConfirm bookSyncConfirmByISBN = bookSyncService.getBookSyncConfirmByISBN(book.getIsbn());
+                   if(ObjectUtil.notNull(bookByIsbn)){
                        BeanUtils.copyProperties(bookByIsbn, newBookS);
+                       newBookS.setIsOnSale(book.getIsOnSale());
+                       newBookS.setLogId(logId);
+                       newBookS.setId(null);
                        bookSyncService.addBookSyncConfirm(newBookS);
+                       if(bookSyncConfirmByISBN!=null){
+                           bookSyncService.delectBooksyncConfirmByIsbn(bookSyncConfirmByISBN.getIsbn());
+                       }
                    }
+                   if(ObjectUtil.notNull(bookSyncConfirmByISBN)){
+                       BeanUtils.copyProperties(bookSyncConfirmByISBN, newBookS);
+                       newBookS.setIsOnSale(book.getIsOnSale());
+                       newBookS.setLogId(logId);
+                       newBookS.setId(null);
+                       bookSyncService.delectBooksyncConfirmByIsbn(bookSyncConfirmByISBN.getIsbn());
+                       bookSyncService.addBookSyncConfirm(newBookS);
+                   }else{
+                       flag=true;
+                       sb.append("未找到该isbn的图书---");
+                   }
+
                }
 
                break;
@@ -198,23 +193,29 @@ public class BookSyncController {
                for (BookSyncConfirm book : bookSyncConfirms) {
                    BookSyncConfirm newBookS = new BookSyncConfirm();
                    Book bookByIsbn = bookService.getBookByIsbn(book.getIsbn());
-                   if(ObjectUtil.isNull(bookByIsbn)){
-                       BookSyncConfirm bookSyncConfirmByISBN = bookSyncService.getBookSyncConfirmByISBN(bookByIsbn.getIsbn());
-                       if(ObjectUtil.isNull(bookSyncConfirmByISBN)){
-                           sb.append("未找到该isbn的图书---");
-                       }else{
-                           newBookS.setIsOnSale(bookByIsbn.getIsOnSale());
-                           newBookS.setLogId(logId);
-                           BeanUtils.copyProperties(bookSyncConfirmByISBN, newBookS);
-                           bookSyncService.addBookSyncConfirm(newBookS);
+                   BookSyncConfirm bookSyncConfirmByISBN = bookSyncService.getBookSyncConfirmByISBN(book.getIsbn());
+                   if(ObjectUtil.notNull(bookByIsbn)){
+                       BeanUtils.copyProperties(bookByIsbn, newBookS);
+                       newBookS.setIsOnSale(book.getIsOnSale());
+                       newBookS.setLogId(logId);
+                       newBookS.setId(null);
+                       bookSyncService.addBookSyncConfirm(newBookS);
+                       if(bookSyncConfirmByISBN!=null){
+                           bookSyncService.delectBooksyncConfirmByIsbn(bookSyncConfirmByISBN.getIsbn());
                        }
 
-                   }else{
+                   }
 
-                       newBookS.setIsOnSale(bookByIsbn.getIsOnSale());
+                   if(ObjectUtil.isNull(bookSyncConfirmByISBN)){
+                       sb.append("未找到该isbn的图书---");
+                   }else{
+                       BeanUtils.copyProperties(bookSyncConfirmByISBN, newBookS);
+                       newBookS.setIsOnSale(book.getIsOnSale());
                        newBookS.setLogId(logId);
-                       BeanUtils.copyProperties(bookByIsbn, newBookS);
+                       newBookS.setId(null);
+                       bookSyncService.delectBooksyncConfirmByIsbn(bookSyncConfirmByISBN.getIsbn());
                        bookSyncService.addBookSyncConfirm(newBookS);
+
                    }
                }
 
@@ -222,35 +223,34 @@ public class BookSyncController {
        }
 
 
-
-
-
        /* List<BookSyncConfirm> books = JSONArray.parseArray(bookinfo.toString(), BookSyncConfirm.class);*/
 
-
-        List<PmphUser> pmphUserByRole = pmphUserService.getPmphUserByRole();
-        for (PmphUser p : pmphUserByRole) {
-
-            String msgContent = "商城同步了图书,请在图书同步管理中确认";// 退回
-            // 存入消息主体
-            Message message = new Message(msgContent);
-            message = messageService.add(message);
-            String msg_id = message.getId();
-            UserMessage userMessage = new UserMessage(msg_id, "系统消息", new Short("0"), 0L, new Short("0"),
-                    p.getId(), new Short("1"), null);
-            userMessageService.addUserMessage(userMessage);
-        }
-
-        /*解析图书为实体类*/
-        Map<String, Object> objectObjectHashMap = new HashMap<>();
-        objectObjectHashMap.put("appkey", appkey);
-        objectObjectHashMap.put("jsonInfo", jsonObject);
-
         if(flag){
+            responseBean.setCode(0);
             responseBean.setMsg(sb.toString());
+
+
+        }else{
+
+            List<PmphUser> pmphUserByRole = pmphUserService.getPmphUserByRole();
+            for (PmphUser p : pmphUserByRole) {
+
+                String msgContent = "商城同步了图书,请在图书同步管理中确认";// 退回
+                // 存入消息主体
+                Message message = new Message(msgContent);
+                message = messageService.add(message);
+                String msg_id = message.getId();
+                UserMessage userMessage = new UserMessage(msg_id, "系统消息", new Short("0"), 0L, new Short("0"),
+                        p.getId(), new Short("1"), null);
+                userMessageService.addUserMessage(userMessage);
+            }
+            Map<String, Object> objectObjectHashMap = new HashMap<>();
+            objectObjectHashMap.put("appkey", appkey);
+            objectObjectHashMap.put("jsonInfo", jsonObject);
         }
 
-        return new ResponseBean(responseBean);
+
+        return responseBean;
     }
 
 

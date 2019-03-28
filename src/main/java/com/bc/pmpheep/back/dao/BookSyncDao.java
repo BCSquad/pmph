@@ -20,6 +20,7 @@ public interface BookSyncDao {
     int addBookSynBak(BookSyncBak bookSyncBak);
     int updateBookSyncConfirm(BookSyncConfirm bookSyncConfirm);
     int delectBooksyncConfirm(Long id);
+    int delectBoolsyncConfirmByIsbn(String isbn);
     BookSyncBak getBookSyncBak(Long id);
     Integer updateBookSyncConfirmStatus(Map<String,Object> params);
     BookSyncLog getFullBookSyncLogBySyncTime();

@@ -38,7 +38,7 @@
     </sql>
     
     <select id="getBookCourseCountList" resultType="BookCourseCountVO" parameterType="PageParameter">
-        select b.bookname,b.isbn,t.orgCount ,t1.teacherCount,t2.courseCount,t3.studentCount
+        select b.id as bookId,b.bookname,b.isbn,t.orgCount ,t1.teacherCount,t2.courseCount,t3.studentCount
         from
         (
             select * from book
@@ -82,4 +82,166 @@
             </if>
         </where>
     </select>
+
+
+    <select id="getCourseByBookId" resultType="CourseVO" parameterType="PageParameter">
+
+        select c.*,wu.username as userName from course c  left join course_book  cb on c.id=cb.course_id
+        left join writer_user  wu on c.teacher_id=wu.id
+        where cb.book_id=#{parameter.bookId} and c.published=1
+
+        <if test="parameter.name != null and parameter.name!=''">
+            and c.name
+            like concat('%', #{parameter.name},'%')
+        </if>
+        order by c.gmt_create desc
+        <if test="start != null">
+            limit #{start},#{pageSize}
+        </if>
+
+    </select>
+
+    <select id="getCourseByBookIdCount" resultType="int" parameterType="PageParameter">
+
+        select count(c.id) from course c  left join course_book  cb on c.id=cb.course_id
+        where cb.book_id=#{parameter.bookId}  and c.published=1
+        <if test="parameter.name != null and parameter.name!=''">
+            and c.name
+            like concat('%', #{parameter.name},'%')
+        </if>
+
+
+    </select>
+
+    <select id="getOrgByBookId" resultType="Org" parameterType="PageParameter">
+        select o.* from course c  left join course_book  cb on c.id=cb.course_id
+        left join writer_user  wu on c.teacher_id=wu.id
+        left join org o on wu.org_id=o.id
+        where book_id=#{parameter.bookId}
+        <if test="parameter.orgName != null and parameter.orgName!=''">
+            and o.org_name
+            like concat('%', #{parameter.orgName},'%')
+        </if>
+
+        GROUP BY o.id
+        <if test="start != null">
+            limit #{start},#{pageSize}
+        </if>
+
+    </select>
+
+    <select id="getOrgByBookIdCount" resultType="int" parameterType="PageParameter">
+        select count(DISTINCT o.id) from course c  left join course_book  cb on c.id=cb.course_id
+        left join writer_user  wu on c.teacher_id=wu.id
+        left join org o on wu.org_id=o.id
+        where book_id=#{parameter.bookId}
+        <if test="parameter.orgName != null and parameter.orgName!=''">
+            and o.org_name
+            like concat('%', #{parameter.orgName},'%')
+        </if>
+    </select>
+
+    <select id="getTeacherUserByBookId" resultType="map" parameterType="PageParameter">
+
+            select * FROM
+            course c
+            LEFT JOIN course_book cb ON c.id = cb.course_id
+            LEFT JOIN writer_user wu ON c.teacher_id = wu.id
+            left join org o on wu.org_id =o.id
+            where book_id=#{parameter.bookId} and c.published=1
+            <if test="parameter.username != null and parameter.username!=''">
+                and wu.username
+                like concat('%', #{parameter.username},'%')
+            </if>
+            GROUP BY wu.id
+        <if test="start != null">
+            limit #{start},#{pageSize}
+        </if>
+    </select>
+    <select id="getTeacherUserByBookIdCount" resultType="int" parameterType="PageParameter">
+        select count(DISTINCT wu.id) from course c  left join course_book  cb on c.id=cb.course_id
+        left join writer_user  wu on c.teacher_id=wu.id
+        left join org o on wu.org_id=o.org_name
+        where book_id=#{parameter.bookId} and c.published=1
+        <if test="parameter.username != null and parameter.username!=''">
+            and wu.username
+            like concat('%', #{parameter.username},'%')
+        </if>
+    </select>
+
+
+    <select id="getStudentUserByBookId" resultType="map" parameterType="PageParameter">
+
+        select wu.* from
+        course c
+        LEFT JOIN course_book cb on c.id=cb.course_id
+        left join course_student cs on cs.course_id=c.id
+        left join course_book_student cbs on cbs.course_book_id=cb.id
+        left join writer_user wu on wu.id =cs.writer_user_id
+        where cb.book_id=#{parameter.bookId} and wu.id is not null  and c.published=1
+        <if test="parameter.username != null and parameter.username!=''">
+            and wu.username
+            like concat('%', #{parameter.username},'%')
+        </if>
+        GROUP BY wu.id
+        <if test="start != null">
+            limit #{start},#{pageSize}
+        </if>
+    </select>
+    <select id="getStudentUserByBookIdCount" resultType="int" parameterType="PageParameter">
+        select count(DISTINCT wu.id) from
+        course c
+        LEFT JOIN course_book cb on c.id=cb.course_id
+        left join course_student cs on cs.course_id=c.id
+        left join course_book_student cbs on cbs.course_book_id=cb.id
+        left join writer_user wu on wu.id =cs.writer_user_id
+        where cb.book_id=#{parameter.bookId} and wu.id is not null  and c.published=1
+
+        <if test="parameter.username != null and parameter.username!=''">
+            and wu.username
+            like concat('%', #{parameter.username},'%')
+        </if>
+    </select>
+
+
+    <select id="getStudentUserByBookIdCountByList" resultType="int" parameterType="PageParameter">
+        select count(DISTINCT wu.id) from
+        course c
+        LEFT JOIN course_book cb on c.id=cb.course_id
+        left join book b on b.id=cb.book_id
+        left join course_student cs on cs.course_id=c.id
+        left join course_book_student cbs on cbs.course_book_id=cb.id
+        left join writer_user wu on wu.id =cs.writer_user_id
+        left join org o on o.id=wu.org_id
+        where cb.book_id=#{parameter.bookId} and wu.id is not null  and c.published=1
+        <if test="parameter.orgName != null and parameter.orgName != '' ">
+            and o.org_name like concat('%',#{parameter.orgName},'%')
+        </if>
+        <if test="parameter.teacherName != null and parameter.teacherName != '' ">
+            and wu.realname like concat('%',#{parameter.teacherName},'%')
+        </if>
+        <if test="parameter.courseName != null and parameter.courseName != '' ">
+            and c.name like concat('%',#{parameter.courseName},'%')
+        </if>
+        <if test="parameter.startTime !=null and parameter.startTime !='' ">
+            and c.`gmt_create` &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d %H:%i:%s')
+        </if>
+        <if test="parameter.endTime !=null and parameter.endTime !='' ">
+            and c.`gmt_create` &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d %H:%i:%s')
+        </if>
+        <if test="parameter.orderPlaced != null ">
+            and c.order_placed = #{parameter.orderPlaced}
+        </if>
+        <if test="parameter.paid != null ">
+            and c.paid = #{parameter.paid}
+        </if>
+        <if test="parameter.bookname != null and parameter.bookname != '' ">
+            and b.bookname like concat('%',#{parameter.bookname},'%')
+        </if>
+        <if test="parameter.isbn != null and parameter.isbn != '' ">
+            and b.isbn like concat('%',#{parameter.isbn},'%')
+        </if>
+    </select>
+
+
 </mapper>

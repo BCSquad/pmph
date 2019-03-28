@@ -4,36 +4,36 @@
  */
 package com.bc.pmpheep.general.controller;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.bc.pmpheep.back.dao.*;
-import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.plugin.PageResult;
+import com.bc.pmpheep.back.po.*;
 import com.bc.pmpheep.back.service.*;
+import com.bc.pmpheep.back.util.*;
 import com.bc.pmpheep.back.vo.*;
 import com.bc.pmpheep.general.runnable.*;
 import com.bc.pmpheep.utils.*;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.wp.usermodel.Paragraph;
+import org.apache.poi.xwpf.usermodel.*;
 import org.apache.shiro.session.Session;
+import org.apache.xmlbeans.XmlCursor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -43,17 +43,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.bo.DecPositionBO;
 import com.bc.pmpheep.back.plugin.PageParameter;
-import com.bc.pmpheep.back.po.Material;
-import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.sessioncontext.SessionContext;
-import com.bc.pmpheep.back.util.CollectionUtil;
-import com.bc.pmpheep.back.util.Const;
-import com.bc.pmpheep.back.util.CookiesUtil;
-import com.bc.pmpheep.back.util.DateUtil;
-import com.bc.pmpheep.back.util.ObjectUtil;
-import com.bc.pmpheep.back.util.RandomUtil;
-import com.bc.pmpheep.back.util.SessionUtil;
-import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.general.bean.ZipDownload;
 import com.bc.pmpheep.general.service.FileService;
@@ -111,13 +101,16 @@ public class FileDownLoadController {
 	MaterialOrgService materialOrgService;
 	@Resource
 	MaterialSurveyDao materialSurveyDao;
-    @Autowired
-    BookUserCommentService bookUserCommentService;
 	@Autowired
-	CmsContentService           cmsContentService;
+	BookUserCommentService bookUserCommentService;
+	@Autowired
+	CmsContentService cmsContentService;
 
 	@Autowired
 	BookCorrectionService bookCorrectionService;
+	@Autowired
+	BookCourseService bookCourseService;
+
 	@Autowired
 	SurveyQuestionAnswerService surveyQuestionAnswerService;
 	@Autowired
@@ -128,6 +121,9 @@ public class FileDownLoadController {
 	OrgService orgService;
 	@Autowired
 	ExpertationDao expertationDao;
+
+	@Autowired
+	BookDao bookDao;
 	@Autowired
 	ExpertationService expertationService;
 	@Autowired
@@ -136,6 +132,8 @@ public class FileDownLoadController {
 	TopicService topicService;
 	@Autowired
 	BookCorrectTrackWordHelper bookCorrectTrackWordHelper;
+	@Autowired
+	BookChooseTrackWordHelper chooseTrackWordHelper;
 	@Autowired
 	BookCorrectWordHelper bookCorrectWordHelper;
 	@Autowired
@@ -164,14 +162,13 @@ public class FileDownLoadController {
 
 	@Autowired
 	private PmphGroupMemberService pmphGroupMemberService;
+	private PageResult courseByBookId;
 
 	/**
 	 * 普通文件下载
-	 * 
-	 * @param id
-	 *            文件在MongoDB中的id
-	 * @param response
-	 *            服务响应
+	 *
+	 * @param id       文件在MongoDB中的id
+	 * @param response 服务响应
 	 * @throws UnsupportedEncodingException
 	 */
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "普通文件下载")
@@ -199,7 +196,6 @@ public class FileDownLoadController {
 	}
 
 	/**
-	 * 
 	 * <pre>
 	 * 功能描述：普通文件下载(更新下载数)
 	 * 使用示范：
@@ -208,13 +204,13 @@ public class FileDownLoadController {
 	 * &#64;param id 文件在MongoDB中的id
 	 * &#64;param response 服务响应
 	 * </pre>
-	 * 
+	 *
 	 * @throws UnsupportedEncodingException
 	 */
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "普通文件下载(更新下载数)")
 	@RequestMapping(value = "/file/{type}/download/{id}", method = RequestMethod.GET)
 	public void download(@PathVariable("type") String type, @PathVariable("id") String id, HttpServletRequest request,
-			HttpServletResponse response) throws UnsupportedEncodingException {
+						 HttpServletResponse response) throws UnsupportedEncodingException {
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		GridFSDBFile file = fileService.get(id);
@@ -237,7 +233,7 @@ public class FileDownLoadController {
 			if (Const.MATERIAL_NOTE_TYPE.equals(type)) {// 教材备注
 				materialNoteAttachmentService.updateMaterialNoteAttachmentDownLoadCountsByAttachment(id);
 			}
-			if(Const.CLINICAL_DECISION.equals(type)){ //临床决断
+			if (Const.CLINICAL_DECISION.equals(type)) { //临床决断
 				productService.updateProductAttachmenDownLoadCountsByAttachment(id);
 			}
 		} catch (IOException ex) {
@@ -247,19 +243,16 @@ public class FileDownLoadController {
 
 	/**
 	 * 小组文件下载
-	 * 
-	 * @param id
-	 *            图片在MongoDB中的id
-	 * @param groupId
-	 *            小组id
-	 * @param response
-	 *            服务响应
+	 *
+	 * @param id       图片在MongoDB中的id
+	 * @param groupId  小组id
+	 * @param response 服务响应
 	 * @return ResponseBean对象
 	 */
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "小组文件下载")
 	@RequestMapping(value = "/groupfile/download/{id}", method = RequestMethod.GET)
 	public ResponseBean download(@PathVariable("id") String id, @RequestParam("groupId") long groupId,
-			HttpServletRequest request, HttpServletResponse response) {
+								 HttpServletRequest request, HttpServletResponse response) {
 		if (groupId < 1) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
 					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "小组id错误（负数或零）");
@@ -273,7 +266,7 @@ public class FileDownLoadController {
 					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "未找到对应文件");
 		}
 		String fileName = groupFileService.getFileName(id);
-				fileName =	returnFileName(request, fileName);
+		fileName = returnFileName(request, fileName);
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
 		try (OutputStream out = response.getOutputStream()) {
 			file.writeTo(out);
@@ -286,15 +279,13 @@ public class FileDownLoadController {
 					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
 		}
 	}
-	/**
-	 *
-	 * Description:导出反馈信息
-	 *
 
+	/**
+	 * Description:导出反馈信息
 	 */
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出反馈信息")
 	@RequestMapping(value = "/bookCorrection/exportfeedback", method = RequestMethod.GET)
-	public void exportfeedback( HttpServletRequest request, HttpServletResponse response,Boolean result) {
+	public void exportfeedback(HttpServletRequest request, HttpServletResponse response, Boolean result) {
 		//Boolean result = null;
 		List<BookFeedBack> list = bookCorrectionService.exportfeedback(result);
 		Workbook workbook = null;
@@ -307,7 +298,7 @@ public class FileDownLoadController {
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");
 		}
-		String fileName = returnFileName(request,"读者反馈.xls");
+		String fileName = returnFileName(request, "读者反馈.xls");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
@@ -324,17 +315,15 @@ public class FileDownLoadController {
 
 
 	/**
-	 *
 	 * Description:导出个人信息
-	 *
 	 */
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出个人信息")
 	@RequestMapping(value = "/users/writer/list/exportWriterUser", method = RequestMethod.GET)
 	public void exportfeedback(HttpServletRequest request, HttpServletResponse response, String name,
-							    Integer rank,  String orgName,  String handphone, String email) {
+							   Integer rank, String orgName, String handphone, String email) {
 		//Boolean result = null;
-		List<WriterUserManagerVO> list = writerUserService.exportWriterInfo( name,
-				 rank,   orgName,   handphone,  email);
+		List<WriterUserManagerVO> list = writerUserService.exportWriterInfo(name,
+				rank, orgName, handphone, email);
 		Workbook workbook = null;
 		if (list.size() == 0) {
 			list.add(new WriterUserManagerVO());
@@ -345,7 +334,7 @@ public class FileDownLoadController {
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");
 		}
-		String fileName = returnFileName(request,"个人用户信息.xls");
+		String fileName = returnFileName(request, "个人用户信息.xls");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
@@ -361,14 +350,12 @@ public class FileDownLoadController {
 	}
 
 	/**
-	 *
 	 * Description:导出小组成员
-	 *
 	 */
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出小组成员")
 	@RequestMapping(value = "/groupMembers/exportExcel", method = RequestMethod.GET)
 	public void groupMembersExportExcel(HttpServletRequest request, HttpServletResponse response, String name,
-							   Long groupId,String groupName) {
+										Long groupId, String groupName) {
 		//Boolean result = null;
 		PageParameter<PmphGroupMemberManagerVO> pageParameter = new PageParameter<>();
 		pageParameter.setStart(null);
@@ -389,7 +376,7 @@ public class FileDownLoadController {
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");
 		}
-		String fileName = returnFileName(request,groupName+"-小组成员信息.xls");
+		String fileName = returnFileName(request, groupName + "-小组成员信息.xls");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
@@ -405,13 +392,11 @@ public class FileDownLoadController {
 	}
 
 	/**
-	 *
 	 * Description:导出信息快报
-	 *
 	 */
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出信息快报")
 	@RequestMapping(value = "/infoExpress/exportExcel", method = RequestMethod.GET)
-	public void infoExpressExportExcel(HttpServletRequest request, HttpServletResponse response,CmsContentVO cmsContentVO) {
+	public void infoExpressExportExcel(HttpServletRequest request, HttpServletResponse response, CmsContentVO cmsContentVO) {
 		//Boolean result = null;
 		PageParameter<CmsContentVO> pageParameter = new PageParameter<>();
 		pageParameter.setStart(null);
@@ -427,12 +412,12 @@ public class FileDownLoadController {
 			list.add(new CmsContentVO());
 		}
 		try {
-			workbook = excelHelper.fromBusinessObjectList(list, "信息快报","0");
+			workbook = excelHelper.fromBusinessObjectList(list, "信息快报", "0");
 
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");
 		}
-		String fileName = returnFileName(request,"信息快报.xls");
+		String fileName = returnFileName(request, "信息快报.xls");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
@@ -448,13 +433,11 @@ public class FileDownLoadController {
 	}
 
 	/**
-	 *
 	 * Description:导出文章
-	 *
 	 */
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出文章")
 	@RequestMapping(value = "/articel/exportExcel", method = RequestMethod.GET)
-	public void articelExportExcel(HttpServletRequest request, HttpServletResponse response,CmsContentVO cmsContentVO) {
+	public void articelExportExcel(HttpServletRequest request, HttpServletResponse response, CmsContentVO cmsContentVO) {
 		//Boolean result = null;
 		PageParameter<CmsContentVO> pageParameter = new PageParameter<>();
 		pageParameter.setStart(null);
@@ -469,12 +452,12 @@ public class FileDownLoadController {
 			list.add(new CmsContentVO());
 		}
 		try {
-			workbook = excelHelper.fromBusinessObjectList(list, "文章","1");
+			workbook = excelHelper.fromBusinessObjectList(list, "文章", "1");
 
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");
 		}
-		String fileName = returnFileName(request,"文章.xls");
+		String fileName = returnFileName(request, "文章.xls");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
@@ -490,15 +473,12 @@ public class FileDownLoadController {
 	}
 
 	/**
-	 *
 	 * Description:导出审核管理员信息
-	 *
-
 	 */
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出审核管理员信息")
 	@RequestMapping(value = "/auth/exportOrgUser", method = RequestMethod.GET)
 	public void exportfeedback(HttpServletRequest request, HttpServletResponse response, String orgName,
-							     String realname,  Integer progress) {
+							   String realname, Integer progress) {
 		OrgVO orgVO = new OrgVO();
 		if (StringUtil.notEmpty(orgName)) {
 			orgVO.setOrgName(orgName.replaceAll(" ", ""));
@@ -518,7 +498,7 @@ public class FileDownLoadController {
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");
 		}
-		String fileName = returnFileName(request,"审核管理员信息.xls");
+		String fileName = returnFileName(request, "审核管理员信息.xls");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
@@ -534,10 +514,7 @@ public class FileDownLoadController {
 	}
 
 	/**
-	 *
 	 * Description:导出图书纠错审核信息
-	 *
-
 	 */
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出图书纠错审核")
 	@RequestMapping(value = "/bookCorrection/exportBookCheck", method = RequestMethod.GET)
@@ -553,7 +530,7 @@ public class FileDownLoadController {
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");
 		}
-		String fileName = returnFileName(request,"图书纠错审核信息-" + DateUtil.date2Str(new Date(),"yyyy-MM-dd-HH：mm：ss")+".xls");
+		String fileName = returnFileName(request, "图书纠错审核信息-" + DateUtil.date2Str(new Date(), "yyyy-MM-dd-HH：mm：ss") + ".xls");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
@@ -569,9 +546,7 @@ public class FileDownLoadController {
 	}
 
 	/**
-	 *
 	 * Description:导出图书纠错审核信息
-	 *
 	 */
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "文章评论")
 	@RequestMapping(value = "/article/exportComments", method = RequestMethod.GET)
@@ -602,8 +577,8 @@ public class FileDownLoadController {
 		}
 		pageParameter.setPageSize(100000000);
 		List<CmsContentVO> list = cmsContentDao.listCmsComment(pageParameter);
-		String[] authStatusName = new String[]{"待审核","未通过","已通过"};
-		for(CmsContentVO cmsContentVO1:list){
+		String[] authStatusName = new String[]{"待审核", "未通过", "已通过"};
+		for (CmsContentVO cmsContentVO1 : list) {
 			//cmsContentVO1.setAuthDateS(DateUtil.formatTimeStamp("yyyy-MM-dd",cmsContentVO1.getAuthDate()));
 			//cmsContentVO1.setGmtCreateS(DateUtil.formatTimeStamp("yyyy-MM-dd",cmsContentVO1.getGmtCreate()));
 			cmsContentVO1.setAuthStatusName(authStatusName[cmsContentVO1.getAuthStatus()]);
@@ -619,7 +594,7 @@ public class FileDownLoadController {
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");
 		}
-		String fileName = returnFileName(request,"文章评论.xls");
+		String fileName = returnFileName(request, "文章评论.xls");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
@@ -635,65 +610,60 @@ public class FileDownLoadController {
 	}
 
 
-    /**
-     *
-     * Description:导出图书评论
-     *
+	/**
+	 * Description:导出图书评论
+	 */
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出图书评论")
+	@RequestMapping(value = "/book/commet/exportExcel", method = RequestMethod.GET)
+	public void bookCommet(HttpServletRequest request, HttpServletResponse response, String name, Integer isAuth, Boolean isLong) {
 
-     */
-    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出图书评论")
-    @RequestMapping(value = "/book/commet/exportExcel", method = RequestMethod.GET)
-    public void bookCommet(HttpServletRequest request, HttpServletResponse response,  String name, Integer isAuth, Boolean isLong) {
+		PageParameter<BookUserCommentVO> pageParameter = new PageParameter<>();
+		BookUserCommentVO bookUserCommentVO = new BookUserCommentVO();
+		bookUserCommentVO.setIsAuth(isAuth);
+		bookUserCommentVO.setName(name.trim());// name.replaceAll(" ", "")去除空格
+		bookUserCommentVO.setIsLong(isLong);
+		pageParameter.setParameter(bookUserCommentVO);
+		pageParameter.setStart(null);
 
-        PageParameter<BookUserCommentVO> pageParameter = new PageParameter<>();
-        BookUserCommentVO bookUserCommentVO = new BookUserCommentVO();
-        bookUserCommentVO.setIsAuth(isAuth);
-        bookUserCommentVO.setName(name.trim());// name.replaceAll(" ", "")去除空格
-        bookUserCommentVO.setIsLong(isLong);
-        pageParameter.setParameter(bookUserCommentVO);
-        pageParameter.setStart(null);
+		List<BookUserCommentVO> list = bookUserCommentService.listBookUserComment(pageParameter).getRows();
+		String[] stateStrArr = new String[]{"待审核", "已通过", "不通过"};
+		for (BookUserCommentVO b : list) {
+			b.setState(stateStrArr[b.getIsAuth() != null && b.getIsAuth() >= 0 && b.getIsAuth() <= 2 ? b.getIsAuth() : 0]);
 
-        List<BookUserCommentVO> list = bookUserCommentService.listBookUserComment(pageParameter).getRows();
-        String[] stateStrArr = new String[]{"待审核","已通过","不通过"};
-        for (BookUserCommentVO b:list) {
-            b.setState(stateStrArr[b.getIsAuth()!=null&&b.getIsAuth()>=0&&b.getIsAuth()<=2?b.getIsAuth():0]);
+		}
 
-        }
+		Workbook workbook = null;
+		if (list.size() == 0) {
+			list.add(new BookUserCommentVO());
+		}
+		try {
+			workbook = excelHelper.fromBusinessObjectList(list, "图书评论");
 
-        Workbook workbook = null;
-        if (list.size() == 0) {
-            list.add(new BookUserCommentVO());
-        }
-        try {
-            workbook = excelHelper.fromBusinessObjectList(list, "图书评论");
-
-        } catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
-            logger.warn("数据表格化的时候失败");
-        }
-        String fileName = returnFileName(request,"图书评论.xls");
-        response.setCharacterEncoding("utf-8");
-        response.setContentType("application/force-download");
-        response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
-        try (OutputStream out = response.getOutputStream()) {
-            workbook.write(out);
-            out.flush();
-            out.close();
-        } catch (Exception e) {
-            logger.warn("文件下载时出现IO异常： {}", e.getMessage());
-            throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
-                    CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
-        }
-    }
+		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+			logger.warn("数据表格化的时候失败");
+		}
+		String fileName = returnFileName(request, "图书评论.xls");
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		try (OutputStream out = response.getOutputStream()) {
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常： {}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
 
 
 	/**
-	 *
 	 * Description:导出用户积分
-	 *
 	 */
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出用户积分")
 	@RequestMapping(value = "/userPoint/exportExcel", method = RequestMethod.GET)
-	public void userPointExportExcel(HttpServletRequest request, HttpServletResponse response,  String username, String realname,String sessionId) {
+	public void userPointExportExcel(HttpServletRequest request, HttpServletResponse response, String username, String realname, String sessionId) {
 
 		PageParameter<WriterPointVO> pageParameter = new PageParameter<>();
 		WriterPointVO writerPointVO = new WriterPointVO();
@@ -714,7 +684,7 @@ public class FileDownLoadController {
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");
 		}
-		String fileName = returnFileName(request,"用户积分.xls");
+		String fileName = returnFileName(request, "用户积分.xls");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
@@ -730,13 +700,11 @@ public class FileDownLoadController {
 	}
 
 	/**
-	 *
 	 * Description:导出选题申报
-	 *
 	 */
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出选题申报")
 	@RequestMapping(value = "/topic/{topicTag}/exportExcel", method = RequestMethod.GET)
-	public void topicExcel(HttpServletRequest request, HttpServletResponse response, @PathVariable(value = "topicTag")String topicTag,
+	public void topicExcel(HttpServletRequest request, HttpServletResponse response, @PathVariable(value = "topicTag") String topicTag,
 						   String bookname,
 						   String submitTime1, String submitTime2,
 						   String authProgress) {
@@ -745,54 +713,54 @@ public class FileDownLoadController {
 		pageParameter.setStart(null);
 		String fileName = "选题申报";
 		List list = new ArrayList<>();
-		if(StringUtil.isEmpty(topicTag)){
-			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC,CheckedExceptionResult.NULL_PARAM,"无此类型选题");
-		}else if("forwardDepart".equals(topicTag)){
+		if (StringUtil.isEmpty(topicTag)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM, "无此类型选题");
+		} else if ("forwardDepart".equals(topicTag)) {
 			fileName = fileName + "-转发部门";
 			TopicOPtsManagerVO topicOPtsManagerVO = new TopicOPtsManagerVO();
 			topicOPtsManagerVO.setBookname(bookname);
-			topicOPtsManagerVO.setSubmitTime1(StringUtil.isEmpty(submitTime1)?null:DateUtil.str2Timestam(submitTime1));
-			topicOPtsManagerVO.setSubmitTime2(StringUtil.isEmpty(submitTime2)?null:DateUtil.str2Timestam(submitTime2));
+			topicOPtsManagerVO.setSubmitTime1(StringUtil.isEmpty(submitTime1) ? null : DateUtil.str2Timestam(submitTime1));
+			topicOPtsManagerVO.setSubmitTime2(StringUtil.isEmpty(submitTime2) ? null : DateUtil.str2Timestam(submitTime2));
 			pageParameter.setParameter(topicOPtsManagerVO);
 			list = topicService.listOpts(sessionId, pageParameter).getRows();
 			if (list.size() == 0) {
 				list.add(new TopicOPtsManagerVO());
 			}
-		}else if("distributeEditor".equals(topicTag)){
+		} else if ("distributeEditor".equals(topicTag)) {
 			fileName = fileName + "-分配编辑";
 			TopicDirectorVO topicDirectorVO = new TopicDirectorVO();
 			topicDirectorVO.setBookname(bookname);
-			topicDirectorVO.setSubmitTime1(StringUtil.isEmpty(submitTime1)?null:DateUtil.str2Timestam(submitTime1));
-			topicDirectorVO.setSubmitTime2(StringUtil.isEmpty(submitTime2)?null:DateUtil.str2Timestam(submitTime2));
+			topicDirectorVO.setSubmitTime1(StringUtil.isEmpty(submitTime1) ? null : DateUtil.str2Timestam(submitTime1));
+			topicDirectorVO.setSubmitTime2(StringUtil.isEmpty(submitTime2) ? null : DateUtil.str2Timestam(submitTime2));
 			pageParameter.setParameter(topicDirectorVO);
 			list = topicService.listTopicDirectorVOs(sessionId, pageParameter).getRows();
 			if (list.size() == 0) {
 				list.add(new TopicDirectorVO());
 			}
-		}else if("acceptance".equals(topicTag)){
+		} else if ("acceptance".equals(topicTag)) {
 			fileName = fileName + "-受理";
 			TopicEditorVO topicEditorVO = new TopicEditorVO();
 			topicEditorVO.setBookname(bookname);
-			topicEditorVO.setSubmitTime1(StringUtil.isEmpty(submitTime1)?null:DateUtil.str2Timestam(submitTime1));
-			topicEditorVO.setSubmitTime2(StringUtil.isEmpty(submitTime2)?null:DateUtil.str2Timestam(submitTime2));
+			topicEditorVO.setSubmitTime1(StringUtil.isEmpty(submitTime1) ? null : DateUtil.str2Timestam(submitTime1));
+			topicEditorVO.setSubmitTime2(StringUtil.isEmpty(submitTime2) ? null : DateUtil.str2Timestam(submitTime2));
 			pageParameter.setParameter(topicEditorVO);
 			list = topicService.listTopicEditorVOs(sessionId, pageParameter).getRows();
 			if (list.size() == 0) {
 				list.add(new TopicEditorVO());
 			}
-		}else if("submitApply".equals(topicTag)||"completedApply".equals(topicTag)){
-			fileName = fileName + ("submitApply".equals(topicTag)?"-已提交的申报":"-已完成的申报");
+		} else if ("submitApply".equals(topicTag) || "completedApply".equals(topicTag)) {
+			fileName = fileName + ("submitApply".equals(topicTag) ? "-已提交的申报" : "-已完成的申报");
 			TopicDeclarationVO topicDeclarationVO = new TopicDeclarationVO();
 			topicDeclarationVO.setBookname(bookname);
-			topicDeclarationVO.setSubmitTime1(StringUtil.isEmpty(submitTime1)?null:DateUtil.str2Timestam(submitTime1));
-			topicDeclarationVO.setSubmitTime2(StringUtil.isEmpty(submitTime2)?null:DateUtil.str2Timestam(submitTime2));
+			topicDeclarationVO.setSubmitTime1(StringUtil.isEmpty(submitTime1) ? null : DateUtil.str2Timestam(submitTime1));
+			topicDeclarationVO.setSubmitTime2(StringUtil.isEmpty(submitTime2) ? null : DateUtil.str2Timestam(submitTime2));
 			pageParameter.setParameter(topicDeclarationVO);
 			String[] strs = authProgress.split(",");
 			List<Long> progress = new ArrayList<>();
 			for (String str : strs) {
 				progress.add(Long.valueOf(str));
 			}
-			list = topicService.listCheckTopic(progress, pageParameter,sessionId).getRows();
+			list = topicService.listCheckTopic(progress, pageParameter, sessionId).getRows();
 			if (list.size() == 0) {
 				list.add(new TopicDeclarationVO());
 			}
@@ -806,7 +774,7 @@ public class FileDownLoadController {
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");
 		}
-		fileName = returnFileName(request,fileName+".xls");
+		fileName = returnFileName(request, fileName + ".xls");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
@@ -822,22 +790,18 @@ public class FileDownLoadController {
 	}
 
 
-
 	/**
-	 *
 	 * Description:教材导出
-	 *
 	 */
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "教材导出")
 	@RequestMapping(value = "/material/exportExcel", method = RequestMethod.GET)
 	public void materialExportExcel(HttpServletRequest request, HttpServletResponse response
-									,MaterialListVO materialListVO) {
+			, MaterialListVO materialListVO) {
 		PageParameter<MaterialListVO> pageParameter = new PageParameter<>();
 		pageParameter.setParameter(materialListVO);
 		pageParameter.setStart(null);
 		String sessionId = CookiesUtil.getSessionId(request);
 		List<MaterialListVO> list = materialService.listMaterials(pageParameter, sessionId).getRows();
-
 
 
 		Workbook workbook = null;
@@ -850,7 +814,7 @@ public class FileDownLoadController {
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");
 		}
-		String fileName = returnFileName(request,"教材申报.xls");
+		String fileName = returnFileName(request, "教材申报.xls");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
@@ -867,29 +831,30 @@ public class FileDownLoadController {
 
 	/**
 	 * 导出临床决策-申报列表
+	 *
 	 * @param request
 	 * @param response
 	 * @param expertationVO 可接受两个模糊查询条件 username realname
 	 */
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出临床决策-申报列表")
 	@RequestMapping(value = "/expertation/exportExpertation", method = RequestMethod.GET)
-	public void exportExpertation(HttpServletRequest request, HttpServletResponse response,ExpertationVO expertationVO) {
+	public void exportExpertation(HttpServletRequest request, HttpServletResponse response, ExpertationVO expertationVO) {
 
 		PageParameter pageParameter = new PageParameter();
 		pageParameter.setStart(null);
 		pageParameter.setParameter(expertationVO);
 		List<ExpertationVO> list = expertationDao.queryExpertation(pageParameter);
 		List<Long> queryExpertationIdList = new ArrayList();
-		for(ExpertationVO ev:list){
+		for (ExpertationVO ev : list) {
 			queryExpertationIdList.add(ev.getId());
 		}
 		list = expertationService.getExpertationByIdList(queryExpertationIdList);
 		//String[] stateList = new String[]{"未提交","待学校审核","被学校退回","学校已审核","待学校审核","被出版社退回"};
 		ProductVO productVO = null;
-		if(!CollectionUtil.isEmpty(list) ){
+		if (!CollectionUtil.isEmpty(list)) {
 			productVO = productDao.queryProductById(list.get(0).getProduct_id());
 		}
-		for (int i= 0;i<list.size();i++) {
+		for (int i = 0; i < list.size(); i++) {
 			ExpertationVO e = list.get(i);
 			/*List<ProductType> clist = expertationDao.queryProductContentTypeListByExpertationId(e.getId());
 			List<ProductType> slist = expertationDao.queryProductSubjectTypeListByExpertationId(e.getId());
@@ -902,16 +867,16 @@ public class FileDownLoadController {
 
 			e.setExcelTypeStr();
 
-			e.setSchoolStauts((e.getOrg_id().intValue() != 0 && e.getOnline_progress().intValue()==1)?"待审核"
-					:((e.getOrg_id().intValue() != 0 && e.getOnline_progress().intValue()==3)?"审核通过":
-					(e.getOrg_id().intValue() !=0 && e.getPmphAudit().intValue()==0  && (e.getOnline_progress().intValue()  == 4||e.getOnline_progress().intValue() == 5)?
-							"出版社退回":(e.getOrg_id().intValue()==0?"":""))));
-			e.setPmphStauts((e.getPmphAudit().intValue()==1?"通过":
-					(e.getPmphAudit().intValue()==2)?"不通过":
-							((e.getOnline_progress().intValue()==2||e.getOnline_progress().intValue()==4||e.getOnline_progress().intValue()==5 )?"出版社退回"
-									:((e.getPmphAudit().intValue()==0  && e.getOrg_id().intValue() !=0  && (e.getOnline_progress().intValue() == 1||e.getOnline_progress().intValue() == 3 )) || (e.getOrg_id().intValue() ==0 && e.getPmphAudit().intValue()==0))?"待审核":""
+			e.setSchoolStauts((e.getOrg_id().intValue() != 0 && e.getOnline_progress().intValue() == 1) ? "待审核"
+					: ((e.getOrg_id().intValue() != 0 && e.getOnline_progress().intValue() == 3) ? "审核通过" :
+					(e.getOrg_id().intValue() != 0 && e.getPmphAudit().intValue() == 0 && (e.getOnline_progress().intValue() == 4 || e.getOnline_progress().intValue() == 5) ?
+							"出版社退回" : (e.getOrg_id().intValue() == 0 ? "" : ""))));
+			e.setPmphStauts((e.getPmphAudit().intValue() == 1 ? "通过" :
+					(e.getPmphAudit().intValue() == 2) ? "不通过" :
+							((e.getOnline_progress().intValue() == 2 || e.getOnline_progress().intValue() == 4 || e.getOnline_progress().intValue() == 5) ? "出版社退回"
+									: ((e.getPmphAudit().intValue() == 0 && e.getOrg_id().intValue() != 0 && (e.getOnline_progress().intValue() == 1 || e.getOnline_progress().intValue() == 3)) || (e.getOrg_id().intValue() == 0 && e.getPmphAudit().intValue() == 0)) ? "待审核" : ""
 							)));
-			e.setFinalResultStr(e.getFinalResult()?"已公布":"未公布");
+			e.setFinalResultStr(e.getFinalResult() ? "已公布" : "未公布");
 			//e.setOnlineProgressName((e.getOrg_id()==0&&e.getOnline_progress()==1)?"待出版社审核":(e.getOrg_id()==0&&e.getOnline_progress()==3?"出版社已审核":stateList[e.getOnline_progress()]));
 			//list.set(i,e);
 		}
@@ -922,14 +887,14 @@ public class FileDownLoadController {
 				list.add(new ExpertationVO());
 			}
 			//workbook = excelHelper.fromBusinessObjectList(list, expertationVO.getProduct_name()!=null?getExportName(expertationVO.getExpert_type()+""):"临床决策申报");
-			workbook = excelHelper.fromExpertationList(productVO,list, expertationVO.getProduct_name()!=null?expertationVO.getProduct_name():getExportName(expertationVO.getExpert_type()+""));
+			workbook = excelHelper.fromExpertationList(productVO, list, expertationVO.getProduct_name() != null ? expertationVO.getProduct_name() : getExportName(expertationVO.getExpert_type() + ""));
 
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");
 		}
-		String fileName = expertationVO.getProduct_name()!=null?expertationVO.getProduct_name():getExportName(expertationVO.getExpert_type()+"")+".xls";
+		String fileName = expertationVO.getProduct_name() != null ? expertationVO.getProduct_name() : getExportName(expertationVO.getExpert_type() + "") + ".xls";
 		try {
-			fileName=java.net.URLEncoder.encode(fileName, "UTF-8");
+			fileName = java.net.URLEncoder.encode(fileName, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
@@ -948,50 +913,50 @@ public class FileDownLoadController {
 		}
 	}
 
-	private String  getExportName(String expert_type){
+	private String getExportName(String expert_type) {
 		String returnName = "";
 		switch (expert_type) {
 
 			case "1":
-				returnName= "人卫临床助手专家申报表";
+				returnName = "人卫临床助手专家申报表";
 				break;
 			case "2":
-				returnName= "人卫用药助手专家申报表";
+				returnName = "人卫用药助手专家申报表";
 				break;
 			case "3":
-				returnName= "人卫中医助手专家申报表";
+				returnName = "人卫中医助手专家申报表";
 				break;
 
 			default:
-				returnName= "临床决策申报";;
+				returnName = "临床决策申报";
+				;
 		}
 
-		returnName += "-" + DateUtil.date2Str(new Date(),"yyyy-MM-dd-HH：mm：ss");
+		returnName += "-" + DateUtil.date2Str(new Date(), "yyyy-MM-dd-HH：mm：ss");
 
 		return returnName;
 
 	}
 
 	/**
-	 *
 	 * @param request
 	 * @param response
-	 * @param ptype  产品分类 必须 （1=临床/2=用药/3=中医）
-	 * @param type_name  （学科/内容）分类 名称模糊查询
+	 * @param ptype     产品分类 必须 （1=临床/2=用药/3=中医）
+	 * @param type_name （学科/内容）分类 名称模糊查询
 	 */
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出临床决策-申报结果统计列表")
 	@RequestMapping(value = "/expertation/exportExpertationCount", method = RequestMethod.GET)
 	public void exportExpertationCount(HttpServletRequest request, HttpServletResponse response,
 									   //int ttype,
-									   @RequestParam(value = "ptype" ,required = true) int ptype,
-									   @RequestParam(value = "productId" ,required = true) Long id,
-									   @RequestParam(value = "type_name",required = false)String type_name) {
-		Map<String,Object> paraMap = new HashMap<>();
+									   @RequestParam(value = "ptype", required = true) int ptype,
+									   @RequestParam(value = "productId", required = true) Long id,
+									   @RequestParam(value = "type_name", required = false) String type_name) {
+		Map<String, Object> paraMap = new HashMap<>();
 
 
-		paraMap.put("ptype",ptype);
-		paraMap.put("type_name",type_name);
-		paraMap.put("id",id);
+		paraMap.put("ptype", ptype);
+		paraMap.put("type_name", type_name);
+		paraMap.put("id", id);
 		PageParameter pageParameter = new PageParameter();
 		pageParameter.setStart(null);
 		pageParameter.setParameter(paraMap);
@@ -1003,19 +968,19 @@ public class FileDownLoadController {
 //			paraMap.put("product_id",0);
 //		}
 
-		Map<String,Object> sheetMap = new HashMap<>();
+		Map<String, Object> sheetMap = new HashMap<>();
 		List<ExpertationCountnessVO> list = new ArrayList<>();
 
 		//2.内容分类
-		paraMap.put("ttype",2);
+		paraMap.put("ttype", 2);
 		List<ExpertationCountnessVO> list2 = expertationDao.getCountListGroupByContentType(pageParameter);
 
 		//1.学科分类
-		paraMap.put("ttype",1);
+		paraMap.put("ttype", 1);
 		List<ExpertationCountnessVO> list1 = expertationDao.getCountListGroupBySubjectType(pageParameter);
 
 		//3.专业分类
-		paraMap.put("ttype",1);
+		paraMap.put("ttype", 1);
 		List<ExpertationCountnessVO> list3 = expertationDao.getCountListGroupByProfessionType(pageParameter);
 
 		if (list1.size() == 0) {
@@ -1028,9 +993,9 @@ public class FileDownLoadController {
 			list3.add(new ExpertationCountnessVO());
 		}
 
-		sheetMap.put("学科分类",list1);
-		sheetMap.put("内容分类",list2);
-		sheetMap.put("申报专业",list3);
+		sheetMap.put("学科分类", list1);
+		sheetMap.put("内容分类", list2);
+		sheetMap.put("申报专业", list3);
 
 		Workbook workbook = null;
 		if (list.size() == 0) {
@@ -1044,7 +1009,7 @@ public class FileDownLoadController {
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");
 		}
-		String fileName = returnFileName(request,"临床决策申报统计.xls");
+		String fileName = returnFileName(request, "临床决策申报统计.xls");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
@@ -1061,7 +1026,6 @@ public class FileDownLoadController {
 
 
 	/**
-	 * 
 	 * <pre>
 	 * 功能描述：处理不同浏览器下载文件乱码问题
 	 * 使用示范：
@@ -1093,46 +1057,33 @@ public class FileDownLoadController {
 	}
 
 	/**
-	 * 
-	 * 
 	 * 功能描述：申报表批量导出excel
-	 * 
-	 * @param materialId
-	 *            教材id
-	 * @param textBookids
-	 *            书籍id集合
-	 * @param realname
-	 *            条件查询的账号或者姓名
-	 * @param position
-	 *            条件查询 职务
-	 * @param title
-	 *            条件查询 职称
-	 * @param orgName
-	 *            条件查询 工作单位
-	 * @param unitName
-	 *            条件查询 申报单位
-	 * @param positionType
-	 *            条件查询 申报职位 ;null全部 1主编 2副主编 3编委
-	 * @param onlineProgress
-	 *            1待审核 3已经审核
-	 * @param offlineProgress
-	 *            0 未 2 收到
+	 *
+	 * @param materialId      教材id
+	 * @param textBookids     书籍id集合
+	 * @param realname        条件查询的账号或者姓名
+	 * @param position        条件查询 职务
+	 * @param title           条件查询 职称
+	 * @param orgName         条件查询 工作单位
+	 * @param unitName        条件查询 申报单位
+	 * @param positionType    条件查询 申报职位 ;null全部 1主编 2副主编 3编委
+	 * @param onlineProgress  1待审核 3已经审核
+	 * @param offlineProgress 0 未 2 收到
 	 * @param request
 	 * @param response
-	 * 
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "申报表批量导出excel")
 	@RequestMapping(value = "/excel/declaration", method = RequestMethod.GET)
 	public void declarationExcel(Long materialId, String textBookids, String realname, String position, String title,
-			String orgName, String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress,@RequestParam(value = "isSelect", required = false) Boolean isSelect,
-			HttpServletRequest request, HttpServletResponse response) {
+								 String orgName, String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress, @RequestParam(value = "isSelect", required = false) Boolean isSelect,
+								 HttpServletRequest request, HttpServletResponse response) {
 		Workbook workbook = null;
 		try {
 			workbook = excelHelper.fromDeclarationEtcBOList(materialService.getMaterialById(materialId),
 					materialExtensionService.getMaterialExtensionByMaterialId(materialId),
 					declarationService.declarationEtcBO(materialId, textBookids, realname, position, title, orgName,
-							unitName, positionType, onlineProgress, offlineProgress,isSelect),
+							unitName, positionType, onlineProgress, offlineProgress, isSelect),
 					"专家信息表");
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");
@@ -1173,45 +1124,32 @@ public class FileDownLoadController {
 	}
 
 	/**
-	 * 
-	 * 
 	 * 功能描述：申报表批量导出word
-	 * 
-	 * @param materialId
-	 *            教材id
-	 * @param textBookids
-	 *            书籍id集合
-	 * @param realname
-	 *            条件查询的账号或者姓名
-	 * @param position
-	 *            条件查询 职务
-	 * @param title
-	 *            条件查询 职称
-	 * @param orgName
-	 *            条件查询 工作单位
-	 * @param unitName
-	 *            条件查询 申报单位
-	 * @param positionType
-	 *            条件查询 申报职位 ;null全部 1主编 2副主编 3编委
-	 * @param onlineProgress
-	 *            1待审核 3已经审核
-	 * @param offlineProgress
-	 *            0 未 2 收到
+	 *
+	 * @param materialId      教材id
+	 * @param textBookids     书籍id集合
+	 * @param realname        条件查询的账号或者姓名
+	 * @param position        条件查询 职务
+	 * @param title           条件查询 职称
+	 * @param orgName         条件查询 工作单位
+	 * @param unitName        条件查询 申报单位
+	 * @param positionType    条件查询 申报职位 ;null全部 1主编 2副主编 3编委
+	 * @param onlineProgress  1待审核 3已经审核
+	 * @param offlineProgress 0 未 2 收到
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "申报表批量导出word")
 	@RequestMapping(value = "/word/declaration", method = RequestMethod.GET)
 	public String declarationWord(Long materialId, String textBookids, String realname, String position, String title,
-			String orgName, String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress,@RequestParam(value = "isSelect", required = false) Boolean isSelect) {
+								  String orgName, String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress, @RequestParam(value = "isSelect", required = false) Boolean isSelect) {
 		String id = String.valueOf(System.currentTimeMillis()).concat(String.valueOf(RandomUtil.getRandomNum()));
 		taskExecutor.execute(new SpringThread(zipHelper, wordHelper, materialService, textbookService,
-				declarationService,isSelect, materialId, textBookids, realname, position, title, orgName, unitName, positionType,
+				declarationService, isSelect, materialId, textBookids, realname, position, title, orgName, unitName, positionType,
 				onlineProgress, offlineProgress, id, materialExtensionService));
 		return '"' + id + '"';
 	}
 
 	/**
-	 *
 	 * @return
 	 */
 	@ResponseBody
@@ -1222,43 +1160,343 @@ public class FileDownLoadController {
 
 		//List<ExpertationVO> list = expertationDao.queryExpertation(pageParameter);
 		taskExecutor.execute(new ClicSpringThread(zipHelper, clicWordHelper,
-				expertationDao,expertationService, productService,expertationVO,id));
-
+				expertationDao, expertationService, productService, expertationVO, id));
 		return '"' + id + '"';
 	}
 
 	/**
-	 *
 	 * @return
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "选题申报表导出word")
 	@RequestMapping(value = "/word/topic/declaration", method = RequestMethod.GET)
-	public String topicDeclarationWord(Long topicId,HttpServletRequest request) {
+	public String topicDeclarationWord(Long topicId, HttpServletRequest request) {
 		String sessionId = CookiesUtil.getSessionId(request);
 		String id = String.valueOf(System.currentTimeMillis()).concat(String.valueOf(RandomUtil.getRandomNum()));
-		taskExecutor.execute(new TopicSpringThread(zipHelper, topicWordHelper,topicId,sessionId,
-				topicService,id));
+		taskExecutor.execute(new TopicSpringThread(zipHelper, topicWordHelper, topicId, sessionId,
+				topicService, id));
 		return '"' + id + '"';
 	}
 
 	/**
-	 *
 	 * @return
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "图书纠错跟踪导出word")
 	@RequestMapping(value = "/word/bookCorrection/listTrack", method = RequestMethod.GET)
 	public String bookCorrectionListTrackWord(HttpServletRequest request,
-											  @RequestParam(value = "bookname",   required = false)	String bookname ,
-											  @RequestParam(value = "isEditorReplied",     required = false)	Boolean isEditorReplied,
-											  @RequestParam(value = "result",     required = false)	Boolean result
-											  ) {
+											  @RequestParam(value = "bookname", required = false) String bookname,
+											  @RequestParam(value = "isEditorReplied", required = false) Boolean isEditorReplied,
+											  @RequestParam(value = "result", required = false) Boolean result
+	) {
 		String sessionId = CookiesUtil.getSessionId(request);
 		String id = String.valueOf(System.currentTimeMillis()).concat(String.valueOf(RandomUtil.getRandomNum()));
-		taskExecutor.execute(new BookCorrectTrackSpringThread(zipHelper, bookCorrectTrackWordHelper,bookCorrectionService,bookname,isEditorReplied,sessionId,result,request,
+		taskExecutor.execute(new BookCorrectTrackSpringThread(zipHelper, bookCorrectTrackWordHelper, bookCorrectionService, bookname, isEditorReplied, sessionId, result, request,
 				id));
 		return '"' + id + '"';
+	}
+
+	/**
+	 * @return
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "图书纠错跟踪导出word")
+	@RequestMapping(value = "/word/bookChoose/listTrack", method = RequestMethod.GET)
+	public void bookChooseListTrackWord(HttpServletRequest request,
+										  Long bookId,
+										  Boolean result,HttpServletResponse response
+	) {
+		String sessionId = CookiesUtil.getSessionId(request);
+		String id = String.valueOf(System.currentTimeMillis()).concat(String.valueOf(RandomUtil.getRandomNum()));
+
+
+		String src = this.getClass().getResource("/").getPath();
+		src = src.substring(1);
+		if (!src.endsWith(File.separator)) {
+			src += File.separator;
+		}
+		ZipDownload zipDownload = new ZipDownload();
+		String fname = FileUtil.replaceIllegalCharForFileName("图书同步");
+		String dest = src + id;
+
+		Book book = new Book();
+		//业务逻辑获取数据
+		try {
+			book = bookDao.getBookById(bookId);
+
+		} catch (CheckedServiceException | IllegalArgumentException e) {
+			logger.warn("获取源数据的时候失败");
+		}
+		try {
+
+
+			if (!ObjectUtils.isEmpty(book)) {
+				StringBuilder sb = new StringBuilder();
+				sb.append(src);
+				sb.append(id);
+				sb.append(File.separator);
+				sb.append(fname);
+				sb.append(File.separator);
+
+				String filePath = sb.toString();
+				HashMap<String, XWPFDocument> map = fromDeclarationEtcBOList(book.getBookname(), book);
+				if (createPath(filePath)) {
+					if (!filePath.endsWith(File.separator)) {
+						filePath = filePath.concat(File.separator);
+					}
+					File file;
+					for (Map.Entry<String, XWPFDocument> entry : map.entrySet()) {
+						file = new File(filePath.concat(FileUtil.replaceIllegalCharForFileName(entry.getKey())));
+
+						response.setCharacterEncoding("utf-8");
+						response.setContentType("application/force-download");
+
+						String fileName = returnFileName(request, file.getName());
+						fileName = fileName.replaceAll(" ", "");
+						response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+						try {
+
+							FileOutputStream out = new FileOutputStream(file);
+							entry.getValue().write(out);
+							out.flush();
+							response.flushBuffer();
+							out.close();
+							FileInputStream fileInputStream = new FileInputStream(file);
+
+							ServletOutputStream outputStream = response.getOutputStream();
+							int len = 0;
+							byte buf[] = new byte[1024];//缓存作用
+
+							while( (len = fileInputStream.read(buf)) > 0 ) //切忌这后面不能加 分号 ”;“
+							{
+								outputStream.write(buf, 0, len);//向客户端输出，实际是把数据存放在response中，然后web服务器再去response中读取
+							}
+							outputStream.flush();
+							outputStream.close();
+
+
+						} catch (IOException ex) {
+							logger.error("Word导出错误：{}", ex.getMessage());
+							throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION,
+									CheckedExceptionResult.FILE_CREATION_FAILED, "未能创建Word文件");
+						}
+					}
+				} else {
+					throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION,
+							CheckedExceptionResult.DIRECTORY_CREATION_FAILED, "未能创建目录");
+				}
+
+
+			}
+
+
+		} catch (Exception e) {
+			logger.warn("数据文档化的时候失败");
+			e.printStackTrace();
+		}
+
+	}
+
+
+
+	private HashMap<String,XWPFDocument> fromDeclarationEtcBOList(String word_name, Book bo) {
+		InputStream is;
+		XWPFDocument document;
+		String path = this.getClass().getClassLoader().getResource("BookChooseTrackTemplate.docx").getPath();
+		HashMap<String, XWPFDocument> map = new HashMap<>(1);
+		int decSequese =0;
+
+		Object object = (Object)bo;
+
+		try {
+			is = new FileInputStream(path);
+			document = new XWPFDocument(is);
+		} catch (IOException ex) {
+			logger.error("读取Word模板文件'ClicResumeTemplate.docx'时出现错误：{}", ex.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.CLINICAL_DECISION,
+					CheckedExceptionResult.FILE_CREATION_FAILED, "未找到模板文件");
+		}
+		if (StringUtil.notEmpty(word_name)) {
+			List<XWPFRun> runs = document.getParagraphs().get(0).getRuns();
+			runs.get(0).setText(word_name.concat("选用统计"), 0);
+		}
+		List<XWPFParagraph> xwpfParagraphs = document.getParagraphs();
+		List<XWPFTable> tables = document.getTables();
+		String filename = generateFileName(bo,(++decSequese)+".");
+		XWPFTable xwpfTable = tables.get(0);
+		xwpfTable.getRow(0).getTableCells().get(1).setText(bo.getBookname());
+		xwpfTable.getRow(0).getCell(3).setText(bo.getIsbn()==null?"":bo.getIsbn());
+		xwpfTable.getRow(0).getCell(5).setText(bo.getRevision()==null?"":bo.getRevision().toString());
+		PageParameter<CourseVO> courseParams = new PageParameter<>();
+		CourseVO courseVO = new CourseVO();
+		courseVO.setBookId(bo.getId());
+
+		courseParams.setStart(null);
+		courseParams.setParameter(courseVO);
+		PageResult courseByBookId = bookCourseService.getCourseByBookId(courseParams);
+
+		PageParameter<Map<String,Object>> orgparams = new PageParameter<>();
+		HashMap<String, Object> params = new HashMap<>();
+		params.put("bookId", bo.getId());
+		orgparams.setStart(null);
+		orgparams.setParameter(params);
+		PageResult orgByBookId = bookCourseService.getOrgByBookId(orgparams);
+		List<Org> orgRows=orgByBookId.getRows();
+		List<CourseVO> courseRows = courseByBookId.getRows();
+
+		addOrRemoveRow(xwpfTable,orgRows.size()-1,5);
+		addOrRemoveRow(xwpfTable,courseRows.size()-1,3);
+		if(orgRows!=null){
+			int count=4+courseRows.size()-1;
+			for(int i=0;i<orgRows.size();i++){
+				Org org= orgRows.get(i);
+				String orgname = org.getOrgName();
+				XWPFTableCell cell = xwpfTable.getRow(count).getCell(1);
+				XWPFParagraph xwpfParagraph = cell.addParagraph();
+				xwpfParagraph.setAlignment(ParagraphAlignment.CENTER);
+				XWPFRun run = xwpfParagraph.createRun();
+				run.setFontSize(11);
+				run.setFontFamily("宋体");
+				run.setBold(false);
+				run.setText(orgname);
+				count++;
+			}
+		}
+		 if(courseRows!=null){
+		 	int count=2;
+			 for(int i=0;i<courseRows.size();i++){
+                 CourseVO courseVO1 = courseRows.get(i);
+                 String name = courseVO1.getName();
+                 String note = courseVO1.getNote();
+				 String userName = courseVO1.getUserName();
+				 Timestamp gmtCreate = courseVO1.getGmtCreate();
+				 XWPFParagraph xwpfParagraph = xwpfTable.getRow(count).getCell(1).addParagraph();
+				 xwpfParagraph.setAlignment(ParagraphAlignment.CENTER);
+				 XWPFRun run = xwpfParagraph.createRun();
+				 run.setFontSize(11);
+				 run.setFontFamily("宋体");
+				 run.setBold(false);
+				 run.setText(name);
+
+
+				 XWPFParagraph xwpfParagraph1 = xwpfTable.getRow(count).getCell(2).addParagraph();
+				 xwpfParagraph1.setAlignment(ParagraphAlignment.CENTER);
+				 XWPFRun run1 = xwpfParagraph1.createRun();
+				 run1.setFontSize(11);
+				 run1.setFontFamily("宋体");
+				 run1.setBold(false);
+				 run1.setText(note);
+
+				 XWPFParagraph xwpfParagraph2 = xwpfTable.getRow(count).getCell(3).addParagraph();
+				 xwpfParagraph2.setAlignment(ParagraphAlignment.CENTER);
+				 XWPFRun run2 = xwpfParagraph2.createRun();
+				 run2.setFontSize(11);
+				 run2.setFontFamily("宋体");
+				 run2.setBold(false);
+				 run2.setText(userName);
+
+				 XWPFParagraph xwpfParagraph3 = xwpfTable.getRow(count).getCell(4).addParagraph();
+				 xwpfParagraph3.setAlignment(ParagraphAlignment.CENTER);
+				 XWPFRun run3 = xwpfParagraph3.createRun();
+				 run3.setFontSize(11);
+				 run3.setFontFamily("宋体");
+				 run3.setBold(false);
+				 run3.setText(gmtCreate.toLocaleString());
+				 count++;
+			 }
+		 }
+
+
+
+
+
+
+
+		/*	map.put(filename, removeEmptyTables(document, filter));*/
+		map.put(filename, document);
+
+
+		return map;
+	}
+
+
+	private void addOrRemoveRow(XWPFTable table, int add,int fromRow)
+
+	{
+		XWPFTableRow row = table.getRow(fromRow-1);
+		if(add>0)
+		{
+			while(add>0)
+			{
+				copyPro(row,table.insertNewTableRow(fromRow));
+				add--;
+			}
+		}
+		else
+		{
+			while(add<0)
+			{
+				table.removeRow(fromRow-1);
+				add++;
+			}
+		}
+	}
+
+	private void copyPro(XWPFTableRow sourceRow,XWPFTableRow targetRow)
+	{
+//复制行属性
+		targetRow.getCtRow().setTrPr(sourceRow.getCtRow().getTrPr());
+		List<XWPFTableCell> cellList = sourceRow.getTableCells();
+		if(null==cellList)
+		{
+			return ;
+		}
+//添加列、复制列以及列中段落属性
+		XWPFTableCell targetCell = null;
+		for(XWPFTableCell sourceCell:cellList)
+		{
+			targetCell = targetRow.addNewTableCell();
+//列属性
+			targetCell.getCTTc().setTcPr(sourceCell.getCTTc().getTcPr());
+//段落属性
+			targetCell.getParagraphs().get(0).getCTP().setPPr(sourceCell.getParagraphs().get(0).getCTP().getPPr());
+		}
+	}
+
+
+
+	private String generateFileName(Book bo ,String decSequese) throws CheckedServiceException {
+		String realname = bo.getBookname()
+				+(StringUtil.notEmpty(bo.getBookname())?"-"+bo.getBookname():"")
+				+("选用统计");
+		String filename;
+		if (StringUtil.isEmpty(realname)) {
+			realname = "未署名";
+		}
+		StringBuilder sb = new StringBuilder();
+		sb.append(decSequese);
+		sb.append(realname);
+		sb.append(".docx");
+		filename = sb.toString();
+		return filename;
+	}
+
+	/**
+	 * 创建文件路径
+	 * @param filePath 文件的路径
+	 * @return
+	 */
+	private boolean createPath(String filePath) {
+		File destDir;
+		if (filePath.endsWith(File.separator)) {
+			destDir = new File(filePath);// 给出的是路径时
+		} else {
+			destDir = new File(filePath.substring(0, filePath.lastIndexOf(File.separator)));
+		}
+		if (!destDir.exists()) {
+			return destDir.mkdirs();
+		}
+		return true;
 	}
 
 	/**

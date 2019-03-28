@@ -16,6 +16,15 @@ public interface CmsManualDao {
     Integer addCmsManual(CmsManual cmsManual);
 
     /**
+     * 新增一个CmsManual
+     *
+     * @param cmsManual 实体对象
+     * @return 影响行数
+     */
+    Integer updateCmsManual(CmsManual cmsManual);
+
+
+    /**
      * 删除CmsManual 通过主键id
      * 
      * @param id
@@ -34,6 +43,13 @@ public interface CmsManualDao {
      * </pre>
      */
     List<CmsManualVO> listCmsManual(PageParameter<CmsManualVO> pageParameter);
+
+
+
+    /**
+     * </pre>
+     */
+    CmsManual cmsManualById(Long id);
 
     /**
      * 

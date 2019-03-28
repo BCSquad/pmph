@@ -251,7 +251,7 @@
         select COUNT(bsc.id)
         from book_sync_confirm bsc
         left join book_sync_log bsl on bsl.id=bsc.log_id
-        where 1=1  and bsc.confirm_status =#{confirm} and bsl.increment=1
+        where 1=1  and bsc.confirm_status =#{confirm} and bsl.increment=1 and bsc.is_deleted=0
         <if test="bookName != null">
             and bsc.bookname like #{bookName}
         </if>
@@ -276,7 +276,7 @@
     <select id="queryBookSyncConfirmList" resultType="BookSyncConfirmVO" parameterType="map">
         select bsc.*,bsl.synchronization_type,bsl.sync_gmt,bsl.increment from book_sync_confirm bsc
         left join book_sync_log bsl on bsl.id=bsc.log_id
-        where 1=1 and bsc.confirm_status =#{confirm} and bsl.increment=1
+        where 1=1 and bsc.confirm_status =#{confirm} and bsl.increment=1   and bsc.is_deleted=0po
 
         <if test="bookName != null">
             and bsc.bookname like #{bookName}
@@ -293,6 +293,8 @@
             #{endTime}
         </if>
             and bsc.is_deleted =0 and bsl.increment=1
+            order by bsl.sync_gmt desc
+
         limit #{start} ,#{pageSize}
 
     </select>
@@ -304,7 +306,7 @@
     </select>
 
     <select id="getBookSyncConfirmByISBN" parameterType="String" resultType="BookSyncConfirm">
-        select * from book_sync_confirm where isbn=#{isbn}
+        select * from book_sync_confirm  bsc left join book_sync_log bsl on bsl.id=bsc.log_id   where isbn=#{isbn}  order by bsl.sync_gmt desc limit 1
 
 
     </select>
@@ -728,6 +730,8 @@
         update book_sync_confirm set is_deleted=1 where id=#{id}
     </update>
 
-
+    <update id="delectBoolsyncConfirmByIsbn" parameterType="string">
+        update  book_sync_confirm bsc left join book_sync_log bsl on bsc.log_id=bsl.id set bsc.is_deleted=1  where bsc.isbn=#{isbn} and  bsl.synchronization_type &lt;&gt;'add'  and bsl.synchronization_type &lt;&gt; 'update'
+    </update>
 
 </mapper>

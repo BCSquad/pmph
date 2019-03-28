@@ -21,6 +21,7 @@ import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.mongodb.gridfs.GridFSDBFile;
+import org.springframework.util.ObjectUtils;
 
 @Service
 public class CmsManualServiceImpl implements CmsManualService {
@@ -84,6 +85,21 @@ public class CmsManualServiceImpl implements CmsManualService {
         this.addCmsManual(cmsManual);
         return cmsManual;
     }
+    @Override
+    public Integer updateCmsManual(CmsManual cmsManual, String sessionId)
+            throws CheckedServiceException {
+        // 获取当前登陆用户
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+        if (ObjectUtil.isNull(pmphUser) || ObjectUtil.isNull(pmphUser.getId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                    CheckedExceptionResult.NULL_PARAM, "用户为空");
+        }
+        cmsManual.setUserId(pmphUser.getId());
+        Integer integer = cmsManualDao.updateCmsManual(cmsManual);
+
+
+        return integer;
+    }
 
     @Override
     public PageResult<CmsManualVO> listCmsManual(PageParameter<CmsManualVO> pageParameter,
@@ -105,6 +121,20 @@ public class CmsManualServiceImpl implements CmsManualService {
             pageResult.setRows(cmsManualVOs);
         }
         return pageResult;
+    }
+    @Override
+    public CmsManual cmsManualById(Long id,String sessionId) throws CheckedServiceException {
+        // 获取当前登陆用户
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+        if (ObjectUtil.isNull(pmphUser) || ObjectUtil.isNull(pmphUser.getId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                    CheckedExceptionResult.NULL_PARAM, "用户为空");
+        }
+
+        // 包含数据总条数的数据集
+        CmsManual cmsManualVO = cmsManualDao.cmsManualById(id);
+
+        return cmsManualVO;
     }
 
     @Override

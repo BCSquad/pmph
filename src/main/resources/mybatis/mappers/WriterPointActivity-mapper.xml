@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.WriterPointActivityDao">
+    <sql id="key">
+        <!-- 去掉最后一个, -->
+        <trim suffixOverrides=",">
+            <if test="name != null">
+                name,
+            </if>
+            <if test="ruleId != null">
+                rule_id,
+            </if>
+            <if test="startGmt != null">
+                start_gmt,
+            </if>
+            <if test=" endGmt != null">
+                end_gmt,
+            </if>
+            <if test=" exchangePoint != null">
+                exchange_point,
+            </if>
+            <if test=" note != null">
+                note,
+            </if>
+            <if test=" gmtUpdate != null">
+                gmt_update,
+            </if>
+            <if test=" status != null">
+                status,
+            </if>
+        </trim>
+    </sql>
+    <!-- sql片段对应?,id属性值任意 -->
+    <sql id="value">
+        <!-- 去掉最后一个, -->
+        <trim suffixOverrides=",">
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="ruleId != null">
+                #{ruleId},
+            </if>
+            <if test="startGmt != null">
+                #{startGmt},
+            </if>
+            <if test=" endGmt != null">
+                #{endGmt},
+            </if>
+            <if test=" exchangePoint != null">
+                #{exchangePoint},
+            </if>
+            <if test=" note != null">
+                #{note},
+            </if>
+            <if test=" gmtUpdate != null">
+                #{gmtUpdate},
+            </if>
+            <if test=" status != null">
+                #{status},
+            </if>
+        </trim>
+    </sql>
+    <!-- 新增 -->
+    <insert id="insert" parameterType="WriterPointActivity">
+        <selectKey resultType="java.lang.Long" order="AFTER"
+                   keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into writer_point_activity (
+        <include refid="key"/>
+        )
+        values(
+        <include refid="value"/>
+        );
+    </insert>
+
+
+    <!-- 修改 -->
+    <update id="updateById" parameterType="WriterPointActivity">
+        update writer_point_activity wp
+        <set>
+            <if test="name != null">
+                wp.name=#{name},
+            </if>
+
+            <if test="ruleId != null">
+                wp.rule_id=#{ruleId},
+            </if>
+            <if test="startGmt != null">
+                wp.start_gmt=#{startGmt},
+            </if>
+            <if test=" endGmt != null">
+                wp.end_gmt=#{endGmt},
+            </if>
+            <if test=" exchangePoint != null">
+                wp.exchange_point=#{exchangePoint},
+            </if>
+            <if test=" note != null">
+                wp.note=#{note},
+            </if>
+            <if test=" gmtUpdate != null">
+                wp.gmt_update=#{gmtUpdate},
+            </if>
+            <if test=" deleted != null">
+                wp.deleted=#{deleted},
+            </if>
+            <if test=" status != null">
+                wp.status=#{status},
+            </if>
+
+        </set>
+        where
+        wp.id=#{id};
+    </update>
+
+    <!-- 查询 -->
+    <select id="selectById" parameterType="java.lang.Long"
+            resultType="WriterPointActivity">
+		select * from writer_point_activity where id=#{id};
+	</select>
+
+    <!-- 用户积分表分页列表（同时查询分页数据和总条数） -->
+    <select id="queryList" parameterType="PageParameter" resultType="WriterPointActivityVO">
+        select wpa.*,wpr.rule_name,wpr.exchange_point as originalExchangePoint,wpr.point from writer_point_activity wpa left join writer_point_rule wpr on wpr.id=wpa.rule_id
+
+        where deleted=0
+
+       <!-- <if test="parameter !=null ">
+            <if test="parameter.name != null and parameter.name != ''">
+                and 'name'=#{parameter.name}
+            </if>
+
+            <if test="parameter.startGmt != null">
+                and start_gmt=#{parameter.startGmt}
+            </if>
+
+            <if test=" parameter.startGmt != null">
+                and start_gmt &gt; #{parameter.startGmt}
+            </if>
+
+            <if test="parameter.endGmt != null">
+                and end_gmt &lt; #{parameter.endGmt}
+            </if>
+            <if test=" parameter.status != null">
+                and status=#{parameter.status}
+            </if>
+
+            <if test=" parameter.status != null">
+                and status=#{parameter.status}
+            </if>
+
+            <if test="start !=null">
+                limit #{start},#{pageSize}
+            </if>
+        </if>
+-->
+    </select>
+
+    <!-- 用户积分表分页列表（同时查询分页数据和总条数） -->
+    <select id="queryListCount" parameterType="PageParameter" resultType="int">
+        select count(id) from writer_point_activity where deleted=0
+        <!--<if test="parameter !=null ">
+            <if test="parameter.name != null and parameter.name != ''">
+                and 'name'=#{parameter.name}
+            </if>
+
+            <if test="parameter.startGmt != null">
+                and start_gmt=#{parameter.startGmt}
+            </if>
+
+            <if test=" parameter.startGmt != null">
+                and start_gmt &gt; #{parameter.startGmt}
+            </if>
+
+            <if test="parameter.endGmt != null">
+                and end_gmt &lt; #{parameter.endGmt}
+            </if>
+            <if test=" parameter.status != null">
+                and status=#{parameter.status}
+            </if>
+
+            <if test=" parameter.status != null">
+                and status=#{parameter.status}
+            </if>
+        </if>-->
+    </select>
+
+</mapper>
