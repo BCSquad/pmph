@@ -738,10 +738,11 @@ public class BookSyncController {
             return responseBean;
 
         }
+        int bookcount=0;
 
         for(BookSyncLog bookSyncLog:bookSyncLogs) {
-
-
+            flag = bookSyncLogs.size()/ 100;
+            count++;
             List<BookSyncConfirm> bookSyncConfirms = bookSyncService.getBookConfirmsByLogId(bookSyncLog.getId());
 
             if (ObjectUtil.isNull(bookSyncConfirms)) {
@@ -752,10 +753,11 @@ public class BookSyncController {
             }
 
 
-            flag = bookSyncConfirms.size() / 100;
+
 
             for (BookSyncConfirm bookSyncConfirm : bookSyncConfirms) {
-                count++;
+                bookcount++;
+
 
                 // 获取图书详情
                 BookDetail bookDetail = new BookDetail();
@@ -790,9 +792,18 @@ public class BookSyncController {
 
                     bookService.updateBook(book);
                     // 更新图书详情
-                    bookDetail.setBookId(book.getId());
-                    bookDetail.setDetail(bookSyncConfirm.getContent());
-                    bookService.updateBookDetail(bookDetail);
+                    if(bookDetail.getId()==null){
+                        bookDetail.setBookId(book.getId());
+                        bookDetail.setDetail(bookSyncConfirm.getContent());
+                        bookService.addBookDetail(bookDetail);
+                    }else{
+                        bookDetail.setBookId(book.getId());
+                        bookDetail.setDetail(bookSyncConfirm.getContent());
+                        bookService.updateBookDetail(bookDetail);
+                    }
+
+
+
 
                     BookSyncBak bookSyncBak = bookSyncService.getBookSyncBak(bookSyncConfirm.getId());
 
@@ -827,7 +838,15 @@ public class BookSyncController {
                     // 同步书籍到本地
                     Book add = bookService.add(newBook);
                     // 同步图书详情到本地
-                    BookDetail newBookDetail = new BookDetail(add.getId(), bookSyncConfirm.getContent());
+                    BookDetail newBookDetail=new BookDetail();
+                    if(bookDetail.getId()==null){
+                        newBookDetail = new BookDetail(add.getId(), bookSyncConfirm.getContent());
+                    }else{
+                        bookDetail.setBookId(add.getId());
+                        bookDetail.setDetail(bookSyncConfirm.getContent());
+                        bookService.updateBookDetail(bookDetail);
+                    }
+
                     bookService.addBookDetail(newBookDetail);
 
                     // 备份新增的图书信息
@@ -861,6 +880,7 @@ public class BookSyncController {
         params.put("id", bookSyncLog.getId());
         bookSyncService.updateSyncBookLogConfirmStatusById(params);
         speed = 100;
+            System.out.println("正在同步第"+bookcount+"本书");
         }
         return responseBean;
     }
