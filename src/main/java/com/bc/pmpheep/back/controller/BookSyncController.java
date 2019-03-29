@@ -84,6 +84,8 @@ public class BookSyncController {
         /*是否增量更新*/
         Boolean increment = jsonObject.getBoolean("increment");
         String synchronizationType = jsonObject.getString("synchronizationType");
+        //写入接口日志表
+        BookSyncLog bookSyncLog = new BookSyncLog();
         if (appkey == null && appkey == "") {
             throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
                     "app_key参数为空");
@@ -97,12 +99,17 @@ public class BookSyncController {
                     "是否增量同步参数为空参数为空");
 
         }
+        if(increment){
+            if (synchronizationType == null && synchronizationType == "") {
+                throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
+                        "同步类型参数为空参数为空");
 
-        if (synchronizationType == null && synchronizationType == "") {
-            throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
-                    "同步类型参数为空参数为空");
-
+            }else{
+                bookSyncLog.setSynchronizationType(synchronizationType);
+            }
         }
+
+
 
 
 
@@ -113,12 +120,9 @@ public class BookSyncController {
         List<BookSyncConfirm> bookSyncConfirms=new ArrayList<>();
         parsejson(objects,bookSyncConfirms);
 
-        //写入接口日志表
-        BookSyncLog bookSyncLog = new BookSyncLog();
 
 
         bookSyncLog.setIncrement(increment);
-        bookSyncLog.setSynchronizationType(synchronizationType);
 
 
         bookSyncService.addBookSyncLog(bookSyncLog);
@@ -236,7 +240,6 @@ public class BookSyncController {
                 if (StringUtil.isEmpty(book.getBookname())) {
                     flag = true;
                     sb.append("图书参数" + count + ":的图书名称不能为空---");
-
                 }
                 book.setLogId(logId);
                 bookSyncService.addBookSyncConfirm(book);
