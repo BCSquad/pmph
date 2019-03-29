@@ -314,9 +314,9 @@
         update book_sync_confirm set confirm_status=#{confirm} where id=#{id}
     </update>
     <select id="getFullBookSyncLogBySyncTime" resultType="BookSyncLog">
-        select *from book_sync_log where increment=0 order by sync_gmt  desc limit 1
+        select *from book_sync_log where increment=0 and confirm_status=0 order by sync_gmt
     </select>
-    <select id="getBookSyncConfirmsByLogId" parameterType="Long" resultType="BookSyncLog">
+    <select id="getBookSyncConfirmsByLogId" parameterType="Long" resultType="BookSyncConfirm">
         select * from book_sync_confirm where log_id=#{id}
     </select>
     <update id="updateSyncBookLogConfirmStatusById" parameterType="map">
