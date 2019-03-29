@@ -741,8 +741,6 @@ public class BookSyncController {
         int bookcount=0;
 
         for(BookSyncLog bookSyncLog:bookSyncLogs) {
-            flag = bookSyncLogs.size()/ 100;
-            count++;
             List<BookSyncConfirm> bookSyncConfirms = bookSyncService.getBookConfirmsByLogId(bookSyncLog.getId());
 
             if (ObjectUtil.isNull(bookSyncConfirms)) {
@@ -756,7 +754,7 @@ public class BookSyncController {
 
 
             for (BookSyncConfirm bookSyncConfirm : bookSyncConfirms) {
-                bookcount++;
+
 
 
                 // 获取图书详情
@@ -869,9 +867,7 @@ public class BookSyncController {
                     bookSyncService.updateBookSynConfirm(bookSyncConfirm1);
 
                 }
-                if (count % flag == 0 && speed < 100) {
-                    speed++;
-                }
+
 
             }
 
