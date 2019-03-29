@@ -707,9 +707,9 @@ public class BookSyncController {
     }
 
 
-    Integer flag = 0;
-    Integer speed = 0;
-    Integer count = 0;
+    Integer flag = 1;
+    Integer speed = 1;
+    Integer count = 1;
 
     /**
      * 全量更新图书
