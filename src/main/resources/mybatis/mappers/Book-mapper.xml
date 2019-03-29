@@ -859,6 +859,7 @@
 	</update>
 		<update id="updateBookSellWellByid" parameterType="map">
 			update book
+			<set>
 			<if test="flag==1">
 				is_sell_well=null,
 				sort_sell_well=null,
@@ -871,8 +872,6 @@
 				is_highly=null,
 				sort_highly=null,
 			</if>
-			<set>
-
 			</set>
 			where id = ${id}
 	</update>
