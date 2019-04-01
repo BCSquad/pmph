@@ -51,7 +51,11 @@ public class FlightTrainTask {
 
     @Scheduled(cron = "0 0 1 1/1 * ? ")  //每隔一天执行一次定时任务
     public void consoleInfo() {
-        System.out.println("定时任务");
+        try {
+            SyncBookSellWell();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -67,7 +71,7 @@ public class FlightTrainTask {
         String sign = DigestUtil.digest(api, "hbP5YsbmiWnkOP4IPtXE126JiIaFRCWD4gpfrcULPbs5hytCw06T2SooKfcUnc2g");
         String params = SyncUtils.getUrlApi(api);
         params += "&sign=" + sign;
-        params += "&biz_content=" + CodecUtil.encodeURL("{\"num\":2}");
+        params += "&biz_content=" + CodecUtil.encodeURL("{\"num\":10}");
         /* params=CodecUtil.encodeURL(params);*/
 
         String url = "http://aip.pmph.com/route/rest";
