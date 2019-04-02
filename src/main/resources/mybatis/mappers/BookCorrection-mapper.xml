@@ -314,7 +314,7 @@
 	<select id="getBookFeedBackDetailById" resultType="BookFeedBack">
 		SELECT
 		b.bookname,
-		if(wu.realname is null  || LENGTH(wu.realname)<1,wu.username,wu.realname) AS feedBackName,
+		ifNull(wu.realname,wu.username) as feedBackName,
 		bc.id,
 		bc.book_id,
 		bc.content,
