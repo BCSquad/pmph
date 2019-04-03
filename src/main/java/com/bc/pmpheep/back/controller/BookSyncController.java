@@ -754,8 +754,7 @@ public class BookSyncController {
 
 
             for (BookSyncConfirm bookSyncConfirm : bookSyncConfirms) {
-
-
+                bookcount++;
 
                 // 获取图书详情
                 BookDetail bookDetail = new BookDetail();
@@ -866,9 +865,10 @@ public class BookSyncController {
                     BeanUtils.copyProperties(bookSyncConfirm, bookSyncConfirm1);
                     bookSyncService.updateBookSynConfirm(bookSyncConfirm1);
 
+
                 }
 
-
+                System.out.println("正在同步第"+bookcount+"本书");
             }
 
         Map<String, Object> params = new HashMap<>();
@@ -876,7 +876,7 @@ public class BookSyncController {
         params.put("id", bookSyncLog.getId());
         bookSyncService.updateSyncBookLogConfirmStatusById(params);
         speed = 100;
-            System.out.println("正在同步第"+bookcount+"本书");
+
         }
         return responseBean;
     }

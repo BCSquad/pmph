@@ -12,12 +12,12 @@
           http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd
           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
-          http://www.springframework.org/schema/task
-        http://www.springframework.org/schema/task/spring-task-4.0.xsd
+         http://www.springframework.org/schema/task
+        http://www.springframework.org/schema/task/spring-task-3.2.xsd
 ">
 
-    <task:annotation-driven scheduler="qbScheduler" mode="proxy"/>
-    <task:scheduler id="qbScheduler" />
+    <task:annotation-driven />
+    <context:component-scan base-package="com.bc.pmpheep.back.task" />
     <mvc:annotation-driven/>
    	 <mvc:default-servlet-handler/>
    	

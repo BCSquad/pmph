@@ -35,7 +35,7 @@ public class FlightTrainTask {
             .getLogger(FlightTrainTask.class.getName());
 
     //生成文件路径
-    private static String path = "/usr/local/tomcat/logs/";
+    private static String path = "d:/";
 
     //文件路径+名称
     private static String filenameTemp;
@@ -49,56 +49,59 @@ public class FlightTrainTask {
     public static final String SIGN_KEY = "sign";
 
 
-    @Scheduled(cron = "0 0 1 1/1 * ? ")  //每隔一天执行一次定时任务
+    @Scheduled(cron = "1 0 0 1/1 * ? ") // 间隔5秒执行
     public void consoleInfo() {
+        String os = System.getProperty("os.name");
+        if(!os.toLowerCase().startsWith("win")) {
+            path = "/usr/local/tomcat/logs/";
+        }
         try {
-            SyncBookSellWell();
-        } catch (UnsupportedEncodingException e) {
+            Map<String, Object> api = new HashMap<String, Object>();
+            api.put("app_key", "nmkt8v9NkWbQ9WPFl3l6lFNsyThsfcep");
+            api.put("format", "json");
+            api.put("method", "com.ai.ecp.pmph.order.saleRank");
+            api.put("session", "MDzjI012CaqX4HG1HbOj35ps1yOYxJ7KfL1ezjKT89OLZZe0f22S6LY6eZ4DleBR");
+            api.put("sign_method", "md5");
+            api.put("timestamp", DateUtil.formatTimeStamp("yyy-MM-dd HH:mm:ss", DateUtil.getCurrentTime()));
+            api.put("v", "1.0");
+            String sign = DigestUtil.digest(api, "hbP5YsbmiWnkOP4IPtXE126JiIaFRCWD4gpfrcULPbs5hytCw06T2SooKfcUnc2g");
+            String params = SyncUtils.getUrlApi(api);
+            params += "&sign=" + sign;
+            params += "&biz_content=" + CodecUtil.encodeURL("{\"num\":10}");
+            /* params=CodecUtil.encodeURL(params);*/
+
+            String url = "http://aip.pmph.com/route/rest";
+            String res = SyncUtils.StringGet(params, url);
+            System.out.println("图书同步销量++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            JSONObject jsonObject = JSON.parseObject(res);
+            Integer code = jsonObject.getInteger("code");
+            List<Map<String,Object>> sales= new ArrayList<Map<String, Object>>();
+            if(code==0){
+                String msg = jsonObject.getString("msg");
+                JSONArray goodsList = jsonObject.getJSONArray("goodsList");
+                for(Object o:goodsList){
+                    Map<String,Object> saleMap=new HashMap<>();
+                    JSONObject jso = JSON.parseObject(o.toString());
+                    String vn = jso.getString("bb_code");
+                    String sale = jso.getString("trade_amount");
+                    saleMap.put("vn", vn);
+                    saleMap.put("sale",sale);
+                    sales.add(saleMap);
+                }
+                int i = bookSyncService.updateBookSaleByVns(sales);
+            }
+
+
+            createFile("SyncSaleLog",new Date().toLocaleString()+"同步图书原始数据:"+res);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
 
     public void SyncBookSellWell() throws UnsupportedEncodingException {
-        Map<String, Object> api = new HashMap<String, Object>();
-        api.put("app_key", "nmkt8v9NkWbQ9WPFl3l6lFNsyThsfcep");
-        api.put("format", "json");
-        api.put("method", "com.ai.ecp.pmph.order.saleRank");
-        api.put("session", "MDzjI012CaqX4HG1HbOj35ps1yOYxJ7KfL1ezjKT89OLZZe0f22S6LY6eZ4DleBR");
-        api.put("sign_method", "md5");
-        api.put("timestamp", DateUtil.formatTimeStamp("yyy-MM-dd HH:mm:ss", DateUtil.getCurrentTime()));
-        api.put("v", "1.0");
-        String sign = DigestUtil.digest(api, "hbP5YsbmiWnkOP4IPtXE126JiIaFRCWD4gpfrcULPbs5hytCw06T2SooKfcUnc2g");
-        String params = SyncUtils.getUrlApi(api);
-        params += "&sign=" + sign;
-        params += "&biz_content=" + CodecUtil.encodeURL("{\"num\":10}");
-        /* params=CodecUtil.encodeURL(params);*/
-
-        String url = "http://aip.pmph.com/route/rest";
-        String res = SyncUtils.StringGet(params, url);
-
-        JSONObject jsonObject = JSON.parseObject(res);
-        Integer code = jsonObject.getInteger("code");
-        List<Map<String,Object>> sales= new ArrayList<Map<String, Object>>();
-        if(code==0){
-            String msg = jsonObject.getString("msg");
-            JSONArray goodsList = jsonObject.getJSONArray("goodsList");
-            for(Object o:goodsList){
-                Map<String,Object> saleMap=new HashMap<>();
-                JSONObject jso = JSON.parseObject(o.toString());
-                String vn = jso.getString("bb_code");
-                String sale = jso.getString("trade_amount");
-                saleMap.put("vn", vn);
-                saleMap.put("sale",sale);
-                sales.add(saleMap);
-            }
-            int i = bookSyncService.updateBookSaleByVns(sales);
 
 
-        }
-
-
-        createFile("SyncSaleLog",new Date().toLocaleString()+"同步图书原始数据:"+res);
     }
 
 
