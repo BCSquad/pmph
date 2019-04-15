@@ -70,9 +70,9 @@ public class BookServiceTest extends BaseTest {
 		String sign = DigestUtil.digest(api, "hbP5YsbmiWnkOP4IPtXE126JiIaFRCWD4gpfrcULPbs5hytCw06T2SooKfcUnc2g");
 		String params = SyncUtils.getUrlApi(api);
 		params+="&sign="+sign;
-		params+="&biz_content="+ CodecUtil.encodeURL("{\"num:\"2}");
+		params+="&biz_content="+ CodecUtil.encodeURL("{\"num\":\"10\"}");
 		/* params=CodecUtil.encodeURL(params);*/
-		String url="http://192.168.2.11/route/rest";
+		String url="http://aip.pmph.com/route/rest";
 
 		String urlapi=url+"?"+params;
 		String s1 = HttpUtil.doGet(url+"?"+params);
@@ -161,9 +161,9 @@ public class BookServiceTest extends BaseTest {
 		String params = SyncUtils.getUrlApi(api);
 		params+="&sign="+sign;
 
-		params+="&biz_content="+ CodecUtil.encodeURL("{\"staff_code\":\"notalike000\",\"gds_detail\":[{\"bb_code\":\"2006002846\",\"order_amount\":\"2\"}]}");
+		params+="&biz_content="+ CodecUtil.encodeURL("{\"staff_code\":\"test666\",\"gds_detail\":[{\"bb_code\":\"2015001072\",\"order_amount\":\"2\"}]}");
 
-		String url="http://192.168.2.11/route/rest";
+		String url="http://aip.pmph.com/route/rest";
 
 		String urlapi=url+"?"+params;
 		String s1 = HttpUtil.doGet(url+"?"+params);
@@ -196,9 +196,9 @@ public class BookServiceTest extends BaseTest {
 		String params = SyncUtils.getUrlApi(api);
 		params+="&sign="+sign;
 
-		params+="&biz_content="+ CodecUtil.encodeURL("{\"staff_code\":\"notalike000\",\"score\":\"100\"}");
+		params+="&biz_content="+ CodecUtil.encodeURL("{\"staff_code\":\"test666\",\"score\":\"100\"}");
 
-		String url="http://192.168.2.11/route/rest";
+		String url="http://aip.pmph.com/route/rest";
 
 		String urlapi=url+"?"+params;
 		String s1 = HttpUtil.doGet(url+"?"+params);

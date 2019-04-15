@@ -959,9 +959,9 @@ public class TextbookServiceImpl implements TextbookService {
 				throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK, CheckedExceptionResult.NULL_PARAM,
 						"书籍名称不能为空");
 			}
-			if (StringUtil.strLength(book.getTextbookName()) > 50) {
+			if (StringUtil.strLength(book.getTextbookName()) > 200) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
-						CheckedExceptionResult.ILLEGAL_PARAM, "书籍名称字数不能超过25个,请修改后再提交");
+						CheckedExceptionResult.ILLEGAL_PARAM, "书籍名称字数不能超过200个,请修改后再提交");
 			}
 			if (ObjectUtil.isNull(book.getTextbookRound())) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK, CheckedExceptionResult.NULL_PARAM,

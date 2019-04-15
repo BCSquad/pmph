@@ -13,12 +13,12 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <script type="text/javascript">
             //var appLogin = "120.76.221.250";//app 测试微信访问
-            var appLogin = "medu.ipmph.com/pmphvuewx";//app 业务测试微信访问
-            //var appLogin = "szbsj.f3322.net:8802/wx"; //app 测试微信访问
-            //var appLogin = "medu.ipmph.com/wx";//app
+           /// var appLogin = "119.254.226.115";//app 业务测试微信访问
+            var appLogin = "medu.ipmph.com/wx";//app 正式
            // var appLogin = "127.0.0.1:8088"; // app开发
- //           var pcLogin = "120.76.221.250";//测试
-            var pcLogin = "119.254.226.115";//业务测试
+     //       var pcLogin = "120.76.221.250";//测试
+//            var pcLogin = "119.254.226.115";//业务测试
+            var pcLogin = "192.168.100.135";//正式
 
             //var pcLogin = "127.0.0.1:8089"; //开发
             var Cookie ={
@@ -128,8 +128,8 @@
             var userData={
                 userSessionId:'${userSessionId}' ,
                 sessionPmphUserToken:'${sessionPmphUserToken}',
-                sessionPmphUser:${sessionPmphUser},
-                pmphUserPermissionIds:${pmphUserPermissionIds}
+                sessionPmphUser:Empty(${sessionPmphUser})?"":${sessionPmphUser},
+                pmphUserPermissionIds:Empty(${pmphUserPermissionIds})?"":${pmphUserPermissionIds}
             }
             <%--mySessionStorage.set('currentUser',userData,'json');--%>
             <%--Cookie.set('sessionId','${userSessionId}',2)--%>

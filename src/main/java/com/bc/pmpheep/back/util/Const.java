@@ -251,4 +251,22 @@ public class Const {
 	public static final Integer WRITER_USER_TRENDST_TYPE_7 = 7;
 
 	public static final String[] TOPIC_TYPES = new String[]{"专著","基础理论","论文集","科普","应用技术","工具书","其他"};
+
+
+	/**
+	 *申报表中“职称”项的数据字典 业务编码
+	 */
+	public static final String       WRITER_USER_TITLE = "writer_user_title";
+	/**
+	 * 申报表中“学历”项的数据字典 业务编码
+	 */
+	public static final String       WRITER_USER_DEGREE = "writer_user_degree";
+	/**
+	 * 人卫社教材编写情况表/其他社教材编写情况 -级别 业务编码
+	 */
+	public static final String       PMPH_RANK = "pmph_rank";
+	/**
+	 * 人卫社教材编写情况表/其他社教材编写情况-编写职务 业务编码
+	 */
+	public static final String       PMPH_POSITION = "pmph_position";
 }

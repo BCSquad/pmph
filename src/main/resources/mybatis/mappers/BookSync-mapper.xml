@@ -276,7 +276,7 @@
     <select id="queryBookSyncConfirmList" resultType="BookSyncConfirmVO" parameterType="map">
         select bsc.*,bsl.synchronization_type,bsl.sync_gmt,bsl.increment from book_sync_confirm bsc
         left join book_sync_log bsl on bsl.id=bsc.log_id
-        where 1=1 and bsc.confirm_status =#{confirm} and bsl.increment=1   and bsc.is_deleted=0po
+        where 1=1 and bsc.confirm_status =#{confirm} and bsl.increment=1   and bsc.is_deleted=0
 
         <if test="bookName != null">
             and bsc.bookname like #{bookName}
@@ -314,9 +314,9 @@
         update book_sync_confirm set confirm_status=#{confirm} where id=#{id}
     </update>
     <select id="getFullBookSyncLogBySyncTime" resultType="BookSyncLog">
-        select *from book_sync_log where increment=0 order by sync_gmt  desc limit 1
+        select *from book_sync_log where increment=0 and confirm_status=0 order by sync_gmt
     </select>
-    <select id="getBookSyncConfirmsByLogId" parameterType="Long" resultType="BookSyncLog">
+    <select id="getBookSyncConfirmsByLogId" parameterType="Long" resultType="BookSyncConfirm">
         select * from book_sync_confirm where log_id=#{id}
     </select>
     <update id="updateSyncBookLogConfirmStatusById" parameterType="map">

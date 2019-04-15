@@ -132,7 +132,7 @@ public class BookSyncServiceImpl implements BookSyncService {
     }
 
     @Override
-    public BookSyncLog getFullBookSyncLogBySyncTime() {
+    public List<BookSyncLog> getFullBookSyncLogBySyncTime() {
         return bookSyncDao.getFullBookSyncLogBySyncTime();
     }
 

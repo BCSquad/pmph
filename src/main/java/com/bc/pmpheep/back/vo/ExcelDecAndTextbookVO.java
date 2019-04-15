@@ -73,6 +73,8 @@ public class ExcelDecAndTextbookVO{
 	//纸质表进度
 	@ExcelHeader(header = "纸质表审核")
     private String showOfflineProgress;
+
+
 	//出生年月
 	@ExcelHeader(header = "出生年月")
 	private String birthday;

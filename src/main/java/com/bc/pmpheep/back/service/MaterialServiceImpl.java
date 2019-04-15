@@ -304,9 +304,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 					throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 							CheckedExceptionResult.NULL_PARAM, "扩展项名称为空");
 				}
-				if (materialExtension.getExtensionName().length() > 100) {
+				if (materialExtension.getExtensionName().length() > 200) {
 					throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-							CheckedExceptionResult.NULL_PARAM, "扩展项名称太长");
+							CheckedExceptionResult.NULL_PARAM, "扩展项名称不能超过200个字");
 				}
 				materialExtension.setMaterialId(materialId);
 				if (null == materialExtension.getId()) { // 保存或者修改扩展项

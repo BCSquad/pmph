@@ -287,7 +287,7 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService, A
 			}
 		}
 		if (StringUtil.isEmpty(orgUser.getRealname())) {
-			orgUser.setRealname(orgUser.getUsername());
+			orgUser.setRealname("");
 		}
 		orgUser.setPassword(new DesRun(Const.DEFAULT_PASSWORD, "").enpsw);// 后台添加用户设置默认密码为123456
 		int num = orgUserDao.addOrgUser(orgUser);// 返回的影响行数，如果不是影响0行就是添加成功
@@ -448,7 +448,7 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService, A
 		orgUser.setPassword(new DesRun("", Const.DEFAULT_PASSWORD).enpsw);// 后台添加用户设置默认密码为123456
                 SsoHelper ssoHelper = context.getBean(SsoHelper.class);
 		String result = ssoHelper.createSSOAccount(orgUser);
-		if (!result.equals("success")) {
+		if (!result.equals("success")&&result.indexOf("已被使用")<=-1) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.FAILURE_SSO_CALLBACK,
 					result);
 		}

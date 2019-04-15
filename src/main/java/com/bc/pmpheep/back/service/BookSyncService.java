@@ -103,7 +103,7 @@ public interface BookSyncService {
      * 获取最新的一次全量同步信息
      * @return
      */
-    BookSyncLog getFullBookSyncLogBySyncTime();
+    List<BookSyncLog> getFullBookSyncLogBySyncTime();
 
     /**
      * 根同步日志id获取图书待确认信息
