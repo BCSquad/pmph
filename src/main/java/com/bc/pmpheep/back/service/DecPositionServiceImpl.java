@@ -18,6 +18,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.bc.pmpheep.back.dao.DataDictionaryDao;
+import com.bc.pmpheep.back.util.*;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,13 +33,6 @@ import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.service.common.SystemMessageService;
-import com.bc.pmpheep.back.util.ArrayUtil;
-import com.bc.pmpheep.back.util.CollectionUtil;
-import com.bc.pmpheep.back.util.JsonUtil;
-import com.bc.pmpheep.back.util.ObjectUtil;
-import com.bc.pmpheep.back.util.PageParameterUitl;
-import com.bc.pmpheep.back.util.SessionUtil;
-import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.DecPositionEditorSelectionVO;
 import com.bc.pmpheep.back.vo.DecPositionVO;
 import com.bc.pmpheep.back.vo.DeclarationCountVO;
@@ -86,6 +81,8 @@ public class DecPositionServiceImpl implements DecPositionService {
     private DecPositionPublishedService decPositionPublishedService;
     @Autowired
     private DecPositionTempService      decPositionTempService;
+    @Autowired
+    private DataDictionaryDao dataDictionaryDao;
 
     @Override
     public DecPosition addDecPosition(DecPosition decPosition) throws CheckedServiceException {
@@ -340,6 +337,12 @@ public class DecPositionServiceImpl implements DecPositionService {
                         StringUtil.toAllCheck(orgName));
         // 因为作家申报机构为0时 为人卫社 但机构中又不存在0机构 在此遍历作家申报的机构，如果为null这里设置为人卫社
         for (DecPositionEditorSelectionVO decPositionEditorSelectionVO : listEditorSelectionVOs) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("type_code", Const.PMPH_POSITION);
+            int i = decPositionEditorSelectionVO.getPresetPosition();
+            params.put("code",i);
+            String post = dataDictionaryDao.getDataDictionaryNameByTypeAndCode(params);
+            decPositionEditorSelectionVO.setStrPresetPosition(post);
             if (null == decPositionEditorSelectionVO.getReportName()) {
                 decPositionEditorSelectionVO.setReportName("人民卫生出版社");
             }

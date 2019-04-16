@@ -11,33 +11,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.bc.pmpheep.back.dao.*;
 import com.bc.pmpheep.back.util.*;
+import com.mchange.v2.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.bo.DeclarationEtcBO;
-import com.bc.pmpheep.back.dao.DecAcadeDao;
-import com.bc.pmpheep.back.dao.DecAcadeRewardDao;
-import com.bc.pmpheep.back.dao.DecAchievementDao;
-import com.bc.pmpheep.back.dao.DecClinicalRewardDao;
-import com.bc.pmpheep.back.dao.DecCourseConstructionDao;
-import com.bc.pmpheep.back.dao.DecEduExpDao;
-import com.bc.pmpheep.back.dao.DecExtensionDao;
-import com.bc.pmpheep.back.dao.DecIntentionDao;
-import com.bc.pmpheep.back.dao.DecLastPositionDao;
-import com.bc.pmpheep.back.dao.DecMonographDao;
-import com.bc.pmpheep.back.dao.DecMoocDigitalDao;
-import com.bc.pmpheep.back.dao.DecNationalPlanDao;
-import com.bc.pmpheep.back.dao.DecPositionDao;
-import com.bc.pmpheep.back.dao.DecPositionPublishedDao;
-import com.bc.pmpheep.back.dao.DecPublishRewardDao;
-import com.bc.pmpheep.back.dao.DecResearchDao;
-import com.bc.pmpheep.back.dao.DecSciDao;
-import com.bc.pmpheep.back.dao.DecTeachExpDao;
-import com.bc.pmpheep.back.dao.DecTextbookDao;
-import com.bc.pmpheep.back.dao.DecTextbookPmphDao;
-import com.bc.pmpheep.back.dao.DecWorkExpDao;
-import com.bc.pmpheep.back.dao.DeclarationDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.DecAcade;
@@ -145,6 +125,8 @@ public class DeclarationServiceImpl implements DeclarationService {
     private WriterUserTrendstService writerUserTrendstService;
     @Autowired
     private WriterUserService writerUserService;
+    @Autowired
+    private DataDictionaryDao dataDictionaryDao;
 
     @Override
     public Declaration addDeclaration(Declaration declaration) throws CheckedServiceException {
@@ -246,6 +228,7 @@ public class DeclarationServiceImpl implements DeclarationService {
         }
         if (StringUtil.notEmpty(title)) {
             map.put("title", StringUtil.toAllCheck(title)); // 职称
+
         }
         if (StringUtil.notEmpty(orgName)) {
             map.put("orgName", StringUtil.toAllCheck(orgName)); // 工作单位
@@ -287,6 +270,27 @@ public class DeclarationServiceImpl implements DeclarationService {
         Integer total = declarationDao.listDeclarationTotal(pageParameter);
         if (null != total && total > 0) {
             List<DeclarationListVO> rows = declarationDao.listDeclaration(pageParameter);
+            for(DeclarationListVO row:rows){
+                String title1 = row.getTitle();
+                if(title!=null){
+                    Map<String, Object> params = new HashMap<>();
+                    params.put("type_code",Const.PMPH_POSITION);
+                    int i = row.getPresetPosition();
+                    params.put("code",i);
+
+                    Map<String, Object> params2= new HashMap<>();
+                    params2.put("type_code",Const.WRITER_USER_TITLE);
+                    int i2 = Integer.parseInt(row.getTitle());
+                    params2.put("code",i2);
+                    String tit = dataDictionaryDao.getDataDictionaryNameByTypeAndCode(params2);
+                    String post = dataDictionaryDao.getDataDictionaryNameByTypeAndCode(params);
+
+                    row.setTitle(tit);
+
+                    row.setChooseBooksAndPostions(row.getTextbookName()+"-"+post);
+                }
+            }
+
             pageResult.setRows(rows);
         }
         pageResult.setTotal(total);
@@ -524,105 +528,12 @@ public class DeclarationServiceImpl implements DeclarationService {
                 String syllabusIds = RouteUtil.MONGODB_FILE + syllabusId; // 下载路径
                 decPositions.setSyllabusId(syllabusIds);
             }
-            switch (decPositions.getPresetPosition()) {
-                case 1:
-                    decPositions.setShowPosition("编委");
-                    break;
-                case 2:
-                    decPositions.setShowPosition("副主编");
-                    break;
-                case 3:
-                    decPositions.setShowPosition("副主编,编委");
-                    break;
-                case 4:
-                    decPositions.setShowPosition("主编");
-                    break;
-                case 5:
-                    decPositions.setShowPosition("主编,编委");
-                    break;
-                case 6:
-                    decPositions.setShowPosition("主编,副主编");
-                    break;
-                case 7:
-                    decPositions.setShowPosition("主编,副主编,编委");
-                    break;
-                case 8:
-                    decPositions.setShowPosition("数字编委");
-                    break;
-                case 9:
-                    decPositions.setShowPosition("编委,数字编委");
-                    break;
-                case 10:
-                    decPositions.setShowPosition("副主编,数字编委");
-                    break;
-                case 11:
-                    decPositions.setShowPosition("副主编,编委,数字编委");
-                    break;
-                case 12:
-                    decPositions.setShowPosition("主编,数字编委");
-                    break;
-                case 13:
-                    decPositions.setShowPosition("主编,编委,数字编委");
-                    break;
-                case 14:
-                    decPositions.setShowPosition("主编,副主编,数字编委");
-                    break;
-                case 15:
-                    decPositions.setShowPosition("主编,副主编,编委,数字编委");
-                    break;
-                default:
-                    break;
-            }
+            String dataDictionaryItemNameByCode = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, decPositions.getPresetPosition().toString());
+            decPositions.setShowPosition(dataDictionaryItemNameByCode);
             if (decPositions.getChosenPosition() != 0) {
-                switch (decPositions.getChosenPosition()) {
-                    case 1:
-                        decPositions.setShowChosenPosition("编委");
-                        break;
-                    case 2:
-                        decPositions.setShowChosenPosition("副主编");
-                        break;
-                    case 3:
-                        decPositions.setShowChosenPosition("副主编,编委");
-                        break;
-                    case 4:
-                        decPositions.setShowChosenPosition("主编");
-                        break;
-                    case 5:
-                        decPositions.setShowChosenPosition("主编,编委");
-                        break;
-                    case 6:
-                        decPositions.setShowChosenPosition("主编,副主编");
-                        break;
-                    case 7:
-                        decPositions.setShowChosenPosition("主编,副主编,编委");
-                        break;
-                    case 8:
-                        decPositions.setShowChosenPosition("数字编委");
-                        break;
-                    case 9:
-                        decPositions.setShowChosenPosition("编委,数字编委");
-                        break;
-                    case 10:
-                        decPositions.setShowChosenPosition("副主编,数字编委");
-                        break;
-                    case 11:
-                        decPositions.setShowChosenPosition("副主编,编委,数字编委");
-                        break;
-                    case 12:
-                        decPositions.setShowChosenPosition("主编,数字编委");
-                        break;
-                    case 13:
-                        decPositions.setShowChosenPosition("主编,编委,数字编委");
-                        break;
-                    case 14:
-                        decPositions.setShowChosenPosition("主编,副主编,数字编委");
-                        break;
-                    case 15:
-                        decPositions.setShowChosenPosition("主编,副主编,编委,数字编委");
-                        break;
-                    default:
-                        break;
-                }
+                String dataDictionaryItemNameByCode2 = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, decPositions.getChosenPosition().toString());
+                decPositions.setShowChosenPosition(dataDictionaryItemNameByCode2);
+
             }
         }
         // 作家遴选

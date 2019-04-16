@@ -674,6 +674,8 @@
 		a.handphone,
 		ifNull(a.auth_date,a.commit_date) as commit_date,
 		a.email,
+		d.textbook_name as textbookName,
+		c.preset_position,
 		GROUP_CONCAT(
 		CONCAT(d.textbook_name,'-',
 		case
