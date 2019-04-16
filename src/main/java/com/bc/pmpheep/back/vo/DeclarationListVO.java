@@ -44,11 +44,21 @@ public class DeclarationListVO implements java.io.Serializable {
     private Integer offlineProgress;
     //书籍名称
     private String textbookName;
+
+    private Integer presetPosition;
     private Integer orgId;
     //提交日期
     private Timestamp commitDate;
 
-    
+
+	public Integer getPresetPosition() {
+		return presetPosition;
+	}
+
+	public void setPresetPosition(Integer presetPosition) {
+		this.presetPosition = presetPosition;
+	}
+
 	public String getTextbookName() {
 		return textbookName;
 	}

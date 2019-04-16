@@ -404,6 +404,8 @@ public class BookSyncController {
     @RequestMapping(value = "/batchConfirm", method = RequestMethod.GET)
     public ResponseBean batchConfirm(Long[] ids, HttpServletRequest request) throws IOException {
         ResponseBean<Object> objectResponseBean = new ResponseBean<>();
+        StringBuffer sb=new StringBuffer();
+
         for (Long id : ids) {
             BookSyncConfirmVO bookSyncConfirmByid = bookSyncService.getBookSyncConfirmByid(id);
 
@@ -475,7 +477,7 @@ public class BookSyncController {
                             bookService.updateBook(bookByIsbn);
                         } else {
                             objectResponseBean.setCode(2);
-                            objectResponseBean.setMsg("需要添加图书已存在");
+                            sb.append("需要添加图书"+bookSyncConfirm.getBookname() +"已存在-----");
                         }
 
                     }
@@ -533,7 +535,7 @@ public class BookSyncController {
                         bookSyncService.updateBookSynConfirm(bookSyncConfirm1);
                     } else {
                         objectResponseBean.setCode(2);
-                        objectResponseBean.setMsg("需要更新的图书不存在");
+                        sb.append("需要更新的图书").append(bookSyncConfirm.getBookname()).append("不存在-----");
                     }
                     break;
                 // 类型为上架
@@ -569,7 +571,7 @@ public class BookSyncController {
 
                     } else {
                         objectResponseBean.setCode(2);
-                        objectResponseBean.setMsg("需要上架的图书不存在");
+                        sb.append("需要上架的图书").append(bookSyncConfirm.getBookname()).append("不存在-----");
                     }
                     break;
                 case "obtained":
@@ -602,12 +604,15 @@ public class BookSyncController {
 
                     } else {
                         objectResponseBean.setCode(2);
-                        objectResponseBean.setMsg("需要下架的图书不存在");
+
+                        sb.append("下需要架的图书").append(bookSyncConfirm.getBookname()).append("不存在-----");
                     }
+
                     break;
             }
 
         }
+        objectResponseBean.setMsg(sb.toString());
         return objectResponseBean;
     }
 
