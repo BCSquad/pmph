@@ -271,24 +271,22 @@ public class DeclarationServiceImpl implements DeclarationService {
         if (null != total && total > 0) {
             List<DeclarationListVO> rows = declarationDao.listDeclaration(pageParameter);
             for(DeclarationListVO row:rows){
-                String title1 = row.getTitle();
-                if(title!=null){
-                    Map<String, Object> params = new HashMap<>();
-                    params.put("type_code",Const.PMPH_POSITION);
-                    int i = row.getPresetPosition();
-                    params.put("code",i);
+                String post =row.getPresetPosition().toString();
+                String tit = row.getTitle();
+                if(tit!=null){
 
-                    Map<String, Object> params2= new HashMap<>();
-                    params2.put("type_code",Const.WRITER_USER_TITLE);
-                    int i2 = Integer.parseInt(row.getTitle());
-                    params2.put("code",i2);
-                    String tit = dataDictionaryDao.getDataDictionaryNameByTypeAndCode(params2);
-                    String post = dataDictionaryDao.getDataDictionaryNameByTypeAndCode(params);
-
-                    row.setTitle(tit);
-
-                    row.setChooseBooksAndPostions(row.getTextbookName()+"-"+post);
+                    if(ObjectUtil.isNumber(tit)){
+                        tit=dataDictionaryDao.getDataDictionaryItemNameByCode(Const.WRITER_USER_TITLE,row.getTitle().toString());
+                    }
                 }
+                if(post!=null){
+                    if(ObjectUtil.isNumber(post)){
+                        post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION,row.getPresetPosition().toString());
+                    }
+                }
+                    row.setTitle(tit);
+                    row.setChooseBooksAndPostions(row.getTextbookName()+"-"+post);
+
             }
 
             pageResult.setRows(rows);
@@ -528,22 +526,34 @@ public class DeclarationServiceImpl implements DeclarationService {
                 String syllabusIds = RouteUtil.MONGODB_FILE + syllabusId; // 下载路径
                 decPositions.setSyllabusId(syllabusIds);
             }
-            String dataDictionaryItemNameByCode = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, decPositions.getPresetPosition().toString());
-            decPositions.setShowPosition(dataDictionaryItemNameByCode);
-            if (decPositions.getChosenPosition() != 0) {
-                String dataDictionaryItemNameByCode2 = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, decPositions.getChosenPosition().toString());
-                decPositions.setShowChosenPosition(dataDictionaryItemNameByCode2);
-
-
+            String presetPosition=decPositions.getPresetPosition().toString();
+            String chosenPosition=decPositions.getChosenPosition().toString();
+                if(ObjectUtil.isNumber(presetPosition)){
+                presetPosition = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, decPositions.getPresetPosition().toString());
             }
+            if(ObjectUtil.isNumber(chosenPosition)){
+                if (decPositions.getChosenPosition() != 0) {
+                    String dataDictionaryItemNameByCode2 = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, decPositions.getChosenPosition().toString());
+
+                }
+            }
+            decPositions.setShowPosition(presetPosition);
+            decPositions.setShowChosenPosition(chosenPosition);
         }
         // 作家遴选
         List<DecPositionPublishedVO> decPositionPublishedVOs = decPositionPublishedDao
                 .listDecPositionDisplayOrPosition(declarationId);
         for (DecPositionPublishedVO decPositionPublished : decPositionPublishedVOs) {
-            if (decPositionPublished.getChosenPosition() != 0) {
-                String dataDictionaryItemNameByCode2 = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, decPositionPublished.getChosenPosition().toString());
-                decPositionPublished.setShowChosenPosition(dataDictionaryItemNameByCode2);
+            String chosenPosition=decPositionPublished.getChosenPosition().toString();
+
+
+            if(ObjectUtil.isNumber(chosenPosition)){
+                if (decPositionPublished.getChosenPosition() != 0) {
+                    chosenPosition = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, decPositionPublished.getChosenPosition().toString());
+
+                }
+            }
+                decPositionPublished.setShowChosenPosition(chosenPosition);
               /*  switch (decPositionPublished.getChosenPosition()) {
                     case 1:
                         decPositionPublished.setShowChosenPosition("编委");
@@ -593,12 +603,15 @@ public class DeclarationServiceImpl implements DeclarationService {
                     default:
                         break;
                 }*/
-            }
+
         }
         // 作家申报表
         DeclarationOrDisplayVO declaration = declarationDao.getDeclarationByIdOrOrgName(declarationId);
         WriterUser user = writerUserService.get(declaration.getUserId());
-        String title = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.WRITER_USER_TITLE, declaration.getTitle().toString());
+        String title=declaration.getTitle().toString();
+        if(ObjectUtil.isNumber(title)){
+            title = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.WRITER_USER_TITLE,title );
+        }
         declaration.setTitle(title);
         if (user != null) {
             declaration.setUsername(user.getUsername());
@@ -770,9 +783,21 @@ public class DeclarationServiceImpl implements DeclarationService {
         List<Long> decIds = new ArrayList<>();
         for (DeclarationOrDisplayVO declarationOrDisplayVO : declarationOrDisplayVOs) {
             decIds.add(declarationOrDisplayVO.getId());
-            String post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, declarationOrDisplayVO.getPresetPosition().toString());
-            String gtitle = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.WRITER_USER_TITLE, declarationOrDisplayVO.getTitle().toString());
-            declarationOrDisplayVO.setTitle(gtitle);
+
+            String post =declarationOrDisplayVO.getPresetPosition().toString();
+            String tit = declarationOrDisplayVO.getTitle();
+            if(tit!=null){
+
+                if(ObjectUtil.isNumber(tit)){
+                    tit=dataDictionaryDao.getDataDictionaryItemNameByCode(Const.WRITER_USER_TITLE,declarationOrDisplayVO.getTitle().toString());
+                }
+            }
+            if(post!=null){
+                if(ObjectUtil.isNumber(post)){
+                    post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION,declarationOrDisplayVO.getPresetPosition().toString());
+                }
+            }
+            declarationOrDisplayVO.setTitle(tit);
             declarationOrDisplayVO.setPresetPosition(post);
         }
         Material material = materialService.getMaterialById(materialId);
@@ -1132,9 +1157,21 @@ public class DeclarationServiceImpl implements DeclarationService {
         List<DeclarationOrDisplayVO> declarationOrDisplayVOs = declarationDao
                 .getDeclarationOrDisplayVOByIdOrRealname(id);
         for(DeclarationOrDisplayVO dv:declarationOrDisplayVOs){
-            String title = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, dv.getTitle().toString());
-            String presetPosition = dv.getPresetPosition();
-            dv.setTitle(title);
+            String post =dv.getPresetPosition().toString();
+            String tit = dv.getTitle();
+            if(tit!=null){
+                if(ObjectUtil.isNumber(tit)){
+                    tit=dataDictionaryDao.getDataDictionaryItemNameByCode(Const.WRITER_USER_TITLE,dv.getTitle().toString());
+                }
+            }
+            if(post!=null){
+                if(ObjectUtil.isNumber(post)){
+                    post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION,dv.getPresetPosition().toString());
+                }
+            }
+            dv.setTitle(tit);
+            dv.setPresetPosition(post);
+
         }
         return declarationOrDisplayVOs;
     }
@@ -1146,6 +1183,24 @@ public class DeclarationServiceImpl implements DeclarationService {
 
         List<DeclarationOrDisplayVO> declarationOrDisplayVOs = declarationDao
                 .getDeclarationOrDisplayVOByIdOrRealname(decIds);
+
+        for(DeclarationOrDisplayVO dv:declarationOrDisplayVOs){
+            String post =dv.getPresetPosition().toString();
+            String tit = dv.getTitle();
+            if(tit!=null){
+                if(ObjectUtil.isNumber(tit)){
+                    tit=dataDictionaryDao.getDataDictionaryItemNameByCode(Const.WRITER_USER_TITLE,dv.getTitle().toString());
+                }
+            }
+            if(post!=null){
+                if(ObjectUtil.isNumber(post)){
+                    post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION,dv.getPresetPosition().toString());
+                }
+            }
+            dv.setTitle(tit);
+            dv.setPresetPosition(post);
+
+        }
 
 
         // 学习经历
