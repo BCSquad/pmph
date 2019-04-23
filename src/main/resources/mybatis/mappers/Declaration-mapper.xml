@@ -359,25 +359,7 @@
 		t.textbook_round,
 		d.*,w.username,
 		GROUP_CONCAT(
-		CASE
-		when p.preset_position =15 then
-		'主编,副主编,编委,数字编委'       <!-- 1111 -->
-		when p.preset_position =14 then '主编,副主编,数字编委'          <!-- 1110 -->
-		when p.preset_position =13 then '主编,编委,数字编委'            <!-- 1101 -->
-		when p.preset_position =12 then '主编,数字编委'               <!-- 1100 -->
-		when p.preset_position =11 then '副主编,编委,数字编委'          <!-- 1011 -->
-		when p.preset_position =10 then '副主编,数字编委'              <!-- 1010 -->
-		when p.preset_position =9 then '编委,数字编委'               <!-- 1001 -->
-		when p.preset_position =8 then '数字编委'                   <!-- 1000 -->
-		when p.preset_position =7 then '主编,副主编,编委'             <!-- 0111 -->
-		when p.preset_position =6 then '主编,副主编'                 <!-- 0110 -->
-		when p.preset_position =5 then '主编,编委'                  <!-- 0101 -->
-		when p.preset_position =4 then '主编'                      <!-- 0100 -->
-		when p.preset_position =3 then '副主编,编委'                 <!-- 0011 -->
-		when p.preset_position =2 then '副主编'                     <!-- 0010 -->
-		when p.preset_position =1 then '编委'                      <!-- 0001 -->
-		else null
-		END
+		 p.preset_position
 		ORDER BY
 		t.textbook_name
 		) presetPosition,
