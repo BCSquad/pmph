@@ -534,6 +534,7 @@ public class DeclarationServiceImpl implements DeclarationService {
                 String dataDictionaryItemNameByCode2 = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, decPositions.getChosenPosition().toString());
                 decPositions.setShowChosenPosition(dataDictionaryItemNameByCode2);
 
+
             }
         }
         // 作家遴选
@@ -597,7 +598,7 @@ public class DeclarationServiceImpl implements DeclarationService {
         // 作家申报表
         DeclarationOrDisplayVO declaration = declarationDao.getDeclarationByIdOrOrgName(declarationId);
         WriterUser user = writerUserService.get(declaration.getUserId());
-        String title = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, declaration.getTitle().toString());
+        String title = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.WRITER_USER_TITLE, declaration.getTitle().toString());
         declaration.setTitle(title);
         if (user != null) {
             declaration.setUsername(user.getUsername());
