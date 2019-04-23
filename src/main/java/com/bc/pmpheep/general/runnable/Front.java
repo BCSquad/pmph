@@ -23,6 +23,7 @@ import com.bc.pmpheep.general.bean.ZipDownload;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.utils.WordHelper;
 import com.bc.pmpheep.utils.ZipHelper;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class Front implements Runnable {
 
