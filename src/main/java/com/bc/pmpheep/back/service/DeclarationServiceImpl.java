@@ -541,7 +541,9 @@ public class DeclarationServiceImpl implements DeclarationService {
                 .listDecPositionDisplayOrPosition(declarationId);
         for (DecPositionPublishedVO decPositionPublished : decPositionPublishedVOs) {
             if (decPositionPublished.getChosenPosition() != 0) {
-                switch (decPositionPublished.getChosenPosition()) {
+                String dataDictionaryItemNameByCode2 = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, decPositionPublished.getChosenPosition().toString());
+                decPositionPublished.setShowChosenPosition(dataDictionaryItemNameByCode2);
+              /*  switch (decPositionPublished.getChosenPosition()) {
                     case 1:
                         decPositionPublished.setShowChosenPosition("编委");
                         break;
@@ -589,14 +591,17 @@ public class DeclarationServiceImpl implements DeclarationService {
                         break;
                     default:
                         break;
-                }
+                }*/
             }
         }
         // 作家申报表
         DeclarationOrDisplayVO declaration = declarationDao.getDeclarationByIdOrOrgName(declarationId);
         WriterUser user = writerUserService.get(declaration.getUserId());
+        String title = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, declaration.getTitle().toString());
+        declaration.setTitle(title);
         if (user != null) {
             declaration.setUsername(user.getUsername());
+
         }
         // 作家学习经历
         List<DecEduExp> decEduExpList = decEduExpDao.getListDecEduExpByDeclarationId(declarationId);
@@ -764,6 +769,10 @@ public class DeclarationServiceImpl implements DeclarationService {
         List<Long> decIds = new ArrayList<>();
         for (DeclarationOrDisplayVO declarationOrDisplayVO : declarationOrDisplayVOs) {
             decIds.add(declarationOrDisplayVO.getId());
+            String post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, declarationOrDisplayVO.getPresetPosition().toString());
+            String gtitle = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.WRITER_USER_TITLE, declarationOrDisplayVO.getTitle().toString());
+            declarationOrDisplayVO.setTitle(gtitle);
+            declarationOrDisplayVO.setPresetPosition(post);
         }
         Material material = materialService.getMaterialById(materialId);
         // 学习经历
@@ -1121,6 +1130,11 @@ public class DeclarationServiceImpl implements DeclarationService {
             throws CheckedServiceException {
         List<DeclarationOrDisplayVO> declarationOrDisplayVOs = declarationDao
                 .getDeclarationOrDisplayVOByIdOrRealname(id);
+        for(DeclarationOrDisplayVO dv:declarationOrDisplayVOs){
+            String title = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, dv.getTitle().toString());
+            String presetPosition = dv.getPresetPosition();
+            dv.setTitle(title);
+        }
         return declarationOrDisplayVOs;
     }
 
@@ -1131,6 +1145,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 
         List<DeclarationOrDisplayVO> declarationOrDisplayVOs = declarationDao
                 .getDeclarationOrDisplayVOByIdOrRealname(decIds);
+
 
         // 学习经历
         ArrayList<DecEduExp> decEduExps = (ArrayList<DecEduExp>) decEduExpDao.getListDecEduExpByDeclarationIds(decIds);
