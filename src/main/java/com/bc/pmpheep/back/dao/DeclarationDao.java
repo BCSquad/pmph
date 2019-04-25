@@ -112,6 +112,7 @@ public interface DeclarationDao {
 	 * @return
 	 */
 	List<DeclarationOrDisplayVO> getDeclarationOrDisplayVOByIdOrRealname(@Param("id") List<Long> id);
+	List<DeclarationOrDisplayVO> getDeclarationOrDisplayVOByIdOrRealname2(@Param("id") List<Long> id);
 
 	/**
 	 * Description:查询表的数据总记录数
@@ -140,6 +141,8 @@ public interface DeclarationDao {
 	 * @return 符合条件的申报表审核分页数据
 	 */
 	List<DeclarationListVO> listDeclaration(PageParameter<Map<String, Object>> pageParameter);
+	String findMaterialCreateDate(Map<String, Object> paraMap);
+	String findDeclarationCreateDate(Map<String, Object> paraMap);
 
 	/**
 	 * 通过主键id查询一个作家申报信息并包含申报机构名称，是否多选
@@ -164,5 +167,6 @@ public interface DeclarationDao {
 	 */
 	Map<String,Object> getMaterialForResolve(Map<String,Object> param);
 
+	Long getMaterialBydeclarationId(Map<String,Object> params);
 
 }

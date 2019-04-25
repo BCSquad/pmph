@@ -122,4 +122,17 @@ public final class ObjectUtil {
 		}
  		return value;
     }
-}
+
+
+	public static boolean isNumber(String str) {
+		boolean re = true;
+		for (int i = 0; i < str.length(); i++) {
+			if (!Character.isDigit(str.charAt(i))) {
+				re = false;
+				break;
+			}
+		}
+		return re;
+
+	}
+	}
