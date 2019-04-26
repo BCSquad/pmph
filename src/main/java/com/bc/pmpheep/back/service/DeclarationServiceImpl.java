@@ -268,19 +268,27 @@ public class DeclarationServiceImpl implements DeclarationService {
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
         // 获取总数
         Integer total = declarationDao.listDeclarationTotal(pageParameter);
-        HashMap<String, Object> paraMap = new HashMap<>();
-        paraMap.put("material_id",materialId);
+
         if (null != total && total > 0) {
             List<DeclarationListVO> rows = declarationDao.listDeclaration(pageParameter);
-
-            String materialCreateDate = declarationDao.findMaterialCreateDate(paraMap);
-            Date date1 = DateUtil.fomatDate(materialCreateDate);
-            Date date = DateUtil.fomatDate("2019-2-1");
-
-            if(date1.getTime()>date.getTime()) {
-
                 for (DeclarationListVO row : rows) {
+                    HashMap<String, Object> paraMap = new HashMap<>();
+                    paraMap.put("declarationId",row.getId());
+                    String declarationlCreateDate = declarationDao.findDeclarationCreateDate(paraMap);
+                    Date date1 = DateUtil.fomatDate(declarationlCreateDate);
+                    Date date = DateUtil.fomatDate("2019-04-12 12:00");
+                    if(date1.getTime()>date.getTime()) {
                     String post = row.getPresetPosition().toString();
+
+                    if (post != null) {
+                        if (ObjectUtil.isNumber(post)) {
+                            post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, row.getPresetPosition().toString());
+                        }
+                    }
+
+                    row.setChooseBooksAndPostions(row.getTextbookName() + "-" + post);
+
+                }
                     String tit = row.getTitle();
                     if (tit != null) {
 
@@ -288,16 +296,13 @@ public class DeclarationServiceImpl implements DeclarationService {
                             tit = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.WRITER_USER_TITLE, row.getTitle().toString());
                         }
                     }
-                    if (post != null) {
-                        if (ObjectUtil.isNumber(post)) {
-                            post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, row.getPresetPosition().toString());
-                        }
-                    }
                     row.setTitle(tit);
-                    row.setChooseBooksAndPostions(row.getTextbookName() + "-" + post);
-
-                }
             }
+
+
+
+
+
 
             pageResult.setRows(rows);
         }
@@ -539,9 +544,9 @@ public class DeclarationServiceImpl implements DeclarationService {
                 decPositions.setSyllabusId(syllabusIds);
             }
 
-            String materialCreateDate = declarationDao.findDeclarationCreateDate(params);
-            Date date1 = DateUtil.fomatDate(materialCreateDate);
-            Date date = DateUtil.fomatDate("2019-2-1");
+            String declarationlCreateDate = declarationDao.findDeclarationCreateDate(params);
+            Date date1 = DateUtil.fomatDate(declarationlCreateDate);
+            Date date = DateUtil.fomatDate("2019-04-12 12:00");
 
             if(date1.getTime()>date.getTime()) {
 
@@ -666,7 +671,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 
             String materialCreateDate = declarationDao.findDeclarationCreateDate(params);
             Date date1 = DateUtil.fomatDate(materialCreateDate);
-            Date date = DateUtil.fomatDate("2019-2-1");
+            Date date = DateUtil.fomatDate("2019-04-12");
 
             if(date1.getTime()>date.getTime()) {
 
@@ -900,11 +905,71 @@ public class DeclarationServiceImpl implements DeclarationService {
                 offlineProgress,isSelect);
         List<Long> decIds = new ArrayList<>();
         for (DeclarationOrDisplayVO declarationOrDisplayVO : declarationOrDisplayVOs) {
+
+            HashMap<String, Object> paraMap = new HashMap<>();
+            paraMap.put("declarationId",declarationOrDisplayVO.getId());
+            String declarationlCreateDate = declarationDao.findDeclarationCreateDate(paraMap);
+            Date date1 = DateUtil.fomatDate(declarationlCreateDate);
+            Date date = DateUtil.fomatDate("2019-04-12 12:00");
+            if(date1.getTime()>date.getTime()) {
+                String post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, declarationOrDisplayVO.getPresetPosition().toString());
+                declarationOrDisplayVO.setPresetPosition(post);
+
+            }else{
+                switch (Integer.parseInt(declarationOrDisplayVO.getPresetPosition())) {
+                    case 1:
+                        declarationOrDisplayVO.setPresetPosition("编委");
+                        break;
+                    case 2:
+                        declarationOrDisplayVO.setPresetPosition("副主编");
+                        break;
+                    case 3:
+                        declarationOrDisplayVO.setPresetPosition("副主编,编委");
+                        break;
+                    case 4:
+                        declarationOrDisplayVO.setPresetPosition("主编");
+                        break;
+                    case 5:
+                        declarationOrDisplayVO.setPresetPosition("主编,编委");
+                        break;
+                    case 6:
+                        declarationOrDisplayVO.setPresetPosition("主编,副主编");
+                        break;
+                    case 7:
+                        declarationOrDisplayVO.setPresetPosition("主编,副主编,编委");
+                        break;
+                    case 8:
+                        declarationOrDisplayVO.setPresetPosition("数字编委");
+                        break;
+                    case 9:
+                        declarationOrDisplayVO.setPresetPosition("编委,数字编委");
+                        break;
+                    case 10:
+                        declarationOrDisplayVO.setPresetPosition("副主编,数字编委");
+                        break;
+                    case 11:
+                        declarationOrDisplayVO.setPresetPosition("副主编,编委,数字编委");
+                        break;
+                    case 12:
+                        declarationOrDisplayVO.setPresetPosition("主编,数字编委");
+                        break;
+                    case 13:
+                        declarationOrDisplayVO.setPresetPosition("主编,编委,数字编委");
+                        break;
+                    case 14:
+                        declarationOrDisplayVO.setPresetPosition("主编,副主编,数字编委");
+                        break;
+                    case 15:
+                        declarationOrDisplayVO.setPresetPosition("主编,副主编,编委,数字编委");
+                        break;
+                    default:
+                        break;
+                }
+            }
+
             decIds.add(declarationOrDisplayVO.getId());
-            String post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, declarationOrDisplayVO.getPresetPosition().toString());
             String gtitle = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.WRITER_USER_TITLE, declarationOrDisplayVO.getTitle().toString());
             declarationOrDisplayVO.setTitle(gtitle);
-            declarationOrDisplayVO.setPresetPosition(post);
         }
         Material material = materialService.getMaterialById(materialId);
         // 学习经历
@@ -1290,7 +1355,7 @@ public class DeclarationServiceImpl implements DeclarationService {
         String materialCreateDate = declarationDao.findMaterialCreateDate(params);
 
         Date date1 = DateUtil.fomatDate(materialCreateDate);
-        Date date = DateUtil.fomatDate("2019-2-1");
+        Date date = DateUtil.fomatDate("2019-04-12 12:00");
         List<DeclarationOrDisplayVO> declarationOrDisplayVOs;
         if(date1.getTime()>date.getTime()) {
             declarationOrDisplayVOs= declarationDao.getDeclarationOrDisplayVOByIdOrRealname2(decIds);
