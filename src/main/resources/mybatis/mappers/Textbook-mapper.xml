@@ -643,6 +643,198 @@
 			limit #{start},#{pageSize}
 		</if>
 	</select>
+
+
+
+	<!-- 职位遴选界面书籍分页列表 -->
+	<select id="listBookPosition_up12" parameterType="PageParameter"
+			resultType="BookPositionVO">
+		select
+		e.book_id bookId,
+		a.revision_times,
+		a.republish_times,
+		a.is_locked,
+		a.is_published,
+		d.id materialId,
+		d.is_all_textbook_published
+		isAllTextbookPublished,
+		d.is_force_end isForceEnd,
+		a.id textBookId,
+		a.sort sort,
+		a.textbook_name,
+		a.textbook_round textbookRound,
+		a.is_chief_published,
+		/*sum(IF(b.id is not null ,1,0))*/
+		app.applyNum,
+		a.planning_editor planningEditor,
+		planningEditor.realname
+		planningEditorName ,
+
+
+		IF(a.is_chief_published,
+		concat(
+		'&lt;span class="editors_sql_label" &gt;主编：',
+		ifnull(
+		(GROUP_CONCAT(
+		IF(
+		g.chosen_position =1,
+		IF(g.id
+		or a.is_published or a.is_chief_published,
+		CONCAT('&lt;font color="#2828ca" style="font-weight: 700;"&gt;',g.realname,'&lt;/font&gt;'),NULL ),
+		null
+		) ORDER BY if(g.chosen_position=1,g.chosen_position,1) desc,g.rank asc)),'待遴选')
+		,'&lt;/span &gt;'
+		,
+		'&lt;span class="editors_sql_label" &gt;副主编：',
+		ifnull(
+		(GROUP_CONCAT(
+		IF(
+		g.chosen_position =2,
+		IF(g.id
+		or a.is_published or a.is_chief_published,
+		CONCAT('&lt;font color="#2828ca" style="font-weight: 700;"&gt;',g.realname,'&lt;/font&gt;'),NULL ),
+		null
+		) ORDER BY if(g.chosen_position=2,g.chosen_position,2) desc,g.rank asc)),'待遴选')
+		,'&lt;/span&gt;'
+		)
+		,
+		concat(
+		'&lt;span class="editors_sql_label" &gt;主编：',
+		ifnull(
+		(GROUP_CONCAT(
+		IF(
+		b.chosen_position =1,
+
+		CONCAT('&lt;font color="black"&gt;',b.realname,'&lt;/font&gt;'),
+		null
+		) ORDER BY if(b.chosen_position=1,b.chosen_position,1) desc,b.rank asc)),'待遴选')
+		,'&lt;/span&gt;'
+		,
+		'&lt;span class="editors_sql_label" &gt;副主编：',
+		ifnull(
+		(GROUP_CONCAT(
+		IF(
+		b.chosen_position=2,
+
+		CONCAT('&lt;font color="black"&gt;',b.realname,'&lt;/font&gt;'),
+		null
+		) ORDER BY if(b.chosen_position=2,b.chosen_position,2) desc,b.rank asc)),'待遴选')
+		,'&lt;/span&gt;'
+		)
+		) editorsAndAssociateEditors,
+		/*IF(a.is_chief_published,
+		(GROUP_CONCAT(
+		IF(
+		g.chosen_position in (2,3,4,5,6,7,10,11,12,13,14,15),
+		IF(g.id
+		or a.is_published or a.is_chief_published,
+		CONCAT('&lt;font color="#2828ca" style="font-weight: 700;"&gt;',g.realname,'&lt;/font&gt;'),NULL ),
+		null
+		) ORDER BY if(g.chosen_position>8,g.chosen_position-8,g.chosen_position) desc,g.rank asc))
+		,
+		(GROUP_CONCAT(
+		IF(
+		b.chosen_position in (2,3,4,5,6,7,10,11,12,13,14,15),
+
+		CONCAT('&lt;font color="black"&gt;',b.realname,'&lt;/font&gt;'),
+		null
+		) ORDER BY if(b.chosen_position>8,b.chosen_position-8,b.chosen_position) desc,b.rank asc))
+
+		) editorsAndAssociateEditors,*/
+		sum(IF(g.chosen_position in (1,2),1,0))
+		editorsAndAssociateEditorsNum,
+		(select cname from (select GROUP_CONCAT(	CONCAT('&lt;font color="black"&gt;',c.realname,'&lt;/font&gt;')) as cname,b1.textbook_id from
+		textbook a
+		LEFT JOIN dec_position b1 ON a.id = b1.textbook_id
+		LEFT JOIN (select * from
+		declaration where is_deleted = 0 and is_staging =
+		0 and online_progress
+		!=0) c on c.id = b1.declaration_id and b1.chosen_position >=3 group by a.id 	) t where   t.textbook_id = a.id)
+		bianWeis,
+		sum(IF(g.chosen_position >=3 ,1,0)) bianWeisNum ,
+		e.id groupId,
+		/*IF(!a.is_published,null,f.repub) */
+		f.repub
+		from textbook a
+
+		LEFT JOIN material d on d.id =
+		a.material_id
+		LEFT JOIN (select * from pmph_user where is_deleted =0
+		and is_disabled =0)
+		planningEditor on planningEditor.id =
+		a.planning_editor
+		LEFT JOIN pmph_group e on e.book_id = a.id
+		LEFT JOIN (
+		SELECT textbook_id,IF(GROUP_CONCAT(PUB ORDER BY PUB ASC ) != GROUP_CONCAT(RES ORDER BY PUB ASC ),true,false) repub  FROM (
+		select A.textbook_id,IFNULL(a.PUB,'')PUB ,IFNULL(b.RES,'')RES from (
+		SELECT  textbook_id,declaration_id, CONCAT(textbook_id,'_',declaration_id,'_',preset_position,'_',chosen_position,'_',IFNULL(rank,0)) PUB
+		from dec_position_published
+		) a left  JOIN (
+		SELECT  textbook_id,declaration_id, CONCAT(textbook_id,'_',declaration_id,'_',preset_position,'_',chosen_position,'_',IFNULL(rank,0)) RES
+		from dec_position WHERE chosen_position !=0
+		) b  on b.textbook_id = a.textbook_id and a.declaration_id = b.declaration_id
+		UNION
+		select B.textbook_id,IFNULL(a.PUB,'')PUB ,IFNULL(b.RES,'')RES from (
+		SELECT  textbook_id,declaration_id, CONCAT(textbook_id,'_',declaration_id,'_',preset_position,'_',chosen_position,'_',IFNULL(rank,0)) PUB
+		from dec_position_published
+		) a RIGHT  JOIN (
+		SELECT textbook_id,declaration_id, CONCAT(textbook_id,'_',declaration_id,'_',preset_position,'_',chosen_position,'_',IFNULL(rank,0)) RES
+		from dec_position WHERE chosen_position !=0
+		) b on b.textbook_id = a.textbook_id and a.declaration_id = b.declaration_id
+		) T GROUP BY textbook_ID
+		)f on f.textbook_id = a.id
+		LEFT JOIN  (select g1.* , c.realname from dec_position_published g1  LEFT JOIN (select * from
+		declaration where is_deleted = 0 and is_staging =
+		0 and online_progress
+		!=0) c on c.id = g1.declaration_id) g on g.textbook_id = a.id and (a.is_published=true or a.is_chief_published =true)
+		left join
+		(select b1.* , c.realname from dec_position b1  LEFT JOIN (select * from
+		declaration where is_deleted = 0 and is_staging =
+		0 and online_progress
+		!=0) c on c.id = b1.declaration_id) b on b.textbook_id = a.id and (a.is_published=false and a.is_chief_published=false)
+
+		left join
+		(select dp.textbook_id ,count(dp.id) applyNum
+		from dec_position dp left join declaration d on dp.declaration_id = d.id
+		where d.online_progress !=0
+		group by dp.textbook_id)app
+		on app.textbook_id = a.id
+
+		where d.is_deleted =0 and d.is_published =1
+		and d.id =
+		#{parameter.materialId}
+		<if test="parameter.power == 4 and parameter.pmphUserId !=null ">
+			and a.planning_editor = #{parameter.pmphUserId}
+		</if>
+		<if test="parameter.state !=null ">
+			<if test="parameter.state == 1 ">
+				and a.is_locked = 0
+			</if>
+			<if test="parameter.state == 2 ">
+				and a.is_locked = 1
+			</if>
+			<if test="parameter.state == 3 ">
+				and a.is_published =1
+			</if>
+			<if test="parameter.state == 4 ">
+				and d.is_force_end =1
+			</if>
+		</if>
+		<if test="parameter.list !=null and  parameter.list.size() > 0 ">
+			and a.id in
+			<foreach collection="parameter.list" item="item" index="index"
+					 open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<if test="parameter.bookName !=null ">
+			and a.textbook_name like concat ('%',#{parameter.bookName},'%')
+		</if>
+		GROUP BY a.id ORDER BY a.sort
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
 	<!-- 职位遴选界面书籍分页列表 不分页 仅查id -->
 	<select id="listBookPosition_up1_ids" parameterType="PageParameter"
 			resultType="Map">

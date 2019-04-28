@@ -166,6 +166,41 @@
 		=#{declarationId};
 	</select>
 
+
+	<!-- 根据id查询一个作家申报职位信息 -->
+	<select id="getTextbookNameAndPresetPosition2" parameterType="java.lang.Long"
+			resultType="Map">
+		SELECT
+		GROUP_CONCAT(
+		CONCAT(t.textbook_name)
+		ORDER BY
+		t.sort
+		)
+		textbookName,
+		GROUP_CONCAT(
+		CONCAT(
+		t.textbook_name,
+		'-',
+		CASE
+		when c.preset_position =3 then '编委'                 <!-- 0011 -->
+		when c.preset_position =2 then '副主编'                     <!-- 0010 -->
+		when c.preset_position =1 then '主板'                      <!-- 0001 -->
+		else null
+		END
+		)
+		ORDER BY
+		t.sort
+		) presetPosition
+		FROM
+		dec_position p
+		LEFT JOIN
+		textbook t ON t.id =
+		p.textbook_id
+		WHERE p.declaration_id
+		=#{declarationId};
+	</select>
+
+
 	<!-- 根据id查询一个作家申报职位信息 -->
 	<select id="getDecPositionById" parameterType="java.lang.Long"
 		resultType="DecPosition">
@@ -220,7 +255,7 @@
 		LEFT JOIN textbook c on c.id=a.textbook_id
 		where
 		b.id is not null
-		and (a.chosen_position in (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15))
+		and (a.chosen_position >0)
 		and b.is_staging =false
 		and b.online_progress > 0
 		and c.id = #{textbookId}
@@ -341,7 +376,29 @@
 		AND B.org_id = #{orgId}
 		AND C.ID IN
 		<foreach collection="list" item="item" index="index" open="("
-			close=")" separator=",">
+				 close=")" separator=",">
+			#{item}
+		</foreach>
+	</select>
+
+	<!-- 根据orgid和bookid获取该机构某些已公布的书的申报职位 -->
+	<select id="listDecPositionsByTextbookIdAndOrgid2" parameterType="java.util.Map"
+			resultType="DecPosition">
+		select DISTINCT a.*
+		from dec_position a
+		LEFT JOIN declaration b on b.id
+		= a.declaration_id
+		LEFT JOIN textbook C ON C.ID=A.textbook_id
+		WHERE B.ID
+		IS NOT NULL and c.id is not null
+		AND b.is_staging =false and
+		b.online_progress != 2
+		AND A.chosen_position IN (1,2,3,8,9,10,12) AND
+		C.is_published = true
+		AND B.org_id = #{orgId}
+		AND C.ID IN
+		<foreach collection="list" item="item" index="index" open="("
+				 close=")" separator=",">
 			#{item}
 		</foreach>
 	</select>
@@ -350,7 +407,7 @@
 	<select id="listEditorSelection" parameterType="java.util.Map"
 		resultType="DecPositionEditorSelectionVO">
 		SELECT
-		dp.`id` , dc.`realname`,dc.`sex`,
+		dp.`id` , dc.`realname`,dc.`sex`,dc.id as did,
 		org.`org_name` reportName,dc.`org_name`,
 		dp.`preset_position`,
 		( CASE
@@ -452,6 +509,65 @@
 		<!-- dp.`preset_position` DESC,dp.`rank`=1 DESC,dp.`chosen_position` =1 
 			DESC,dp.`gmt_create` DESC -->
 	</select>
+	<!-- 教材申报-遴选主编/遴选编委(列表) -->
+	<select id="listEditorSelection2" parameterType="java.util.Map"
+			resultType="DecPositionEditorSelectionVO">
+		SELECT
+		dp.`id` , dc.`realname`,dc.`sex`,
+		org.`org_name` reportName,dc.`org_name`,
+		dp.`preset_position`,
+		( CASE
+		WHEN
+		dp.`preset_position` >=3
+		THEN
+		'编委'
+		WHEN
+		dp.`preset_position` =2
+		THEN
+		'副主编'
+		WHEN
+		dp.`preset_position` =1
+		THEN
+		'主编'
+		ELSE NULL
+		END) strPresetPosition,
+		dc.`online_progress`,
+		dc.`id` declarationId, dc.`offline_progress`,
+		dp.`chosen_position`, dp.`rank`,
+		dp.`syllabus_id`,dp.`syllabus_name`
+		FROM
+		`dec_position` dp
+		LEFT JOIN
+		`declaration` dc
+		ON
+		dp.`declaration_id` = dc.`id`
+		LEFT JOIN
+		`org` org
+		ON
+		dc.`org_id`= org.`id` and dc.`online_progress` > 0
+		WHERE
+		<!-- dc.`online_progress` != 0 AND -->
+		dc.online_progress in (1,3) and
+		dc.`is_staging`= FALSE
+		AND
+		dp.`textbook_id` = #{textbookId}
+		<if test="realName !=null and realName !=''">
+			AND
+			dc.`realname` like concat('%',#{realName},'%')
+		</if>
+		<if test="orgName !=null and orgName !=''">
+			AND org.`org_name` like concat('%',#{orgName},'%')
+		</if>
+		ORDER BY
+		dp.`rank` &lt; 1 DESC,
+		dp.`preset_position`=1 ASC,
+		dp.`chosen_position` =1 DESC,
+		dc.`realname` ASC,
+		dp.`gmt_create` DESC
+		<!-- dp.`preset_position` DESC,dp.`rank`=1 DESC,dp.`chosen_position` =1
+			DESC,dp.`gmt_create` DESC -->
+	</select>
+
 
 	<!-- 教材申报-遴选主编/遴选编委(更新) -->
 	<update id="updateDecPositionEditorSelection" parameterType="java.util.List">
@@ -485,11 +601,32 @@
 		1=1
 		<if test="editorOrSubeditorType ==1">
 			AND
-			dp.`chosen_position` IN (4,2,8)
+			dp.`chosen_position` IN (1,2)
 		</if>
 		<if test="editorOrSubeditorType ==2">
 			AND
-			dp.`chosen_position`IN (1,8,9)
+			dp.`chosen_position` >=2
+		</if>
+		AND
+		dp.`textbook_id` = #{textbookId};
+	</select>
+
+	<!-- 教材申报-遴选主编/遴选编委 (根据书籍Id查询所有申报id) -->
+	<select id="getDecPositionIdByBookId2" parameterType="java.util.Map"
+			resultType="java.lang.Long">
+		select
+		dp.`id`
+		FROM
+		`dec_position` dp
+		WHERE
+		1=1
+		<if test="editorOrSubeditorType ==1">
+			AND
+			dp.`chosen_position` =1
+		</if>
+		<if test="editorOrSubeditorType ==2">
+			AND
+			dp.`chosen_position`=3
 		</if>
 		AND
 		dp.`textbook_id` = #{textbookId};
@@ -568,6 +705,21 @@
 		AND
 		b.org_id IS NOT NULL;
 	</select>
+	<!-- 根据materialId查询学校当选总数 -->
+	<select id="getSchoolDeclarationChosenCount2" parameterType="java.lang.Long"
+			resultType="java.lang.Integer">
+		SELECT IFNULL(SUM(if((a.chosen_position IN (1,2,3,8,9,10,12)),1,0)),0) count
+		FROM dec_position_published a
+		LEFT JOIN declaration b ON a.declaration_id = b.id
+		LEFT JOIN textbook c ON a.textbook_id = c.id
+		LEFT JOIN material d ON b.material_id = d.id
+		LEFT JOIN org e ON b.org_id = e.id
+		WHERE a.chosen_position IS NOT NULL AND a.chosen_position !=0
+		AND d.id = #{materialId} AND b.is_staging = 0 AND b.online_progress > 0
+		AND
+		b.org_id IS NOT NULL;
+	</select>
+
 
 	<!-- 根据materialId查询学校总数 -->
 	<select id="getSchoolCount" parameterType="java.lang.Long"
@@ -595,6 +747,19 @@
 		GROUP BY dp.declaration_id)a;
 	</select>
 
+	<!-- 根据materialId查询主编申报总数 -->
+	<select id="getEditorCount2" parameterType="java.lang.Long"
+			resultType="java.lang.Integer">
+		select COUNT(*) FROM (
+		SELECT COUNT(dp.declaration_id) count
+		from dec_position dp
+		left join (select * from declaration) d on (d.id=dp.declaration_id)
+		left join (select id from material) m on (m.id=d.material_id)
+		where dp.preset_position IS NOT NULL AND
+		d.is_staging = 0 AND d.online_progress >0 AND d.org_id IS NOT NULL
+		and m.id=#{materialId} AND dp.preset_position =1
+		GROUP BY dp.declaration_id)a;
+	</select>
 	<!-- 根据materialId查询副主编申报总数 -->
 	<select id="getSubEditorCount" parameterType="java.lang.Long"
 		resultType="java.lang.Integer">
@@ -608,6 +773,19 @@
 		AND m.id=#{materialId} AND dp.preset_position IN (2,3,6,7,10,11,14,15)
 		GROUP BY dp.declaration_id)a;
 	</select>
+	<!-- 根据materialId查询副主编申报总数 -->
+	<select id="getSubEditorCount2" parameterType="java.lang.Long"
+			resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM (
+		SELECT COUNT(dp.declaration_id) count
+		FROM dec_position dp
+		LEFT JOIN (select * FROM declaration) d ON (d.id=dp.declaration_id)
+		LEFT JOIN (select id FROM material) m ON (m.id=d.material_id)
+		WHERE dp.preset_position IS NOT NULL AND
+		d.is_staging = 0 AND d.online_progress >0 AND d.org_id IS NOT NULL
+		AND m.id=#{materialId} AND dp.preset_position =2
+		GROUP BY dp.declaration_id)a;
+	</select>
 	<!-- 根据materialId查询编委申报数 -->
 	<select id="getEditorialCount" parameterType="java.lang.Long"
 		resultType="java.lang.Integer">
@@ -619,6 +797,19 @@
 		where dp.preset_position IS NOT NULL AND
 		d.is_staging = 0 AND d.online_progress >0 AND d.org_id IS NOT NULL
 		and m.id=#{materialId} AND dp.preset_position IN (1,3,5,7,9,11,13,15)
+		GROUP BY dp.declaration_id)a;
+	</select>
+	<!-- 根据materialId查询编委申报数 -->
+	<select id="getEditorialCount2" parameterType="java.lang.Long"
+			resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM (
+		select COUNT(dp.declaration_id) count
+		from dec_position dp
+		left join (select * from declaration) d on (d.id=dp.declaration_id)
+		left join (select id from material) m on (m.id=d.material_id)
+		where dp.preset_position IS NOT NULL AND
+		d.is_staging = 0 AND d.online_progress >0 AND d.org_id IS NOT NULL
+		and m.id=#{materialId} AND dp.preset_position =3
 		GROUP BY dp.declaration_id)a;
 	</select>
 
@@ -649,6 +840,19 @@
 		d.org_id IS NOT NULL
 		and m.id= #{materialId};
 	</select>
+	<!-- 根据materialId查询主编当选数 -->
+	<select id="getChosenEditorCount2" parameterType="java.lang.Long"
+			resultType="java.lang.Integer">
+		select IFNULL(sum(if((dp.chosen_position =1),1,0)),0) count
+		from dec_position_published dp
+		left join (select * from declaration) d on (d.id=dp.declaration_id)
+		left join (select id from material) m on (m.id=d.material_id)
+		LEFT JOIN (SELECT id,is_published FROM textbook) n ON (n.id =
+		dp.textbook_id)
+		where d.is_staging = 0 AND d.online_progress > 0 AND
+		d.org_id IS NOT NULL
+		and m.id= #{materialId};
+	</select>
 
 	<!-- 根据materialId查询副主编当选数 -->
 	<select id="getChosenSubeditorCount" parameterType="java.lang.Long"
@@ -664,10 +868,37 @@
 		and m.id= #{materialId};
 	</select>
 
+	<!-- 根据materialId查询副主编当选数 -->
+	<select id="getChosenSubeditorCount2" parameterType="java.lang.Long"
+			resultType="java.lang.Integer">
+		select IFNULL(sum(if((dp.chosen_position =2),1,0)),0) count
+		from dec_position_published dp
+		left join (select * from declaration) d on (d.id=dp.declaration_id)
+		left join (select id from material) m on (m.id=d.material_id)
+		LEFT JOIN (SELECT id,is_published FROM textbook) n ON (n.id =
+		dp.textbook_id)
+		where d.is_staging = 0 AND d.online_progress > 0 AND
+		d.org_id IS NOT NULL
+		and m.id= #{materialId};
+	</select>
 	<!-- 根据materialId查询编委当选数 -->
 	<select id="getChosenEditorialCount" parameterType="java.lang.Long"
 		resultType="java.lang.Integer">
 		select IFNULL(sum(if((dp.chosen_position in (1,9)),1,0)),0) count
+		from dec_position_published dp
+		left join (select * from declaration) d on (d.id=dp.declaration_id)
+		left join (select id from material) m on (m.id=d.material_id)
+		LEFT JOIN (SELECT id,is_published FROM textbook) n ON (n.id =
+		dp.textbook_id)
+		where d.is_staging = 0 AND d.online_progress > 0 AND
+		d.org_id IS NOT NULL
+		and m.id= #{materialId};
+	</select>
+
+	<!-- 根据materialId查询编委当选数 -->
+	<select id="getChosenEditorialCount2" parameterType="java.lang.Long"
+			resultType="java.lang.Integer">
+		select IFNULL(sum(if((dp.chosen_position =3),1,0)),0) count
 		from dec_position_published dp
 		left join (select * from declaration) d on (d.id=dp.declaration_id)
 		left join (select id from material) m on (m.id=d.material_id)
@@ -691,6 +922,7 @@
 		d.org_id IS NOT NULL
 		and m.id= #{materialId};
 	</select>
+
 
 	<!-- 获取书籍总数 -->
 	<select id="getBooks" parameterType="java.lang.Long" resultType="java.lang.Integer">
@@ -746,6 +978,51 @@
 		;
 	</select>
 
+
+
+	<!-- 申报情况按学校统计（按申报数数排序） -->
+	<select id="getSchoolResultPreset2" parameterType="pageParameter"
+			resultType="DeclarationSituationSchoolResultVO">
+		SELECT * FROM (
+		SELECT @rowno:=@rowno+1 AS
+		row,t1.materialid,t1.orgid,t1.schoolname,
+		t1.presetpositioneditor,t1.presetpositionsubeditor,t1.presetpositioneditorial,
+		t1.presetdigitaleditor
+		FROM (
+		SELECT SUM(if((b.preset_position =1),1,0))
+		presetpositioneditor,
+		SUM(if((b.preset_position =2),1,0)) presetpositionsubeditor,
+		SUM(if((b.preset_position =3),1,0))
+		presetpositioneditorial,
+		SUM(if((b.preset_position IN
+		(8,9,10,11,12,13,14,15)),1,0)) presetdigitaleditor,
+		d.id
+		materialid,e.id orgid,e.org_name schoolname
+		FROM declaration a
+		LEFT JOIN dec_position b ON a.id = b.declaration_id
+		LEFT JOIN textbook c ON b.textbook_id = c.id
+		LEFT JOIN material d ON c.material_id = d.id
+		LEFT JOIN (SELECT id,org_name FROM org UNION SELECT 0,'人民卫生出版社' FROM org)e
+		ON a.org_id = e.id
+		WHERE a.is_staging = 0 AND a.online_progress > 0 AND b.preset_position IS
+		NOT NULL
+		AND a.org_id IS NOT NULL
+		AND d.id = #{parameter.materialId}
+		<if test="parameter.schoolName !=null and parameter.schoolName !=''">
+			and e.org_name like concat
+			('%',#{parameter.schoolName},'%')
+		</if>
+		GROUP BY e.id ORDER BY SUM(if((b.preset_position =1),1,0))DESC,
+		SUM(if((b.preset_position =2),1,0)) DESC,
+		SUM(if((b.preset_position =3),1,0)) DESC,
+		SUM(if((b.preset_position IN
+		(8,9,10,11,12,13,14,15)),1,0)) DESC)t1,
+		(SELECT @rowno:=0)t2 )t3
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+		;
+	</select>
 	<!-- 申报情况按学校统计（连接申报职位表按当选数排序） -->
 	<select id="getSchoolResultPresetChosen" parameterType="pageParameter"
 		resultType="DeclarationSituationSchoolResultVO">
@@ -785,6 +1062,52 @@
 		(2,3,6,7,10,11,14,15)),1,0)) DESC,
 		SUM(if((b.chosen_position IN
 		(1,3,5,7,9,11,13,15)),1,0)) DESC,
+		SUM(if((b.chosen_position IN
+		(8,9,10,11,12,13,14,15)),1,0)) DESC,a.org_id ASC)t1,
+		(SELECT
+		@rowno:=0)t2 )t3
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+		;
+	</select>
+
+
+	<!-- 申报情况按学校统计（连接申报职位表按当选数排序） -->
+	<select id="getSchoolResultPresetChosen2" parameterType="pageParameter"
+			resultType="DeclarationSituationSchoolResultVO">
+		SELECT * FROM (
+		SELECT @rowno:=@rowno+1 AS
+		row,t1.materialid,t1.orgid,t1.schoolname,
+		t1.presetpositioneditor,t1.presetpositionsubeditor,t1.presetpositioneditorial,
+		t1.presetdigitaleditor
+		FROM (
+		SELECT SUM(if((b.preset_position =1),1,0))
+		presetpositioneditor,
+		SUM(if((b.preset_position =2),1,0)) presetpositionsubeditor,
+		SUM(if((b.preset_position >=3),1,0))
+		presetpositioneditorial,
+		SUM(if((b.preset_position IN
+		(8,9,10,11,12,13,14,15)),1,0)) presetdigitaleditor,
+		d.id
+		materialid,e.id orgid,e.org_name schoolname
+		FROM declaration a
+		LEFT JOIN dec_position b ON a.id = b.declaration_id
+		LEFT JOIN textbook c ON b.textbook_id = c.id
+		LEFT JOIN material d ON c.material_id = d.id
+		LEFT JOIN (SELECT id,org_name FROM org UNION SELECT 0,'人民卫生出版社' FROM org)e
+		ON a.org_id = e.id
+		WHERE a.is_staging = 0 AND a.online_progress > 0 AND b.preset_position IS
+		NOT NULL
+		AND a.org_id IS NOT NULL
+		AND d.id = #{parameter.materialId}
+		<if test="parameter.schoolName !=null and parameter.schoolName !=''">
+			and e.org_name like concat
+			('%',#{parameter.schoolName},'%')
+		</if>
+		GROUP BY e.id ORDER BY SUM(if((b.chosen_position =1),1,0))DESC,
+		SUM(if((b.chosen_position =2),1,0)) DESC,
+		SUM(if((b.chosen_position >=3),1,0)) DESC,
 		SUM(if((b.chosen_position IN
 		(8,9,10,11,12,13,14,15)),1,0)) DESC,a.org_id ASC)t1,
 		(SELECT
@@ -860,6 +1183,48 @@
 		@rowno:=0)t2)t3 ;
 	</select>
 
+	<!-- 申报情况按学校统计（按当选数排序,不分页） -->
+	<select id="getSchoolResultChosen2" parameterType="pageParameter"
+			resultType="DeclarationSituationSchoolResultVO">
+		SELECT * FROM (
+		SELECT @rowno:=@rowno+1 AS
+		row,t1.materialid,t1.orgid,t1.schoolname,
+		t1.chosenpositioneditor,t1.chosenpositionsubeditor,t1.chosenpositioneditorial,
+		t1.isdigitaleditor
+		FROM (
+		SELECT SUM(if((b.chosen_position =1),1,0))
+		chosenpositioneditor,
+		SUM(if((b.chosen_position =2),1,0))
+		chosenpositionsubeditor,
+		SUM(if((b.chosen_position =3),1,0))
+		chosenpositioneditorial,
+		SUM(if((b.chosen_position IN
+		(8,9,10,12)),1,0)) isdigitaleditor,
+		d.id materialid,e.id
+		orgid,e.org_name schoolname
+		FROM declaration a
+		LEFT JOIN dec_position_published b ON a.id = b.declaration_id
+		LEFT JOIN textbook c ON b.textbook_id = c.id
+		LEFT JOIN material d ON c.material_id = d.id
+		LEFT JOIN (SELECT id,org_name FROM org UNION SELECT 0,'人民卫生出版社' FROM org)e
+		ON a.org_id = e.id
+		WHERE a.is_staging = 0 AND a.online_progress > 0
+		AND a.org_id IS NOT NULL
+		AND d.id = #{parameter.materialId}
+		<if test="parameter.schoolName !=null and parameter.schoolName !=''">
+			and e.org_name like concat
+			('%',#{parameter.schoolName},'%')
+		</if>
+		GROUP BY e.id ORDER BY SUM(if((b.chosen_position =1),1,0))
+		DESC,
+		SUM(if((b.chosen_position IN =2),1,0)) DESC,
+		SUM(if((b.chosen_position IN =3) DESC,
+		SUM(if((b.chosen_position IN (8,9,10,12)),1,0)) DESC)t1,
+		(SELECT
+		@rowno:=0)t2)t3 ;
+	</select>
+
+
 	<!-- 申报情况按学校统计（按当选数排序,分页） -->
 	<select id="getSchoolResultChosenPage" parameterType="pageParameter"
 		resultType="DeclarationSituationSchoolResultVO">
@@ -896,6 +1261,51 @@
 		DESC,
 		SUM(if((b.chosen_position IN (2,10)),1,0)) DESC,
 		SUM(if((b.chosen_position IN (1,9)),1,0)) DESC,
+		SUM(if((b.chosen_position IN (8,9,10,12)),1,0)) DESC)t1,
+		(SELECT
+		@rowno:=0)t2)t3
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+		;
+	</select>
+
+	<!-- 申报情况按学校统计（按当选数排序,分页） -->
+	<select id="getSchoolResultChosenPage2" parameterType="pageParameter"
+			resultType="DeclarationSituationSchoolResultVO">
+		SELECT * FROM (
+		SELECT @rowno:=@rowno+1 AS
+		row,t1.materialid,t1.orgid,t1.schoolname,
+		t1.chosenpositioneditor,t1.chosenpositionsubeditor,t1.chosenpositioneditorial,
+		t1.isdigitaleditor
+		FROM (
+		SELECT SUM(if((b.chosen_position =1),1,0))
+		chosenpositioneditor,
+		SUM(if((b.chosen_position =2),1,0))
+		chosenpositionsubeditor,
+		SUM(if((b.chosen_position >=3),1,0))
+		chosenpositioneditorial,
+		SUM(if((b.chosen_position IN
+		(8,9,10,12)),1,0)) isdigitaleditor,
+		d.id materialid,e.id
+		orgid,e.org_name schoolname
+		FROM declaration a
+		LEFT JOIN dec_position_published b ON a.id = b.declaration_id
+		LEFT JOIN textbook c ON b.textbook_id = c.id
+		LEFT JOIN material d ON c.material_id = d.id
+		LEFT JOIN (SELECT id,org_name FROM org UNION SELECT 0,'人民卫生出版社' FROM org)e
+		ON a.org_id = e.id
+		WHERE a.is_staging = 0 AND a.online_progress > 0
+		AND a.org_id IS NOT NULL
+		AND d.id = #{parameter.materialId}
+		<if test="parameter.schoolName !=null and parameter.schoolName !=''">
+			and e.org_name like concat
+			('%',#{parameter.schoolName},'%')
+		</if>
+		GROUP BY e.id ORDER BY SUM(if((b.chosen_position =1),1,0))
+		DESC,
+		SUM(if((b.chosen_position =2),1,0)) DESC,
+		SUM(if((b.chosen_position >=3),1,0)) DESC,
 		SUM(if((b.chosen_position IN (8,9,10,12)),1,0)) DESC)t1,
 		(SELECT
 		@rowno:=0)t2)t3
@@ -962,11 +1372,11 @@
 		t1.presetpositioneditor,t1.presetpositionsubeditor,t1.presetpositioneditorial,
 		t1.presetdigitaleditor
 		FROM (
-		SELECT SUM(if((b.preset_position IN (4,5,6,7,12,13,14,15)),1,0))
+		SELECT SUM(if((b.preset_position IN (1)),1,0))
 		presetpositioneditor,
 		SUM(if((b.preset_position IN
-		(2,3,6,7,10,11,14,15)),1,0)) presetpositionsubeditor,
-		SUM(if((b.preset_position IN (1,3,5,7,9,11,13,15)),1,0))
+		(2)),1,0)) presetpositionsubeditor,
+		SUM(if((b.preset_position IN (3)),1,0))
 		presetpositioneditorial,
 		SUM(if((b.preset_position IN
 		(8,9,10,11,12,13,14,15)),1,0)) presetdigitaleditor,
@@ -985,6 +1395,42 @@
 		</if>
 		GROUP BY c.id ORDER BY c.sort ASC)t1,(SELECT @rowno:=0)t2 )t3 ;
 	</select>
+
+	<!-- 申报情况按书籍统计（申报职务） -->
+	<select id="getBookResultPreset2" parameterType="pageParameter"
+			resultType="DeclarationSituationBookResultVO">
+		SELECT * FROM (
+		SELECT @rowno:=@rowno+1 AS
+		row,t1.materialid,t1.id,t1.bookname,
+		t1.presetpositioneditor,t1.presetpositionsubeditor,t1.presetpositioneditorial,
+		t1.presetdigitaleditor
+		FROM (
+		SELECT SUM(if((b.preset_position =1),1,0))
+		presetpositioneditor,
+		SUM(if((b.preset_position =2),1,0)) presetpositionsubeditor,
+		SUM(if((b.preset_position =3),1,0))
+		presetpositioneditorial,
+		SUM(if((b.preset_position IN
+		(8,9,10,11,12,13,14,15)),1,0)) presetdigitaleditor,
+		d.id
+		materialid,c.id id,c.textbook_name bookname
+		FROM declaration a
+		LEFT JOIN dec_position b ON a.id = b.declaration_id
+		LEFT JOIN textbook c ON b.textbook_id = c.id
+		LEFT JOIN material d ON c.material_id = d.id
+		WHERE a.is_staging = 0 AND a.online_progress > 0 AND b.preset_position IS
+		NOT NULL
+		AND d.id = #{parameter.materialId}
+		<if test="parameter.bookName !=null and parameter.bookName !=''">
+			and c.textbook_name like concat
+			('%',#{parameter.bookName},'%')
+		</if>
+		GROUP BY c.id ORDER BY c.sort ASC)t1,(SELECT @rowno:=0)t2 )t3 ;
+	</select>
+
+
+
+	<!-- 申报情况按书籍统计（申报职务） -->
 
 	<select id="getChoseCount" parameterType="map" resultType="int">
 
@@ -1016,11 +1462,43 @@
 		t1.chosenpositioneditor,t1.chosenpositionsubeditor,t1.chosenpositioneditorial,
 		t1.isdigitaleditor
 		FROM (
-		SELECT SUM(if((b.chosen_position IN (4,12)),1,0))
+		SELECT SUM(if((b.chosen_position IN (1)),1,0))
 		chosenpositioneditor,
-		SUM(if((b.chosen_position IN (2,10)),1,0))
+		SUM(if((b.chosen_position IN (2)),1,0))
 		chosenpositionsubeditor,
-		SUM(if((b.chosen_position IN (1,9)),1,0))
+		SUM(if((b.chosen_position IN (3)),1,0))
+		chosenpositioneditorial,
+		SUM(if((b.chosen_position IN
+		(8,9,10,12)),1,0)) isdigitaleditor,
+		d.id materialid,c.id
+		id,c.textbook_name bookname
+		FROM declaration a
+		LEFT JOIN dec_position_published b ON a.id = b.declaration_id
+		LEFT JOIN textbook c ON b.textbook_id = c.id
+		LEFT JOIN material d ON c.material_id = d.id
+		WHERE a.is_staging = 0 AND a.online_progress > 0
+		AND d.id = #{parameter.materialId}
+		<if test="parameter.bookName !=null and parameter.bookName !=''">
+			and c.textbook_name like concat
+			('%',#{parameter.bookName},'%')
+		</if>
+		GROUP BY c.id ORDER BY c.sort ASC)t1,(SELECT @rowno:=0)t2 )t3 ;
+	</select>
+
+	<!-- 申报情况按书籍统计（当选职务） -->
+	<select id="getBookResultChosen2" parameterType="pageParameter"
+			resultType="DeclarationSituationBookResultVO">
+		SELECT * FROM (
+		SELECT @rowno:=@rowno+1 AS
+		row,t1.materialid,t1.id,t1.bookname,
+		t1.chosenpositioneditor,t1.chosenpositionsubeditor,t1.chosenpositioneditorial,
+		t1.isdigitaleditor
+		FROM (
+		SELECT SUM(if((b.chosen_position =1),1,0))
+		chosenpositioneditor,
+		SUM(if((b.chosen_position =2),1,0))
+		chosenpositionsubeditor,
+		SUM(if((b.chosen_position =3),1,0))
 		chosenpositioneditorial,
 		SUM(if((b.chosen_position IN
 		(8,9,10,12)),1,0)) isdigitaleditor,
@@ -1081,6 +1559,44 @@
 		;
 	</select>
 
+	<!-- 申报结果按学校统计（按申报数排序） -->
+	<select id="getSchoolListPreset2" parameterType="pageParameter"
+			resultType="DeclarationResultSchoolVO">
+		SELECT * FROM (
+		SELECT @rowno:=@rowno+1 AS
+		row,t1.materialid,t1.orgid,t1.schoolname,t1.bookname,t1.editorlist,
+		t1.subeditorlist,t1.editoriallist,t1.isdigitaleditorlist
+		FROM (
+		SELECT '-' editorlist,'-' subeditorlist,'-' editoriallist,'-'
+		isdigitaleditorlist,
+		d.id materialid,e.id orgid,e.org_name schoolname,
+		c.textbook_name bookname
+		FROM declaration a
+		LEFT JOIN dec_position b ON a.id = b.declaration_id
+		LEFT JOIN textbook c ON b.textbook_id = c.id
+		LEFT JOIN material d ON c.material_id = d.id
+		LEFT JOIN (SELECT id,org_name FROM org UNION SELECT 0,'人民卫生出版社' FROM org)e
+		ON a.org_id = e.id
+		WHERE a.is_staging = 0 AND a.online_progress > 0 AND b.preset_position IS
+		NOT NULL
+		AND a.org_id IS NOT NULL
+		AND d.id = #{parameter.materialId}
+		<if test="parameter.schoolName !=null and parameter.schoolName !=''">
+			and e.org_name like concat ('%',#{parameter.schoolName},'%')
+		</if>
+		GROUP BY
+		a.org_id,
+		c.textbook_name ORDER BY SUM(if((b.preset_position =1),1,0)) DESC,
+		SUM(if((b.preset_position =2),1,0)) DESC,
+		SUM(if((b.preset_position >=3),1,0)) DESC,
+		SUM(if((b.preset_position IN
+		(8,9,10,11,12,13,14,15)),1,0)) DESC)t1,
+		(SELECT @rowno:=0)t2)t3 order by t3.schoolname,t3.bookname ASC
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+		;
+	</select>
 	<!-- 总数 申报结果按学校统计（连接申报职位表按当选数排序） -->
 	<select id="getSchoolListPresetChosenCount" parameterType="pageParameter"
 			resultType="int">
@@ -1231,6 +1747,45 @@
 		@rowno:=0)t2 )t3 ;
 	</select>
 
+
+	<!-- 申报结果按学校统计（按当选数排序,不分页） -->
+	<select id="getSchoolListChosen2" parameterType="pageParameter"
+			resultType="DeclarationResultSchoolVO">
+		SELECT * FROM(
+		SELECT @rowno:=@rowno+1 AS
+		row,t1.materialid,t1.orgid,t1.schoolname,t1.editorlist,
+		t1.subeditorlist,t1.editoriallist,t1.isdigitaleditorlist
+		FROM (
+		SELECT GROUP_CONCAT(if((b.chosen_position =1),a.realname,null)) editorlist,
+		GROUP_CONCAT(if((b.chosen_position =2),a.realname,null))
+		subeditorlist,
+		GROUP_CONCAT(if((b.chosen_position >=3),a.realname,null)) editoriallist,
+		GROUP_CONCAT(if((b.chosen_position IN (8,9,10,12)),a.realname,null))
+		isdigitaleditorlist,
+		d.id materialid,e.id orgid,e.org_name schoolname
+		FROM declaration a
+		LEFT JOIN dec_position_published b ON a.id = b.declaration_id
+		LEFT JOIN textbook c ON b.textbook_id = c.id
+		LEFT JOIN material d ON c.material_id = d.id
+		LEFT JOIN (SELECT id,org_name FROM org UNION SELECT 0,'人民卫生出版社' FROM org)e
+		ON a.org_id = e.id
+		WHERE a.is_staging = 0 AND a.online_progress > 0
+		AND a.org_id IS NOT NULL
+		AND d.id = #{parameter.materialId}
+		<if test="parameter.schoolName !=null and parameter.schoolName !=''">
+			and e.org_name like concat
+			('%',#{parameter.schoolName},'%')
+		</if>
+		GROUP BY a.org_id ORDER BY SUM(if((b.chosen_position =1),1,0))
+		DESC,
+		SUM(if((b.chosen_position =2),1,0)) DESC,
+		SUM(if((b.chosen_position >=3),1,0)) DESC,
+		SUM(if((b.chosen_position in (8,9,10,12)),1,0)) DESC)t1,
+		(SELECT
+		@rowno:=0)t2 )t3 ;
+	</select>
+
+
 	<!-- 申报结果按学校统计（按当选数排序,分页） -->
 	<select id="getSchoolListChosenPage" parameterType="pageParameter"
 		resultType="DeclarationResultSchoolVO">
@@ -1270,6 +1825,54 @@
 		DESC,
 		SUM(if((b.chosen_position in (2,10)),1,0)) DESC,
 		SUM(if((b.chosen_position in (1,9)),1,0)) DESC,
+		SUM(if((b.chosen_position in (8,9,10,12)),1,0)) DESC)t1,
+		(SELECT
+		@rowno:=0)t2 )t3 ORDER BY
+		t3.schoolname,
+		t3.bookname ASC
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+		;
+	</select>
+
+	<!-- 申报结果按学校统计（按当选数排序,分页） -->
+	<select id="getSchoolListChosenPage2" parameterType="pageParameter"
+			resultType="DeclarationResultSchoolVO">
+
+
+		SELECT * FROM(
+		SELECT @rowno:=@rowno+1 AS
+		row,t1.materialid,t1.orgid,t1.schoolname,	t1.bookname,t1.editorlist,
+		t1.subeditorlist,t1.editoriallist,t1.isdigitaleditorlist
+		FROM (
+		SELECT GROUP_CONCAT(if((b.chosen_position =1),a.realname,null)) editorlist,
+		GROUP_CONCAT(if((b.chosen_position =2),a.realname,null))
+		subeditorlist,
+		GROUP_CONCAT(if((b.chosen_position =3),a.realname,null)) editoriallist,
+		GROUP_CONCAT(if((b.chosen_position IN (8,9,10,12)),a.realname,null))
+		isdigitaleditorlist,
+		d.id materialid,e.id orgid,e.org_name schoolname,
+		c.textbook_name bookname
+		FROM declaration a
+		LEFT JOIN dec_position_published b ON a.id = b.declaration_id
+		LEFT JOIN textbook c ON b.textbook_id = c.id
+		LEFT JOIN material d ON c.material_id = d.id
+		LEFT JOIN (SELECT id,org_name FROM org UNION SELECT 0,'人民卫生出版社' FROM org)e
+		ON a.org_id = e.id
+		WHERE a.is_staging = 0 AND a.online_progress > 0
+		AND a.org_id IS NOT NULL
+		AND d.id = #{parameter.materialId}
+		<if test="parameter.schoolName !=null and parameter.schoolName !=''">
+			and e.org_name like concat
+			('%',#{parameter.schoolName},'%')
+		</if>
+		GROUP BY
+		a.org_id,
+		c.textbook_name ORDER BY SUM(if((b.chosen_position =1),1,0))
+		DESC,
+		SUM(if((b.chosen_position =2),1,0)) DESC,
+		SUM(if((b.chosen_position =3),1,0)) DESC,
 		SUM(if((b.chosen_position in (8,9,10,12)),1,0)) DESC)t1,
 		(SELECT
 		@rowno:=0)t2 )t3 ORDER BY
@@ -1350,6 +1953,34 @@
 		(SELECT @rowno:=0)t2 )t3 ;
 	</select>
 
+	<!-- 申报结果按书籍统计 -->
+	<select id="getBookChosenList2" parameterType="pageParameter"
+			resultType="DeclarationResultBookVO">
+		SELECT * FROM (
+		SELECT @rowno:=@rowno+1 AS
+		row,t1.materialid,t1.id,t1.bookname,t1.editorlist,
+		t1.subeditorlist,t1.editoriallist,t1.isdigitaleditorlist
+		FROM (
+		SELECT GROUP_CONCAT(if((b.chosen_position =1),a.realname,null)) editorlist,
+		GROUP_CONCAT(if((b.chosen_position =2),a.realname,null))
+		subeditorlist,
+		GROUP_CONCAT(if((b.chosen_position >=3),a.realname,null)) editoriallist,
+		GROUP_CONCAT(IF((b.chosen_position IN (8,9,10,12)),a.realname,null))
+		isdigitaleditorlist,
+		d.id materialid,c.id id,c.textbook_name bookname
+		FROM declaration a
+		LEFT JOIN dec_position_published b ON a.id = b.declaration_id
+		LEFT JOIN textbook c ON b.textbook_id = c.id
+		LEFT JOIN material d ON c.material_id = d.id
+		WHERE a.is_staging = 0 AND a.online_progress > 0
+		AND d.id = #{parameter.materialId}
+		<if test="parameter.bookName !=null and parameter.bookName !=''">
+			and c.textbook_name like concat ('%',#{parameter.bookName},'%')
+		</if>
+		GROUP BY c.id ORDER BY c.sort ASC)t1,
+		(SELECT @rowno:=0)t2 )t3 ;
+	</select>
+
 	<!-- 根据书籍id查询主编和副主编、编委 -->
 	<select id="getTextbookEditorList" parameterType="java.lang.Long"
 		resultType="TextbookDecVO">
@@ -1374,12 +2005,28 @@
 		where dp.chosen_position &amp; 1 >0
 		and dp.textbook_id=#{textbookId}
 	</select>
+	<!-- 根据书籍id查询编委 -->
+	<select id="getDecPositionByTextbookId2" parameterType="java.lang.Long"
+			resultType="DecPosition">
+		select * from dec_position dp
+		where dp.chosen_position &amp; 3 >0
+		and dp.textbook_id=#{textbookId}
+	</select>
+
 
 	<!-- 根据书籍id查询主编和副主编 -->
 	<select id="getMainDecPositionByTextbookId" parameterType="java.lang.Long"
 			resultType="DecPosition">
 		select * from dec_position dp
 		where (dp.chosen_position &amp; 4>0 || dp.chosen_position &amp; 2>0)
+
+		and dp.textbook_id=#{textbookId}
+	</select>
+	<!-- 根据书籍id查询主编和副主编 -->
+	<select id="getMainDecPositionByTextbookId2" parameterType="java.lang.Long"
+			resultType="DecPosition">
+		select * from dec_position dp
+		where (dp.chosen_position &amp; 1>0 || dp.chosen_position &amp; 2>0)
 
 		and dp.textbook_id=#{textbookId}
 	</select>
@@ -1396,11 +2043,35 @@
 		AND
 		dp.`textbook_id`= #{textbookId}
 	</select>
+	<!-- 根据书籍ID查询主编，副主编 -->
+	<select id="getEditorByTextbookId2" parameterType="java.lang.Long"
+			resultType="DecPosition">
+		SELECT
+		*
+		FROM
+		`dec_position` dp
+		WHERE
+		dp.`chosen_position` =1
+		AND
+		dp.`textbook_id`= #{textbookId}
+	</select>
 
 	<select id="getIsZhuBian" resultType="map">
 		 SELECT
 			realname,
 			(dp.chosen_position &amp; 4)>0 iszhubian,tb.textbook_name as textbookName,tb.id as textbookId,(dp.chosen_position &amp; 2)>0 isfubian
+		FROM
+			declaration d
+		LEFT JOIN dec_position dp ON d.id = dp.declaration_id
+		LEFT JOIN textbook tb ON tb.id = dp.textbook_id
+		WHERE
+			d.material_id = #{materialId}
+	</select>
+
+	<select id="getIsZhuBian2" resultType="map">
+		 SELECT
+			realname,
+			(dp.chosen_position &amp; 1)>0 iszhubian,tb.textbook_name as textbookName,tb.id as textbookId,(dp.chosen_position &amp; 2)>0 isfubian
 		FROM
 			declaration d
 		LEFT JOIN dec_position dp ON d.id = dp.declaration_id

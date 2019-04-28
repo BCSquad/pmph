@@ -13,6 +13,8 @@ import java.util.*;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.bc.pmpheep.back.dao.*;
+import com.bc.pmpheep.back.util.*;
 import com.bc.pmpheep.back.vo.*;
 import com.bc.pmpheep.wx.service.WXQYUserService;
 import org.apache.commons.beanutils.BeanComparator;
@@ -29,10 +31,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.bo.DecPositionBO;
-import com.bc.pmpheep.back.dao.MaterialDao;
-import com.bc.pmpheep.back.dao.PmphRoleDao;
-import com.bc.pmpheep.back.dao.PmphUserDao;
-import com.bc.pmpheep.back.dao.TextbookDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.DecPosition;
@@ -45,11 +43,6 @@ import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.po.WriterUserTrendst;
 import com.bc.pmpheep.back.service.common.SystemMessageService;
-import com.bc.pmpheep.back.util.CollectionUtil;
-import com.bc.pmpheep.back.util.ObjectUtil;
-import com.bc.pmpheep.back.util.PageParameterUitl;
-import com.bc.pmpheep.back.util.SessionUtil;
-import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.BookListVO;
 import com.bc.pmpheep.back.vo.BookPositionVO;
 import com.bc.pmpheep.back.vo.ExcelDecAndTextbookVO;
@@ -121,7 +114,8 @@ public class TextbookServiceImpl implements TextbookService {
 
 	@Autowired
 	WxSendMessageService wxSendMessageService;
-	
+	@Autowired
+	DeclarationDao declarationDao;
 	/**
 	 *
 	 * @param textbook
@@ -641,7 +635,18 @@ public class TextbookServiceImpl implements TextbookService {
 
 		Integer total = textbookDao.listBookPositionTotal(pageParameter);
 		if (null != total && total > 0) {
-			List<BookPositionVO> rows = textbookDao.listBookPosition_up1(pageParameter);
+
+			HashMap<String, Object> paraMap = new HashMap<>();
+			paraMap.put("material_id",materialId);
+			String material_id = declarationDao.findMaterialCreateDate(paraMap);
+			Date date1 = DateUtil.fomatDate(material_id);
+			Date date = DateUtil.fomatDate("2019-2-12 12:00");
+			List<BookPositionVO> rows;
+			if(date1.getTime()>date.getTime()) {
+				rows = textbookDao.listBookPosition_up12(pageParameter);
+			}else{
+				rows = textbookDao.listBookPosition_up1(pageParameter);
+			}
 			// 下面进行授权
 			for (BookPositionVO row : rows) {
 				String rowpower = "000000";

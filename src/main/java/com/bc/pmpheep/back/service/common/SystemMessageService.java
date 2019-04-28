@@ -2,10 +2,13 @@ package com.bc.pmpheep.back.service.common;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.bc.pmpheep.back.dao.DeclarationDao;
 import com.bc.pmpheep.back.po.*;
 import com.bc.pmpheep.back.service.*;
 import com.bc.pmpheep.back.vo.ExpertationVO;
@@ -91,6 +94,8 @@ public final class SystemMessageService {
 
 	@Autowired
 	private ProductService productService;
+	@Autowired
+	DeclarationDao declarationDao;
 
 	/**
 	 * 遴选公告发布时，给学校管理员和学校教师发送消息，通知他们留意报名情况或者是参加报名
@@ -219,45 +224,78 @@ public final class SystemMessageService {
 					"该书籍没有找到对应的教材");
 		}
 		// 获取这本书的申报遴选列表
+		HashMap<String, Object> paraMap = new HashMap<>();
+		paraMap.put("material_id",textbook.getMaterialId());
+		String materialCreateDate = declarationDao.findMaterialCreateDate(paraMap);
+		Date date1 = DateUtil.fomatDate(materialCreateDate);
+		Date date = DateUtil.fomatDate("2019-04-12 12:00");
 		for (DecPositionPublished decPosition : newMessage) {
 			if (null != decPosition && null != decPosition.getChosenPosition() && null != decPosition.getRank()) {// 筛选出主编、副主编
 				Declaration declaration = declarationService.getDeclarationById(decPosition.getDeclarationId());
 				// 消息内容
 				String msgContent = "";
-				if (decPosition.getChosenPosition() == 4 || decPosition.getChosenPosition() == 12) {
-					if (decPosition.getRank() == 1) {
-						if (decPosition.getChosenPosition() == 12) {
-							msgContent = "恭喜您被选为《<font color='red'>" + material.getMaterialName()
-									+ "</font>》<font color='red'>[" + textbook.getTextbookName()
-									+ "</font>]的第一主编和数字编委，您现在可以开始遴选编委了，最终结果以遴选结果公告为准";
-						} else {
+
+				if(date1.getTime()>date.getTime()) {
+
+					if (decPosition.getChosenPosition() == 1) {
+						if (decPosition.getRank() == 1) {
 							msgContent = "恭喜您被选为《<font color='red'>" + material.getMaterialName()
 									+ "</font>》<font color='red'>[" + textbook.getTextbookName()
 									+ "</font>]的第一主编，您现在可以开始遴选编委了，最终结果以遴选结果公告为准";
-						}
-
-					} else {
-						if (decPosition.getChosenPosition() == 12) {
-							msgContent = "恭喜您被选为《<font color='red'>" + material.getMaterialName()
-									+ "</font>》<font color='red'>[" + textbook.getTextbookName()
-									+ "</font>]的主编与数字编委，最终结果以遴选结果公告为准";
 						} else {
+
 							msgContent = "恭喜您被选为《<font color='red'>" + material.getMaterialName()
 									+ "</font>》<font color='red'>[" + textbook.getTextbookName()
 									+ "</font>]的主编，最终结果以遴选结果公告为准";
 						}
+
 					}
-				}
-				if (decPosition.getChosenPosition() == 2 || decPosition.getChosenPosition() == 10) {
-					if (decPosition.getChosenPosition() == 10) {
-						msgContent = "恭喜您被选为《<font color='red'>" + material.getMaterialName()
-								+ "</font>》<font color='red'>[" + textbook.getTextbookName()
-								+ "</font>]的副主编和数字编委，最终结果以遴选结果公告为准";
-					} else {
+					if (decPosition.getChosenPosition() == 2) {
 						msgContent = "恭喜您被选为《<font color='red'>" + material.getMaterialName()
 								+ "</font>》<font color='red'>[" + textbook.getTextbookName()
 								+ "</font>]的副主编，最终结果以遴选结果公告为准";
+
+
 					}
+
+				}else{
+					if (decPosition.getChosenPosition() == 4 || decPosition.getChosenPosition() == 12) {
+						if (decPosition.getRank() == 1) {
+							if (decPosition.getChosenPosition() == 12) {
+								msgContent = "恭喜您被选为《<font color='red'>" + material.getMaterialName()
+										+ "</font>》<font color='red'>[" + textbook.getTextbookName()
+										+ "</font>]的第一主编和数字编委，您现在可以开始遴选编委了，最终结果以遴选结果公告为准";
+							} else {
+								msgContent = "恭喜您被选为《<font color='red'>" + material.getMaterialName()
+										+ "</font>》<font color='red'>[" + textbook.getTextbookName()
+										+ "</font>]的第一主编，您现在可以开始遴选编委了，最终结果以遴选结果公告为准";
+							}
+
+						} else {
+							if (decPosition.getChosenPosition() == 12) {
+								msgContent = "恭喜您被选为《<font color='red'>" + material.getMaterialName()
+										+ "</font>》<font color='red'>[" + textbook.getTextbookName()
+										+ "</font>]的主编与数字编委，最终结果以遴选结果公告为准";
+							} else {
+								msgContent = "恭喜您被选为《<font color='red'>" + material.getMaterialName()
+										+ "</font>》<font color='red'>[" + textbook.getTextbookName()
+										+ "</font>]的主编，最终结果以遴选结果公告为准";
+							}
+						}
+					}
+					if (decPosition.getChosenPosition() == 2 || decPosition.getChosenPosition() == 10) {
+						if (decPosition.getChosenPosition() == 10) {
+							msgContent = "恭喜您被选为《<font color='red'>" + material.getMaterialName()
+									+ "</font>》<font color='red'>[" + textbook.getTextbookName()
+									+ "</font>]的副主编和数字编委，最终结果以遴选结果公告为准";
+						} else {
+							msgContent = "恭喜您被选为《<font color='red'>" + material.getMaterialName()
+									+ "</font>》<font color='red'>[" + textbook.getTextbookName()
+									+ "</font>]的副主编，最终结果以遴选结果公告为准";
+						}
+
+					}
+
 
 				}
 				Message message = new Message(msgContent);

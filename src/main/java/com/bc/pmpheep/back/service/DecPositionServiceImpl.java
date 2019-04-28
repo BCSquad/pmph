@@ -8,19 +8,15 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
 import com.bc.pmpheep.back.dao.DataDictionaryDao;
+import com.bc.pmpheep.back.dao.DeclarationDao;
 import com.bc.pmpheep.back.util.*;
 import org.apache.commons.lang.StringUtils;
+import org.jsoup.helper.DataUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -83,6 +79,8 @@ public class DecPositionServiceImpl implements DecPositionService {
     private DecPositionTempService      decPositionTempService;
     @Autowired
     private DataDictionaryDao dataDictionaryDao;
+    @Autowired
+    DeclarationDao declarationDao;
 
     @Override
     public DecPosition addDecPosition(DecPosition decPosition) throws CheckedServiceException {
@@ -337,12 +335,23 @@ public class DecPositionServiceImpl implements DecPositionService {
                         StringUtil.toAllCheck(orgName));
         // 因为作家申报机构为0时 为人卫社 但机构中又不存在0机构 在此遍历作家申报的机构，如果为null这里设置为人卫社
         for (DecPositionEditorSelectionVO decPositionEditorSelectionVO : listEditorSelectionVOs) {
-            Map<String, Object> params = new HashMap<>();
-            params.put("type_code", Const.PMPH_POSITION);
-            int i = decPositionEditorSelectionVO.getPresetPosition();
-            params.put("code",i);
-            String post = dataDictionaryDao.getDataDictionaryNameByTypeAndCode(params);
-            decPositionEditorSelectionVO.setStrPresetPosition(post);
+
+
+            HashMap<String, Object> paraMap = new HashMap<>();
+            paraMap.put("declarationId",decPositionEditorSelectionVO.getDid());
+            String declarationlCreateDate = declarationDao.findDeclarationCreateDate(paraMap);
+            Date date1 = DateUtil.fomatDate(declarationlCreateDate);
+            Date date = DateUtil.fomatDate("2019-04-12 12:00");
+            if(date1.getTime()>date.getTime()) {
+                String post = decPositionEditorSelectionVO.getPresetPosition().toString();
+                if (post != null) {
+                    if (ObjectUtil.isNumber(post)) {
+                        post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, post);
+                    }
+                }
+                decPositionEditorSelectionVO.setStrPresetPosition(post);
+            }
+
             if (null == decPositionEditorSelectionVO.getReportName()) {
                 decPositionEditorSelectionVO.setReportName("人民卫生出版社");
             }
@@ -371,13 +380,13 @@ public class DecPositionServiceImpl implements DecPositionService {
         List<DecPositionEditorSelectionVO> digitalrList =
                 new ArrayList<DecPositionEditorSelectionVO>(selectedDecPositionEditorSelectionVOs.size());// 已遴选数字编委集合
         for (DecPositionEditorSelectionVO decVo : selectedDecPositionEditorSelectionVOs) {
-            if (4 == decVo.getChosenPosition() || 12 == decVo.getChosenPosition()) {// 主编 1100 0100
+            if (1 == decVo.getChosenPosition()) {// 主编 1100 0100
                 editorList.add(decVo);
-            } else if (2 == decVo.getChosenPosition() || 10 == decVo.getChosenPosition()) {// 副主编
+            } else if (2 == decVo.getChosenPosition() ) {// 副主编
                 // 1010
                 // 0010
                 subeditorList.add(decVo);
-            } else if (1 == decVo.getChosenPosition() || 9 == decVo.getChosenPosition()) {// 编委 1001
+            } else if ( decVo.getChosenPosition()>=3) {// 编委 1001
                 // 0001
                 editorialMemberList.add(decVo);
             } else if (8 == decVo.getChosenPosition()) {// 数字编委 1000
@@ -440,6 +449,9 @@ public class DecPositionServiceImpl implements DecPositionService {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
                     CheckedExceptionResult.NULL_PARAM, "用户为空");
         }
+
+
+
         Integer count = 0;
         List<DecPosition> decPositions =
                 new JsonUtil().getArrayListObjectFromStr(DecPosition.class, jsonDecPosition);// json字符串转List对象集合
@@ -542,42 +554,90 @@ public class DecPositionServiceImpl implements DecPositionService {
                 List<DecPositionPublished> decPositionPublisheds =
                         new ArrayList<DecPositionPublished>(decPositionsList.size());
                 for (DecPosition decPosition : decPositionsList) {
+                    HashMap<String, Object> paraMap = new HashMap<>();
+                    paraMap.put("declarationId",decPosition.getDeclarationId());
+                    String declarationlCreateDate = declarationDao.findDeclarationCreateDate(paraMap);
+                    Date date1 = DateUtil.fomatDate(declarationlCreateDate);
+                    Date date = DateUtil.fomatDate("2019-04-12 12:00");
+
                     // 筛选出遴选上的主编副主编人员
                     Integer chosenPosition = decPosition.getChosenPosition();
-                    if (null != chosenPosition
-                            && (chosenPosition == 4 || chosenPosition == 2 || chosenPosition == 12 || chosenPosition == 10)) {
-                        chosenPosition = chosenPosition > 8 ? chosenPosition - 8 : chosenPosition;
-                        decPositionPublisheds.add(new DecPositionPublished(
-                                pmphUser.getId(),
-                                decPosition.getDeclarationId(),
-                                textbookId,
-                                decPosition.getPresetPosition(),
-                                chosenPosition,
-                                decPosition.getRank(),
-                                decPosition.getSyllabusId(),
-                                decPosition.getSyllabusName()));
+                    if(date1.getTime()>date.getTime()) {
+                        if (null != chosenPosition && (chosenPosition == 1 || chosenPosition == 2)) {
+                            decPositionPublisheds.add(new DecPositionPublished(
+                                    pmphUser.getId(),
+                                    decPosition.getDeclarationId(),
+                                    textbookId,
+                                    decPosition.getPresetPosition(),
+                                    chosenPosition,
+                                    decPosition.getRank(),
+                                    decPosition.getSyllabusId(),
+                                    decPosition.getSyllabusName()));
+                        }
+                    }else{
+                        if (null != chosenPosition
+                                && (chosenPosition == 4 || chosenPosition == 2 || chosenPosition == 12 || chosenPosition == 10)) {
+                            chosenPosition = chosenPosition > 8 ? chosenPosition - 8 : chosenPosition;
+                            decPositionPublisheds.add(new DecPositionPublished(
+                                    pmphUser.getId(),
+                                    decPosition.getDeclarationId(),
+                                    textbookId,
+                                    decPosition.getPresetPosition(),
+                                    chosenPosition,
+                                    decPosition.getRank(),
+                                    decPosition.getSyllabusId(),
+                                    decPosition.getSyllabusName()));
+                        }
                     }
+
                 }
                 // 已经公布的列表
                 List<DecPositionPublished> lst =
                         decPositionPublishedService.getDecPositionPublishedListByBookId(textbookId);
                 List<DecPositionPublished> addNew = new ArrayList<DecPositionPublished>(16);
                 for (DecPositionPublished item : lst) {
+                    HashMap<String, Object> paraMap = new HashMap<>();
+                    paraMap.put("declarationId",item.getDeclarationId());
+                    String declarationlCreateDate = declarationDao.findDeclarationCreateDate(paraMap);
+                    Date date1 = DateUtil.fomatDate(declarationlCreateDate);
+                    Date date = DateUtil.fomatDate("2019-04-12 12:00");
                     // 编委 | 数字编委
-                    if (item.getChosenPosition() == 1 || item.getChosenPosition() >= 8) {
-                        // item.setChosenPosition(item.getChosenPosition() > 8
-                        // ?(item.getChosenPosition()-8):item.getChosenPosition() );
-                        addNew.add(item);
+                    if(date1.getTime()>date.getTime()) {
+                        if (item.getChosenPosition() == 3) {
+                            // item.setChosenPosition(item.getChosenPosition() > 8
+                            // ?(item.getChosenPosition()-8):item.getChosenPosition() );
+                            addNew.add(item);
+                        }
+
+                    }else{
+                        if (item.getChosenPosition() == 1 || item.getChosenPosition() >= 8) {
+                            // item.setChosenPosition(item.getChosenPosition() > 8
+                            // ?(item.getChosenPosition()-8):item.getChosenPosition() );
+                            addNew.add(item);
+                        }
                     }
                 }
                 // 加入主编副主编
                 for (DecPositionPublished item : decPositionPublisheds) {
                     boolean no = true;
                     for (DecPositionPublished itemadd : addNew) {
+                        HashMap<String, Object> paraMap = new HashMap<>();
+                        paraMap.put("declarationId",itemadd.getDeclarationId());
+                        String declarationlCreateDate = declarationDao.findDeclarationCreateDate(paraMap);
+                        Date date1 = DateUtil.fomatDate(declarationlCreateDate);
+                        Date date = DateUtil.fomatDate("2019-04-12 12:00");
+
+
                         if (itemadd.getDeclarationId().intValue() == item.getDeclarationId()
                                 .intValue()) {
                             no = false;
-                            itemadd.setChosenPosition(item.getChosenPosition() + 8);
+                            if(date1.getTime()>date.getTime()) {
+                                itemadd.setChosenPosition(item.getChosenPosition());
+                            }else{
+                                itemadd.setChosenPosition(item.getChosenPosition() + 8);
+                            }
+
+
                             break;
                         }
                     }
@@ -643,9 +703,21 @@ public class DecPositionServiceImpl implements DecPositionService {
         if (total > 0) {
             boolean flag = false;
             List<DeclarationSituationSchoolResultVO> chosens =
-                    decPositionDao.getSchoolResultChosenPage(pageParameter);
+                    decPositionDao.getSchoolResultChosenPage2(pageParameter);
             List<DeclarationSituationSchoolResultVO> presets =
-                    decPositionDao.getSchoolResultPresetChosen(pageParameter);
+                    decPositionDao.getSchoolResultPresetChosen2(pageParameter);
+            HashMap<String, Object> paraMap = new HashMap<>();
+            paraMap.put("material_id",pageParameter.getParameter().getMaterialId());
+            String declarationlCreateDate = declarationDao.findMaterialCreateDate(paraMap);
+            Date date1 = DateUtil.fomatDate(declarationlCreateDate);
+            Date date = DateUtil.fomatDate("2019-04-12 12:00");
+            if(date1.getTime()>date.getTime()) {
+                chosens =
+                        decPositionDao.getSchoolResultChosenPage2(pageParameter);
+                presets =
+                        decPositionDao.getSchoolResultPresetChosen2(pageParameter);
+
+            }
             List<DeclarationSituationSchoolResultVO> delList = new ArrayList<>();
             List<DeclarationSituationSchoolResultVO> list = new ArrayList<>();
             if (null == chosens || chosens.isEmpty()) {
@@ -724,10 +796,24 @@ public class DecPositionServiceImpl implements DecPositionService {
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
         int total = decPositionDao.getSchoolCount(pageParameter.getParameter().getMaterialId());
         if (total > 0) {
+
             List<DeclarationSituationSchoolResultVO> presets =
-                    decPositionDao.getSchoolResultPreset(pageParameter);
+                    decPositionDao.getSchoolResultPreset2(pageParameter);
             List<DeclarationSituationSchoolResultVO> chosens =
-                    decPositionDao.getSchoolResultChosen(pageParameter);
+                    decPositionDao.getSchoolResultChosen2(pageParameter);
+
+            HashMap<String, Object> paraMap = new HashMap<>();
+            paraMap.put("material_id",pageParameter.getParameter().getMaterialId());
+            String material_id = declarationDao.findMaterialCreateDate(paraMap);
+            Date date1 = DateUtil.fomatDate(material_id);
+            Date date = DateUtil.fomatDate("2019-2-12 12:00");
+            if(date1.getTime()>date.getTime()) {
+               presets =
+                        decPositionDao.getSchoolResultPreset2(pageParameter);
+                chosens =
+                        decPositionDao.getSchoolResultChosen2(pageParameter);
+            }
+
             List<DeclarationSituationSchoolResultVO> list = new ArrayList<>();
             if (null == chosens || chosens.isEmpty()) {
                 for (DeclarationSituationSchoolResultVO preset : presets) {
@@ -925,7 +1011,18 @@ public class DecPositionServiceImpl implements DecPositionService {
         if (total > 0) {
             boolean flag = false;
             List<DeclarationResultSchoolVO> chosens =
-                    decPositionDao.getSchoolListChosenPage(pageParameter);
+                    decPositionDao.getSchoolListChosenPage2(pageParameter);
+
+            HashMap<String, Object> paraMap = new HashMap<>();
+            paraMap.put("material_id",pageParameter.getParameter().getMaterialId());
+            String declarationlCreateDate = declarationDao.findDeclarationCreateDate(paraMap);
+            Date date1 = DateUtil.fomatDate(declarationlCreateDate);
+            Date date = DateUtil.fomatDate("2019-04-12 12:00");
+            if(date1.getTime()>date.getTime()) {
+               chosens =
+                        decPositionDao.getSchoolListChosenPage2(pageParameter);
+            }
+
             List<DeclarationResultSchoolVO> presets =
                     decPositionDao.getSchoolListPresetChosen(pageParameter);
             List<DeclarationResultSchoolVO> delList = new ArrayList<>();
@@ -1004,9 +1101,25 @@ public class DecPositionServiceImpl implements DecPositionService {
         int total = decPositionDao.getSchoolListPresetChosenCount(pageParameter);
         if (total > 0) {
             List<DeclarationResultSchoolVO> presets =
-                    decPositionDao.getSchoolListPreset(pageParameter);
+                    decPositionDao.getSchoolListPreset2(pageParameter);
             List<DeclarationResultSchoolVO> chosens =
-                    decPositionDao.getSchoolListChosen(pageParameter);
+                    decPositionDao.getSchoolListChosen2(pageParameter);
+
+            HashMap<String, Object> paraMap = new HashMap<>();
+            paraMap.put("material_id",pageParameter.getParameter().getMaterialId());
+            String declarationlCreateDate = declarationDao.findDeclarationCreateDate(paraMap);
+            Date date1 = DateUtil.fomatDate(declarationlCreateDate);
+            Date date = DateUtil.fomatDate("2019-04-12 12:00");
+            if(date1.getTime()>date.getTime()) {
+               presets =
+                        decPositionDao.getSchoolListPreset2(pageParameter);
+               chosens =
+                        decPositionDao.getSchoolListChosen2(pageParameter);
+            }
+
+
+
+
             List<DeclarationResultSchoolVO> list = new ArrayList<>();
             if (null == chosens || chosens.isEmpty()) {
                 for (DeclarationResultSchoolVO preset : presets) {
@@ -1064,8 +1177,18 @@ public class DecPositionServiceImpl implements DecPositionService {
         //int total = decPositionDao.getBooks(pageParameter.getParameter().getMaterialId());
         int total = decPositionDao.getBookListTwoCount(pageParameter);
         if (total > 0) {
+            List<DeclarationResultBookVO> VOs = decPositionDao.getBookChosenList2(pageParameter);
+            HashMap<String, Object> paraMap = new HashMap<>();
+            paraMap.put("material_id",pageParameter.getParameter().getMaterialId());
+            String declarationlCreateDate = declarationDao.findDeclarationCreateDate(paraMap);
+            Date date1 = DateUtil.fomatDate(declarationlCreateDate);
+            Date date = DateUtil.fomatDate("2019-04-12 12:00");
+            if(date1.getTime()>date.getTime()) {
+                VOs = decPositionDao.getBookChosenList2(pageParameter);
+
+            }
+
             List<DeclarationResultBookVO> books = decPositionDao.getBookListTwo(pageParameter);
-            List<DeclarationResultBookVO> VOs = decPositionDao.getBookChosenList(pageParameter);
             List<DeclarationResultBookVO> list = new ArrayList<>();
             if (null == VOs || VOs.isEmpty()) {
                 pageResult.setRows(books);

@@ -613,4 +613,309 @@ public interface DecPositionDao {
 
     //计算当选人数
     Integer getChoseCount(@Param("bookId") Long id, @Param("materialId") Long materialId,@Param("bookName") String bookName);
+
+
+        /**
+         * 根据orgid和bookid获取该机构某些已公布的书的申报职位
+         *
+         * @author Mryang
+         * @createDate 2017年11月19日 上午10:13:40
+         * @param map
+         * @return
+         */
+        List<DecPosition> listDecPositionsByTextbookIdAndOrgid2(Map<String, Object> map);
+
+        /**
+         *
+         * <pre>
+         * 功能描述：教材申报-遴选主编/遴选编委 (根据书籍Id查询所有申报id)
+         * 使用示范：
+         *
+         * @param textbookId  书籍Id
+         * @return 所有申报id
+         * </pre>
+         */
+        List<Long> getDecPositionIdByBookId2(@Param("textbookId") Long textbookId,
+                                            @Param("editorOrSubeditorType") Integer editorOrSubeditorType);
+
+
+
+
+
+        /**
+         *
+         *
+         * 功能描述：获取申报书籍和职位
+         *
+         * @param declarationId 申报表id
+         * @return
+         *
+         */
+
+        Map<String, String> getTextbookNameAndPresetPosition2(Long declarationId);
+
+
+
+
+
+
+
+        /**
+         *
+         * <pre>
+         * 功能描述：教材申报-遴选主编/遴选编委(列表)
+         * 使用示范：
+         *
+         * &#64;param textbookId 书籍ID
+         * &#64;param realName 申报人姓名
+         * &#64;param presetPosition 申报职位
+         * &#64;return
+         * </pre>
+         */
+        List<DecPositionEditorSelectionVO> listEditorSelection2(@Param("textbookId") Long textbookId,
+                                                               @Param("realName") String realName, @Param("orgName") String orgName);
+
+
+
+
+
+
+
+
+        /**
+         *
+         * Description:根据教材id获取院校当选总数
+         *
+         * @author:lyc
+         * @date:2018年1月2日下午4:12:15
+         * @param
+         * @return Integer
+         */
+        Integer getSchoolDeclarationChosenCount2(Long materialId);
+
+
+
+
+
+        /**
+         *
+         * Description:根据教材id获取副主编申报总数
+         *
+         * @author:lyc
+         * @date:2017年11月30日下午6:11:35
+         * @param
+         * @return Integer
+         */
+        Integer getSubEditorCount2(Long materialId);
+
+        /**
+         *
+         * Description:根据教材id获取编委申报总数
+         *
+         * @author:lyc
+         * @date:2017年11月30日下午6:12:13
+         * @param
+         * @return Integer
+         */
+        Integer getEditorialCount2(Long materialId);
+
+
+        /**
+         *
+         * Description:根据教材id获取主编当选总数
+         *
+         * @author:lyc
+         * @date:2018年1月2日下午3:38:02
+         * @param
+         * @return Integer
+         */
+        Integer getChosenEditorCount2(Long materialId);
+
+        /**
+         *
+         * Description:根据教材id获取副主编当选总数
+         *
+         * @author:lyc
+         * @date:2018年1月2日下午3:38:44
+         * @param
+         * @return Integer
+         */
+        Integer getChosenSubeditorCount2(Long materialId);
+
+        /**
+         *
+         * Description:根据教材id获取编委当选总数
+         *
+         * @author:lyc
+         * @date:2018年1月2日下午3:39:09
+         * @param
+         * @return Integer
+         */
+        Integer getChosenEditorialCount2(Long materialId);
+
+
+
+        /**
+         *
+         * Description:根据教材id（和学校名称）查询学校当选职务情况（按当选结果排序,不分页）
+         *
+         * @author:lyc
+         * @date:2017年12月1日下午2:30:41
+         * @param
+         * @return List<DeclarationSituationSchoolResultVO>
+         */
+        List<DeclarationSituationSchoolResultVO> getSchoolResultChosen2(
+                PageParameter<DeclarationSituationSchoolResultVO> pageParameter);
+
+        /**
+         * Description:根据教材id（和学校名称）查询学校当选职务情况（按当选结果排序,分页）
+         * @param pageParameter
+         * @author:lyc
+         * @date:2018年3月21日下午4:17:32
+         * @return List<DeclarationSituationSchoolResultVO>
+         */
+        List<DeclarationSituationSchoolResultVO> getSchoolResultChosenPage2(
+                PageParameter<DeclarationSituationSchoolResultVO> pageParameter);
+
+        /**
+         *
+         * Description:根据教材id（和学校名称）查询学校申报职务情况（按申报结果排序）
+         *
+         * @author:lyc
+         * @date:2017年12月5日上午10:15:13
+         * @param
+         * @return List<DeclarationSituationSchoolResultVO>
+         */
+        List<DeclarationSituationSchoolResultVO> getSchoolResultPreset2(
+                PageParameter<DeclarationSituationSchoolResultVO> pageParameter);
+
+        /**
+         * Description:根据教材id（和学校名称）查询学校申报职务情况（按连接申报职位表按当选结果排序）
+         *
+         * @author:lyc
+         * @date:2018年3月21日上午11:30:23
+         * @param pageParameter
+         * @return List<DeclarationSituationSchoolResultVO>
+         */
+        List<DeclarationSituationSchoolResultVO> getSchoolResultPresetChosen2(
+                PageParameter<DeclarationSituationSchoolResultVO> pageParameter);
+
+
+
+
+        /**
+         *
+         * Description:根据教材id（和书本名称）查询学校申报职务情况
+         *
+         * @author:lyc
+         * @date:2017年12月1日下午5:20:08
+         * @param
+         * @return List<DeclarationSituationBookResultVO>
+         */
+        List<DeclarationSituationBookResultVO> getBookResultPreset2(
+                PageParameter<DeclarationSituationBookResultVO> pageParameter);
+
+        /**
+         *
+         * Description:根据教材id（和书本名称）查询学校当选职务情况
+         *
+         * @author:lyc
+         * @date:2017年12月1日下午5:20:08
+         * @param
+         * @return List<DeclarationSituationBookResultVO>
+         */
+        List<DeclarationSituationBookResultVO> getBookResultChosen2(
+                PageParameter<DeclarationSituationBookResultVO> pageParameter);
+
+        /**
+         *
+         * Description:根据教材id（和学校名）查询统计结果（按当选人数排名,不分页）
+         *
+         * @author:lyc
+         * @date:2017年12月1日下午5:56:59
+         * @param
+         * @return List<DeclarationResultSchoolVO>
+         */
+        List<DeclarationResultSchoolVO> getSchoolListChosen2(
+                PageParameter<DeclarationResultSchoolVO> pageParameter);
+
+        /**
+         * Description:根据教材id（和学校名）查询统计结果（按当选人数排名,分页）
+         *
+         * @author:lyc
+         * @date:2018年3月21日下午4:20:49
+         * @param pageParameter
+         * @return List<DeclarationResultSchoolVO>
+         */
+        List<DeclarationResultSchoolVO> getSchoolListChosenPage2(
+                PageParameter<DeclarationResultSchoolVO> pageParameter);
+
+        /**
+         *
+         * Description:根据教材id（和学校名）查询统计结果（按申报人数排名）
+         *
+         * @author:lyc
+         * @date:2017年12月5日上午11:15:38
+         * @param
+         * @return List<DeclarationResultSchoolVO>
+         */
+        List<DeclarationResultSchoolVO> getSchoolListPreset2(
+                PageParameter<DeclarationResultSchoolVO> pageParameter);
+
+
+
+
+
+
+        /**
+         *
+         * Description:根据教材id（和书名）查询统计结果
+         *
+         * @author:lyc
+         * @date:2017年12月1日下午6:35:54
+         * @param
+         * @return List<DeclarationResultBookVO>
+         */
+        List<DeclarationResultBookVO> getBookChosenList2(PageParameter<DeclarationResultBookVO> pageParameter);
+
+
+
+        /**
+         * 根据书籍id查询编委
+         *
+         * @param textbookId
+         * @return
+         */
+        List<DecPosition> getDecPositionByTextbookId2( Long textbookId);
+
+        /**
+         * 根据书籍id查询主编副主编
+         * @param textbookId
+         * @return
+         */
+        List<DecPosition> getMainDecPositionByTextbookId2( Long textbookId);
+
+
+
+        /**
+         *
+         * <pre>
+         * 功能描述：根据书籍ID查询书籍选中的主编，副主编
+         * 使用示范：
+         *
+         * @param textbookId 书籍ID
+         * @return DecPosition集合
+         * </pre>
+         */
+        List<DecPosition> getEditorByTextbookId2(Long textbookId);
+
+        /*
+        获取当前教材下的主编
+         */
+        List<Map<String,Object>> getIsZhuBian2(@Param("materialId") Long materialId);
+
+
+
+
+
 }
