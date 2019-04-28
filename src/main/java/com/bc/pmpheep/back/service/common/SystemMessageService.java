@@ -228,7 +228,7 @@ public final class SystemMessageService {
 		paraMap.put("material_id",textbook.getMaterialId());
 		String materialCreateDate = declarationDao.findMaterialCreateDate(paraMap);
 		Date date1 = DateUtil.fomatDate(materialCreateDate);
-		Date date = DateUtil.fomatDate("2019-04-12 12:00");
+		Date date = DateUtil.fomatDate("2019-2-12 12:00");
 		for (DecPositionPublished decPosition : newMessage) {
 			if (null != decPosition && null != decPosition.getChosenPosition() && null != decPosition.getRank()) {// 筛选出主编、副主编
 				Declaration declaration = declarationService.getDeclarationById(decPosition.getDeclarationId());

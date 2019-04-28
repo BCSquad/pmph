@@ -1355,7 +1355,7 @@ public class DeclarationServiceImpl implements DeclarationService {
         String materialCreateDate = declarationDao.findMaterialCreateDate(params);
 
         Date date1 = DateUtil.fomatDate(materialCreateDate);
-        Date date = DateUtil.fomatDate("2019-04-12 12:00");
+        Date date = DateUtil.fomatDate("2019-2-12 12:00");
         List<DeclarationOrDisplayVO> declarationOrDisplayVOs;
         if(date1.getTime()>date.getTime()) {
             declarationOrDisplayVOs= declarationDao.getDeclarationOrDisplayVOByIdOrRealname2(decIds);

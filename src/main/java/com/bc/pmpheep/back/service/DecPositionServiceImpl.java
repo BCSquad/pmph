@@ -710,7 +710,7 @@ public class DecPositionServiceImpl implements DecPositionService {
             paraMap.put("material_id",pageParameter.getParameter().getMaterialId());
             String declarationlCreateDate = declarationDao.findMaterialCreateDate(paraMap);
             Date date1 = DateUtil.fomatDate(declarationlCreateDate);
-            Date date = DateUtil.fomatDate("2019-04-12 12:00");
+            Date date = DateUtil.fomatDate("2019-2-12 12:00");
             if(date1.getTime()>date.getTime()) {
                 chosens =
                         decPositionDao.getSchoolResultChosenPage2(pageParameter);
