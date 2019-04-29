@@ -1002,7 +1002,27 @@
 		</foreach>
 			GROUP BY dp.`textbook_id`
 	</select>
-	
+
+	<select id="getExcelDecByMaterialId2" resultType="com.bc.pmpheep.back.bo.DecPositionBO">
+		select 	tk.textbook_name,tk.textbook_round,tk.sort,dc.id as did,
+		CONCAT('[',GROUP_CONCAT(CONCAT('{realname:"',dc.realname,'",',
+		'chosenOrgName:"',if(dc.org_id >0,org.org_name,'人民卫生出版社'),'",','chosenPosition:',dp.chosen_position,',',
+		'rank:',if(dp.rank is not null,dp.rank,0),'}') ORDER BY if(dp.chosen_position=1,dp.chosen_position,1) desc ,dp.rank asc),']') writers
+		from dec_position dp
+		left join declaration dc on dp.declaration_id=dc.id
+		left join org org on dc.org_id=org.id
+		left join writer_user wu on wu.id =dc.user_id
+		left join textbook tk on tk.id =dp.textbook_id
+		left join material m on m.id=tk.material_id
+		WHERE dc.is_staging=false and dc.online_progress!=0
+		and dp.chosen_position in(1,2)
+		and dp.`textbook_id` in
+		<foreach collection="array" item="item" index="index" open="("
+				 separator="," close=")">
+			#{item}
+		</foreach>
+		GROUP BY dp.`textbook_id`
+	</select>
 	<!-- 遴选编委后修改 再次修改次数-->
 	<update id="updatRevisionTimesByTextBookId" parameterType="java.util.Map">
 		UPDATE textbook SET revision_times=revision_times+(#{number}) WHERE id = #{textBookId};
