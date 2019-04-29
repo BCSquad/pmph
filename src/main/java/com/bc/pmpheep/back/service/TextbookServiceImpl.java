@@ -1297,6 +1297,15 @@ public class TextbookServiceImpl implements TextbookService {
 			String declarationlCreateDate = declarationDao.findDeclarationCreateDate(paraMap);
 			Date date1 = DateUtil.fomatDate(declarationlCreateDate);
 			Date date = DateUtil.fomatDate("2019-04-12 12:00");
+			String tit =excelDecAndTextbookVO.getTitle().toString();
+			if(tit!=null){
+				if(ObjectUtil.isNumber(tit)){
+					tit = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.WRITER_USER_TITLE, tit);
+				}
+			}
+
+			excelDecAndTextbookVO.setTitle(tit);
+
 			if(date1.getTime()>date.getTime()) {
 				String post =excelDecAndTextbookVO.getChosenPosition().toString();
 				post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, post);
