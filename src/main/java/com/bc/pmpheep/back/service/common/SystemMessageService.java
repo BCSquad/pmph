@@ -1084,8 +1084,59 @@ public final class SystemMessageService {
 		Textbook textbook = textbookService.getTextbookById(textBookId);
 		Material material = materialService.getMaterialById(textbook.getMaterialId());
 		// 给主编、副主编、编委、数字编委发送
+
+		HashMap<String, Object> paraMap = new HashMap<>();
+		paraMap.put("material_id",textbook.getMaterialId());
+		String materialCreateDate = declarationDao.findMaterialCreateDate(paraMap);
+		Date date1 = DateUtil.fomatDate(materialCreateDate);
+		Date date = DateUtil.fomatDate("2019-2-12 12:00");
 		String msg = "";
 		for (DecPositionPublished decPosition : decPositionPublishedLst) {
+			if(date1.getTime()>date.getTime()) {
+
+				if (decPosition.getChosenPosition() == 1) {
+					if (null != decPosition.getRank() && decPosition.getRank() == 1) {
+						if (decPosition.getChosenPosition() == 1) {
+							msg = "《<font color='red'>" + material.getMaterialName() + "</font>》[<font color='red'>"
+									+ textbook.getTextbookName() + "</font>]的最终结果已公布，恭喜您当选[<font color='red'>"
+									+ textbook.getTextbookName() + "</font>]的第一主编";
+						} else {
+							msg = "《<font color='red'>" + material.getMaterialName() + "</font>》[<font color='red'>"
+									+ textbook.getTextbookName() + "</font>]的最终结果已公布，恭喜您当选[<font color='red'>"
+									+ textbook.getTextbookName() + "</font>]的第一主编、数字编委";
+						}
+					} else {
+						if (decPosition.getChosenPosition() == 1) {
+							msg = "《<font color='red'>" + material.getMaterialName() + "</font>》[<font color='red'>"
+									+ textbook.getTextbookName() + "</font>]的最终结果已公布，恭喜您当选[<font color='red'>"
+									+ textbook.getTextbookName() + "</font>]的主编";
+						} else {
+							msg = "《<font color='red'>" + material.getMaterialName() + "</font>》[<font color='red'>"
+									+ textbook.getTextbookName() + "</font>]的最终结果已公布，恭喜您当选[<font color='red'>"
+									+ textbook.getTextbookName() + "</font>]的主编、数字编委";
+						}
+					}
+
+				}
+				if (decPosition.getChosenPosition() == 2) {
+					if (decPosition.getChosenPosition() == 2) {
+						msg = "《<font color='red'>" + material.getMaterialName() + "</font>》[<font color='red'>"
+								+ textbook.getTextbookName() + "</font>]的最终结果已公布，恭喜您当选[<font color='red'>"
+								+ textbook.getTextbookName() + "</font>]的副主编";
+					}
+				}
+
+				if (decPosition.getChosenPosition() == 3) {
+					if (decPosition.getChosenPosition() == 3) {
+						msg = "《<font color='red'>" + material.getMaterialName() + "</font>》[<font color='red'>"
+								+ textbook.getTextbookName() + "</font>]的最终结果已公布，恭喜您当选[<font color='red'>"
+								+ textbook.getTextbookName() + "</font>]的编委";
+					}
+				}
+
+			}else{
+
+
 			if (null != decPosition.getChosenPosition()) {
 				if (decPosition.getChosenPosition() == 8) {
 					msg = "《<font color='red'>" + material.getMaterialName() + "</font>》[<font color='red'>"
@@ -1139,6 +1190,7 @@ public final class SystemMessageService {
 								+ textbook.getTextbookName() + "</font>]的编委、数字编委";
 					}
 				}
+			}
 				// 获取申报表
 				Declaration declaration = declarationService.getDeclarationById(decPosition.getDeclarationId());
 				// 存入消息主体
