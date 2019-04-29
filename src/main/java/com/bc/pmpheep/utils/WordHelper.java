@@ -93,13 +93,10 @@ public class WordHelper {
 			File file;
 			for (Map.Entry<String, XWPFDocument> entry : map.entrySet()) {
 				String key = entry.getKey();
-				if(entry.getKey().length()>91){
+				if(entry.getKey().length()>80){
 					int l=key.lastIndexOf("》")+1;
-
-
 					key=key.substring(0,l)+key.substring(key.indexOf("_"))+ key.substring(key.lastIndexOf("."));
 					System.out.println(key);
-
 				}
 				file = new File(textbookPath.concat(FileUtil.replaceIllegalCharForFileName(key)));
 				try {
