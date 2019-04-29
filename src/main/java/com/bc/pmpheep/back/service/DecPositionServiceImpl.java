@@ -1355,6 +1355,16 @@ public class DecPositionServiceImpl implements DecPositionService {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
                     CheckedExceptionResult.NULL_PARAM, "书籍ID为空");
         }
-        return decPositionDao.getEditorByTextbookId(textbookId);
+        Map<String, Object> params = new HashMap<>();
+        params.put("textbook_id",textbookId);
+        String declarationCreateDateByTextBook = declarationDao.findDeclarationCreateDateByTextBook(params);
+        java.util.Date date1 = DateUtil.fomatDate(declarationCreateDateByTextBook);
+        java.util.Date date = DateUtil.fomatDate("2019-04-12 12:00");
+        if(date1.getTime()>date.getTime()) {
+            return decPositionDao.getEditorByTextbookId2(textbookId);
+        }else{
+            return decPositionDao.getEditorByTextbookId(textbookId);
+        }
+
     }
 }

@@ -8,11 +8,10 @@ import com.bc.pmpheep.annotation.ExcelHeader;
 import com.bc.pmpheep.back.bo.DecPositionBO;
 import com.bc.pmpheep.back.bo.DeclarationEtcBO;
 import com.bc.pmpheep.back.bo.WriterBO;
+import com.bc.pmpheep.back.dao.DataDictionaryDao;
+import com.bc.pmpheep.back.dao.DeclarationDao;
 import com.bc.pmpheep.back.po.*;
-import com.bc.pmpheep.back.util.CollectionUtil;
-import com.bc.pmpheep.back.util.DateUtil;
-import com.bc.pmpheep.back.util.ObjectUtil;
-import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.util.*;
 import com.bc.pmpheep.back.vo.*;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -43,6 +42,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -52,6 +52,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ExcelHelper {
+
+	@Autowired
+	DeclarationDao declarationDao;
+
+	@Autowired
+	DataDictionaryDao dataDictionaryDao;
 
 	private class ColumnProperties {
 
@@ -347,12 +353,27 @@ public class ExcelHelper {
 				}
 				Integer zhuBianTotalNum = 0;
 				Integer fuZhuBianTotalNum = 0;
+
+				HashMap<String, Object> paraMap = new HashMap<>();
+				paraMap.put("declarationId",bo.getDid());
+				String declarationlCreateDate = declarationDao.findDeclarationCreateDate(paraMap);
+				java.util.Date date1 = DateUtil.fomatDate(declarationlCreateDate);
+				java.util.Date date = DateUtil.fomatDate("2019-04-12 12:00");
+
 				for (WriterBO writer : writers) {
 					Integer chosenPosition = writer.getChosenPosition();
-					if (null != chosenPosition && (chosenPosition == 12 || chosenPosition == 4)) {
-						zhuBianTotalNum++;
-					} else if (null != chosenPosition && (chosenPosition == 10 || chosenPosition == 2)) {
-						fuZhuBianTotalNum++;
+					if(date1.getTime()>date.getTime()) {
+						if (null != chosenPosition && (chosenPosition == 1)) {
+							zhuBianTotalNum++;
+						} else if (null != chosenPosition && (chosenPosition ==2)) {
+							fuZhuBianTotalNum++;
+						}
+					}else{
+						if (null != chosenPosition && (chosenPosition == 12 || chosenPosition == 4)) {
+							zhuBianTotalNum++;
+						} else if (null != chosenPosition && (chosenPosition == 10 || chosenPosition == 2)) {
+							fuZhuBianTotalNum++;
+						}
 					}
 				}
 				Row row = sheet.createRow(rowCount);
@@ -379,19 +400,39 @@ public class ExcelHelper {
 					if (null != writer.getRank()) {
 						rank = String.valueOf(writer.getRank());
 					}
-					if (null != chosenPosition && chosenPosition == 12) {
-						position = "主编 " + zhuBianTotalNum + "-" + rank + "，数字编委";
-					} else if (null != chosenPosition && chosenPosition == 4) {
-						position = "主编 " + zhuBianTotalNum + "-" + rank;
-					} else if (null != chosenPosition && chosenPosition == 10) {
-						position = "副主编 " + fuZhuBianTotalNum + "-" + rank + "，数字编委";
-					} else if (null != chosenPosition && chosenPosition == 2) {
-						position = "副主编 " + fuZhuBianTotalNum + "-" + rank;
-					} else if (null != chosenPosition && chosenPosition == 9) {
-						position = "编委，数字编委";
-					} else if (null != chosenPosition && chosenPosition == 1) {
-						position = "编委";
+
+					if(date1.getTime()>date.getTime()) {
+						String post = chosenPosition.toString();
+
+						if (post != null) {
+							if (ObjectUtil.isNumber(post)) {
+								post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION,post);
+								if(chosenPosition==1){
+									position = "主编 " + zhuBianTotalNum + "-" + rank ;
+								}
+								if(chosenPosition==2){
+									position = "副主编 " + fuZhuBianTotalNum + "-" + rank;
+								}
+							}
+
+						}
+					}else{
+						if (null != chosenPosition && chosenPosition == 12) {
+							position = "主编 " + zhuBianTotalNum + "-" + rank + "，数字编委";
+						} else if (null != chosenPosition && chosenPosition == 4) {
+							position = "主编 " + zhuBianTotalNum + "-" + rank;
+						} else if (null != chosenPosition && chosenPosition == 10) {
+							position = "副主编 " + fuZhuBianTotalNum + "-" + rank + "，数字编委";
+						} else if (null != chosenPosition && chosenPosition == 2) {
+							position = "副主编 " + fuZhuBianTotalNum + "-" + rank;
+						} else if (null != chosenPosition && chosenPosition == 9) {
+							position = "编委，数字编委";
+						} else if (null != chosenPosition && chosenPosition == 1) {
+							position = "编委";
+						}
 					}
+
+
 					row.createCell(6).setCellValue(position);
 					writerNum++;
 					rowCount++;

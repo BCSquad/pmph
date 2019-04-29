@@ -143,6 +143,7 @@ public interface DeclarationDao {
 	List<DeclarationListVO> listDeclaration(PageParameter<Map<String, Object>> pageParameter);
 	String findMaterialCreateDate(Map<String, Object> paraMap);
 	String findDeclarationCreateDate(Map<String, Object> paraMap);
+	String findDeclarationCreateDateByTextBook(Map<String, Object> paraMap);
 
 	/**
 	 * 通过主键id查询一个作家申报信息并包含申报机构名称，是否多选

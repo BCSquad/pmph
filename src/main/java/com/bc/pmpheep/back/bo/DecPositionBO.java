@@ -25,8 +25,17 @@ public class DecPositionBO {
 	private String textbookName;
 	
     private Integer textbookRound;
+    private Long did;
 
     private List<WriterBO> writers;
+
+    public Long getDid() {
+        return did;
+    }
+
+    public void setDid(Long did) {
+        this.did = did;
+    }
 
     /**
      * @return the sort

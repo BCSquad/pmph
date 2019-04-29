@@ -132,7 +132,8 @@ public interface DecPositionPublishedDao {
 	 * </pre>
 	 */
 	Integer deletePublishedEditorByTextbookId(Long textbookId);
-	
+    Integer deletePublishedEditorByTextbookId2(Long textbookId);
+
 	/**
      * 
      * Description:根据申报表id查询申报职位信息

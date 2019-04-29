@@ -83,7 +83,16 @@ public class ExcelDecAndTextbookVO{
     private String materialName;
     //作家证件类型
   	private Short idtype;
-  
+  	private Long did;
+
+	public Long getDid() {
+		return did;
+	}
+
+	public void setDid(Long did) {
+		this.did = did;
+	}
+
 	public String getAddress() {
 		return address;
 	}

@@ -116,6 +116,8 @@ public class TextbookServiceImpl implements TextbookService {
 	WxSendMessageService wxSendMessageService;
 	@Autowired
 	DeclarationDao declarationDao;
+	@Autowired
+	DataDictionaryDao dataDictionaryDao;
 	/**
 	 *
 	 * @param textbook
@@ -1290,6 +1292,26 @@ public class TextbookServiceImpl implements TextbookService {
 		}
 		List<ExcelDecAndTextbookVO> list = textbookDao.getExcelDecAndTextbooks(textbookIds);
 		for (ExcelDecAndTextbookVO excelDecAndTextbookVO : list) {
+			HashMap<String, Object> paraMap = new HashMap<>();
+			paraMap.put("declarationId",excelDecAndTextbookVO.getDid());
+			String declarationlCreateDate = declarationDao.findDeclarationCreateDate(paraMap);
+			Date date1 = DateUtil.fomatDate(declarationlCreateDate);
+			Date date = DateUtil.fomatDate("2019-04-12 12:00");
+			String tit =excelDecAndTextbookVO.getTitle().toString();
+			if(tit!=null){
+				if(ObjectUtil.isNumber(tit)){
+					tit = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.WRITER_USER_TITLE, tit);
+				}
+			}
+
+			excelDecAndTextbookVO.setTitle(tit);
+
+			if(date1.getTime()>date.getTime()) {
+				String post =excelDecAndTextbookVO.getChosenPosition().toString();
+				post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, post);
+				excelDecAndTextbookVO.setShowChosenPosition(post);
+			}else{
+
 			switch (excelDecAndTextbookVO.getChosenPosition()) {
 			case 1:
 				excelDecAndTextbookVO.setShowChosenPosition("编委");
@@ -1336,6 +1358,7 @@ public class TextbookServiceImpl implements TextbookService {
 			default:
 				excelDecAndTextbookVO.setShowChosenPosition("主编,副主编,编委,数字编委");
 				break;
+			}
 			}
 			switch (excelDecAndTextbookVO.getOnlineProgress()) {
 			case 0:
@@ -1393,7 +1416,8 @@ public class TextbookServiceImpl implements TextbookService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_PUB, CheckedExceptionResult.NULL_PARAM,
 					"教材id为空");
 		}
-		List<DecPositionBO> list = textbookDao.getExcelDecByMaterialId(textbookIds);
+		List<DecPositionBO> list = textbookDao.getExcelDecByMaterialId2(textbookIds);
+
 		return list;
 	}
 
