@@ -557,7 +557,7 @@ public class DecPositionServiceImpl implements DecPositionService {
                     HashMap<String, Object> paraMap = new HashMap<>();
                     paraMap.put("declarationId",decPosition.getDeclarationId());
                     String declarationlCreateDate = declarationDao.findDeclarationCreateDate(paraMap);
-                    Date date1 = DateUtil.fomatDate(declarationlCreateDate);
+                    Date date1 = DateUtil.fomatDate(declarationlCreateDate==null?"2019-04-13 12:00":declarationlCreateDate);
                     Date date = DateUtil.fomatDate("2019-04-12 12:00");
 
                     // 筛选出遴选上的主编副主编人员
