@@ -118,9 +118,9 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 		bookCorrection.setEditorReply(editorReply);
 		bookCorrection.setIsEditorHandling(true);
 		if (!StringUtil.isEmpty(authorReply)) {
-			if (authorReply.length() > 500) {
+			if (authorReply.length() > 1000) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION,
-						CheckedExceptionResult.NULL_PARAM, "回复内容超过最长限制500");
+						CheckedExceptionResult.NULL_PARAM, "回复内容超过最长限制1000");
 			}
 			bookCorrection.setIsAuthorReplied(true);
 			bookCorrection.setAuthorReply(authorReply);
