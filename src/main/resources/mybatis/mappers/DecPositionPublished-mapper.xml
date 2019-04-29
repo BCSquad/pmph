@@ -213,6 +213,24 @@
 		t.`textbook_id` = #{textbookId}) tmp
 		ON a.id = tmp.id
 	</delete>
+
+	<!-- 按申报表id删除 -->
+	<delete id="deletePublishedEditorByTextbookId2" parameterType="java.lang.Long">
+		DELETE
+		a.*
+		FROM
+		`dec_position_published` a
+		JOIN
+		(SELECT
+		t.`id`
+		FROM
+		`dec_position_published` t
+		WHERE
+		t.`chosen_position` IN (1, 2)
+		AND
+		t.`textbook_id` = #{textbookId}) tmp
+		ON a.id = tmp.id
+	</delete>
 	
 	<!-- 根据declarationId查询作家申报职位信息 -->
 	<select id="listDecPositionDisplayOrPosition" parameterType="java.lang.Long"

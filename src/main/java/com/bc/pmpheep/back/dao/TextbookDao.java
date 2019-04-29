@@ -192,6 +192,7 @@ public interface TextbookDao {
      * @return
      */
     List<DecPositionBO> getExcelDecByMaterialId(Long[] textbookIds);
+    List<DecPositionBO> getExcelDecByMaterialId2(Long[] textbookIds);
 
     /**
      * 

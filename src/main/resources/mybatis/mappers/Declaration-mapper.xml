@@ -683,6 +683,14 @@
 		SELECT d.gmt_create from  declaration d
 				where  d.id = ${declarationId}
 	</select>
+
+	<select id="findDeclarationCreateDateByTextBook" parameterType="java.util.Map"
+			resultType="java.lang.String">
+		SELECT d.gmt_create from  declaration d
+		left join  dec_position dp on dp.declaration_id =d.id
+				where  dp.textbook_id = ${textbook_id} limit 1
+	</select>
+
 	<!-- 申报表审核分页列表 -->
 	<select id="listDeclaration" parameterType="PageParameter"
 		resultType="DeclarationListVO">

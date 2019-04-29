@@ -2051,7 +2051,7 @@
 		FROM
 		`dec_position` dp
 		WHERE
-		dp.`chosen_position` =1
+		dp.`chosen_position` IN (1,2)
 		AND
 		dp.`textbook_id`= #{textbookId}
 	</select>

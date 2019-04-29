@@ -132,6 +132,7 @@ public interface DecPositionPublishedDao {
 	 * </pre>
 	 */
 	Integer deletePublishedEditorByTextbookId(Long textbookId);
+    Integer deletePublishedEditorByTextbookId2(Long textbookId);
 	
 	/**
      * 

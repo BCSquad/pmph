@@ -1,7 +1,11 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.bc.pmpheep.back.dao.DeclarationDao;
+import com.bc.pmpheep.back.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +28,8 @@ public class DecPositionPublishedServiceImpl implements DecPositionPublishedServ
 	@Autowired
 	private DecPositionPublishedDao decPositionPublishedDao;
 
+	@Autowired
+	DeclarationDao declarationDao;
 	@Override
 	public DecPositionPublished addDecPositionPublished(DecPositionPublished decPositionPublished)
 			throws CheckedServiceException {
@@ -157,7 +163,16 @@ public class DecPositionPublishedServiceImpl implements DecPositionPublishedServ
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
 					"书籍id为空");
 		}
-		return decPositionPublishedDao.deletePublishedEditorByTextbookId(textbookId);
+		Map<String, Object> params = new HashMap<>();
+		params.put("textbook_id",textbookId);
+		String declarationCreateDateByTextBook = declarationDao.findDeclarationCreateDateByTextBook(params);
+		java.util.Date date1 = DateUtil.fomatDate(declarationCreateDateByTextBook);
+		java.util.Date date = DateUtil.fomatDate("2019-04-12 12:00");
+		if(date1.getTime()>date.getTime()) {
+			return decPositionPublishedDao.deletePublishedEditorByTextbookId2(textbookId);
+		}else {
+			return decPositionPublishedDao.deletePublishedEditorByTextbookId(textbookId);
+		}
 	}
 
 }
