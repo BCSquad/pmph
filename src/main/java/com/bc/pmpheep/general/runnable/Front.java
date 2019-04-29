@@ -1,8 +1,7 @@
 package com.bc.pmpheep.general.runnable;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import com.bc.pmpheep.back.util.FileUtil;
 import org.slf4j.Logger;
@@ -134,8 +133,26 @@ public class Front implements Runnable {
 		}
 		ZipDownload zipDownload = new ZipDownload();
 		List<DeclarationEtcBO> declarationEtcBOs = new ArrayList<>();
-		List<DeclarationOrDisplayVO> declarationOrDisplayVOs = this.declarationService
-				.getDeclarationOrDisplayVOByRealname(this.decIds);
+		Map<String, Object> params = new HashMap<>();
+		params.put("declarationId",this.decIds.get(0));
+
+
+		Long materialBydeclarationId = this.declarationService.getMaterialBydeclarationId(params);
+		Map<String, Object> param = new HashMap<>();
+		params.put("material_id",materialBydeclarationId);
+		String materialCreateDate = declarationService.findMaterialCreateDate(params);
+
+		Date date1 = DateUtil.fomatDate(materialCreateDate);
+		Date date = DateUtil.fomatDate("2019-2-1");
+		List<DeclarationOrDisplayVO> declarationOrDisplayVOs;
+		if(date1.getTime()>date.getTime()) {
+
+			declarationOrDisplayVOs= this.declarationService
+					.getDeclarationOrDisplayVOByRealname(this.decIds);
+		}else{
+			declarationOrDisplayVOs= this.declarationService
+					.getDeclarationOrDisplayVOByRealname2(this.decIds);
+		}
 		Material material = this.materialService
 				.getMaterialById(declarationOrDisplayVOs.get(0).getMaterialId());
 		StringBuilder str = new StringBuilder();

@@ -359,7 +359,25 @@
 		t.textbook_round,
 		d.*,w.username,
 		GROUP_CONCAT(
-		 p.preset_position
+		CASE
+		when p.preset_position =15 then
+		'主编,副主编,编委,数字编委'       <!-- 1111 -->
+		when p.preset_position =14 then '主编,副主编,数字编委'          <!-- 1110 -->
+		when p.preset_position =13 then '主编,编委,数字编委'            <!-- 1101 -->
+		when p.preset_position =12 then '主编,数字编委'               <!-- 1100 -->
+		when p.preset_position =11 then '副主编,编委,数字编委'          <!-- 1011 -->
+		when p.preset_position =10 then '副主编,数字编委'              <!-- 1010 -->
+		when p.preset_position =9 then '编委,数字编委'               <!-- 1001 -->
+		when p.preset_position =8 then '数字编委'                   <!-- 1000 -->
+		when p.preset_position =7 then '主编,副主编,编委'             <!-- 0111 -->
+		when p.preset_position =6 then '主编,副主编'                 <!-- 0110 -->
+		when p.preset_position =5 then '主编,编委'                  <!-- 0101 -->
+		when p.preset_position =4 then '主编'                      <!-- 0100 -->
+		when p.preset_position =3 then '副主编,编委'                 <!-- 0011 -->
+		when p.preset_position =2 then '副主编'                     <!-- 0010 -->
+		when p.preset_position =1 then '编委'                      <!-- 0001 -->
+		else null
+		END
 		ORDER BY
 		t.textbook_name
 		) presetPosition,
@@ -384,6 +402,44 @@
 		AND d.id IN
 		<foreach collection="id" close=")" open="(" separator=","
 			index="index" item="id">
+			#{id}
+		</foreach>
+		GROUP BY t.textbook_round ,t.textbook_name, w.username
+		ORDER BY
+		t.textbook_name DESC
+	</select>
+
+	<select id="getDeclarationOrDisplayVOByIdOrRealname2" resultType="DeclarationOrDisplayVO">
+		SELECT
+		t.textbook_name,
+		t.textbook_round,
+		d.*,w.username,
+		GROUP_CONCAT(
+		p.preset_position
+		ORDER BY
+		t.textbook_name
+		) presetPosition,
+		if(d.org_id=0,'人民卫生出版社',o.org_name) orgNameOne
+		FROM
+		declaration d
+		LEFT
+		JOIN writer_user w ON w.id =
+		d.user_id
+		LEFT JOIN dec_position p ON
+		p.declaration_id = d.id
+		LEFT JOIN
+		textbook t ON t.id = p.textbook_id
+		LEFT JOIN org o ON o.id = d.org_id
+		LEFT JOIN material m ON m.id =
+		d.material_id
+		WHERE
+		d.online_progress > 0
+		AND d.is_deleted = 0
+		AND
+		m.is_deleted = 0
+		AND d.id IN
+		<foreach collection="id" close=")" open="(" separator=","
+				 index="index" item="id">
 			#{id}
 		</foreach>
 		GROUP BY t.textbook_round ,t.textbook_name, w.username
@@ -613,7 +669,20 @@
 		) temp
 		) temp1
 	</select>
-
+	<select id="findMaterialCreateDate" parameterType="java.util.Map"
+			resultType="java.lang.String">
+		SELECT m.gmt_create from  material m
+		<where>
+			<if test="material_id != null and material_id != '' ">
+				and m.id = ${material_id}
+			</if>
+		</where>
+	</select>
+	<select id="findDeclarationCreateDate" parameterType="java.util.Map"
+			resultType="java.lang.String">
+		SELECT d.gmt_create from  declaration d
+				where  d.id = ${declarationId}
+	</select>
 	<!-- 申报表审核分页列表 -->
 	<select id="listDeclaration" parameterType="PageParameter"
 		resultType="DeclarationListVO">
@@ -810,6 +879,11 @@
 			m.founder_id = 4)
 			AND m.is_all_textbook_published =0
 			AND m.is_force_end =0
+	</select>
+
+	<select id="getMaterialBydeclarationId" parameterType="map" resultType="long">
+		select d.material_id from declaration d
+		where id=#{declarationId}
 	</select>
 
 </mapper>

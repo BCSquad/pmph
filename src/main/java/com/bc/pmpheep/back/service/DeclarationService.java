@@ -7,6 +7,7 @@ import com.bc.pmpheep.back.bo.DeclarationEtcBO;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import com.bc.pmpheep.back.po.PmphUser;
 import org.apache.ibatis.annotations.Param;
@@ -191,7 +192,8 @@ public interface DeclarationService {
 	 */
 	List<DeclarationOrDisplayVO> getDeclarationOrDisplayVOByRealname(@Param("id") List<Long> id)
 			throws CheckedServiceException;
-
+	List<DeclarationOrDisplayVO> getDeclarationOrDisplayVOByRealname2(@Param("id") List<Long> id)
+			throws CheckedServiceException;
 	/**
 	 * 根据教材id获取导出Excel所需的申报表数据
 	 *
@@ -208,4 +210,8 @@ public interface DeclarationService {
 	 * @return
 	 */
 	List<Declaration> getPositionChooseLossByMaterialId(Long materialId)throws CheckedServiceException;
+
+	Long getMaterialBydeclarationId(Map<String,Object> params);
+
+	String findMaterialCreateDate(Map<String, Object> paraMap);
 }

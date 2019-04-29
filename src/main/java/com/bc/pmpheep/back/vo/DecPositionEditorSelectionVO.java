@@ -66,6 +66,15 @@ public class DecPositionEditorSelectionVO implements Serializable {
     private Integer   offlineProgress;
     // 创建时间
     private Timestamp gmtCreate;
+    private Integer did;
+
+    public Integer getDid() {
+        return did;
+    }
+
+    public void setDid(Integer did) {
+        this.did = did;
+    }
 
     /**
      * @return the id

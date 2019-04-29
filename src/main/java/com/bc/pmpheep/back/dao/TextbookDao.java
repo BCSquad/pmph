@@ -210,6 +210,7 @@ public interface TextbookDao {
     Integer listBookPositionTotal_up1(PageParameter<Map<String, Object>> pageParameter);
 
     List<BookPositionVO> listBookPosition_up1(PageParameter<Map<String, Object>> pageParameter);
+    List<BookPositionVO> listBookPosition_up12(PageParameter<Map<String, Object>> pageParameter);
 
     List<Map<String,Object>> listBookPosition_up1_ids(PageParameter<Map<String, Object>> pageParameter);
 }

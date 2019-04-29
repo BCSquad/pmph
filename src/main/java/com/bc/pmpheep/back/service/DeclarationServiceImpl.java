@@ -268,26 +268,41 @@ public class DeclarationServiceImpl implements DeclarationService {
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
         // 获取总数
         Integer total = declarationDao.listDeclarationTotal(pageParameter);
+
         if (null != total && total > 0) {
             List<DeclarationListVO> rows = declarationDao.listDeclaration(pageParameter);
-            for(DeclarationListVO row:rows){
-                String post =row.getPresetPosition().toString();
-                String tit = row.getTitle();
-                if(tit!=null){
+                for (DeclarationListVO row : rows) {
+                    HashMap<String, Object> paraMap = new HashMap<>();
+                    paraMap.put("declarationId",row.getId());
+                    String declarationlCreateDate = declarationDao.findDeclarationCreateDate(paraMap);
+                    Date date1 = DateUtil.fomatDate(declarationlCreateDate);
+                    Date date = DateUtil.fomatDate("2019-04-12 12:00");
+                    if(date1.getTime()>date.getTime()) {
+                    String post = row.getPresetPosition().toString();
 
-                    if(ObjectUtil.isNumber(tit)){
-                        tit=dataDictionaryDao.getDataDictionaryItemNameByCode(Const.WRITER_USER_TITLE,row.getTitle().toString());
+                    if (post != null) {
+                        if (ObjectUtil.isNumber(post)) {
+                            post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, row.getPresetPosition().toString());
+                        }
                     }
+
+                    row.setChooseBooksAndPostions(row.getTextbookName() + "-" + post);
+
                 }
-                if(post!=null){
-                    if(ObjectUtil.isNumber(post)){
-                        post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION,row.getPresetPosition().toString());
+                    String tit = row.getTitle();
+                    if (tit != null) {
+
+                        if (ObjectUtil.isNumber(tit)) {
+                            tit = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.WRITER_USER_TITLE, row.getTitle().toString());
+                        }
                     }
-                }
                     row.setTitle(tit);
-                    row.setChooseBooksAndPostions(row.getTextbookName()+"-"+post);
-
             }
+
+
+
+
+
 
             pageResult.setRows(rows);
         }
@@ -519,6 +534,8 @@ public class DeclarationServiceImpl implements DeclarationService {
     public ApplicationVO exportExcel(Long declarationId) {
         ApplicationVO applicationVO = new ApplicationVO(); // 专家信息显示实体
         // 作家申报
+        Map<String, Object> params = new HashMap<>();
+        params.put("declarationId",declarationId);
         List<DecPositionDisplayVO> decPositionList = decPositionDao.listDecPositionsOrBook(declarationId);
         for (DecPositionDisplayVO decPositions : decPositionList) {
             String syllabusId = decPositions.getSyllabusId();
@@ -526,35 +543,143 @@ public class DeclarationServiceImpl implements DeclarationService {
                 String syllabusIds = RouteUtil.MONGODB_FILE + syllabusId; // 下载路径
                 decPositions.setSyllabusId(syllabusIds);
             }
-            String presetPosition=decPositions.getPresetPosition().toString();
-            String chosenPosition=decPositions.getChosenPosition().toString();
-                if(ObjectUtil.isNumber(presetPosition)){
-                presetPosition = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, decPositions.getPresetPosition().toString());
-            }
-            if(ObjectUtil.isNumber(chosenPosition)){
-                if (decPositions.getChosenPosition() != 0) {
-                    String dataDictionaryItemNameByCode2 = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, decPositions.getChosenPosition().toString());
 
-                }
+            String declarationlCreateDate = declarationDao.findDeclarationCreateDate(params);
+            Date date1 = DateUtil.fomatDate(declarationlCreateDate);
+            Date date = DateUtil.fomatDate("2019-04-12 12:00");
+
+            if(date1.getTime()>date.getTime()) {
+
+            String dataDictionaryItemNameByCode = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, decPositions.getPresetPosition().toString());
+            decPositions.setShowPosition(dataDictionaryItemNameByCode);
+            if (decPositions.getChosenPosition() != 0) {
+                String dataDictionaryItemNameByCode2 = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, decPositions.getChosenPosition().toString());
+                decPositions.setShowChosenPosition(dataDictionaryItemNameByCode2);
             }
-            decPositions.setShowPosition(presetPosition);
-            decPositions.setShowChosenPosition(chosenPosition);
+
+            }else{
+
+                switch (decPositions.getPresetPosition()) {
+                    case 1:
+                        decPositions.setShowPosition("编委");
+                        break;
+                    case 2:
+                        decPositions.setShowPosition("副主编");
+                        break;
+                    case 3:
+                        decPositions.setShowPosition("副主编,编委");
+                        break;
+                    case 4:
+                        decPositions.setShowPosition("主编");
+                        break;
+                    case 5:
+                        decPositions.setShowPosition("主编,编委");
+                        break;
+                    case 6:
+                        decPositions.setShowPosition("主编,副主编");
+                        break;
+                    case 7:
+                        decPositions.setShowPosition("主编,副主编,编委");
+                        break;
+                    case 8:
+                        decPositions.setShowPosition("数字编委");
+                        break;
+                    case 9:
+                        decPositions.setShowPosition("编委,数字编委");
+                        break;
+                    case 10:
+                        decPositions.setShowPosition("副主编,数字编委");
+                        break;
+                    case 11:
+                        decPositions.setShowPosition("副主编,编委,数字编委");
+                        break;
+                    case 12:
+                        decPositions.setShowPosition("主编,数字编委");
+                        break;
+                    case 13:
+                        decPositions.setShowPosition("主编,编委,数字编委");
+                        break;
+                    case 14:
+                        decPositions.setShowPosition("主编,副主编,数字编委");
+                        break;
+                    case 15:
+                        decPositions.setShowPosition("主编,副主编,编委,数字编委");
+                        break;
+                    default:
+                        break;
+                }
+                if (decPositions.getChosenPosition() != 0) {
+                    switch (decPositions.getChosenPosition()) {
+                        case 1:
+                            decPositions.setShowChosenPosition("编委");
+                            break;
+                        case 2:
+                            decPositions.setShowChosenPosition("副主编");
+                            break;
+                        case 3:
+                            decPositions.setShowChosenPosition("副主编,编委");
+                            break;
+                        case 4:
+                            decPositions.setShowChosenPosition("主编");
+                            break;
+                        case 5:
+                            decPositions.setShowChosenPosition("主编,编委");
+                            break;
+                        case 6:
+                            decPositions.setShowChosenPosition("主编,副主编");
+                            break;
+                        case 7:
+                            decPositions.setShowChosenPosition("主编,副主编,编委");
+                            break;
+                        case 8:
+                            decPositions.setShowChosenPosition("数字编委");
+                            break;
+                        case 9:
+                            decPositions.setShowChosenPosition("编委,数字编委");
+                            break;
+                        case 10:
+                            decPositions.setShowChosenPosition("副主编,数字编委");
+                            break;
+                        case 11:
+                            decPositions.setShowChosenPosition("副主编,编委,数字编委");
+                            break;
+                        case 12:
+                            decPositions.setShowChosenPosition("主编,数字编委");
+                            break;
+                        case 13:
+                            decPositions.setShowChosenPosition("主编,编委,数字编委");
+                            break;
+                        case 14:
+                            decPositions.setShowChosenPosition("主编,副主编,数字编委");
+                            break;
+                        case 15:
+                            decPositions.setShowChosenPosition("主编,副主编,编委,数字编委");
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+
+            }
         }
         // 作家遴选
         List<DecPositionPublishedVO> decPositionPublishedVOs = decPositionPublishedDao
                 .listDecPositionDisplayOrPosition(declarationId);
+
         for (DecPositionPublishedVO decPositionPublished : decPositionPublishedVOs) {
-            String chosenPosition=decPositionPublished.getChosenPosition().toString();
 
+            String materialCreateDate = declarationDao.findDeclarationCreateDate(params);
+            Date date1 = DateUtil.fomatDate(materialCreateDate);
+            Date date = DateUtil.fomatDate("2019-04-12");
 
-            if(ObjectUtil.isNumber(chosenPosition)){
+            if(date1.getTime()>date.getTime()) {
+
                 if (decPositionPublished.getChosenPosition() != 0) {
-                    chosenPosition = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, decPositionPublished.getChosenPosition().toString());
-
-                }
-            }
-                decPositionPublished.setShowChosenPosition(chosenPosition);
-              /*  switch (decPositionPublished.getChosenPosition()) {
+                    String dataDictionaryItemNameByCode2 = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, decPositionPublished.getChosenPosition().toString());
+                    decPositionPublished.setShowChosenPosition(dataDictionaryItemNameByCode2);
+                } else {
+                switch (decPositionPublished.getChosenPosition()) {
                     case 1:
                         decPositionPublished.setShowChosenPosition("编委");
                         break;
@@ -602,16 +727,14 @@ public class DeclarationServiceImpl implements DeclarationService {
                         break;
                     default:
                         break;
-                }*/
-
+                }
+            }
+            }
         }
         // 作家申报表
         DeclarationOrDisplayVO declaration = declarationDao.getDeclarationByIdOrOrgName(declarationId);
         WriterUser user = writerUserService.get(declaration.getUserId());
-        String title=declaration.getTitle().toString();
-        if(ObjectUtil.isNumber(title)){
-            title = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.WRITER_USER_TITLE,title );
-        }
+        String title = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.WRITER_USER_TITLE, declaration.getTitle().toString());
         declaration.setTitle(title);
         if (user != null) {
             declaration.setUsername(user.getUsername());
@@ -781,25 +904,78 @@ public class DeclarationServiceImpl implements DeclarationService {
                 materialId, bookIds, realname, position, title, orgName, unitName, positionType, onlineProgress,
                 offlineProgress,isSelect);
         List<Long> decIds = new ArrayList<>();
-        for (DeclarationOrDisplayVO declarationOrDisplayVO : declarationOrDisplayVOs) {
-            decIds.add(declarationOrDisplayVO.getId());
+        try {
+            for (DeclarationOrDisplayVO declarationOrDisplayVO : declarationOrDisplayVOs) {
 
-            String post =declarationOrDisplayVO.getPresetPosition().toString();
-            String tit = declarationOrDisplayVO.getTitle();
-            if(tit!=null){
+                HashMap<String, Object> paraMap = new HashMap<>();
+                paraMap.put("declarationId",declarationOrDisplayVO.getId());
+                String declarationlCreateDate = declarationDao.findDeclarationCreateDate(paraMap);
+                Date date1 = DateUtil.fomatDate(declarationlCreateDate);
+                Date date = DateUtil.fomatDate("2019-04-12 12:00");
+                if(date1.getTime()>date.getTime()) {
+                    String post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, declarationOrDisplayVO.getPresetPosition().toString());
+                    declarationOrDisplayVO.setPresetPosition(post);
 
-                if(ObjectUtil.isNumber(tit)){
-                    tit=dataDictionaryDao.getDataDictionaryItemNameByCode(Const.WRITER_USER_TITLE,declarationOrDisplayVO.getTitle().toString());
+                }else{
+                    switch (Integer.parseInt(declarationOrDisplayVO.getPresetPosition())) {
+                        case 1:
+                            declarationOrDisplayVO.setPresetPosition("编委");
+                            break;
+                        case 2:
+                            declarationOrDisplayVO.setPresetPosition("副主编");
+                            break;
+                        case 3:
+                            declarationOrDisplayVO.setPresetPosition("副主编,编委");
+                            break;
+                        case 4:
+                            declarationOrDisplayVO.setPresetPosition("主编");
+                            break;
+                        case 5:
+                            declarationOrDisplayVO.setPresetPosition("主编,编委");
+                            break;
+                        case 6:
+                            declarationOrDisplayVO.setPresetPosition("主编,副主编");
+                            break;
+                        case 7:
+                            declarationOrDisplayVO.setPresetPosition("主编,副主编,编委");
+                            break;
+                        case 8:
+                            declarationOrDisplayVO.setPresetPosition("数字编委");
+                            break;
+                        case 9:
+                            declarationOrDisplayVO.setPresetPosition("编委,数字编委");
+                            break;
+                        case 10:
+                            declarationOrDisplayVO.setPresetPosition("副主编,数字编委");
+                            break;
+                        case 11:
+                            declarationOrDisplayVO.setPresetPosition("副主编,编委,数字编委");
+                            break;
+                        case 12:
+                            declarationOrDisplayVO.setPresetPosition("主编,数字编委");
+                            break;
+                        case 13:
+                            declarationOrDisplayVO.setPresetPosition("主编,编委,数字编委");
+                            break;
+                        case 14:
+                            declarationOrDisplayVO.setPresetPosition("主编,副主编,数字编委");
+                            break;
+                        case 15:
+                            declarationOrDisplayVO.setPresetPosition("主编,副主编,编委,数字编委");
+                            break;
+                        default:
+                            break;
+                    }
                 }
+
+                decIds.add(declarationOrDisplayVO.getId());
+                String gtitle = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.WRITER_USER_TITLE, declarationOrDisplayVO.getTitle().toString());
+                declarationOrDisplayVO.setTitle(gtitle);
             }
-            if(post!=null){
-                if(ObjectUtil.isNumber(post)){
-                    post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION,declarationOrDisplayVO.getPresetPosition().toString());
-                }
-            }
-            declarationOrDisplayVO.setTitle(tit);
-            declarationOrDisplayVO.setPresetPosition(post);
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
         Material material = materialService.getMaterialById(materialId);
         // 学习经历
         ArrayList<DecEduExp> decEduExps = (ArrayList<DecEduExp>) decEduExpDao.getListDecEduExpByDeclarationIds(decIds);
@@ -855,275 +1031,281 @@ public class DeclarationServiceImpl implements DeclarationService {
         // 编写内容意向表
         ArrayList<DecIntention> decIntentions = (ArrayList<DecIntention>) decIntentionDao
                 .getDecIntentionByDeclarationIds(decIds);
-        for (DeclarationOrDisplayVO declarationOrDisplayVO : declarationOrDisplayVOs) {
-            if(StringUtil.isEmpty(declarationOrDisplayVO.getTextbookName())){
-                throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-                        "书籍名称为空");
-            }
-            String strOnlineProgress = "";// 审核进度
-            String strOfflineProgress = "";// 纸质表进度
-            String sex = "";// 性别
-            String idtype = "";// 证件类别
-            String degree = "";// 学历
-            switch (declarationOrDisplayVO.getIdtype()) {
-                case 0:
-                    idtype = "身份证";
-                    break;
-                case 1:
-                    idtype = "护照";
-                    break;
-                case 2:
-                    idtype = "军官证";
-                    break;
-                default:
-                    idtype = "出现错误";
-                    break;
-            }
-            switch (declarationOrDisplayVO.getDegree()) {
-                case 0:
-                    degree = "无";
-                    break;
-                case 1:
-                    degree = "专科";
-                    break;
-                case 2:
-                    degree = "本科";
-                    break;
-                case 3:
-                    degree = "硕士";
-                    break;
-                case 4:
-                    degree = "博士";
-                    break;
-                default:
-                    degree = "出现错误";
-                    break;
-            }
-            switch (declarationOrDisplayVO.getOnlineProgress()) {
-                case 0:
-                    strOnlineProgress = "未提交";
-                    break;
-                case 1:
-                    strOnlineProgress = "已提交";
-                    break;
-                case 2:
-                    strOnlineProgress = "被退回";
-                    break;
-                case 3:
-                    strOnlineProgress = "已通过";
-                    break;
-                default:
-                    strOnlineProgress = "出现错误";
-                    break;
-            }
-            switch (declarationOrDisplayVO.getSex()) {
-                case 0:
-                    sex = "保密";
-                    break;
-                case 1:
-                    sex = "男";
-                    break;
-                case 2:
-                    sex = "女";
-                    break;
-                default:
-                    sex = "出现错误";
-                    break;
-            }
-            switch (declarationOrDisplayVO.getOfflineProgress()) {
-                case 0:
-                    strOfflineProgress = "未收到";
-                    break;
-                case 1:
-                    strOfflineProgress = "被退回";
-                    break;
-                case 2:
-                    strOfflineProgress = "已收到";
-                    break;
-                default:
-                    strOfflineProgress = "出现错误";
-                    break;
-            }
-            String birthday = "";
-            if (null != declarationOrDisplayVO.getBirthday()) {
-                birthday = DateUtil.date2Str(declarationOrDisplayVO.getBirthday(), "yyyy-MM-dd");
-            }
+        try{
 
-            if (null == declarationOrDisplayVO.getPosition() || "".equals(declarationOrDisplayVO.getPosition())) {
-                declarationOrDisplayVO.setPosition("无");
-            }
-            if (StringUtil.isEmpty(declarationOrDisplayVO.getTextbookName())) {
-                declarationOrDisplayVO.setTextbookName("");
-            }
-            if (StringUtil.isEmpty(declarationOrDisplayVO.getPresetPosition())) {
-                declarationOrDisplayVO.setPresetPosition("");
-            }
-            // 学习经历
-            List<DecEduExp> decEduExp = new ArrayList<>();
-            for (DecEduExp exp : decEduExps) {
-                if (exp.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
-                    decEduExp.add(exp);
+            for (DeclarationOrDisplayVO declarationOrDisplayVO : declarationOrDisplayVOs) {
+                if(StringUtil.isEmpty(declarationOrDisplayVO.getTextbookName())){
+                    throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+                            "书籍名称为空");
                 }
-            }
-            // 工作经历
-            List<DecWorkExp> decWorkExp = new ArrayList<>();
-            for (DecWorkExp workExp : decWorkExps) {
-                if (workExp.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
-                    decWorkExp.add(workExp);
+                String strOnlineProgress = "";// 审核进度
+                String strOfflineProgress = "";// 纸质表进度
+                String sex = "";// 性别
+                String idtype = "";// 证件类别
+                String degree = "";// 学历
+                switch (declarationOrDisplayVO.getIdtype()) {
+                    case 0:
+                        idtype = "身份证";
+                        break;
+                    case 1:
+                        idtype = "护照";
+                        break;
+                    case 2:
+                        idtype = "军官证";
+                        break;
+                    default:
+                        idtype = "出现错误";
+                        break;
                 }
-            }
-            // 教学经历
-            List<DecTeachExp> decTeachExp = new ArrayList<>();
-            for (DecTeachExp teachExp : decTeachExps) {
-                if (teachExp.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
-                    decTeachExp.add(teachExp);
+                switch (declarationOrDisplayVO.getDegree()) {
+                    case 0:
+                        degree = "无";
+                        break;
+                    case 1:
+                        degree = "专科";
+                        break;
+                    case 2:
+                        degree = "本科";
+                        break;
+                    case 3:
+                        degree = "硕士";
+                        break;
+                    case 4:
+                        degree = "博士";
+                        break;
+                    default:
+                        degree = "出现错误";
+                        break;
                 }
-            }
-            // 兼职学术
-            List<DecAcade> decAcade = new ArrayList<>();
-            for (DecAcade acade : decAcades) {
-                if (acade.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
-                    decAcade.add(acade);
+                switch (declarationOrDisplayVO.getOnlineProgress()) {
+                    case 0:
+                        strOnlineProgress = "未提交";
+                        break;
+                    case 1:
+                        strOnlineProgress = "已提交";
+                        break;
+                    case 2:
+                        strOnlineProgress = "被退回";
+                        break;
+                    case 3:
+                        strOnlineProgress = "已通过";
+                        break;
+                    default:
+                        strOnlineProgress = "出现错误";
+                        break;
                 }
-            }
-            // 个人成就
-            DecAchievement decAchievement = new DecAchievement();
-            for (DecAchievement achievement : decAchievements) {
-                if (achievement.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
-                    decAchievement = achievement;
-                    break;
+                switch (declarationOrDisplayVO.getSex()) {
+                    case 0:
+                        sex = "保密";
+                        break;
+                    case 1:
+                        sex = "男";
+                        break;
+                    case 2:
+                        sex = "女";
+                        break;
+                    default:
+                        sex = "出现错误";
+                        break;
                 }
-            }
-            // 上套教材
-            List<DecLastPosition> decLastPosition = new ArrayList<>();
-            for (DecLastPosition lastPosition : decLastPositions) {
-                if (lastPosition.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
-                    decLastPosition.add(lastPosition);
+                switch (declarationOrDisplayVO.getOfflineProgress()) {
+                    case 0:
+                        strOfflineProgress = "未收到";
+                        break;
+                    case 1:
+                        strOfflineProgress = "被退回";
+                        break;
+                    case 2:
+                        strOfflineProgress = "已收到";
+                        break;
+                    default:
+                        strOfflineProgress = "出现错误";
+                        break;
                 }
-            }
-            // 精品课程建设情况
-            List<DecCourseConstruction> decCourseConstruction = new ArrayList<>();
-            for (DecCourseConstruction construction : decCourseConstructions) {
-                if (construction.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
-                    decCourseConstruction.add(construction);
+                String birthday = "";
+                if (null != declarationOrDisplayVO.getBirthday()) {
+                    birthday = DateUtil.date2Str(declarationOrDisplayVO.getBirthday(), "yyyy-MM-dd");
                 }
-            }
-            // 主编国家级规划
-            List<DecNationalPlan> decNationalPlan = new ArrayList<>();
-            for (DecNationalPlan plan : decNationalPlans) {
-                if (plan.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
-                    decNationalPlan.add(plan);
-                }
-            }
-            // 人卫社教材编写
-            List<DecTextbookPmph> decTextbookPmph = new ArrayList<>();
-            for (DecTextbookPmph textbookPmph : decTextbookPmphs) {
-                if (textbookPmph.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
-                    decTextbookPmph.add(textbookPmph);
-                }
-            }
-            // 其他社教材编写
-            List<DecTextbook> decTextbook = new ArrayList<>();
-            for (DecTextbook textbook : decTextbooks) {
-                if (textbook.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
-                    decTextbook.add(textbook);
-                }
-            }
-            // 参加人卫慕课、数字教材编写情况表
-            DecMoocDigital decMoocDigital = new DecMoocDigital();
-            for (DecMoocDigital moocDigital : decMoocDigitals) {
-                if (moocDigital.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
-                    decMoocDigital = moocDigital;
-                    break;
-                }
-            }
-            // 作家科研
-            List<DecResearch> decResearch = new ArrayList<>();
-            for (DecResearch research : decResearchs) {
-                if (research.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
-                    decResearch.add(research);
-                }
-            }
 
-            // 主编学术专著情况
-            List<DecMonograph> monographs = new ArrayList<>();
-            for (DecMonograph monograph : decMonographList) {
-                if (monograph.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
-                    monographs.add(monograph);
+                if (null == declarationOrDisplayVO.getPosition() || "".equals(declarationOrDisplayVO.getPosition())) {
+                    declarationOrDisplayVO.setPosition("无");
                 }
-            }
-            // 出版行业获奖情况
-            List<DecPublishReward> publishRewards = new ArrayList<>();
-            for (DecPublishReward publishReward : decPublishRewardList) {
-                if (publishReward.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
-                    publishRewards.add(publishReward);
+                if (StringUtil.isEmpty(declarationOrDisplayVO.getTextbookName())) {
+                    declarationOrDisplayVO.setTextbookName("");
                 }
-            }
-            // SCI论文投稿及影响因子情况
-            List<DecSci> scis = new ArrayList<>();
-            for (DecSci sci : decSciList) {
-                if (sci.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
-                    scis.add(sci);
+                if (StringUtil.isEmpty(declarationOrDisplayVO.getPresetPosition())) {
+                    declarationOrDisplayVO.setPresetPosition("");
                 }
-            }
-            // 临床医学获奖情况
-            List<DecClinicalReward> clinicalRewards = new ArrayList<>();
-            for (DecClinicalReward clinicalReward : decClinicalRewardList) {
-                if (clinicalReward.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
-                    clinicalRewards.add(clinicalReward);
+                // 学习经历
+                List<DecEduExp> decEduExp = new ArrayList<>();
+                for (DecEduExp exp : decEduExps) {
+                    if (exp.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
+                        decEduExp.add(exp);
+                    }
                 }
-            }
-            // 学术荣誉授予情况
-            List<DecAcadeReward> acadeRewards = new ArrayList<>();
-            for (DecAcadeReward acadeReward : decAcadeRewardList) {
-                if (acadeReward.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
-                    acadeRewards.add(acadeReward);
+                // 工作经历
+                List<DecWorkExp> decWorkExp = new ArrayList<>();
+                for (DecWorkExp workExp : decWorkExps) {
+                    if (workExp.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
+                        decWorkExp.add(workExp);
+                    }
                 }
-            }
-            // 编写内容意向表
-            DecIntention decIntention = new DecIntention();
-            for (DecIntention intention : decIntentions) {
-                if (intention.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
-                    decIntention = intention;
-                    break;
+                // 教学经历
+                List<DecTeachExp> decTeachExp = new ArrayList<>();
+                for (DecTeachExp teachExp : decTeachExps) {
+                    if (teachExp.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
+                        decTeachExp.add(teachExp);
+                    }
                 }
-            }
-            // 作家扩展项
-            List<DecExtensionVO> extensionVOs = new ArrayList<>();
-            for (DecExtensionVO extensionVO : decExtensionVOs) {
-                if (extensionVO.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
-                    extensionVOs.add(extensionVO);
+                // 兼职学术
+                List<DecAcade> decAcade = new ArrayList<>();
+                for (DecAcade acade : decAcades) {
+                    if (acade.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
+                        decAcade.add(acade);
+                    }
                 }
+                // 个人成就
+                DecAchievement decAchievement = new DecAchievement();
+                for (DecAchievement achievement : decAchievements) {
+                    if (achievement.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
+                        decAchievement = achievement;
+                        break;
+                    }
+                }
+                // 上套教材
+                List<DecLastPosition> decLastPosition = new ArrayList<>();
+                for (DecLastPosition lastPosition : decLastPositions) {
+                    if (lastPosition.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
+                        decLastPosition.add(lastPosition);
+                    }
+                }
+                // 精品课程建设情况
+                List<DecCourseConstruction> decCourseConstruction = new ArrayList<>();
+                for (DecCourseConstruction construction : decCourseConstructions) {
+                    if (construction.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
+                        decCourseConstruction.add(construction);
+                    }
+                }
+                // 主编国家级规划
+                List<DecNationalPlan> decNationalPlan = new ArrayList<>();
+                for (DecNationalPlan plan : decNationalPlans) {
+                    if (plan.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
+                        decNationalPlan.add(plan);
+                    }
+                }
+                // 人卫社教材编写
+                List<DecTextbookPmph> decTextbookPmph = new ArrayList<>();
+                for (DecTextbookPmph textbookPmph : decTextbookPmphs) {
+                    if (textbookPmph.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
+                        decTextbookPmph.add(textbookPmph);
+                    }
+                }
+                // 其他社教材编写
+                List<DecTextbook> decTextbook = new ArrayList<>();
+                for (DecTextbook textbook : decTextbooks) {
+                    if (textbook.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
+                        decTextbook.add(textbook);
+                    }
+                }
+                // 参加人卫慕课、数字教材编写情况表
+                DecMoocDigital decMoocDigital = new DecMoocDigital();
+                for (DecMoocDigital moocDigital : decMoocDigitals) {
+                    if (moocDigital.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
+                        decMoocDigital = moocDigital;
+                        break;
+                    }
+                }
+                // 作家科研
+                List<DecResearch> decResearch = new ArrayList<>();
+                for (DecResearch research : decResearchs) {
+                    if (research.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
+                        decResearch.add(research);
+                    }
+                }
+
+                // 主编学术专著情况
+                List<DecMonograph> monographs = new ArrayList<>();
+                for (DecMonograph monograph : decMonographList) {
+                    if (monograph.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
+                        monographs.add(monograph);
+                    }
+                }
+                // 出版行业获奖情况
+                List<DecPublishReward> publishRewards = new ArrayList<>();
+                for (DecPublishReward publishReward : decPublishRewardList) {
+                    if (publishReward.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
+                        publishRewards.add(publishReward);
+                    }
+                }
+                // SCI论文投稿及影响因子情况
+                List<DecSci> scis = new ArrayList<>();
+                for (DecSci sci : decSciList) {
+                    if (sci.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
+                        scis.add(sci);
+                    }
+                }
+                // 临床医学获奖情况
+                List<DecClinicalReward> clinicalRewards = new ArrayList<>();
+                for (DecClinicalReward clinicalReward : decClinicalRewardList) {
+                    if (clinicalReward.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
+                        clinicalRewards.add(clinicalReward);
+                    }
+                }
+                // 学术荣誉授予情况
+                List<DecAcadeReward> acadeRewards = new ArrayList<>();
+                for (DecAcadeReward acadeReward : decAcadeRewardList) {
+                    if (acadeReward.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
+                        acadeRewards.add(acadeReward);
+                    }
+                }
+                // 编写内容意向表
+                DecIntention decIntention = new DecIntention();
+                for (DecIntention intention : decIntentions) {
+                    if (intention.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
+                        decIntention = intention;
+                        break;
+                    }
+                }
+                // 作家扩展项
+                List<DecExtensionVO> extensionVOs = new ArrayList<>();
+                for (DecExtensionVO extensionVO : decExtensionVOs) {
+                    if (extensionVO.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
+                        extensionVOs.add(extensionVO);
+                    }
+                }
+                String isDispensed = declarationOrDisplayVO.getIsDispensed() ? "是" : "否";
+                String isUtec = declarationOrDisplayVO.getIsUtec() ? "是" : "否";
+                String textbookName = declarationOrDisplayVO.getTextbookName() + "第"
+                        + declarationOrDisplayVO.getTextbookRound() + "版";
+                DeclarationEtcBO declarationEtcBO = new DeclarationEtcBO(declarationOrDisplayVO.getRealname(),
+                        declarationOrDisplayVO.getUsername(), sex, birthday, declarationOrDisplayVO.getExperience(),DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",declarationOrDisplayVO.getCommitDate()),
+                        declarationOrDisplayVO.getOrgName(), declarationOrDisplayVO.getPosition(),
+                        declarationOrDisplayVO.getTitle(), declarationOrDisplayVO.getAddress(),
+                        declarationOrDisplayVO.getPostcode(), declarationOrDisplayVO.getTelephone(),
+                        declarationOrDisplayVO.getFax(), declarationOrDisplayVO.getHandphone(), degree,
+                        declarationOrDisplayVO.getEmail(), idtype, declarationOrDisplayVO.getIdcard(),
+                        declarationOrDisplayVO.getExpertise(), isDispensed, isUtec, strOnlineProgress, strOfflineProgress,
+                        declarationOrDisplayVO.getOrgNameOne(), (ArrayList<DecEduExp>) decEduExp,
+                        (ArrayList<DecWorkExp>) decWorkExp, (ArrayList<DecTeachExp>) decTeachExp, decAchievement,
+                        (ArrayList<DecAcade>) decAcade, (ArrayList<DecLastPosition>) decLastPosition,
+                        (ArrayList<DecCourseConstruction>) decCourseConstruction,
+                        (ArrayList<DecNationalPlan>) decNationalPlan, (ArrayList<DecTextbookPmph>) decTextbookPmph,
+                        decMoocDigital, (ArrayList<DecTextbook>) decTextbook, (ArrayList<DecResearch>) decResearch,
+                        (ArrayList<DecMonograph>) monographs, (ArrayList<DecPublishReward>) publishRewards,
+                        (ArrayList<DecSci>) scis, (ArrayList<DecClinicalReward>) clinicalRewards,
+                        (ArrayList<DecAcadeReward>) acadeRewards, (ArrayList<DecExtensionVO>) extensionVOs, decIntention);
+                List<String> list = new ArrayList<>();
+                list.add(textbookName);
+                declarationEtcBO.setTextbookName(list);
+                List<String> presetPosition = new ArrayList<>();
+                presetPosition.add(declarationOrDisplayVO.getPresetPosition());
+                declarationEtcBO.setPresetPosition(presetPosition);
+                declarationEtcBOs.add(declarationEtcBO);
             }
-            String isDispensed = declarationOrDisplayVO.getIsDispensed() ? "是" : "否";
-            String isUtec = declarationOrDisplayVO.getIsUtec() ? "是" : "否";
-            String textbookName = declarationOrDisplayVO.getTextbookName() + "第"
-                    + declarationOrDisplayVO.getTextbookRound() + "版";
-            DeclarationEtcBO declarationEtcBO = new DeclarationEtcBO(declarationOrDisplayVO.getRealname(),
-                    declarationOrDisplayVO.getUsername(), sex, birthday, declarationOrDisplayVO.getExperience(),DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",declarationOrDisplayVO.getCommitDate()),
-                    declarationOrDisplayVO.getOrgName(), declarationOrDisplayVO.getPosition(),
-                    declarationOrDisplayVO.getTitle(), declarationOrDisplayVO.getAddress(),
-                    declarationOrDisplayVO.getPostcode(), declarationOrDisplayVO.getTelephone(),
-                    declarationOrDisplayVO.getFax(), declarationOrDisplayVO.getHandphone(), degree,
-                    declarationOrDisplayVO.getEmail(), idtype, declarationOrDisplayVO.getIdcard(),
-                    declarationOrDisplayVO.getExpertise(), isDispensed, isUtec, strOnlineProgress, strOfflineProgress,
-                    declarationOrDisplayVO.getOrgNameOne(), (ArrayList<DecEduExp>) decEduExp,
-                    (ArrayList<DecWorkExp>) decWorkExp, (ArrayList<DecTeachExp>) decTeachExp, decAchievement,
-                    (ArrayList<DecAcade>) decAcade, (ArrayList<DecLastPosition>) decLastPosition,
-                    (ArrayList<DecCourseConstruction>) decCourseConstruction,
-                    (ArrayList<DecNationalPlan>) decNationalPlan, (ArrayList<DecTextbookPmph>) decTextbookPmph,
-                    decMoocDigital, (ArrayList<DecTextbook>) decTextbook, (ArrayList<DecResearch>) decResearch,
-                    (ArrayList<DecMonograph>) monographs, (ArrayList<DecPublishReward>) publishRewards,
-                    (ArrayList<DecSci>) scis, (ArrayList<DecClinicalReward>) clinicalRewards,
-                    (ArrayList<DecAcadeReward>) acadeRewards, (ArrayList<DecExtensionVO>) extensionVOs, decIntention);
-            List<String> list = new ArrayList<>();
-            list.add(textbookName);
-            declarationEtcBO.setTextbookName(list);
-            List<String> presetPosition = new ArrayList<>();
-            presetPosition.add(declarationOrDisplayVO.getPresetPosition());
-            declarationEtcBO.setPresetPosition(presetPosition);
-            declarationEtcBOs.add(declarationEtcBO);
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
         return declarationEtcBOs;
     }
 
@@ -1156,22 +1338,17 @@ public class DeclarationServiceImpl implements DeclarationService {
             throws CheckedServiceException {
         List<DeclarationOrDisplayVO> declarationOrDisplayVOs = declarationDao
                 .getDeclarationOrDisplayVOByIdOrRealname(id);
+        return declarationOrDisplayVOs;
+    }
+    @Override
+    public List<DeclarationOrDisplayVO> getDeclarationOrDisplayVOByRealname2(List<Long> id)
+            throws CheckedServiceException {
+        List<DeclarationOrDisplayVO> declarationOrDisplayVOs = declarationDao
+                .getDeclarationOrDisplayVOByIdOrRealname2(id);
         for(DeclarationOrDisplayVO dv:declarationOrDisplayVOs){
-            String post =dv.getPresetPosition().toString();
-            String tit = dv.getTitle();
-            if(tit!=null){
-                if(ObjectUtil.isNumber(tit)){
-                    tit=dataDictionaryDao.getDataDictionaryItemNameByCode(Const.WRITER_USER_TITLE,dv.getTitle().toString());
-                }
-            }
-            if(post!=null){
-                if(ObjectUtil.isNumber(post)){
-                    post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION,dv.getPresetPosition().toString());
-                }
-            }
-            dv.setTitle(tit);
-            dv.setPresetPosition(post);
-
+                String title = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, dv.getTitle().toString());
+                String presetPosition = dv.getPresetPosition();
+                dv.setTitle(title);
         }
         return declarationOrDisplayVOs;
     }
@@ -1181,29 +1358,35 @@ public class DeclarationServiceImpl implements DeclarationService {
             throws CheckedServiceException, IllegalArgumentException, IllegalAccessException {
         List<DeclarationEtcBO> declarationEtcBOs = new ArrayList<>();
 
-        List<DeclarationOrDisplayVO> declarationOrDisplayVOs = declarationDao
-                .getDeclarationOrDisplayVOByIdOrRealname(decIds);
 
-        for(DeclarationOrDisplayVO dv:declarationOrDisplayVOs){
-            String post =dv.getPresetPosition().toString();
-            String tit = dv.getTitle();
-            if(tit!=null){
-                if(ObjectUtil.isNumber(tit)){
-                    tit=dataDictionaryDao.getDataDictionaryItemNameByCode(Const.WRITER_USER_TITLE,dv.getTitle().toString());
-                }
-            }
-            if(post!=null){
-                if(ObjectUtil.isNumber(post)){
-                    post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION,dv.getPresetPosition().toString());
-                }
-            }
-            dv.setTitle(tit);
-            dv.setPresetPosition(post);
+        Map<String, Object> params = new HashMap<>();
+        params.put("declarationId",decIds.get(0));
+        Long materialBydeclarationId = declarationDao.getMaterialBydeclarationId(params);
+        params.put("material_id",materialBydeclarationId);
+        String materialCreateDate = declarationDao.findMaterialCreateDate(params);
 
+        Date date1 = DateUtil.fomatDate(materialCreateDate);
+        Date date = DateUtil.fomatDate("2019-2-12 12:00");
+        List<DeclarationOrDisplayVO> declarationOrDisplayVOs;
+        if(date1.getTime()>date.getTime()) {
+            declarationOrDisplayVOs= declarationDao.getDeclarationOrDisplayVOByIdOrRealname2(decIds);
+            for(DeclarationOrDisplayVO dv: declarationOrDisplayVOs){
+                String post = dv.getPresetPosition();
+                if (post != null) {
+                    if (ObjectUtil.isNumber(post)) {
+                        post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, dv.getPresetPosition().toString());
+                    }
+                }
+                dv.setPresetPosition(post);
+            }
+
+
+        }else{
+            declarationOrDisplayVOs= declarationDao.getDeclarationOrDisplayVOByIdOrRealname(decIds);
         }
 
 
-        // 学习经历
+            // 学习经历
         ArrayList<DecEduExp> decEduExps = (ArrayList<DecEduExp>) decEduExpDao.getListDecEduExpByDeclarationIds(decIds);
         // 工作经历
         ArrayList<DecWorkExp> decWorkExps = (ArrayList<DecWorkExp>) decWorkExpDao
@@ -1535,6 +1718,16 @@ public class DeclarationServiceImpl implements DeclarationService {
                     "教材id为空");
         }
         return declarationDao.getPositionChooseLossByMaterialId(materialId);
+    }
+
+    @Override
+    public Long getMaterialBydeclarationId(Map<String, Object> params) {
+        return declarationDao.getMaterialBydeclarationId(params);
+    }
+
+    @Override
+    public String findMaterialCreateDate(Map<String, Object> paraMap) {
+        return declarationDao.findMaterialCreateDate(paraMap);
     }
 
 }

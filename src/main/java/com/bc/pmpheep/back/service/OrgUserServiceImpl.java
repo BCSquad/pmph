@@ -456,10 +456,10 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService, A
 		result = "FAIL";
 		if (num > 0) {
 			result = "SUCCESS";
-			Integer integer = orgUserDao.addOrgUserToWriterUser(orgUser);
+		/*	Integer integer = orgUserDao.addOrgUserToWriterUser(orgUser);
 			if(integer==0){
 				result = "FAIL";
-			}
+			}*/
 		}
 		return result;
 	}
