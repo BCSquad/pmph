@@ -88,6 +88,7 @@ public class WordHelper {
 			if (!textbookPath.endsWith(File.separator)) {
 				textbookPath = textbookPath.concat(File.separator);
 			}
+			System.out.println(textbookPath+"++++++++++++++++++++++++===========++++++++++++++++++++++++++");
 			File file;
 			for (Map.Entry<String, XWPFDocument> entry : map.entrySet()) {
 				file = new File(textbookPath.concat(FileUtil.replaceIllegalCharForFileName(entry.getKey())));
