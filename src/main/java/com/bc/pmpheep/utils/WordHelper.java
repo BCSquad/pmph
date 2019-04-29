@@ -84,10 +84,13 @@ public class WordHelper {
 			List<MaterialExtension> extensions,int... arrDecSequence) throws CheckedServiceException {
 		String decSequence = arrDecSequence.length>0?(arrDecSequence[0]+"."):"";
 		HashMap<String, XWPFDocument> map = fromDeclarationEtcBOList(materialName, list, filter, extensions,decSequence);
-		if(textbookPath.length()>90){
-			textbookPath=textbookPath.substring(0,textbookPath.lastIndexOf("》")+1)+"/";
-			System.out.println(textbookPath);
+		if(textbookPath.contains("》")){
+			if(textbookPath.length()>90){
+				textbookPath=textbookPath.substring(0,textbookPath.lastIndexOf("》")+1)+"/";
+				System.out.println(textbookPath);
+			}
 		}
+
 		if (createPath(textbookPath)) {
 			if (!textbookPath.endsWith(File.separator)) {
 				textbookPath = textbookPath.concat(File.separator);
@@ -97,10 +100,12 @@ public class WordHelper {
 			File file;
 			for (Map.Entry<String, XWPFDocument> entry : map.entrySet()) {
 				String key = entry.getKey();
-				if(entry.getKey().length()>90){
-					int l=key.lastIndexOf("》")+1;
-					key=key.substring(0,l)+key.substring(key.indexOf("_"))+ key.substring(key.lastIndexOf("."));
-					System.out.println(key);
+				if(key.contains("》")) {
+					if (entry.getKey().length() > 90) {
+						int l = key.lastIndexOf("》") + 1;
+						key = key.substring(0, l) + key.substring(key.indexOf("_")) + key.substring(key.lastIndexOf("."));
+						System.out.println(key);
+					}
 				}
 				file = new File(textbookPath.concat(FileUtil.replaceIllegalCharForFileName(key)));
 				try {
