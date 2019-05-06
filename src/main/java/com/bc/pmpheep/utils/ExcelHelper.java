@@ -2025,7 +2025,7 @@ public class ExcelHelper {
 				}
 				colCount++;
 				value = "无";
-				switch (decCourseConstruction.getType()) {
+				switch (decCourseConstruction.getType()==null?0:decCourseConstruction.getType()) {
 				case 1:
 					value = "国际";
 					break;
