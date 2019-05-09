@@ -353,12 +353,27 @@ public class ExcelHelper {
 				}
 				Integer zhuBianTotalNum = 0;
 				Integer fuZhuBianTotalNum = 0;
+
+				HashMap<String, Object> paraMap = new HashMap<>();
+				paraMap.put("declarationId",bo.getDid());
+				String declarationlCreateDate = declarationDao.findDeclarationCreateDate(paraMap);
+				java.util.Date date1 = DateUtil.fomatDate(declarationlCreateDate);
+				java.util.Date date = DateUtil.fomatDate("2019-04-12 12:00");
+
 				for (WriterBO writer : writers) {
 					Integer chosenPosition = writer.getChosenPosition();
-					if (null != chosenPosition && (chosenPosition == 1)) {
-						zhuBianTotalNum++;
-					} else if (null != chosenPosition && (chosenPosition ==2)) {
-						fuZhuBianTotalNum++;
+					if(date1.getTime()>date.getTime()) {
+						if (null != chosenPosition && (chosenPosition == 1)) {
+							zhuBianTotalNum++;
+						} else if (null != chosenPosition && (chosenPosition ==2)) {
+							fuZhuBianTotalNum++;
+						}
+					}else{
+						if (null != chosenPosition && (chosenPosition == 12 || chosenPosition == 4)) {
+							zhuBianTotalNum++;
+						} else if (null != chosenPosition && (chosenPosition == 10 || chosenPosition == 2)) {
+							fuZhuBianTotalNum++;
+						}
 					}
 				}
 				Row row = sheet.createRow(rowCount);
@@ -386,11 +401,6 @@ public class ExcelHelper {
 						rank = String.valueOf(writer.getRank());
 					}
 
-					HashMap<String, Object> paraMap = new HashMap<>();
-					paraMap.put("declarationId",bo.getDid());
-					String declarationlCreateDate = declarationDao.findDeclarationCreateDate(paraMap);
-					java.util.Date date1 = DateUtil.fomatDate(declarationlCreateDate);
-					java.util.Date date = DateUtil.fomatDate("2019-04-12 12:00");
 					if(date1.getTime()>date.getTime()) {
 						String post = chosenPosition.toString();
 
@@ -2015,7 +2025,7 @@ public class ExcelHelper {
 				}
 				colCount++;
 				value = "无";
-				switch (decCourseConstruction.getType()) {
+				switch (decCourseConstruction.getType()==null?0:decCourseConstruction.getType()) {
 				case 1:
 					value = "国际";
 					break;

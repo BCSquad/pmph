@@ -884,7 +884,12 @@ public class DecPositionServiceImpl implements DecPositionService {
             schoolDeclarationChosenAverage =
                     String.valueOf(bigDecimalchosen.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
         }
-        Integer editorCount = decPositionDao.getEditorCount(materialId);
+        HashMap<String, Object> paraMap = new HashMap<>();
+        paraMap.put("material_id",materialId);
+        String material_id = declarationDao.findMaterialCreateDate(paraMap);
+        Date date1 = DateUtil.fomatDate(material_id);
+        Date date = DateUtil.fomatDate("2019-2-12 12:00");
+        Integer editorCount =decPositionDao.getEditorCount(materialId);
         Integer subEditorCount = decPositionDao.getSubEditorCount(materialId);
         Integer editorialCount = decPositionDao.getEditorialCount(materialId);
         Integer digitalCount = decPositionDao.getDigitalCount(materialId);
@@ -892,6 +897,17 @@ public class DecPositionServiceImpl implements DecPositionService {
         Integer chosenSubeditorCount = decPositionDao.getChosenSubeditorCount(materialId);
         Integer chosenEditorialCount = decPositionDao.getChosenEditorialCount(materialId);
         Integer chosenDigitalCount = decPositionDao.getChosenDigitalCount(materialId);
+
+        if(date1.getTime()>date.getTime()) {
+            editorCount = decPositionDao.getEditorCount2(materialId);
+            subEditorCount = decPositionDao.getSubEditorCount2(materialId);
+            editorialCount = decPositionDao.getEditorialCount2(materialId);
+            chosenEditorCount = decPositionDao.getChosenEditorCount2(materialId);
+            chosenSubeditorCount = decPositionDao.getChosenSubeditorCount2(materialId);
+            chosenEditorialCount = decPositionDao.getChosenEditorialCount2(materialId);
+
+        }
+
         declarationCountVO.setSchoolDeclarationCount(schoolDeclarationCount);
         declarationCountVO.setSchoolDeclarationChosenCount(schoolDeclarationChosenCount);
         declarationCountVO.setSchoolDeclarationAverage(schoolDeclarationAverage);
@@ -1177,12 +1193,12 @@ public class DecPositionServiceImpl implements DecPositionService {
         //int total = decPositionDao.getBooks(pageParameter.getParameter().getMaterialId());
         int total = decPositionDao.getBookListTwoCount(pageParameter);
         if (total > 0) {
-            List<DeclarationResultBookVO> VOs = decPositionDao.getBookChosenList2(pageParameter);
+            List<DeclarationResultBookVO> VOs = decPositionDao.getBookChosenList(pageParameter);
             HashMap<String, Object> paraMap = new HashMap<>();
             paraMap.put("material_id",pageParameter.getParameter().getMaterialId());
-            String declarationlCreateDate = declarationDao.findDeclarationCreateDate(paraMap);
+            String declarationlCreateDate = declarationDao.findMaterialCreateDate(paraMap);
             Date date1 = DateUtil.fomatDate(declarationlCreateDate);
-            Date date = DateUtil.fomatDate("2019-04-12 12:00");
+            Date date = DateUtil.fomatDate("2019-02-12 12:00");
             if(date1.getTime()>date.getTime()) {
                 VOs = decPositionDao.getBookChosenList2(pageParameter);
 

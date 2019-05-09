@@ -231,7 +231,7 @@
 		t.`textbook_id` = #{textbookId}) tmp
 		ON a.id = tmp.id
 	</delete>
-	
+
 	<!-- 根据declarationId查询作家申报职位信息 -->
 	<select id="listDecPositionDisplayOrPosition" parameterType="java.lang.Long"
 		resultType="DecPositionPublishedVO">

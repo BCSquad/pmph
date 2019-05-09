@@ -288,6 +288,7 @@ public interface DecPositionDao {
      * @return Integer
      */
     Integer getEditorCount(Long materialId);
+    Integer getEditorCount2(Long materialId);
 
     /**
      * 
