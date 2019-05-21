@@ -380,5 +380,12 @@
         limit 0,1
     </select>
 
+    <select id="getListByCode"  parameterType="string" resultType="map">
+        select i.name,i.code
+        from data_dictionary_item i
+        inner join data_dictionary_type t
+        on t.id = i.type_id and t.type_code = #{type_code} and i.deleted = 0
+    </select>
+
 
 </mapper>

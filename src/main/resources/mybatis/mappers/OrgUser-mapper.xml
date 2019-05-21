@@ -487,11 +487,13 @@
 		ou.id,o.org_name,ou.username,ou.realname,ou.handphone,ou.email,ou.address,o.area_id,ou.postcode,
 		ou.is_disabled isDisabled,ot.type_name
 		orgTypeName,ou.position,ou.title,ou.note,
-		ou.org_id,ot.id orgTypeId
+		ou.org_id,ot.id orgTypeId,ar.area_name as area
 		from org o
 		left join org_user ou on ou.org_id=o.id
 		left join org_type ot
 		on ot.id=o.org_type_id
+		left join area ar on o.area_id=ar.id
+
 		where 1=1
 		<if test="parameter.name !=null and parameter.name !='' ">
 			and (ou.username like concat('%',#{parameter.name},'%' )

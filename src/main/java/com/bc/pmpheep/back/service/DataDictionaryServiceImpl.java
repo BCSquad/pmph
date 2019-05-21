@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Alias("com.bc.pmpheep.back.service.DataDictionaryServiceImpl")
@@ -123,5 +124,10 @@ public class DataDictionaryServiceImpl implements DataDictionaryService{
         int result = dicDao.itemAdd(dataDictionaryItem);
 
         return result;
+    }
+
+    @Override
+    public List<Map<String, Object>> getListByCode(String code) {
+        return  dicDao.getListByCode(code) ;
     }
 }
