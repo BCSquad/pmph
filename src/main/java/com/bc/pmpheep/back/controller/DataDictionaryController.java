@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("dataDictionary")
@@ -85,4 +86,21 @@ public class DataDictionaryController {
         int result = dicService.itemAdd(dataDictionaryItem);
         return new ResponseBean(dataDictionaryItem);
     }
+
+
+    /**
+     * 获取数据字典项列表
+     * @param request
+     * @param dataDictionaryItem
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    @RequestMapping("/getListByCode")
+    @ResponseBody
+    public ResponseBean getListByCode(HttpServletRequest request,String code){
+        List<Map<String, Object>> list = dicService.getListByCode(code);
+        return new ResponseBean(list);
+    }
+
 }

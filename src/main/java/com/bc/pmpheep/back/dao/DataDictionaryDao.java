@@ -53,4 +53,6 @@ public interface DataDictionaryDao {
      */
     String getDataDictionaryItemNameByCode(@Param("type_code") String type_code, @Param("code") String code);
 
+    List<Map<String, Object>> getListByCode(String type_code);
+
 }

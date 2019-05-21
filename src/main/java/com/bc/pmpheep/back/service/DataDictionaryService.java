@@ -6,6 +6,9 @@ import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.DataDictionaryItem;
 import com.bc.pmpheep.back.po.DataDictionaryType;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  *  数据字典接口
  */
@@ -42,4 +45,6 @@ public interface DataDictionaryService {
      * @return
      */
     int itemAdd(DataDictionaryItem dataDictionaryItem);
+
+    List<Map<String,Object>> getListByCode(String code);
 }

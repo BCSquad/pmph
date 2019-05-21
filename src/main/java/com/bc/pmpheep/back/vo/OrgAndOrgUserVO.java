@@ -60,6 +60,9 @@ public class OrgAndOrgUserVO implements Serializable {
 	// 邮编
 	@ExcelHeader(header = "邮编")
 	private String postcode;
+
+	@ExcelHeader(header = "省份")
+	private String area;
 	// 委托书
 	private String proxy;
 	// 备注
@@ -96,6 +99,15 @@ public class OrgAndOrgUserVO implements Serializable {
 	// public void setSchool(String school) {
 	// this.school = school;
 	// }
+
+
+	public String getArea() {
+		return area;
+	}
+
+	public void setArea(String area) {
+		this.area = area;
+	}
 
 	public Integer getIsHospital() {
 		return isHospital;
