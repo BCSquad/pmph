@@ -805,13 +805,13 @@
 		<!-- 申报职位 -->
 		<if test="parameter.positionType != null ">
 			<if test="parameter.positionType == 1 "> <!-- 主编 -->
-				and c.preset_position in (4,5,6,7,12,13,14,15)
+				and c.preset_position =1
 			</if>
 			<if test="parameter.positionType == 2 "> <!-- 副主编 -->
-				and c.preset_position in (2,3,6,7,10,11,14,15)
+				and c.preset_position =2
 			</if>
 			<if test="parameter.positionType == 3 "> <!-- 编委 -->
-				and c.preset_position in (1,3,5,7,9,11,13,15)
+				and c.preset_position >=3
 			</if>
 		</if>
 		<!-- 学校审核 -->
