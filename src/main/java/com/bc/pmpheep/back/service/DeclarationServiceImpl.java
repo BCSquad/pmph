@@ -14,6 +14,7 @@ import java.util.Map;
 import com.bc.pmpheep.back.dao.*;
 import com.bc.pmpheep.back.util.*;
 import com.mchange.v2.lang.StringUtils;
+import org.jsoup.helper.DataUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,6 +59,7 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -279,10 +281,24 @@ public class DeclarationServiceImpl implements DeclarationService {
                     Date date = DateUtil.fomatDate("2019-04-12 12:00");
                     if(date1.getTime()>date.getTime()) {
                     String post = row.getPresetPosition().toString();
-
+                    String post2="";
                     if (post != null) {
                         if (ObjectUtil.isNumber(post)) {
-                            post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, row.getPresetPosition().toString());
+                            if(Integer.parseInt(post)==8){
+                                post="数字编委";
+                            }else{
+                                post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, post);
+                            }
+                        }else{
+                            String[] split = post.split(",");
+                            for(String s:split){
+                                if(Integer.parseInt(s)==8){
+                                    post2+="数字编委,";
+                                }else{
+                                    post2 += dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, s)+",";
+                                }
+                            }
+                            post=post2.substring(0,post2.lastIndexOf(","));
                         }
                     }
 
@@ -550,8 +566,36 @@ public class DeclarationServiceImpl implements DeclarationService {
 
             if(date1.getTime()>date.getTime()) {
 
-            String dataDictionaryItemNameByCode = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, decPositions.getPresetPosition().toString());
-            decPositions.setShowPosition(dataDictionaryItemNameByCode);
+                String post=decPositions.getPresetPosition();
+                String dataDictionaryItemNameByCode;
+                String post2="";
+                if (ObjectUtil.isNumber(post)) {
+                    if(Integer.parseInt(post)==8){
+                        dataDictionaryItemNameByCode="数字编委";
+                    }else{
+                        dataDictionaryItemNameByCode = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, post);
+                    }
+                }else{
+
+                    String[] split = post.split(",");
+                    for(String s:split){
+                        if(Integer.parseInt(s)==8){
+                            post2+="数字编委,";
+                        }else{
+                            post2 += dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, s)+",";
+                        }
+
+                    }
+                    dataDictionaryItemNameByCode=post2.substring(0,post2.lastIndexOf(","));
+                }
+                decPositions.setShowPosition(dataDictionaryItemNameByCode);
+
+
+
+
+
+
+
             if (decPositions.getChosenPosition() != 0) {
                 String dataDictionaryItemNameByCode2 = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, decPositions.getChosenPosition().toString());
                 decPositions.setShowChosenPosition(dataDictionaryItemNameByCode2);
@@ -559,7 +603,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 
             }else{
 
-                switch (decPositions.getPresetPosition()) {
+                switch (Integer.parseInt(decPositions.getPresetPosition())) {
                     case 1:
                         decPositions.setShowPosition("编委");
                         break;

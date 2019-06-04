@@ -45,17 +45,17 @@ public class DeclarationListVO implements java.io.Serializable {
     //书籍名称
     private String textbookName;
 
-    private Integer presetPosition;
+    private String presetPosition;
     private Integer orgId;
     //提交日期
     private Timestamp commitDate;
 
 
-	public Integer getPresetPosition() {
+	public String getPresetPosition() {
 		return presetPosition;
 	}
 
-	public void setPresetPosition(Integer presetPosition) {
+	public void setPresetPosition(String presetPosition) {
 		this.presetPosition = presetPosition;
 	}
 

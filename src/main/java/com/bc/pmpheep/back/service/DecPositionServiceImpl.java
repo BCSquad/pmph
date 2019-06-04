@@ -343,11 +343,34 @@ public class DecPositionServiceImpl implements DecPositionService {
             Date date1 = DateUtil.fomatDate(declarationlCreateDate);
             Date date = DateUtil.fomatDate("2019-04-12 12:00");
             if(date1.getTime()>date.getTime()) {
-                String post = decPositionEditorSelectionVO.getPresetPosition().toString();
+
+
+                String post = decPositionEditorSelectionVO.getPresetPosition();
+                String post2="";
+
                 if (post != null) {
+
                     if (ObjectUtil.isNumber(post)) {
-                        post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, post);
+                        if(Integer.parseInt(post)==8){
+                            post="数字编委";
+                        }else{
+                            post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, post);
+                        }
+                    }else{
+                        String[] split = post.split(",");
+                        for (String s: split) {
+                            if(Integer.parseInt(s)==8){
+                                post2+="数字编委,";
+                            }else{
+                                post2 += dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, s)+",";
+                            }
+                        }
+                        post=post2.substring(0,post2.lastIndexOf(","));
+
                     }
+
+
+
                 }
                 decPositionEditorSelectionVO.setStrPresetPosition(post);
             }

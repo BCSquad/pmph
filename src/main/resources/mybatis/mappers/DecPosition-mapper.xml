@@ -757,7 +757,7 @@
 		left join (select id from material) m on (m.id=d.material_id)
 		where dp.preset_position IS NOT NULL AND
 		d.is_staging = 0 AND d.online_progress >0 AND d.org_id IS NOT NULL
-		and m.id=#{materialId} AND dp.preset_position =1
+		and m.id=#{materialId} AND dp.preset_position  like concat('%',1,'%')
 		GROUP BY dp.declaration_id)a;
 	</select>
 	<!-- 根据materialId查询副主编申报总数 -->
@@ -783,7 +783,7 @@
 		LEFT JOIN (select id FROM material) m ON (m.id=d.material_id)
 		WHERE dp.preset_position IS NOT NULL AND
 		d.is_staging = 0 AND d.online_progress >0 AND d.org_id IS NOT NULL
-		AND m.id=#{materialId} AND dp.preset_position =2
+		AND m.id=#{materialId} AND dp.preset_position  like concat('%',2,'%')
 		GROUP BY dp.declaration_id)a;
 	</select>
 	<!-- 根据materialId查询编委申报数 -->
@@ -809,7 +809,7 @@
 		left join (select id from material) m on (m.id=d.material_id)
 		where dp.preset_position IS NOT NULL AND
 		d.is_staging = 0 AND d.online_progress >0 AND d.org_id IS NOT NULL
-		and m.id=#{materialId} AND dp.preset_position =3
+		and m.id=#{materialId} AND dp.preset_position like concat('%',3,'%')
 		GROUP BY dp.declaration_id)a;
 	</select>
 
@@ -823,7 +823,7 @@
 		left join (select id from material) m on (m.id=d.material_id)
 		where dp.preset_position IS NOT NULL AND
 		d.is_staging = 0 AND d.online_progress >0 AND d.org_id IS NOT NULL
-		and m.id=#{materialId} AND dp.preset_position IN (8,9,10,11,12,13,14,15)
+		and m.id=#{materialId} AND dp.preset_position like concat('%',8,'%')
 		GROUP BY dp.declaration_id)a;
 	</select>
 
@@ -1372,14 +1372,12 @@
 		t1.presetpositioneditor,t1.presetpositionsubeditor,t1.presetpositioneditorial,
 		t1.presetdigitaleditor
 		FROM (
-		SELECT SUM(if((b.preset_position IN (1)),1,0))
+		SELECT SUM(if((b.preset_position  like concat('%',1,'%')),1,0))
 		presetpositioneditor,
-		SUM(if((b.preset_position IN
-		(2)),1,0)) presetpositionsubeditor,
-		SUM(if((b.preset_position IN (3)),1,0))
+		SUM(if((b.preset_position  like concat('%',2,'%')),1,0)) presetpositionsubeditor,
+		SUM(if((b.preset_position  like concat('%',3,'%')),1,0))
 		presetpositioneditorial,
-		SUM(if((b.preset_position IN
-		(8,9,10,11,12,13,14,15)),1,0)) presetdigitaleditor,
+		SUM(if((b.preset_position  like concat('%',8,'%')),1,0)) presetdigitaleditor,
 		d.id
 		materialid,c.id id,c.textbook_name bookname
 		FROM declaration a
