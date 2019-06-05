@@ -928,6 +928,7 @@ public class DecPositionServiceImpl implements DecPositionService {
             chosenEditorCount = decPositionDao.getChosenEditorCount2(materialId);
             chosenSubeditorCount = decPositionDao.getChosenSubeditorCount2(materialId);
             chosenEditorialCount = decPositionDao.getChosenEditorialCount2(materialId);
+            digitalCount = decPositionDao.getDigitalCount2(materialId);
 
         }
 
@@ -966,10 +967,29 @@ public class DecPositionServiceImpl implements DecPositionService {
         if (total > 0) {
             List<DeclarationSituationBookResultVO> books =
                     decPositionDao.getBookListOne(pageParameter);
+
+            HashMap<String, Object> paraMap = new HashMap<>();
+            paraMap.put("material_id",books.get(0).getMaterialId());
+            String material_id = declarationDao.findMaterialCreateDate(paraMap);
+            Date date1 = DateUtil.fomatDate(material_id);
+            Date date = DateUtil.fomatDate("2019-2-12 12:00");
+
             List<DeclarationSituationBookResultVO> presets =
                     decPositionDao.getBookResultPreset(pageParameter);
             List<DeclarationSituationBookResultVO> chosens =
                     decPositionDao.getBookResultChosen(pageParameter);
+            if(date1.getTime()>date.getTime()) {
+
+                presets =
+                        decPositionDao.getBookResultPreset2(pageParameter);
+                 chosens =
+                        decPositionDao.getBookResultChosen2(pageParameter);
+
+
+            }
+
+
+
             List<DeclarationSituationBookResultVO> middle = new ArrayList<>();
             List<DeclarationSituationBookResultVO> list = new ArrayList<>();
             if (null == presets || presets.isEmpty()) {

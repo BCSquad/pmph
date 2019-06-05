@@ -406,6 +406,7 @@ public class ExcelHelper {
 
 						if (post != null) {
 							if (ObjectUtil.isNumber(post)) {
+
 								post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION,post);
 								if(chosenPosition==1){
 									position = "主编 " + zhuBianTotalNum + "-" + rank ;

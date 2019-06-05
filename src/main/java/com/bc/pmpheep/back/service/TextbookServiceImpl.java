@@ -1308,7 +1308,12 @@ public class TextbookServiceImpl implements TextbookService {
 
 			if(date1.getTime()>date.getTime()) {
 				String post =excelDecAndTextbookVO.getChosenPosition().toString();
-				post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, post);
+				if(Integer.parseInt(post)==8){
+					post="数字编委";
+				}else{
+					post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, post);
+
+				}
 				excelDecAndTextbookVO.setShowChosenPosition(post);
 			}else{
 
