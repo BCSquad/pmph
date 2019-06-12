@@ -60,7 +60,12 @@
 	<delete id="deleteMaterialOrgByOrgId" parameterType="java.lang.Long">
 		delete from material_org where org_id = #{orgId} ;
 	</delete>
-	
-	
+
+	<!-- 根据orgId删除 -->
+	<delete id="deleteMaterialOrgByMaterialAndOrgId" parameterType="map">
+		delete from material_org where org_id = #{orgId} and material_id=#{materialId} ;
+	</delete>
+
+
 
 </mapper>

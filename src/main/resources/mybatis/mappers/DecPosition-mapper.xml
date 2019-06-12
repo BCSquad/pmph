@@ -754,7 +754,7 @@
 WHERE
 		d.is_staging = 0
 		AND d.org_id IS NOT NULL
-		AND d.material_id =29
+		AND d.material_id =#{materialId}
 		AND dp.preset_position LIKE concat ( '%', 1, '%' )
 	</select>
 	<!-- 根据materialId查询副主编申报总数 -->
@@ -779,7 +779,7 @@ WHERE
 		d.is_staging = 0
 
 		AND d.org_id IS NOT NULL
-		AND d.material_id =29
+		AND d.material_id =#{materialId}
 		AND dp.preset_position LIKE concat ( '%', 2, '%' )
 	</select>
 	<!-- 根据materialId查询编委申报数 -->
@@ -804,7 +804,7 @@ WHERE
 		d.is_staging = 0
 
 		AND d.org_id IS NOT NULL
-		AND d.material_id =29
+		AND d.material_id = #{materialId}
 		AND dp.preset_position LIKE concat ( '%', 3, '%' )
 	</select>
 
@@ -831,7 +831,7 @@ WHERE
 		d.is_staging = 0
 
 		AND d.org_id IS NOT NULL
-		AND d.material_id =29
+		AND d.material_id =#{materialId}
 		AND dp.preset_position LIKE concat ( '%', 8, '%' )
 	</select>
 

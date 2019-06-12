@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
@@ -78,4 +79,7 @@ public interface MaterialOrgDao {
      * @return 影响行数
      */
     Integer deleteMaterialOrgByOrgId(Long orgId);
+
+    Integer deleteMaterialOrgByMaterialAndOrgId(Map<String,Object> params);
+
 }

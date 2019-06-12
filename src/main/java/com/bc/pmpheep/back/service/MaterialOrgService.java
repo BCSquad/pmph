@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.bc.pmpheep.back.po.MaterialOrg;
 import com.bc.pmpheep.back.vo.OrgExclVO;
@@ -80,4 +81,6 @@ public interface MaterialOrgService {
      * @return 影响行数
      */
     Integer deleteMaterialOrgByOrgId(Long orgId) throws CheckedServiceException;
+
+    Integer deleteMaterialOrgByMaterialAndOrgId(Map<String,Object> params);
 }
