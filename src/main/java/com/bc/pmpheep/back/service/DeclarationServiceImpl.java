@@ -1451,7 +1451,7 @@ public class DeclarationServiceImpl implements DeclarationService {
                     }else{
                         String[] split = post.split(",");
                         for(String s: split){
-                            if(Integer.parseInt(post)==8){
+                            if(Integer.parseInt(s)==8){
                                 post2+="数字编委,";
                             }else{
                                 post2 += dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, s)+",";
