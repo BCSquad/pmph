@@ -238,35 +238,35 @@ public class DecPositionServiceImpl implements DecPositionService {
             String showPosition = newDecPosition.getShowPosition();
             DecPosition decPosition = new DecPosition();
             if ("编委".equals(showPosition)) {
-                decPosition.setPresetPosition(1);
+                decPosition.setPresetPosition("3");
             } else if ("副主编".equals(showPosition)) {
-                decPosition.setPresetPosition(2);
+                decPosition.setPresetPosition("2");
             } else if ("副主编,编委".equals(showPosition)) {
-                decPosition.setPresetPosition(3);
+                decPosition.setPresetPosition("2,3");
             } else if ("主编".equals(showPosition)) {
-                decPosition.setPresetPosition(4);
+                decPosition.setPresetPosition("1");
             } else if ("主编,编委".equals(showPosition)) {
-                decPosition.setPresetPosition(5);
+                decPosition.setPresetPosition("1,3");
             } else if ("主编,副主编".equals(showPosition)) {
-                decPosition.setPresetPosition(6);
+                decPosition.setPresetPosition("1,2");
             } else if ("主编,副主编,编委".equals(showPosition)) {
-                decPosition.setPresetPosition(7);
+                decPosition.setPresetPosition("1,2,3");
             } else if ("数字编委".equals(showPosition)) {
-                decPosition.setPresetPosition(8);
+                decPosition.setPresetPosition("8");
             } else if ("编委,数字编委".equals(showPosition)) {
-                decPosition.setPresetPosition(9);
+                decPosition.setPresetPosition("3,8");
             } else if ("副主编,数字编委".equals(showPosition)) {
-                decPosition.setPresetPosition(10);
+                decPosition.setPresetPosition("2,8");
             } else if ("副主编,编委,数字编委".equals(showPosition)) {
-                decPosition.setPresetPosition(11);
+                decPosition.setPresetPosition("2,3,8");
             } else if ("主编,数字编委".equals(showPosition)) {
-                decPosition.setPresetPosition(12);
+                decPosition.setPresetPosition("1,8");
             } else if ("主编,编委,数字编委".equals(showPosition)) {
-                decPosition.setPresetPosition(13);
+                decPosition.setPresetPosition("1,3,8");
             } else if ("主编,副主编,数字编委".equals(showPosition)) {
-                decPosition.setPresetPosition(14);
+                decPosition.setPresetPosition("1,2,8");
             } else if ("主编,副主编,编委,数字编委".equals(showPosition)) {
-                decPosition.setPresetPosition(15);
+                decPosition.setPresetPosition("1,2,3,8");
             }
             File files = null;
             String fileName = null;

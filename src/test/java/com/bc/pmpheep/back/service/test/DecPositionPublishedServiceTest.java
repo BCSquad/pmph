@@ -25,7 +25,7 @@ public class DecPositionPublishedServiceTest extends BaseTest {
 	@Resource
 	DecPositionPublishedService decPositionPublishedService;
 	DecPositionPublished decPositionPublished = new DecPositionPublished(1L, 
-			1L, 3L, 1, true, 1, 3, "123", "测试");
+			1L, 3L, "1", true, 1, 3, "123", "测试");
 	
 	@Test
 	@Rollback(Const.ISROLLBACK)
