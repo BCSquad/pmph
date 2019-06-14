@@ -442,7 +442,7 @@
 				 index="index" item="id">
 			#{id}
 		</foreach>
-		GROUP BY d.id
+		GROUP BY t.textbook_round ,t.textbook_name, w.username
 		ORDER BY
 		t.textbook_name DESC
 	</select>
