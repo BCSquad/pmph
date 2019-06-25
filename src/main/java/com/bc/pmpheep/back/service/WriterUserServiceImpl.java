@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.bc.pmpheep.back.dao.DataDictionaryDao;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,6 +56,9 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 
 	@Autowired
 	WriterProfileDao writerProfileDao;
+
+	@Autowired
+	private DataDictionaryDao dataDictionaryDao;
 
 	@Autowired
 	private DecPositionPublishedService decPositionPublishedService;
@@ -354,6 +358,13 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 				List<WriterUserManagerVO> list = writerUserDao.getListWriterUser(pageParameter);
 				for (int i = 0;i<list.size();i++) {
 					WriterUserManagerVO vo = list.get(i);
+
+					String  title= vo.getTitle();
+					if(title!=null){
+						if (ObjectUtil.isNumber(title)) {
+							vo.setTitle(dataDictionaryDao.getDataDictionaryItemNameByCode(Const.WRITER_USER_TITLE, title));
+						}
+					}
 					String voS = com.alibaba.fastjson.JSON.toJSONString(vo).replaceAll("-","");
 					vo = com.alibaba.fastjson.JSON.parseObject(voS,WriterUserManagerVO.class);
 					list.remove(i);
@@ -532,6 +543,13 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 		List<WriterUserManagerVO> writerUserManagerVOList = writerUserDao.getTeacherCheckList(pageParameter);
 		for (WriterUserManagerVO writerUserManagerVO : writerUserManagerVOList) {
+
+			String  title= writerUserManagerVO.getTitle();
+			if(title!=null){
+				if (ObjectUtil.isNumber(title)) {
+					writerUserManagerVO.setTitle(dataDictionaryDao.getDataDictionaryItemNameByCode(Const.WRITER_USER_TITLE, title));
+				}
+			}
 			switch (writerUserManagerVO.getRank()) {
 			case 0:
 				writerUserManagerVO.setRankName("普通用户");
