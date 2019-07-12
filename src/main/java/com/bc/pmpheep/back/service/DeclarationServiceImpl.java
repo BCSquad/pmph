@@ -287,7 +287,7 @@ public class DeclarationServiceImpl implements DeclarationService {
                             if(Integer.parseInt(post)==8){
                                 post="数字编委";
                             }else{
-                                post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, post);
+                                post = dataDictionaryDao.getDataDictionaryItemNameByCode2(Const.PMPH_POSITION, post);
                             }
                         }else{
                             String[] split = post.split(",");
@@ -295,7 +295,7 @@ public class DeclarationServiceImpl implements DeclarationService {
                                 if(Integer.parseInt(s)==8){
                                     post2+="数字编委,";
                                 }else{
-                                    post2 += dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, s)+",";
+                                    post2 += dataDictionaryDao.getDataDictionaryItemNameByCode2(Const.PMPH_POSITION, s)+",";
                                 }
                             }
                             post=post2.substring(0,post2.lastIndexOf(","));
@@ -314,11 +314,6 @@ public class DeclarationServiceImpl implements DeclarationService {
                     }
                     row.setTitle(tit);
             }
-
-
-
-
-
 
             pageResult.setRows(rows);
         }
@@ -573,7 +568,7 @@ public class DeclarationServiceImpl implements DeclarationService {
                     if(Integer.parseInt(post)==8){
                         dataDictionaryItemNameByCode="数字编委";
                     }else{
-                        dataDictionaryItemNameByCode = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, post);
+                        dataDictionaryItemNameByCode = dataDictionaryDao.getDataDictionaryItemNameByCode2(Const.PMPH_POSITION, post);
                     }
                 }else{
 
@@ -582,7 +577,7 @@ public class DeclarationServiceImpl implements DeclarationService {
                         if(Integer.parseInt(s)==8){
                             post2+="数字编委,";
                         }else{
-                            post2 += dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, s)+",";
+                            post2 += dataDictionaryDao.getDataDictionaryItemNameByCode2(Const.PMPH_POSITION, s)+",";
                         }
 
                     }
@@ -966,7 +961,7 @@ public class DeclarationServiceImpl implements DeclarationService {
                         if (Integer.parseInt(post) == 8) {
                             post = "数字编委";
                         } else {
-                            post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, post);
+                            post = dataDictionaryDao.getDataDictionaryItemNameByCode2(Const.PMPH_POSITION, post);
                         }
 
                     } else {
@@ -975,7 +970,7 @@ public class DeclarationServiceImpl implements DeclarationService {
                             if (Integer.parseInt(s) == 8) {
                                 post2 += "数字编委,";
                             } else {
-                                post2 += dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, s) + ",";
+                                post2 += dataDictionaryDao.getDataDictionaryItemNameByCode2(Const.PMPH_POSITION, s) + ",";
                             }
                         }
                         post = post2.substring(0, post2.lastIndexOf(","));
@@ -1446,7 +1441,7 @@ public class DeclarationServiceImpl implements DeclarationService {
                         if(Integer.parseInt(post)==8){
                             post="数字编委";
                         }else{
-                            post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, post);
+                            post = dataDictionaryDao.getDataDictionaryItemNameByCode2(Const.PMPH_POSITION, post);
                         }
                     }else{
                         String[] split = post.split(",");
@@ -1454,7 +1449,7 @@ public class DeclarationServiceImpl implements DeclarationService {
                             if(Integer.parseInt(s)==8){
                                 post2+="数字编委,";
                             }else{
-                                post2 += dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, s)+",";
+                                post2 += dataDictionaryDao.getDataDictionaryItemNameByCode2(Const.PMPH_POSITION, s)+",";
                             }
 
                         }

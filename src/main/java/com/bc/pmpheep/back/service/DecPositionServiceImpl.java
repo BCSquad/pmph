@@ -354,7 +354,7 @@ public class DecPositionServiceImpl implements DecPositionService {
                         if(Integer.parseInt(post)==8){
                             post="数字编委";
                         }else{
-                            post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, post);
+                            post = dataDictionaryDao.getDataDictionaryItemNameByCode2(Const.PMPH_POSITION, post);
                         }
                     }else{
                         String[] split = post.split(",");
@@ -362,7 +362,7 @@ public class DecPositionServiceImpl implements DecPositionService {
                             if(Integer.parseInt(s)==8){
                                 post2+="数字编委,";
                             }else{
-                                post2 += dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, s)+",";
+                                post2 += dataDictionaryDao.getDataDictionaryItemNameByCode2(Const.PMPH_POSITION, s)+",";
                             }
                         }
                         post=post2.substring(0,post2.lastIndexOf(","));
