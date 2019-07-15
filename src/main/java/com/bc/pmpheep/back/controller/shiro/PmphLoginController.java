@@ -259,11 +259,12 @@ public class PmphLoginController {
         session.setAttribute(Const.SEESION_PMPH_USER_TOKEN,
                 token);
         PmphUser user = pmphUserService.getPmphUser(pmphUser.getUsername());
+        System.out.println(pmphUser.toString());
+        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++");
         if(user!=null){
-            PmphUser newU = new PmphUser();
+          /*  PmphUser newU = new PmphUser();
             newU.setId(user.getId());
             if(pmphUser.getPassword()!=null) newU.setPassword(pmphUser.getPassword());
-            if(pmphUser.getAvatar()!=null) newU.setAvatar(pmphUser.getAvatar());
             if(pmphUser.getDepartmentId()!=null) newU.setDepartmentId(pmphUser.getDepartmentId());
             if(pmphUser.getRealname()!=null) newU.setRealname(pmphUser.getRealname());
             if(pmphUser.getIsAdmin()!=null) newU.setIsAdmin(pmphUser.getIsAdmin());
@@ -278,12 +279,11 @@ public class PmphLoginController {
             if(pmphUser.getGmtUpdate()!=null) newU.setGmtUpdate(pmphUser.getGmtUpdate());
             if(pmphUser.getIsDeleted()!=null) newU.setIsDeleted(pmphUser.getIsDeleted());
             if(pmphUser.getOpenid()!=null) newU.setOpenid(pmphUser.getOpenid());
-            pmphUserService.updateUser(newU);
+            pmphUserService.updateUser(newU);*/
         }else{
-            PmphUser newU = new PmphUser();
+           /* PmphUser newU = new PmphUser();
             if(pmphUser.getUsername()!=null) newU.setUsername(pmphUser.getUsername());
             if(pmphUser.getPassword()!=null) newU.setPassword(pmphUser.getPassword());
-            if(pmphUser.getAvatar()!=null) newU.setAvatar(pmphUser.getAvatar());
             if(pmphUser.getDepartmentId()!=null) newU.setDepartmentId(pmphUser.getDepartmentId());
             if(pmphUser.getRealname()!=null) newU.setRealname(pmphUser.getRealname());
             if(pmphUser.getIsAdmin()!=null) newU.setIsAdmin(pmphUser.getIsAdmin());
@@ -298,7 +298,7 @@ public class PmphLoginController {
             if(pmphUser.getGmtUpdate()!=null) newU.setGmtUpdate(pmphUser.getGmtUpdate());
             if(pmphUser.getIsDeleted()!=null) newU.setIsDeleted(pmphUser.getIsDeleted());
             if(pmphUser.getOpenid()!=null) newU.setOpenid(pmphUser.getOpenid());
-            pmphUserService.add(newU);
+            pmphUserService.add(newU);*/
         }
         resultMap.put(Const.USER_SEESION_ID, session.getId());
         return new ResponseBean(resultMap);
