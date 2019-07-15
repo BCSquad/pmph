@@ -264,7 +264,6 @@ public class PmphLoginController {
         if(user!=null){
             PmphUser newU = new PmphUser();
             newU.setId(user.getId());
-            newU.setAvatar("DEFAULT");
             if(pmphUser.getPassword()!=null) newU.setPassword(pmphUser.getPassword());
             if(pmphUser.getDepartmentId()!=null) newU.setDepartmentId(pmphUser.getDepartmentId());
             if(pmphUser.getRealname()!=null) newU.setRealname(pmphUser.getRealname());
