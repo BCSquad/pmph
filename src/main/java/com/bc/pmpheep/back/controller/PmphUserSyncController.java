@@ -45,7 +45,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping(value = "/pmph")
+@RequestMapping(value = "/pmphWeb")
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class PmphUserSyncController {
 
@@ -61,13 +61,15 @@ public class PmphUserSyncController {
 
 
     @ResponseBody
-    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "图书同步接口")
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "同步社内用户")
     @RequestMapping(value = "/syncDatas", method = RequestMethod.POST)
     public void syncDatas(HttpServletRequest request, @RequestBody String json) {
         System.out.println(json);
         try{
             JSONObject jsonObject = JSON.parseObject(json);
-            if(jsonObject!=null){
+            System.out.println(jsonObject);
+            System.out.println("同步社内用户");
+        /*    if(jsonObject!=null){
                 JSONArray goodsList = jsonObject.getJSONArray("params");
                 if(goodsList!=null) {
                     for (Object o : goodsList) {
@@ -116,7 +118,7 @@ public class PmphUserSyncController {
                         }
 
                     }
-                }}
+                }}*/
         }catch (Exception e){
             e.printStackTrace();
         }
