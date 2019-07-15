@@ -64,11 +64,12 @@ public class PmphUserSyncController {
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "同步社内用户")
     @RequestMapping(value = "/syncDatas", method = RequestMethod.POST)
     public void syncDatas(HttpServletRequest request, @RequestBody String json) {
+        System.out.println("同步社内用户");
         System.out.println(json);
         try{
-            JSONObject jsonObject = JSON.parseObject(json);
-            System.out.println(jsonObject);
-            System.out.println("同步社内用户");
+          /*  JSONObject jsonObject = JSON.parseObject(json);
+            System.out.println(jsonObject);*/
+
         /*    if(jsonObject!=null){
                 JSONArray goodsList = jsonObject.getJSONArray("params");
                 if(goodsList!=null) {
