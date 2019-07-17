@@ -94,11 +94,15 @@ public class PmphUserSyncController {
                                     pmphDepartment.setPath("0-1");
                                     pmphDepartmentService.add(pmphDepartment);
                                 }else{
-                                    utsNode.setErpdeptname(dp.getDpName());
+                                    if(StringUtils.isNullOrEmpty(utsNode.getErpdeptname())){
+                                        utsNode.setErpdeptname(dp.getDpName());
+                                    }
+
                                 }
                             } else {
                                 Long parentId = 1L;
                                 String path = "0-1";
+
                                 for (String s : strList) {
                                     PmphDepartment dp = pmphDepartmentService.getPmphDepartmentByName(s);
                                     if (ObjectUtil.notNull(dp)) {
@@ -113,6 +117,10 @@ public class PmphUserSyncController {
                                         parentId = add.getId();
                                         path = add.getPath() + "-" + add.getId();
                                     }
+                                }
+                                PmphDepartment lastDpName = pmphDepartmentService.getPmphDepartmentByName(strList.get(strList.size()-1));
+                                if(StringUtils.isNullOrEmpty(utsNode.getErpdeptname())){
+                                    utsNode.setErpdeptname(lastDpName.getDpName());
                                 }
                             }
                         }

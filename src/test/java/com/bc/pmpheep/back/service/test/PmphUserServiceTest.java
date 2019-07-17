@@ -1,8 +1,23 @@
 package com.bc.pmpheep.back.service.test;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.alibaba.fastjson.JSON;
+import net.sf.json.util.JSONStringer;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.CharArrayBuffer;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONString;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -73,17 +88,91 @@ public class PmphUserServiceTest extends BaseTest {
 		roleIdList.add(1L);
 		roleIdList.add(2L);
 		roleIdList.add(3L);
+		List<PmphUser> li=new ArrayList<>();
 		PmphUser user = new PmphUser();
 		user.setUsername("admin3");
 		user.setAvatar("110");
 		user.setPassword("1");
 		user.setRealname("admin3");
 		user.setIsDisabled(false);
-		PmphUser ps = userService.add(user, roleIdList);// 给单用户添加多个角色
+		li.add(user);
+		String s = postJson("http://localhost:11000/pmpheep/pmphWeb/syncDatas", li.toString());
+
+		System.out.println(s);
+
+
+
+		/*PmphUser ps = userService.add(user, roleIdList);// 给单用户添加多个角色
 		// 查看对象是否不为空。
-		Assert.assertNotNull("是否保存成功", ps);
+		Assert.assertNotNull("是否保存成功", ps);*/
 	}
 
+	/**
+	 * post请求，参数为json字符串
+	 * @param url 请求地址
+	 * @param jsonString json字符串
+	 * @return 响应
+	 */
+	public static String postJson(String url, String jsonString)
+	{
+		String result = null;
+		CloseableHttpClient httpClient = HttpClients.createDefault();
+		HttpPost post = new HttpPost(url);
+		CloseableHttpResponse response = null;
+		try {
+			StringEntity stringEntity = new StringEntity(jsonString, "UTF-8");// 解决中文乱码问题
+			stringEntity.setContentEncoding("UTF-8");
+			stringEntity.setContentType("application/json");
+			post.setEntity(stringEntity);
+			response = httpClient.execute(post);
+			if(response != null && response.getStatusLine().getStatusCode() == 200)
+			{
+				HttpEntity entity = response.getEntity();
+				result = entityToString(entity);
+			}
+			return result;
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				httpClient.close();
+				if(response != null)
+				{
+					response.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+
+	}
+
+	public static String entityToString(HttpEntity entity) throws IOException {
+		String result = null;
+		if(entity != null)
+		{
+			long lenth = entity.getContentLength();
+			if(lenth != -1 && lenth < 2048)
+			{
+				result = EntityUtils.toString(entity,"UTF-8");
+			}else {
+				InputStreamReader reader1 = new InputStreamReader(entity.getContent(), "UTF-8");
+				CharArrayBuffer buffer = new CharArrayBuffer(2048);
+				char[] tmp = new char[1024];
+				int l;
+				while((l = reader1.read(tmp)) != -1) {
+					buffer.append(tmp, 0, l);
+				}
+				result = buffer.toString();
+			}
+		}
+		return result;
+	}
 	/**
 	 * PmphUser 添加删除
 	 */
