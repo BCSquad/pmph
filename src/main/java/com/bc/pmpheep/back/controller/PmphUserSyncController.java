@@ -68,7 +68,12 @@ public class PmphUserSyncController {
                     UtsNode utsNode = (UtsNode) net.sf.json.JSONObject.toBean(net.sf.json.JSONObject.fromObject(utsJSON), UtsNode.class);
                     //同步人员
                     if (PERSON.equals(data.getType())) {
-                        PmphDepartment dpname = pmphDepartmentService.getPmphDepartmentByName(utsNode.getErpdeptname());
+                        PmphDepartment dpname;
+                        if(StringUtils.isNullOrEmpty(utsNode.getErpdeptname())){
+                            dpname=null;
+                        }else{
+                            dpname = pmphDepartmentService.getPmphDepartmentByName(utsNode.getErpdeptname());
+                        }
                         if (ObjectUtil.isNull(dpname)) {
                             String newParentPath = data.getNewParentPath();
                             String[] split = newParentPath.split("/");
@@ -79,12 +84,18 @@ public class PmphUserSyncController {
                                 }
                             }
                             if (strList.size() <= 1) {
-                                PmphDepartment pmphDepartment = new PmphDepartment();
-                                pmphDepartment.setDpName(utsNode.getOu());
-                                pmphDepartment.setParentId(1L);
-                                pmphDepartment.setSort(999);
-                                pmphDepartment.setPath("0-1");
-                                pmphDepartmentService.add(pmphDepartment);
+                                PmphDepartment dp = pmphDepartmentService.getPmphDepartmentByName(strList.get(0));
+
+                                if(ObjectUtil.isNull(dp)){
+                                    PmphDepartment pmphDepartment = new PmphDepartment();
+                                    pmphDepartment.setDpName(strList.get(0));
+                                    pmphDepartment.setParentId(1L);
+                                    pmphDepartment.setSort(999);
+                                    pmphDepartment.setPath("0-1");
+                                    pmphDepartmentService.add(pmphDepartment);
+                                }else{
+                                    utsNode.setErpdeptname(dp.getDpName());
+                                }
                             } else {
                                 Long parentId = 1L;
                                 String path = "0-1";
@@ -177,11 +188,11 @@ public class PmphUserSyncController {
                                     }
 
                                 }
-                                ssoReturnData.setCode("0");
-                                ssoReturnData.setMessage(SUCCESS);
+
 
                             }
-
+                            ssoReturnData.setCode("0");
+                            ssoReturnData.setMessage(SUCCESS);
                         }
                         if ("DELETE".equals(data.getOperation())) {
                             PmphDepartment pmphDepartmentByName = pmphDepartmentService.getPmphDepartmentByName(utsNode.getOu());
@@ -263,9 +274,18 @@ public class PmphUserSyncController {
         newPmphUser.setPassword(pwd);
         newPmphUser.setPassword(new DesRun("", newPmphUser.getPassword()).enpsw);
         newPmphUser.setGmtUpdate(utsNode.getLastmodifytime());
-        PmphDepartment pmphDepartmentByName = pmphDepartmentService.getPmphDepartmentByName(utsNode.getErpdeptname());
-        if (ObjectUtil.notNull(pmphDepartmentByName))
+        PmphDepartment pmphDepartmentByName;
+        if(StringUtils.isNullOrEmpty(utsNode.getErpdeptname())){
+            pmphDepartmentByName=null;
+        }else{
+            pmphDepartmentByName = pmphDepartmentService.getPmphDepartmentByName(utsNode.getErpdeptname());
+        }
+        if (ObjectUtil.notNull(pmphDepartmentByName)){
             newPmphUser.setDepartmentId(pmphDepartmentByName.getId());
+        }
+        else{
+            newPmphUser.setDepartmentId(0L);
+        }
         newPmphUser.setHandphone(utsNode.getEmployeemobile());
         newPmphUser.setEmail(utsNode.getEmployeemail());
         newPmphUser.setSort(999);
@@ -280,7 +300,13 @@ public class PmphUserSyncController {
         oldPmphUser.setPassword(new DesRun("", oldPmphUser.getPassword()).enpsw);
         oldPmphUser.setGmtCreate(utsNode.getEmployeebirthday());
         oldPmphUser.setGmtUpdate(utsNode.getLastmodifytime());
-        PmphDepartment pmphDepartmentName = pmphDepartmentService.getPmphDepartmentByName(utsNode.getErpdeptname());
+        PmphDepartment pmphDepartmentName;
+        if(StringUtils.isNullOrEmpty(utsNode.getErpdeptname())){
+            pmphDepartmentName=null;
+        }else{
+            pmphDepartmentName = pmphDepartmentService.getPmphDepartmentByName(utsNode.getErpdeptname());
+        }
+
         if (ObjectUtil.notNull(pmphDepartmentName)) {
             oldPmphUser.setDepartmentId(pmphDepartmentName.getId());
         } else {
