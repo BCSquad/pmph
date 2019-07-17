@@ -72,10 +72,20 @@ public class BookUserCommentController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量审核图书评论")
 	@RequestMapping(value = "/update", method = RequestMethod.PUT)
-	public ResponseBean update(Long[] ids, Integer isAuth,String reason, String[] writerId,String[] bookname,String[] content,HttpServletRequest request) {
+	public ResponseBean update(Long[] ids, Integer isAuth,String reason,String reply, String[] writerId,String[] bookname,String[] content,HttpServletRequest request) {
 		String sessionId = CookiesUtil.getSessionId(request);
-		return new ResponseBean(bookUserCommentService.updateBookUserCommentByAuth(ids, isAuth,reason,writerId,bookname,content, sessionId));
+		return new ResponseBean(bookUserCommentService.updateBookUserCommentByAuth(ids, isAuth,reason,reply,writerId,bookname,content, sessionId));
 	}
+
+
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "设置图书评论前台展示")
+	@RequestMapping(value = "/updateFront", method = RequestMethod.PUT)
+	public ResponseBean updateFront(Long[] ids, Integer front,HttpServletRequest request) {
+		String sessionId = CookiesUtil.getSessionId(request);
+		return new ResponseBean(bookUserCommentService.updateBookUserCommentFront(ids, front, sessionId));
+	}
+
 
 	/**
 	 * 

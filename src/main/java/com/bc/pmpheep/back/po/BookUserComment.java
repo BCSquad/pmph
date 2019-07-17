@@ -103,6 +103,8 @@ public class BookUserComment implements Serializable {
 
 
 	private String authReason;
+	private String authReply;
+	private Boolean front;
 
 	public String getAuthReason() {
 		return authReason;
@@ -116,8 +118,24 @@ public class BookUserComment implements Serializable {
 		super();
 	}
 
+	public String getAuthReply() {
+		return authReply;
+	}
+
+	public void setAuthReply(String authReply) {
+		this.authReply = authReply;
+	}
+
+	public Boolean getFront() {
+		return front;
+	}
+
+	public void setFront(Boolean front) {
+		this.front = front;
+	}
+
 	public BookUserComment(Long bookId, Long writerId, Double score, String content, Boolean isHide, Integer isAuth,
-			Long authUserId, Timestamp authDate, Boolean isDeleted, Timestamp gmtCreate, Timestamp gmtUpdate,String authReason) {
+						   Long authUserId, Timestamp authDate, Boolean isDeleted, Timestamp gmtCreate, Timestamp gmtUpdate, String authReason) {
 		super();
 		this.bookId = bookId;
 		this.writerId = writerId;

@@ -314,7 +314,9 @@
 	<select id="getBookFeedBackDetailById" resultType="BookFeedBack">
 		SELECT
 		b.bookname,
-		wu.realname as feedBackName,
+		b.isbn,
+		/*wu.realname as feedBackName,*/
+		wu.username as feedBackName,
 		bc.id,
 		bc.book_id,
 		bc.content,
@@ -322,14 +324,18 @@
 		pu.realname as authorname,
 		bc.author_reply,
 		bc.auth_date,
-		DATE_FORMAT(bc.gmt_create,'%Y-%m-%d %H:%i:%s') as gmt_create
+		case
+		when bc.gmt_show > '0000-00-00 00:00:00' then TRUE
+		else FALSE
+		end as showFront,
+		DATE_FORMAT(bc.gmt_create,'%Y-%m-%d %H:%i:%S') as gmt_create
 		FROM
 		book AS b
 		Inner Join book_user_feedback AS bc ON
 		b.id = bc.book_id
 		left join writer_user wu on bc.user_id = wu.id
 		left join pmph_user pu on bc.author_id = pu.id
-		WHERE
+		where
 		bc.is_deleted = '0'
 		and bc.id = #{id}
 	</select>

@@ -2,9 +2,11 @@ package com.bc.pmpheep.back.service;
 
 import java.util.List;
 
+import com.bc.pmpheep.back.dao.DeclarationDao;
 import com.bc.pmpheep.back.po.*;
 import com.bc.pmpheep.general.po.Message;
 import com.bc.pmpheep.general.service.MessageService;
+import com.mysql.jdbc.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,6 +60,8 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 	MessageService messageService;
 	@Autowired
 	UserMessageService userMessageService;
+	@Autowired
+	DeclarationDao declarationDao;
 
 	@Override
 	public PageResult<BookUserCommentVO> listBookUserComment(PageParameter<BookUserCommentVO> pageParameter)
@@ -68,13 +72,14 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 		if (total > 0) {
 			List<BookUserCommentVO> list = bookUserCommentDao.listBookUserComment(pageParameter);
 			pageResult.setRows(list);
+
 		}
 		pageResult.setTotal(total);
 		return pageResult;
 	}
 
 	@Override
-	public String updateBookUserCommentByAuth(Long[] ids, Integer isAuth,String reason, String[] writerId,String[] bookname,String[] content,String sessionId)
+	public String updateBookUserCommentByAuth(Long[] ids, Integer isAuth,String reason, String reply,String[] writerId,String[] bookname,String[] content,String sessionId)
 			throws CheckedServiceException {
 		String result = "FAIL";
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
@@ -108,8 +113,12 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
                 }
 			    bookUserComment.setAuthReason(reason);
             }
+			if(isAuth==1){
+				if (!ObjectUtil.isNull(reply)) {
+					bookUserComment.setAuthReply(reply);
+				}
+			}
 			bookUserComment.setId(ids[i]);
-
 			bookUserComment.setIsAuth(isAuth);
 			bookUserComment.setAuthUserId(pmphUser.getId());
 			bookUserComment.setAuthDate(DateUtil.getCurrentTime());
@@ -119,14 +128,27 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 				bookService.updateBookCore(bookUserComment.getBookId());
 				// 更新书的评论数
 				bookService.updateUpComments(bookUserComment.getBookId());
+				if(!StringUtils.isNullOrEmpty(reply)){
+					String messageTitle = "系统消息";
+					Message message = messageService.add(new Message("您在"+"《"+bookname[i]+"》中的评论：\" "+content[i]+" \"  以回复。  回复内容："+reply));
+					// 信息是由系统发出
+					UserMessage userMessage = new UserMessage(message.getId(), messageTitle, new Short("0"), pmphUser.getId(), new Short("1"),
+							Long.parseLong(writerId[i]), new Short("2"),Long.parseLong("0"), new Short("0"));
+					userMessageService.addUserMessage(userMessage);
+				}
 			}
 			if(isAuth==2){
-				 String messageTitle = "系统消息";
-				 Message message = messageService.add(new Message("您在"+"《"+bookname[i]+"》中的评论：\" "+content[i]+" \"  未通过审核。  退回理由："+reason));
-				// 信息是由系统发出
-				UserMessage userMessage = new UserMessage(message.getId(), messageTitle, new Short("0"), pmphUser.getId(), new Short("1"),
-						Long.parseLong(writerId[i]), new Short("2"),Long.parseLong("0"), new Short("0"));
-				userMessageService.addUserMessage(userMessage);
+				int declarationByUserId = declarationDao.getDeclarationByUserId(Long.parseLong(writerId[i]));
+				if(ObjectUtil.notNull(declarationByUserId)){
+					if(declarationByUserId>0){
+						String messageTitle = "系统消息";
+						Message message = messageService.add(new Message("您在"+"《"+bookname[i]+"》中的评论：\" "+content[i]+" \"  未通过审核。  退回理由："+reason));
+						// 信息是由系统发出
+						UserMessage userMessage = new UserMessage(message.getId(), messageTitle, new Short("0"), pmphUser.getId(), new Short("1"),
+								Long.parseLong(writerId[i]), new Short("2"),Long.parseLong("0"), new Short("0"));
+						userMessageService.addUserMessage(userMessage);
+					}
+				}
 			}
 			// 当用户评论过后 增加相应积分
 			if (isAuth == 1) {
@@ -136,6 +158,18 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 		}
 		if (num > 0) {
 			result = "SUCCESS";
+		}
+		return result;
+	}
+
+	@Override
+	public String updateBookUserCommentFront(Long[] ids, Integer front, String sessionId) throws CheckedServiceException {
+		String result = "SUCCESS";
+		for(Long id:ids){
+			BookUserComment bookUserComment = new BookUserComment();
+			bookUserComment.setId(id);
+			bookUserComment.setFront(front==0?false:true);
+			bookUserCommentDao.updateBookUserComment(bookUserComment);
 		}
 		return result;
 	}

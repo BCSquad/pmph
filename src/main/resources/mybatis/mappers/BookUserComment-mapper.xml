@@ -177,6 +177,12 @@
             <if test="authReason != null and authReason !=''">
                 auth_reason= #{authReason} ,
             </if>
+			<if test="authReply != null and authReply !=''">
+				auth_reply= #{authReply} ,
+			</if>
+			<if test="front != null and front !=''">
+				front= #{front} ,
+			</if>
 		</set>
 		where
 		id=#{id} ;

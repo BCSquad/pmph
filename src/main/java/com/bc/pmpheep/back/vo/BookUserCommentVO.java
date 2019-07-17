@@ -120,6 +120,24 @@ public class BookUserCommentVO implements Serializable {
 	 * 是否逻辑删除
 	 */
 	private Boolean isDeleted;
+	private String authReply;
+	private Boolean front;
+
+	public String getAuthReply() {
+		return authReply;
+	}
+
+	public void setAuthReply(String authReply) {
+		this.authReply = authReply;
+	}
+
+	public Boolean getFront() {
+		return front;
+	}
+
+	public void setFront(Boolean front) {
+		this.front = front;
+	}
 
 	/**
 	 * 评价内容
