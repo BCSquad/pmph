@@ -1,6 +1,8 @@
 package com.bc.pmpheep.back.po;
 
-public class SsoReturnData {
+import java.io.Serializable;
+
+public class SsoReturnData implements Serializable {
     private String id;
     private String code;
     private String message;
@@ -27,5 +29,14 @@ public class SsoReturnData {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "id='" + id + '\'' +
+                ", code='" + code + '\'' +
+                ", message='" + message + '\'' +
+                '}';
     }
 }

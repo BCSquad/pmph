@@ -16,8 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -45,8 +50,11 @@ public class PmphUserSyncController {
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "同步社内用户")
     @RequestMapping(value = "/syncDatas", method = RequestMethod.POST)
-    public ResponseBean<List> syncDatas(HttpServletRequest request, @RequestBody String json) {
+    public void syncDatas(HttpServletRequest request, @RequestBody String json, HttpServletResponse response) throws IOException {
         List<SsoReturnData> retrunDatas = new ArrayList<>(); //返回信息集合
+        ReturnData returnData = new ReturnData();
+
+
         try {
             System.out.println("同步社内用户");
             System.out.println(json);
@@ -137,7 +145,7 @@ public class PmphUserSyncController {
 
                         }
                         if ("MODIFY".equals(data.getOperation())) {
-                            PmphUser oldPmphUser = pmphUserService.getPmphUser(utsNode.getCn());
+                            PmphUser oldPmphUser = pmphUserService.getPmphUser(data.getOldName());
                             if (ObjectUtil.notNull(oldPmphUser)) {
                                 updatePmphUser(oldPmphUser, utsNode);
                                 ssoReturnData.setCode("0");
@@ -258,7 +266,12 @@ public class PmphUserSyncController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new ResponseBean<List>(retrunDatas);
+        returnData.setStatus("0");
+        returnData.setMessage(retrunDatas);
+        PrintWriter writer = response.getWriter();
+        writer.write(returnData.toString());
+
+
     }
 
     public void addPmphUser(UtsNode utsNode) {
