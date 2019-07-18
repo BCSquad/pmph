@@ -79,6 +79,10 @@ public class PmphUserSyncController {
                             String newParentPath = data.getNewParentPath();
                             String[] split = newParentPath.split("/");
                             List<String> strList = new ArrayList<>();
+
+                        if(newParentPath.equals("/")){
+                            strList.add(data.getNewName());
+                        }
                             for (String s : split) {
                                 if (!StringUtils.isNullOrEmpty(s)) {
                                     strList.add(s);
@@ -163,9 +167,12 @@ public class PmphUserSyncController {
                         if ("INSERT".equals(data.getOperation())) {
                             PmphDepartment pmphDepartmentByName = pmphDepartmentService.getPmphDepartmentByName(utsNode.getOu());
                             if (ObjectUtil.isNull(pmphDepartmentByName)) {
-                                String newParentPath = data.getNewParentPath();
-                                String[] split = newParentPath.split("/");
                                 List<String> strList = new ArrayList<>();
+                                String newParentPath = data.getNewParentPath();
+                                if(newParentPath.equals("/")){
+                                    strList.add(data.getNewName());
+                                }
+                                String[] split = newParentPath.split("/");
                                 for (String s : split) {
                                     if (!StringUtils.isNullOrEmpty(s)) {
                                         strList.add(s);
@@ -193,6 +200,7 @@ public class PmphUserSyncController {
                                     }
 
                                 }
+
 
 
                             }
@@ -216,37 +224,41 @@ public class PmphUserSyncController {
                         if ("MODIFY".equals(data.getOperation())) {
                             PmphDepartment pmphDepartmentByName = pmphDepartmentService.getPmphDepartmentByName(utsNode.getOu());
                             if (ObjectUtil.isNull(pmphDepartmentByName)) {
-                                String newParentPath = data.getNewParentPath();
-                                String[] split = newParentPath.split("/");
                                 List<String> strList = new ArrayList<>();
-                                for (String s : split) {
-                                    if (!StringUtils.isNullOrEmpty(s)) {
-                                        strList.add(s);
-                                    }
+                                String newParentPath = data.getNewParentPath();
+                                if(newParentPath.equals("/")){
+                                    strList.add(data.getNewName());
                                 }
-                                if (strList.size() <= 1) {
-                                    PmphDepartment pmphDepartment = new PmphDepartment();
-                                    pmphDepartment.setDpName(utsNode.getOu());
-                                    pmphDepartment.setParentId(1L);
-                                    pmphDepartment.setSort(999);
-                                    pmphDepartment.setPath("0-1");
-                                    pmphDepartmentService.add(pmphDepartment);
-                                } else {
-                                    Long parentId = 1L;
-                                    String path = "0-1";
-                                    for (String s : strList) {
+                                    String[] split = newParentPath.split("/");
+
+                                    for (String s : split) {
+                                        if (!StringUtils.isNullOrEmpty(s)) {
+                                            strList.add(s);
+                                        }
+                                    }
+                                    if (strList.size() <= 1) {
                                         PmphDepartment pmphDepartment = new PmphDepartment();
-                                        pmphDepartment.setDpName(s);
-                                        pmphDepartment.setParentId(parentId);
+                                        pmphDepartment.setDpName(utsNode.getOu());
+                                        pmphDepartment.setParentId(1L);
                                         pmphDepartment.setSort(999);
-                                        pmphDepartment.setPath(path);
-                                        PmphDepartment add = pmphDepartmentService.add(pmphDepartment);
-                                        parentId = add.getId();
-                                        path = add.getPath() + "-" + add.getId();
-                                    }
+                                        pmphDepartment.setPath("0-1");
+                                        pmphDepartmentService.add(pmphDepartment);
+                                    } else {
+                                        Long parentId = 1L;
+                                        String path = "0-1";
+                                        for (String s : strList) {
+                                            PmphDepartment pmphDepartment = new PmphDepartment();
+                                            pmphDepartment.setDpName(s);
+                                            pmphDepartment.setParentId(parentId);
+                                            pmphDepartment.setSort(999);
+                                            pmphDepartment.setPath(path);
+                                            PmphDepartment add = pmphDepartmentService.add(pmphDepartment);
+                                            parentId = add.getId();
+                                            path = add.getPath() + "-" + add.getId();
+                                        }
+
 
                                 }
-
                             }
                             ssoReturnData.setCode("0");
                             ssoReturnData.setMessage(SUCCESS);
