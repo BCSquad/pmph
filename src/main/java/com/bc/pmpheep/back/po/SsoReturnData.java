@@ -34,9 +34,8 @@ public class SsoReturnData implements Serializable {
     @Override
     public String toString() {
         return "{" +
-                "id='" + id + '\'' +
-                ", code='" + code + '\'' +
-                ", message='" + message + '\'' +
-                '}';
+                "\"id\"=\"" + id +"\"" +
+                ", \"code\"=\"" + code + "\"" +
+                ", \"message\"=\"" + message + "\"}" ;
     }
 }

@@ -1,6 +1,8 @@
 package com.bc.pmpheep.back.controller;
 
 
+import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bc.pmpheep.annotation.LogDetail;
@@ -266,12 +268,9 @@ public class PmphUserSyncController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        returnData.setStatus("0x0000");
-        returnData.setMessage(retrunDatas);
         PrintWriter writer = response.getWriter();
-        writer.write(returnData.toString());
-
-
+        writer.write("{\"status\":\"0x0000\",\"message\":{\"datas\":"+retrunDatas.toString().replace("=",":")+"}}");
+        writer.close();
     }
 
     public void addPmphUser(UtsNode utsNode) {
