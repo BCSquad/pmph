@@ -46,35 +46,26 @@ public class PmphUserSyncController {
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "同步社内用户")
     @RequestMapping(value = "/syncDatas", method = RequestMethod.POST)
     public ResponseBean<List> syncDatas(HttpServletRequest request, @RequestBody String json) {
-        List<SsoReturnData> retrunDatas = new ArrayList<>();
+        List<SsoReturnData> retrunDatas = new ArrayList<>(); //返回信息集合
         try {
-            Integer code = 1;
             System.out.println("同步社内用户");
             System.out.println(json);
             String appSerialNumber = request.getParameter("appSerialNumber");
-            String utsNodeString = request.getParameter("utsNodeInfo");
-            JSONObject jsonObject = JSONObject.parseObject(utsNodeString);
-            JSONArray datas = jsonObject.getJSONArray("datas");
-
+            String utsNodeString = request.getParameter("utsNodeInfo"); //获取传输信息
+            JSONObject jsonObject = JSONObject.parseObject(utsNodeString); //解析信息
+            JSONArray datas = jsonObject.getJSONArray("datas");  //解析信息集合
             for (int j = 0; j < datas.size(); j++) {
 
-                SsoReturnData ssoReturnData = new SsoReturnData();
+                SsoReturnData ssoReturnData = new SsoReturnData();   //返回信息
                 try {
-                    Datas data = datas.getObject(j, Datas.class);
-                    ssoReturnData.setId(data.getId());
-
-                    JSONObject jsonObject1 = datas.getJSONObject(j);
-                    JSONObject utsJSON = jsonObject1.getJSONObject("utsNode");
-                    UtsNode utsNode = (UtsNode) net.sf.json.JSONObject.toBean(net.sf.json.JSONObject.fromObject(utsJSON), UtsNode.class);
+                    Datas data = datas.getObject(j, Datas.class);  //解析信息
+                    ssoReturnData.setId(data.getId());    //设置返回信息的id
+                    JSONObject jsonObject1 = datas.getJSONObject(j);  //解析信息为json对象
+                    JSONObject utsJSON = jsonObject1.getJSONObject("utsNode");  //解析对象中的utsNode 集合信息
+                    UtsNode utsNode = (UtsNode) net.sf.json.JSONObject.toBean(net.sf.json.JSONObject.fromObject(utsJSON), UtsNode.class);  //转换为java对象
                     //同步人员
-                    if (PERSON.equals(data.getType())) {
-                        PmphDepartment dpname;
-                        if(StringUtils.isNullOrEmpty(utsNode.getErpdeptname())){
-                            dpname=null;
-                        }else{
-                            dpname = pmphDepartmentService.getPmphDepartmentByName(utsNode.getErpdeptname());
-                        }
-                        if (ObjectUtil.isNull(dpname)) {
+                    if ("person".equals(data.getType())) {
+
                             String newParentPath = data.getNewParentPath();
                             String[] split = newParentPath.split("/");
                             List<String> strList = new ArrayList<>();
@@ -85,7 +76,6 @@ public class PmphUserSyncController {
                             }
                             if (strList.size() <= 1) {
                                 PmphDepartment dp = pmphDepartmentService.getPmphDepartmentByName(strList.get(0));
-
                                 if(ObjectUtil.isNull(dp)){
                                     PmphDepartment pmphDepartment = new PmphDepartment();
                                     pmphDepartment.setDpName(strList.get(0));
@@ -97,7 +87,6 @@ public class PmphUserSyncController {
                                     if(StringUtils.isNullOrEmpty(utsNode.getErpdeptname())){
                                         utsNode.setErpdeptname(dp.getDpName());
                                     }
-
                                 }
                             } else {
                                 Long parentId = 1L;
@@ -123,7 +112,7 @@ public class PmphUserSyncController {
                                     utsNode.setErpdeptname(lastDpName.getDpName());
                                 }
                             }
-                        }
+
 
                         if ("INSERT".equals(data.getOperation())) {
                             PmphUser oldPmphUser = pmphUserService.getPmphUser(utsNode.getCn());
@@ -160,9 +149,7 @@ public class PmphUserSyncController {
                             }
 
                         }
-                    }
-                    //同步部门
-                    if (ORGANIZATIONAL_UNIT.equals(data.getType())) {
+                    }else if ("organizationalUnit".equals(data.getType())) {
                         if ("INSERT".equals(data.getOperation())) {
                             PmphDepartment pmphDepartmentByName = pmphDepartmentService.getPmphDepartmentByName(utsNode.getOu());
                             if (ObjectUtil.isNull(pmphDepartmentByName)) {
