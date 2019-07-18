@@ -180,7 +180,7 @@
 			<if test="authReply != null and authReply !=''">
 				auth_reply= #{authReply} ,
 			</if>
-			<if test="front != null and front !=''">
+			<if test="front != null">
 				front= #{front} ,
 			</if>
 		</set>

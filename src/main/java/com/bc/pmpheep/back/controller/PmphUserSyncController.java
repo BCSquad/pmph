@@ -266,7 +266,7 @@ public class PmphUserSyncController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        returnData.setStatus("0");
+        returnData.setStatus("0x0000");
         returnData.setMessage(retrunDatas);
         PrintWriter writer = response.getWriter();
         writer.write(returnData.toString());
