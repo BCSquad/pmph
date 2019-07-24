@@ -6,9 +6,11 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.back.vo.DeclarationListVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,6 +101,28 @@ public class DeclarationController {
                                                                    offlineProgress,
                                                                    haveFile,isSelect,startCommitDate,endCommitDate,tag,request));
     }
+
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "加载申报列表")
+    @RequestMapping(value = "/list/declarationByUserId", method = RequestMethod.GET)
+    public ResponseBean declaration(
+            @RequestParam(value = "pageNumber", required = true) Integer pageNumber,
+            @RequestParam(value = "pageSize", required = true) Integer pageSize,
+            @RequestParam(value = "userId", required = true) Long userId,
+            @RequestParam(value = "materialName", required = true) String materialName,
+            @RequestParam(value = "unitName", required = true) String unitName
+
+
+        ,HttpServletRequest request) {
+        return new ResponseBean(declarationService.pageDeclarationByUserId(pageNumber,
+                pageSize,
+               userId,materialName,unitName,request));
+    }
+
+
+
+
+
 
     /**
      * 确认/取消收到纸质表

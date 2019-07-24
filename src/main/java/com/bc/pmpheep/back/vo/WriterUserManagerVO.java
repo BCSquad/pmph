@@ -125,6 +125,15 @@ public class WriterUserManagerVO implements Serializable {
     private Boolean isTop;
 
     private Date topSort;
+    private String declareCount;
+
+    public String getDeclareCount() {
+        return declareCount;
+    }
+
+    public void setDeclareCount(String declareCount) {
+        this.declareCount = declareCount;
+    }
 
     public Boolean getIsTeacher() {
 		return isTeacher;

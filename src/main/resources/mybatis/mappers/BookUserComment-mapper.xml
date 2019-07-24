@@ -183,6 +183,9 @@
 			<if test="front != null">
 				front= #{front} ,
 			</if>
+			<if test="replyDate != null">
+				reply_date= #{replyDate} ,
+			</if>
 		</set>
 		where
 		id=#{id} ;

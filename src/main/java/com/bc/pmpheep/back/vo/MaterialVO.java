@@ -42,12 +42,22 @@ public class MaterialVO implements Serializable{
 	private String cehuaPowers;
 	//项目编辑权限  项目编辑权限8位二进制字符串
 	private String projectEditorPowers;
+	private String materialCheckPositions;
 	
 	public MaterialVO() {
 		super();
 	}
-	
-	public MaterialVO(
+
+
+    public String getMaterialCheckPositions() {
+        return materialCheckPositions;
+    }
+
+    public void setMaterialCheckPositions(String materialCheckPositions) {
+        this.materialCheckPositions = materialCheckPositions;
+    }
+
+    public MaterialVO(
 			Material material, 
 			String directorName,
 			String materialType,

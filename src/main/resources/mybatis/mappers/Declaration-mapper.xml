@@ -845,6 +845,161 @@
 		limit #{start},#{pageSize}
 	</select>
 
+	<select id="listDeclarationByUserId" parameterType="PageParameter"
+			resultType="DeclarationListVO">
+		select
+		a.id,
+		a.material_id,
+		m.material_name,
+		a.realname,
+		e.username,
+		f.org_name unitName,
+		a.org_name,
+		a.org_id as orgId,
+		a.position,
+		a.title,
+		a.handphone,
+		ifNull(a.auth_date,a.commit_date) as commit_date,
+		a.email,
+		d.textbook_name as textbookName,
+		c.preset_position,
+		GROUP_CONCAT(
+		CONCAT(d.textbook_name,'-',
+		case
+		when c.preset_position =15 then
+		'主编,副主编,编委,数字编委'       <!-- 1111 -->
+		when c.preset_position =14 then '主编,副主编,数字编委'          <!-- 1110 -->
+		when c.preset_position =13 then '主编,编委,数字编委'            <!-- 1101 -->
+		when c.preset_position =12 then '主编,数字编委'               <!-- 1100 -->
+		when c.preset_position =11 then '副主编,编委,数字编委'          <!-- 1011 -->
+		when c.preset_position =10 then '副主编,数字编委'              <!-- 1010 -->
+		when c.preset_position =9 then '编委,数字编委'               <!-- 1001 -->
+		when c.preset_position =8 then '数字编委'                   <!-- 1000 -->
+		when c.preset_position =7 then '主编,副主编,编委'             <!-- 0111 -->
+		when c.preset_position =6 then '主编,副主编'                 <!-- 0110 -->
+		when c.preset_position =5 then '主编,编委'                  <!-- 0101 -->
+		when c.preset_position =4 then '主编'                      <!-- 0100 -->
+		when c.preset_position =3 then '副主编,编委'                 <!-- 0011 -->
+		when c.preset_position =2 then '副主编'                     <!-- 0010 -->
+		when c.preset_position =1 then '编委'                      <!-- 0001 -->
+		else null
+		end
+		) ORDER BY d.sort Separator '&lt;/br&gt;'
+		)chooseBooksAndPostions,a.online_progress,a.offline_progress
+		from
+		declaration a
+		<!-- LEFT JOIN material b on b.id= a.material_id -->
+		LEFT JOIN dec_position c on c.declaration_id = a.id
+		LEFT JOIN textbook
+		d on d.id = c.textbook_id
+		LEFT JOIN writer_user e on e.id=a.user_id
+		LEFT JOIN (SELECT id,org_name from org UNION SELECT 0,'人民卫生出版社' from
+		org ) f on f.id=a.org_id
+		left join material m on m.id =a.material_id
+		where a.online_progress > 0 and a.is_deleted =
+		0   and c.id is not null
+		<!-- and b.is_deleted =0 and b.id = #{parameter.materialId} -->
+		and e.id = ${parameter.userId}
+		<!-- 下面是动态条件 -->
+		<!-- 书籍 -->
+		<if test="parameter.bookIds != null ">
+			and d.id in
+			<foreach collection="parameter.bookIds" item="item" index="index"
+					 open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+        <if test="parameter.materialName != null  and parameter.materialName !='' ">
+
+       and   m.material_name like concat('%',#{parameter.materialName},'%')
+        </if>
+
+		<if test="parameter.isSelected !=null ">
+			<if test="parameter.isSelected">
+				and EXISTS (select dp.id  from dec_position_published dp where dp.declaration_id = a.id
+				and
+				dp.textbook_id = d.id)
+			</if>
+			<if test = "!parameter.isSelected">
+				and not EXISTS (select dp.id  from dec_position_published dp where dp.declaration_id = a.id
+				and
+				dp.textbook_id = d.id)
+			</if>
+		</if>
+		<!-- 账号或者姓名 -->
+		<if test="parameter.realname != null ">
+			and (a.realname like concat('%',#{parameter.realname},'%')
+			or e.username
+			like concat('%',#{parameter.realname},'%') )
+		</if>
+
+		<!-- 提交开始时间 -->
+		<if test="parameter.startCommitDate != null and parameter.startCommitDate != ''  ">
+			and a.commit_date &gt;= str_to_date(#{parameter.startCommitDate},'%Y-%m-%d %H:%i:%s')
+		</if>
+
+		<!-- 提交结束时间 -->
+		<if test="parameter.endCommitDate !=null and parameter.endCommitDate !='' ">
+			AND a.commit_date &lt;=  str_to_date(#{parameter.endCommitDate},'%Y-%m-%d %H:%i:%s')
+		</if>
+		<!-- 职务 -->
+		<if test="parameter.position != null ">
+			and a.position like concat('%',#{parameter.position},'%')
+		</if>
+		<!-- 职称 -->
+		<if test="parameter.title != null ">
+			and a.title like concat('%',#{parameter.title},'%')
+		</if>
+		<!-- 工作单位 -->
+		<if test="parameter.orgName != null ">
+			and a.org_name like concat('%',#{parameter.orgName},'%')
+		</if>
+		<!-- 申报单位id -->
+		<if test="parameter.orgId != null ">
+			and a.org_id = #{parameter.orgId}
+		</if>
+		<!-- 申报单位 -->
+		<if test="parameter.unitName != null ">
+			and f.org_name like concat('%',#{parameter.unitName},'%')
+		</if>
+		<!-- 申报职位 -->
+		<if test="parameter.positionType != null ">
+			<if test="parameter.positionType == 1 "> <!-- 主编 -->
+				and c.preset_position like concat('%',1,'%')
+			</if>
+			<if test="parameter.positionType == 2 "> <!-- 副主编 -->
+				and c.preset_position like concat('%',2,'%')
+			</if>
+			<if test="parameter.positionType == 3 "> <!-- 编委 -->
+				and c.preset_position like concat('%',3,'%')
+			</if>
+		</if>
+		<!-- 学校审核 -->
+		<if test="parameter.onlineProgress != null ">
+			and a.online_progress = #{parameter.onlineProgress}
+		</if>
+		<!-- 纸质表进度 -->
+		<if test="parameter.offlineProgress != null ">
+			and a.offline_progress = #{parameter.offlineProgress}
+		</if>
+		GROUP BY a.id
+		<if test="parameter.haveFile !=  null ">
+			<if test="parameter.haveFile">  <!-- haveFile -->
+				HAVING GROUP_CONCAT(c.syllabus_id SEPARATOR "") != ""
+			</if>
+			<if test="!parameter.haveFile"> <!-- noFile -->
+				HAVING GROUP_CONCAT(c.syllabus_id SEPARATOR "") = ""
+			</if>
+		</if>
+		<!-- 排序和分页条件 -->
+		ORDER BY
+		(a.online_progress=3 or a.org_id=0) desc,
+		ifNull(a.auth_date,a.commit_date) desc,
+		CONVERT ( f.org_name USING gbk ) ASC
+		limit #{start},#{pageSize}
+	</select>
+
+
 	<!-- 根据id查询一个作家申报信息并包含申报机构名称，是否多选 -->
 	<select id="getDeclarationByIdOrOrgName" parameterType="java.lang.Long"
 		resultType="DeclarationOrDisplayVO">

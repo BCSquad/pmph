@@ -13,8 +13,6 @@ import java.util.Map;
 
 import com.bc.pmpheep.back.dao.*;
 import com.bc.pmpheep.back.util.*;
-import com.mchange.v2.lang.StringUtils;
-import org.jsoup.helper.DataUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +40,6 @@ import com.bc.pmpheep.back.po.DecTextbookPmph;
 import com.bc.pmpheep.back.po.DecWorkExp;
 import com.bc.pmpheep.back.po.Declaration;
 import com.bc.pmpheep.back.po.Material;
-import com.bc.pmpheep.back.po.MaterialExtension;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.po.WriterUserTrendst;
@@ -59,7 +56,6 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -313,6 +309,89 @@ public class DeclarationServiceImpl implements DeclarationService {
                         }
                     }
                     row.setTitle(tit);
+            }
+
+            pageResult.setRows(rows);
+        }
+        pageResult.setTotal(total);
+        return pageResult;
+    }
+
+    @Override
+    public PageResult<DeclarationListVO> pageDeclarationByUserId(Integer pageNumber, Integer pageSize, Long userId, String materialName, String unitName,HttpServletRequest request) throws CheckedServiceException {
+        if (null == request.getSession(false)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+                    "会话过期");
+        }
+        // 获取当前用户
+        String sessionId = CookiesUtil.getSessionId(request);
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+        if (null == pmphUser) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+                    "请求用户不存在");
+        }
+
+        Gson gson = new Gson();
+
+        // 拼装复合参数
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        map.put("userId",userId);
+        map.put("materialName",materialName);
+        map.put("unitName",unitName);
+
+        // 包装参数实体
+        PageParameter<Map<String, Object>> pageParameter = new PageParameter<Map<String, Object>>(pageNumber, pageSize,
+                map);
+        // 返回实体
+        PageResult<DeclarationListVO> pageResult = new PageResult<>();
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+        // 获取总数
+        Integer total =1;
+
+        if (null != total && total > 0) {
+            List<DeclarationListVO> rows = declarationDao.listDeclarationByUserId(pageParameter);
+            total=rows.size()!=0?rows.size():0;
+            for (DeclarationListVO row : rows) {
+                HashMap<String, Object> paraMap = new HashMap<>();
+                paraMap.put("declarationId",row.getId());
+                String declarationlCreateDate = declarationDao.findDeclarationCreateDate(paraMap);
+                Date date1 = DateUtil.fomatDate(declarationlCreateDate);
+                Date date = DateUtil.fomatDate("2019-04-12 12:00");
+                if(date1.getTime()>date.getTime()) {
+                    String post = row.getPresetPosition().toString();
+                    String post2="";
+                    if (post != null) {
+                        if (ObjectUtil.isNumber(post)) {
+                            if(Integer.parseInt(post)==8){
+                                post="数字编委";
+                            }else{
+                                post = dataDictionaryDao.getDataDictionaryItemNameByCode2(Const.PMPH_POSITION, post);
+                            }
+                        }else{
+                            String[] split = post.split(",");
+                            for(String s:split){
+                                if(Integer.parseInt(s)==8){
+                                    post2+="数字编委,";
+                                }else{
+                                    post2 += dataDictionaryDao.getDataDictionaryItemNameByCode2(Const.PMPH_POSITION, s)+",";
+                                }
+                            }
+                            post=post2.substring(0,post2.lastIndexOf(","));
+                        }
+                    }
+
+                    row.setChooseBooksAndPostions(row.getTextbookName() + "-" + post);
+
+                }
+                String tit = row.getTitle();
+                if (tit != null) {
+
+                    if (ObjectUtil.isNumber(tit)) {
+                        tit = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.WRITER_USER_TITLE, row.getTitle().toString());
+                    }
+                }
+                row.setTitle(tit);
             }
 
             pageResult.setRows(rows);

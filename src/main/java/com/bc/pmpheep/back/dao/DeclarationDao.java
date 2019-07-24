@@ -143,6 +143,7 @@ public interface DeclarationDao {
 	 * @return 符合条件的申报表审核分页数据
 	 */
 	List<DeclarationListVO> listDeclaration(PageParameter<Map<String, Object>> pageParameter);
+	List<DeclarationListVO> listDeclarationByUserId(PageParameter<Map<String, Object>> pageParameter);
 	String findMaterialCreateDate(Map<String, Object> paraMap);
 	String findDeclarationCreateDate(Map<String, Object> paraMap);
 	String findDeclarationCreateDateByTextBook(Map<String, Object> paraMap);

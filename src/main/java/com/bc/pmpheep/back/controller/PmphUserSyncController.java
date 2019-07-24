@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -60,72 +61,88 @@ public class PmphUserSyncController {
         try {
             System.out.println("同步社内用户");
             System.out.println(json);
+            //解析应用id
             String appSerialNumber = request.getParameter("appSerialNumber");
-            String utsNodeString = request.getParameter("utsNodeInfo"); //获取传输信息
-            JSONObject jsonObject = JSONObject.parseObject(utsNodeString); //解析信息
-            JSONArray datas = jsonObject.getJSONArray("datas");  //解析信息集合
+            //获取传输信息
+            String utsNodeString = request.getParameter("utsNodeInfo");
+            //解析信息
+            JSONObject jsonObject = JSONObject.parseObject(utsNodeString);
+            //解析信息集合
+            JSONArray datas = jsonObject.getJSONArray("datas");
             for (int j = 0; j < datas.size(); j++) {
-
-                SsoReturnData ssoReturnData = new SsoReturnData();   //返回信息
+                //返回信息
+                SsoReturnData ssoReturnData = new SsoReturnData();
                 try {
-                    Datas data = datas.getObject(j, Datas.class);  //解析信息
-                    ssoReturnData.setId(data.getId());    //设置返回信息的id
-                    JSONObject jsonObject1 = datas.getJSONObject(j);  //解析信息为json对象
-                    JSONObject utsJSON = jsonObject1.getJSONObject("utsNode");  //解析对象中的utsNode 集合信息
-                    UtsNode utsNode = (UtsNode) net.sf.json.JSONObject.toBean(net.sf.json.JSONObject.fromObject(utsJSON), UtsNode.class);  //转换为java对象
+                    //解析信息
+                    Datas data = datas.getObject(j, Datas.class);
+                    //设置返回信息的id
+                    ssoReturnData.setId(data.getId());
+                    //解析信息为json对象
+                    JSONObject jsonObject1 = datas.getJSONObject(j);
+                    //解析对象中的utsNode 集合信息
+                    JSONObject utsJSON = jsonObject1.getJSONObject("utsNode");
+                    //转换为java对象
+                    UtsNode utsNode = (UtsNode) net.sf.json.JSONObject.toBean(net.sf.json.JSONObject.fromObject(utsJSON), UtsNode.class);
                     //同步人员
                     if ("person".equals(data.getType())) {
-
-                            String newParentPath = data.getNewParentPath();
-                            String[] split = newParentPath.split("/");
-                            List<String> strList = new ArrayList<>();
-
-                        if(newParentPath.equals("/")){
+                        //添加用户前先检查用户所在部门是否否存在
+                        String newParentPath = data.getNewParentPath();
+                        String[] split = newParentPath.split("/");
+                        List<String> strList = new ArrayList<>();
+                        //如果没有上级
+                        if (newParentPath.equals("/")) {
+                            //添加默认用户信息中的部门
                             strList.add(data.getNewName());
                         }
-                            for (String s : split) {
-                                if (!StringUtils.isNullOrEmpty(s)) {
-                                    strList.add(s);
-                                }
+                        for (String s : split) {
+                            if (!StringUtils.isNullOrEmpty(s)) {
+                                strList.add(s);
                             }
-                            if (strList.size() <= 1) {
-                                PmphDepartment dp = pmphDepartmentService.getPmphDepartmentByName(strList.get(0));
-                                if(ObjectUtil.isNull(dp)){
-                                    PmphDepartment pmphDepartment = new PmphDepartment();
-                                    pmphDepartment.setDpName(strList.get(0));
-                                    pmphDepartment.setParentId(1L);
-                                    pmphDepartment.setSort(999);
-                                    pmphDepartment.setPath("0-1");
-                                    pmphDepartmentService.add(pmphDepartment);
-                                }else{
-                                    if(StringUtils.isNullOrEmpty(utsNode.getErpdeptname())){
-                                        utsNode.setErpdeptname(dp.getDpName());
-                                    }
-                                }
+                        }
+                        if (strList.size() <= 1) {  //没有上级部门
+                            PmphDepartment dp = pmphDepartmentService.getPmphDepartmentByName(strList.get(0));
+                            //如果系统不存在此部门
+                            if (ObjectUtil.isNull(dp)) {
+                                PmphDepartment pmphDepartment = new PmphDepartment();
+                                pmphDepartment.setDpName(strList.get(0));
+                                pmphDepartment.setParentId(1L);
+                                pmphDepartment.setSort(999);
+                                pmphDepartment.setPath("0-1");
+                                pmphDepartmentService.add(pmphDepartment);
                             } else {
-                                Long parentId = 1L;
-                                String path = "0-1";
-
-                                for (String s : strList) {
-                                    PmphDepartment dp = pmphDepartmentService.getPmphDepartmentByName(s);
-                                    if (ObjectUtil.notNull(dp)) {
-                                        path = dp.getPath();
-                                    } else {
-                                        PmphDepartment pmphDepartment = new PmphDepartment();
-                                        pmphDepartment.setDpName(s);
-                                        pmphDepartment.setParentId(parentId);
-                                        pmphDepartment.setSort(999);
-                                        pmphDepartment.setPath(path);
-                                        PmphDepartment add = pmphDepartmentService.add(pmphDepartment);
-                                        parentId = add.getId();
-                                        path = add.getPath() + "-" + add.getId();
-                                    }
-                                }
-                                PmphDepartment lastDpName = pmphDepartmentService.getPmphDepartmentByName(strList.get(strList.size()-1));
-                                if(StringUtils.isNullOrEmpty(utsNode.getErpdeptname())){
-                                    utsNode.setErpdeptname(lastDpName.getDpName());
+                                //如果用户信息没有部门信息
+                                if (StringUtils.isNullOrEmpty(utsNode.getErpdeptname())) {
+                                    utsNode.setErpdeptname(dp.getDpName());
                                 }
                             }
+                            //如果有上级部门
+                        } else {
+                            //设置父id
+                            Long parentId = 1L;
+                            //设置路径
+                            String path = "0-1";
+
+                            for (String s : strList) {
+                                PmphDepartment dp = pmphDepartmentService.getPmphDepartmentByName(s);
+                                if (ObjectUtil.notNull(dp)) {
+                                    path = dp.getPath();
+                                } else {
+                                    PmphDepartment pmphDepartment = new PmphDepartment();
+                                    pmphDepartment.setDpName(s);
+                                    pmphDepartment.setParentId(parentId);
+                                    pmphDepartment.setSort(999);
+                                    pmphDepartment.setPath(path);
+                                    PmphDepartment add = pmphDepartmentService.add(pmphDepartment);
+                                    parentId = add.getId();
+                                    path = add.getPath() + "-" + add.getId();
+                                }
+                            }
+                            PmphDepartment lastDpName = pmphDepartmentService.getPmphDepartmentByName(strList.get(strList.size() - 1));
+                            //如果用户信息中没有部门,把节点信息最后一个部门当做用户部门
+                            if (StringUtils.isNullOrEmpty(utsNode.getErpdeptname())) {
+                                utsNode.setErpdeptname(lastDpName.getDpName());
+                            }
+                        }
 
 
                         if ("INSERT".equals(data.getOperation())) {
@@ -163,13 +180,13 @@ public class PmphUserSyncController {
                             }
 
                         }
-                    }else if ("organizationalUnit".equals(data.getType())) {
+                    } else if ("organizationalUnit".equals(data.getType())) {
                         if ("INSERT".equals(data.getOperation())) {
                             PmphDepartment pmphDepartmentByName = pmphDepartmentService.getPmphDepartmentByName(utsNode.getOu());
                             if (ObjectUtil.isNull(pmphDepartmentByName)) {
                                 List<String> strList = new ArrayList<>();
                                 String newParentPath = data.getNewParentPath();
-                                if(newParentPath.equals("/")){
+                                if (newParentPath.equals("/")) {
                                     strList.add(data.getNewName());
                                 }
                                 String[] split = newParentPath.split("/");
@@ -202,7 +219,6 @@ public class PmphUserSyncController {
                                 }
 
 
-
                             }
                             ssoReturnData.setCode("0");
                             ssoReturnData.setMessage(SUCCESS);
@@ -226,36 +242,36 @@ public class PmphUserSyncController {
                             if (ObjectUtil.isNull(pmphDepartmentByName)) {
                                 List<String> strList = new ArrayList<>();
                                 String newParentPath = data.getNewParentPath();
-                                if(newParentPath.equals("/")){
+                                if (newParentPath.equals("/")) {
                                     strList.add(data.getNewName());
                                 }
-                                    String[] split = newParentPath.split("/");
+                                String[] split = newParentPath.split("/");
 
-                                    for (String s : split) {
-                                        if (!StringUtils.isNullOrEmpty(s)) {
-                                            strList.add(s);
-                                        }
+                                for (String s : split) {
+                                    if (!StringUtils.isNullOrEmpty(s)) {
+                                        strList.add(s);
                                     }
-                                    if (strList.size() <= 1) {
+                                }
+                                if (strList.size() <= 1) {
+                                    PmphDepartment pmphDepartment = new PmphDepartment();
+                                    pmphDepartment.setDpName(utsNode.getOu());
+                                    pmphDepartment.setParentId(1L);
+                                    pmphDepartment.setSort(999);
+                                    pmphDepartment.setPath("0-1");
+                                    pmphDepartmentService.add(pmphDepartment);
+                                } else {
+                                    Long parentId = 1L;
+                                    String path = "0-1";
+                                    for (String s : strList) {
                                         PmphDepartment pmphDepartment = new PmphDepartment();
-                                        pmphDepartment.setDpName(utsNode.getOu());
-                                        pmphDepartment.setParentId(1L);
+                                        pmphDepartment.setDpName(s);
+                                        pmphDepartment.setParentId(parentId);
                                         pmphDepartment.setSort(999);
-                                        pmphDepartment.setPath("0-1");
-                                        pmphDepartmentService.add(pmphDepartment);
-                                    } else {
-                                        Long parentId = 1L;
-                                        String path = "0-1";
-                                        for (String s : strList) {
-                                            PmphDepartment pmphDepartment = new PmphDepartment();
-                                            pmphDepartment.setDpName(s);
-                                            pmphDepartment.setParentId(parentId);
-                                            pmphDepartment.setSort(999);
-                                            pmphDepartment.setPath(path);
-                                            PmphDepartment add = pmphDepartmentService.add(pmphDepartment);
-                                            parentId = add.getId();
-                                            path = add.getPath() + "-" + add.getId();
-                                        }
+                                        pmphDepartment.setPath(path);
+                                        PmphDepartment add = pmphDepartmentService.add(pmphDepartment);
+                                        parentId = add.getId();
+                                        path = add.getPath() + "-" + add.getId();
+                                    }
 
 
                                 }
@@ -281,7 +297,7 @@ public class PmphUserSyncController {
             e.printStackTrace();
         }
         PrintWriter writer = response.getWriter();
-        writer.write("{\"status\":\"0x0000\",\"message\":{\"datas\":"+retrunDatas.toString().replace("=",":")+"}}");
+        writer.write("{\"status\":\"0x0000\",\"message\":{\"datas\":" + retrunDatas.toString().replace("=", ":") + "}}");
         writer.close();
     }
 
@@ -294,15 +310,14 @@ public class PmphUserSyncController {
         newPmphUser.setPassword(new DesRun("", newPmphUser.getPassword()).enpsw);
         newPmphUser.setGmtUpdate(utsNode.getLastmodifytime());
         PmphDepartment pmphDepartmentByName;
-        if(StringUtils.isNullOrEmpty(utsNode.getErpdeptname())){
-            pmphDepartmentByName=null;
-        }else{
+        if (StringUtils.isNullOrEmpty(utsNode.getErpdeptname())) {
+            pmphDepartmentByName = null;
+        } else {
             pmphDepartmentByName = pmphDepartmentService.getPmphDepartmentByName(utsNode.getErpdeptname());
         }
-        if (ObjectUtil.notNull(pmphDepartmentByName)){
+        if (ObjectUtil.notNull(pmphDepartmentByName)) {
             newPmphUser.setDepartmentId(pmphDepartmentByName.getId());
-        }
-        else{
+        } else {
             newPmphUser.setDepartmentId(0L);
         }
         newPmphUser.setHandphone(utsNode.getEmployeemobile());
@@ -320,9 +335,9 @@ public class PmphUserSyncController {
         oldPmphUser.setGmtCreate(utsNode.getEmployeebirthday());
         oldPmphUser.setGmtUpdate(utsNode.getLastmodifytime());
         PmphDepartment pmphDepartmentName;
-        if(StringUtils.isNullOrEmpty(utsNode.getErpdeptname())){
-            pmphDepartmentName=null;
-        }else{
+        if (StringUtils.isNullOrEmpty(utsNode.getErpdeptname())) {
+            pmphDepartmentName = null;
+        } else {
             pmphDepartmentName = pmphDepartmentService.getPmphDepartmentByName(utsNode.getErpdeptname());
         }
 

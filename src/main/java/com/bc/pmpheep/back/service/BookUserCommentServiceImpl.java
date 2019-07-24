@@ -116,6 +116,7 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 			if(isAuth==1){
 				if (!ObjectUtil.isNull(reply)) {
 					bookUserComment.setAuthReply(reply);
+					bookUserComment.setReplyDate(DateUtil.getCurrentTime());
 				}
 			}
 			bookUserComment.setId(ids[i]);

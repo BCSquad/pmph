@@ -128,6 +128,9 @@ public interface DeclarationService {
 														 HttpServletRequest request)
 			throws CheckedServiceException;
 
+
+	public PageResult<DeclarationListVO> pageDeclarationByUserId(Integer pageNumber, Integer pageSize, Long userId,  String materialName,String unitName, HttpServletRequest request)
+			throws CheckedServiceException;
 	/**
 	 * 确认收到纸质表
 	 *

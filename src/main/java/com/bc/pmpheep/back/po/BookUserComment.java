@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 
 import org.apache.ibatis.type.Alias;
 
@@ -105,6 +106,16 @@ public class BookUserComment implements Serializable {
 	private String authReason;
 	private String authReply;
 	private Boolean front;
+	private Timestamp replyDate;
+
+
+	public Timestamp getReplyDate() {
+		return replyDate;
+	}
+
+	public void setReplyDate(Timestamp replyDate) {
+		this.replyDate = replyDate;
+	}
 
 	public String getAuthReason() {
 		return authReason;

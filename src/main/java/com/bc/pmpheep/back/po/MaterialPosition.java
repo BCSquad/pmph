@@ -10,15 +10,10 @@ import java.io.Serializable;
 @Alias("MaterialPosition")
 public class MaterialPosition implements Serializable {
     private Long id;
-    private Long materailId;
+    private Long materialId;
     private String positionCode ;
 
 
-    public MaterialPosition(Long id, Long materailId, String positionCode) {
-        this.id = id;
-        this.materailId = materailId;
-        this.positionCode = positionCode;
-    }
 
     public Long getId() {
         return id;
@@ -28,12 +23,12 @@ public class MaterialPosition implements Serializable {
         this.id = id;
     }
 
-    public Long getMaterailId() {
-        return materailId;
+    public Long getMaterialId() {
+        return materialId;
     }
 
-    public void setMaterailId(Long materailId) {
-        this.materailId = materailId;
+    public void setMaterialId(Long materialId) {
+        this.materialId = materialId;
     }
 
     public String getPositionCode() {
