@@ -223,6 +223,49 @@ public class WriterUserController {
 		return new ResponseBean(writerUserService.getListWriterUser(pageParameter, groupId));
 	}
 
+	/**
+	 *
+	 *
+	 * 功能描述：分页查询作家用户
+	 *
+	 * @param page
+	 *            分页条件
+	 * @param writerUserManagerVO
+	 *            查询条件
+	 * @return 分好页的结果集
+	 *
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "分页查询作家用户")
+	@RequestMapping(value = "/list/expertList", method = RequestMethod.GET)
+	public ResponseBean expertList(Long groupId, @RequestParam("pageSize") Integer pageSize,
+								   @RequestParam("pageNumber") Integer pageNumber, @RequestParam("name") String name,
+								   @RequestParam("rank") Integer rank, @RequestParam("orgName") String orgName, @RequestParam(value = "handphone",required = false) String handphone, @RequestParam(value = "email",required = false) String email) {
+		PageParameter pageParameter = new PageParameter<>();
+		WriterUserManagerVO writerUserManagerVO = new WriterUserManagerVO();
+		if (StringUtil.notEmpty(name)) {
+			writerUserManagerVO.setName(name.replaceAll(" ", ""));// 去除空格
+		}
+		if (StringUtil.notEmpty(orgName)) {
+			writerUserManagerVO.setOrgName(orgName.replaceAll(" ", ""));
+		}
+		if (StringUtil.notEmpty(handphone)) {
+			writerUserManagerVO.setHandphone(handphone.replaceAll(" ", ""));
+		}
+		if (StringUtil.notEmpty(email)) {
+			writerUserManagerVO.setEmail(email.replaceAll(" ", ""));
+		}
+		writerUserManagerVO.setRank(rank);
+		pageParameter.setPageNumber(pageNumber);
+		pageParameter.setPageSize(pageSize);
+		pageParameter.setParameter(writerUserManagerVO);
+		return new ResponseBean(writerUserService.getListexpertUser(pageParameter, groupId));
+	}
+
+
+
+
+
 
 
 	/**

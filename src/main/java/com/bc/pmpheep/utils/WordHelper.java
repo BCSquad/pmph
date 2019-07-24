@@ -249,7 +249,7 @@ public class WordHelper {
 	private String generateFileName(DeclarationEtcBO bo ,String decSequese) throws CheckedServiceException {
 		String realname = bo.getRealname();
 		String textbookName = bo.getTextbookName().get(0);
-		String presetPosition = bo.getPresetPosition().get(0);
+		String presetPosition = bo.getPresetPosition().get(0)==null?"":bo.getPresetPosition().get(0);
 		String filename;
 		if (StringUtil.notEmpty(textbookName) && StringUtil.notEmpty(presetPosition)) {
 			if (StringUtil.isEmpty(realname)) {

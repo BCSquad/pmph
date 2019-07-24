@@ -177,6 +177,15 @@
             <if test="authReason != null and authReason !=''">
                 auth_reason= #{authReason} ,
             </if>
+			<if test="authReply != null and authReply !=''">
+				auth_reply= #{authReply} ,
+			</if>
+			<if test="front != null">
+				front= #{front} ,
+			</if>
+			<if test="replyDate != null">
+				reply_date= #{replyDate} ,
+			</if>
 		</set>
 		where
 		id=#{id} ;

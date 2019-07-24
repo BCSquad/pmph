@@ -393,7 +393,7 @@
 		IS NOT NULL and c.id is not null
 		AND b.is_staging =false and
 		b.online_progress != 2
-		AND A.chosen_position IN (1,2,3,8,9,10,12) AND
+		AND A.chosen_position not null AND
 		C.is_published = true
 		AND B.org_id = #{orgId}
 		AND C.ID IN
@@ -708,7 +708,7 @@
 	<!-- 根据materialId查询学校当选总数 -->
 	<select id="getSchoolDeclarationChosenCount2" parameterType="java.lang.Long"
 			resultType="java.lang.Integer">
-		SELECT IFNULL(SUM(if((a.chosen_position IN (1,2,3,8,9,10,12)),1,0)),0) count
+		SELECT IFNULL(SUM(if((a.chosen_position IN (1,2,3,8)),1,0)),0) count
 		FROM dec_position_published a
 		LEFT JOIN declaration b ON a.declaration_id = b.id
 		LEFT JOIN textbook c ON a.textbook_id = c.id
@@ -750,15 +750,12 @@
 	<!-- 根据materialId查询主编申报总数 -->
 	<select id="getEditorCount2" parameterType="java.lang.Long"
 			resultType="java.lang.Integer">
-		select COUNT(*) FROM (
-		SELECT COUNT(dp.declaration_id) count
-		from dec_position dp
-		left join (select * from declaration) d on (d.id=dp.declaration_id)
-		left join (select id from material) m on (m.id=d.material_id)
-		where dp.preset_position IS NOT NULL AND
-		d.is_staging = 0 AND d.online_progress >0 AND d.org_id IS NOT NULL
-		and m.id=#{materialId} AND dp.preset_position =1
-		GROUP BY dp.declaration_id)a;
+		select count(dp.id) from dec_position dp  left join declaration d on d.id=declaration_id
+WHERE
+		d.is_staging = 0
+		AND d.org_id IS NOT NULL
+		AND d.material_id =#{materialId}
+		AND dp.preset_position LIKE concat ( '%', 1, '%' )
 	</select>
 	<!-- 根据materialId查询副主编申报总数 -->
 	<select id="getSubEditorCount" parameterType="java.lang.Long"
@@ -776,15 +773,14 @@
 	<!-- 根据materialId查询副主编申报总数 -->
 	<select id="getSubEditorCount2" parameterType="java.lang.Long"
 			resultType="java.lang.Integer">
-		SELECT COUNT(*) FROM (
-		SELECT COUNT(dp.declaration_id) count
-		FROM dec_position dp
-		LEFT JOIN (select * FROM declaration) d ON (d.id=dp.declaration_id)
-		LEFT JOIN (select id FROM material) m ON (m.id=d.material_id)
-		WHERE dp.preset_position IS NOT NULL AND
-		d.is_staging = 0 AND d.online_progress >0 AND d.org_id IS NOT NULL
-		AND m.id=#{materialId} AND dp.preset_position =2
-		GROUP BY dp.declaration_id)a;
+	select count(dp.id) from dec_position dp  left join declaration d on d.id=declaration_id
+WHERE
+
+		d.is_staging = 0
+
+		AND d.org_id IS NOT NULL
+		AND d.material_id =#{materialId}
+		AND dp.preset_position LIKE concat ( '%', 2, '%' )
 	</select>
 	<!-- 根据materialId查询编委申报数 -->
 	<select id="getEditorialCount" parameterType="java.lang.Long"
@@ -802,15 +798,14 @@
 	<!-- 根据materialId查询编委申报数 -->
 	<select id="getEditorialCount2" parameterType="java.lang.Long"
 			resultType="java.lang.Integer">
-		SELECT COUNT(*) FROM (
-		select COUNT(dp.declaration_id) count
-		from dec_position dp
-		left join (select * from declaration) d on (d.id=dp.declaration_id)
-		left join (select id from material) m on (m.id=d.material_id)
-		where dp.preset_position IS NOT NULL AND
-		d.is_staging = 0 AND d.online_progress >0 AND d.org_id IS NOT NULL
-		and m.id=#{materialId} AND dp.preset_position =3
-		GROUP BY dp.declaration_id)a;
+	select count(dp.id) from dec_position dp  left join declaration d on d.id=declaration_id
+WHERE
+
+		d.is_staging = 0
+
+		AND d.org_id IS NOT NULL
+		AND d.material_id = #{materialId}
+		AND dp.preset_position LIKE concat ( '%', 3, '%' )
 	</select>
 
 	<!-- 根据materialId查询数字编委申报数 -->
@@ -825,6 +820,19 @@
 		d.is_staging = 0 AND d.online_progress >0 AND d.org_id IS NOT NULL
 		and m.id=#{materialId} AND dp.preset_position IN (8,9,10,11,12,13,14,15)
 		GROUP BY dp.declaration_id)a;
+	</select>
+
+	<!-- 根据materialId查询数字编委申报数 -->
+	<select id="getDigitalCount2" parameterType="java.lang.Long"
+			resultType="java.lang.Integer">
+	select count(dp.id) from dec_position dp  left join declaration d on d.id=declaration_id
+WHERE
+
+		d.is_staging = 0
+
+		AND d.org_id IS NOT NULL
+		AND d.material_id =#{materialId}
+		AND dp.preset_position LIKE concat ( '%', 8, '%' )
 	</select>
 
 	<!-- 根据materialId查询主编当选数 -->
@@ -989,13 +997,16 @@
 		t1.presetpositioneditor,t1.presetpositionsubeditor,t1.presetpositioneditorial,
 		t1.presetdigitaleditor
 		FROM (
-		SELECT SUM(if((b.preset_position =1),1,0))
+		SELECT SUM(if((b.preset_position like concat
+		('%',1,'%')),1,0))
 		presetpositioneditor,
-		SUM(if((b.preset_position =2),1,0)) presetpositionsubeditor,
-		SUM(if((b.preset_position =3),1,0))
+		SUM(if((b.preset_position like concat
+		('%',2,'%')),1,0)) presetpositionsubeditor,
+		SUM(if((b.preset_position like concat
+		('%',3,'%')),1,0))
 		presetpositioneditorial,
-		SUM(if((b.preset_position IN
-		(8,9,10,11,12,13,14,15)),1,0)) presetdigitaleditor,
+		SUM(if((b.preset_position like concat
+		('%',8,'%')),1,0)) presetdigitaleditor,
 		d.id
 		materialid,e.id orgid,e.org_name schoolname
 		FROM declaration a
@@ -1012,11 +1023,14 @@
 			and e.org_name like concat
 			('%',#{parameter.schoolName},'%')
 		</if>
-		GROUP BY e.id ORDER BY SUM(if((b.preset_position =1),1,0))DESC,
-		SUM(if((b.preset_position =2),1,0)) DESC,
-		SUM(if((b.preset_position =3),1,0)) DESC,
-		SUM(if((b.preset_position IN
-		(8,9,10,11,12,13,14,15)),1,0)) DESC)t1,
+		GROUP BY e.id ORDER BY SUM(if((b.preset_position like concat
+		('%',1,'%')),1,0))DESC,
+		SUM(if((b.preset_position like concat
+		('%',2,'%')),1,0)) DESC,
+		SUM(if((b.preset_position like concat
+		('%',3,'%')),1,0)) DESC,
+		SUM(if((b.preset_position like concat
+		('%',8,'%')),1,0)) DESC)t1,
 		(SELECT @rowno:=0)t2 )t3
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
@@ -1405,13 +1419,16 @@
 		t1.presetpositioneditor,t1.presetpositionsubeditor,t1.presetpositioneditorial,
 		t1.presetdigitaleditor
 		FROM (
-		SELECT SUM(if((b.preset_position =1),1,0))
+		SELECT SUM(if((b.preset_position like concat
+		('%',"1",'%')),1,0))
 		presetpositioneditor,
-		SUM(if((b.preset_position =2),1,0)) presetpositionsubeditor,
-		SUM(if((b.preset_position =3),1,0))
+		SUM(if((b.preset_position like concat
+		('%',"2",'%')),1,0)) presetpositionsubeditor,
+		SUM(if((b.preset_position like concat
+		('%',"3",'%')),1,0))
 		presetpositioneditorial,
-		SUM(if((b.preset_position IN
-		(8,9,10,11,12,13,14,15)),1,0)) presetdigitaleditor,
+		SUM(if((b.preset_position like concat
+		('%',"8",'%')),1,0)) presetdigitaleditor,
 		d.id
 		materialid,c.id id,c.textbook_name bookname
 		FROM declaration a
@@ -1586,11 +1603,14 @@
 		</if>
 		GROUP BY
 		a.org_id,
-		c.textbook_name ORDER BY SUM(if((b.preset_position =1),1,0)) DESC,
-		SUM(if((b.preset_position =2),1,0)) DESC,
-		SUM(if((b.preset_position >=3),1,0)) DESC,
-		SUM(if((b.preset_position IN
-		(8,9,10,11,12,13,14,15)),1,0)) DESC)t1,
+		c.textbook_name ORDER BY SUM(if((b.preset_position like concat
+		('%',1,'%')),1,0)) DESC,
+		SUM(if((b.preset_position like concat
+		('%',2,'%')),1,0)) DESC,
+		SUM(if((b.preset_position like concat
+		('%',3,'%')),1,0)) DESC,
+		SUM(if((b.preset_position like concat
+		('%',8,'%')),1,0)) DESC)t1,
 		(SELECT @rowno:=0)t2)t3 order by t3.schoolname,t3.bookname ASC
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
@@ -1759,7 +1779,7 @@
 		SELECT GROUP_CONCAT(if((b.chosen_position =1),a.realname,null)) editorlist,
 		GROUP_CONCAT(if((b.chosen_position =2),a.realname,null))
 		subeditorlist,
-		GROUP_CONCAT(if((b.chosen_position >=3),a.realname,null)) editoriallist,
+		GROUP_CONCAT(if((b.chosen_position =3),a.realname,null)) editoriallist,
 		GROUP_CONCAT(if((b.chosen_position IN (8,9,10,12)),a.realname,null))
 		isdigitaleditorlist,
 		d.id materialid,e.id orgid,e.org_name schoolname

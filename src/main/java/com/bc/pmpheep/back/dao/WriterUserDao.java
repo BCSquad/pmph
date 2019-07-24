@@ -81,6 +81,14 @@ public interface WriterUserDao {
      * @return 需要的作家用户集合
      */
     List<WriterUserManagerVO> getListWriterUser(PageParameter<WriterUserManagerVO> page);
+	/**
+	 *
+	 * 功能描述：分页查询作家用户
+	 *
+	 * @param page 传入的查询条件
+	 * @return 需要的作家用户集合
+	 */
+	List<WriterUserManagerVO> getListexpertUser(PageParameter<WriterUserManagerVO> page);
 
     /**
      * 
@@ -102,6 +110,8 @@ public interface WriterUserDao {
      * @return 查询到的条数
      */
     Integer getListWriterUserTotal(PageParameter<WriterUserManagerVO> page);
+
+	Integer getListexpertUserTotal(PageParameter<WriterUserManagerVO> page);
 
     /**
      * 

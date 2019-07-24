@@ -60,6 +60,7 @@
                         <value>/oauth2wx/**</value>
                         <value>/oauth2me/**</value>
                         <value>/aiptest/**</value>
+                        <value>/pmphWeb/**</value>
                     </list>
                 </property>
             </bean>	

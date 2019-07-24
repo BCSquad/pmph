@@ -238,35 +238,35 @@ public class DecPositionServiceImpl implements DecPositionService {
             String showPosition = newDecPosition.getShowPosition();
             DecPosition decPosition = new DecPosition();
             if ("编委".equals(showPosition)) {
-                decPosition.setPresetPosition(1);
+                decPosition.setPresetPosition("3");
             } else if ("副主编".equals(showPosition)) {
-                decPosition.setPresetPosition(2);
+                decPosition.setPresetPosition("2");
             } else if ("副主编,编委".equals(showPosition)) {
-                decPosition.setPresetPosition(3);
+                decPosition.setPresetPosition("2,3");
             } else if ("主编".equals(showPosition)) {
-                decPosition.setPresetPosition(4);
+                decPosition.setPresetPosition("1");
             } else if ("主编,编委".equals(showPosition)) {
-                decPosition.setPresetPosition(5);
+                decPosition.setPresetPosition("1,3");
             } else if ("主编,副主编".equals(showPosition)) {
-                decPosition.setPresetPosition(6);
+                decPosition.setPresetPosition("1,2");
             } else if ("主编,副主编,编委".equals(showPosition)) {
-                decPosition.setPresetPosition(7);
+                decPosition.setPresetPosition("1,2,3");
             } else if ("数字编委".equals(showPosition)) {
-                decPosition.setPresetPosition(8);
+                decPosition.setPresetPosition("8");
             } else if ("编委,数字编委".equals(showPosition)) {
-                decPosition.setPresetPosition(9);
+                decPosition.setPresetPosition("3,8");
             } else if ("副主编,数字编委".equals(showPosition)) {
-                decPosition.setPresetPosition(10);
+                decPosition.setPresetPosition("2,8");
             } else if ("副主编,编委,数字编委".equals(showPosition)) {
-                decPosition.setPresetPosition(11);
+                decPosition.setPresetPosition("2,3,8");
             } else if ("主编,数字编委".equals(showPosition)) {
-                decPosition.setPresetPosition(12);
+                decPosition.setPresetPosition("1,8");
             } else if ("主编,编委,数字编委".equals(showPosition)) {
-                decPosition.setPresetPosition(13);
+                decPosition.setPresetPosition("1,3,8");
             } else if ("主编,副主编,数字编委".equals(showPosition)) {
-                decPosition.setPresetPosition(14);
+                decPosition.setPresetPosition("1,2,8");
             } else if ("主编,副主编,编委,数字编委".equals(showPosition)) {
-                decPosition.setPresetPosition(15);
+                decPosition.setPresetPosition("1,2,3,8");
             }
             File files = null;
             String fileName = null;
@@ -343,11 +343,34 @@ public class DecPositionServiceImpl implements DecPositionService {
             Date date1 = DateUtil.fomatDate(declarationlCreateDate);
             Date date = DateUtil.fomatDate("2019-04-12 12:00");
             if(date1.getTime()>date.getTime()) {
-                String post = decPositionEditorSelectionVO.getPresetPosition().toString();
+
+
+                String post = decPositionEditorSelectionVO.getPresetPosition();
+                String post2="";
+
                 if (post != null) {
+
                     if (ObjectUtil.isNumber(post)) {
-                        post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, post);
+                        if(Integer.parseInt(post)==8){
+                            post="数字编委";
+                        }else{
+                            post = dataDictionaryDao.getDataDictionaryItemNameByCode2(Const.PMPH_POSITION, post);
+                        }
+                    }else{
+                        String[] split = post.split(",");
+                        for (String s: split) {
+                            if(Integer.parseInt(s)==8){
+                                post2+="数字编委,";
+                            }else{
+                                post2 += dataDictionaryDao.getDataDictionaryItemNameByCode2(Const.PMPH_POSITION, s)+",";
+                            }
+                        }
+                        post=post2.substring(0,post2.lastIndexOf(","));
+
                     }
+
+
+
                 }
                 decPositionEditorSelectionVO.setStrPresetPosition(post);
             }
@@ -905,6 +928,7 @@ public class DecPositionServiceImpl implements DecPositionService {
             chosenEditorCount = decPositionDao.getChosenEditorCount2(materialId);
             chosenSubeditorCount = decPositionDao.getChosenSubeditorCount2(materialId);
             chosenEditorialCount = decPositionDao.getChosenEditorialCount2(materialId);
+            digitalCount = decPositionDao.getDigitalCount2(materialId);
 
         }
 
@@ -943,10 +967,29 @@ public class DecPositionServiceImpl implements DecPositionService {
         if (total > 0) {
             List<DeclarationSituationBookResultVO> books =
                     decPositionDao.getBookListOne(pageParameter);
+
+            HashMap<String, Object> paraMap = new HashMap<>();
+            paraMap.put("material_id",books.get(0).getMaterialId());
+            String material_id = declarationDao.findMaterialCreateDate(paraMap);
+            Date date1 = DateUtil.fomatDate(material_id);
+            Date date = DateUtil.fomatDate("2019-2-12 12:00");
+
             List<DeclarationSituationBookResultVO> presets =
                     decPositionDao.getBookResultPreset(pageParameter);
             List<DeclarationSituationBookResultVO> chosens =
                     decPositionDao.getBookResultChosen(pageParameter);
+            if(date1.getTime()>date.getTime()) {
+
+                presets =
+                        decPositionDao.getBookResultPreset2(pageParameter);
+                 chosens =
+                        decPositionDao.getBookResultChosen2(pageParameter);
+
+
+            }
+
+
+
             List<DeclarationSituationBookResultVO> middle = new ArrayList<>();
             List<DeclarationSituationBookResultVO> list = new ArrayList<>();
             if (null == presets || presets.isEmpty()) {

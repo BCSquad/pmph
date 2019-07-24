@@ -688,10 +688,129 @@
             and t1.is_writer = true and t1.group_id = #{parameter.groupId}
 			)
 		</if>
+
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
 	</select>
+
+	<!-- 分页查询 -->
+	<select id="getListexpertUserTotal" parameterType="map"
+			resultType="java.lang.Integer">
+
+        select count(*) from (select w.id FROM
+        writer_user w
+        LEFT JOIN declaration d ON w.id = d.user_id
+        LEFT JOIN (
+        SELECT
+        user_id,
+        count( dd.user_id ) cc
+        FROM
+        declaration dd
+        WHERE
+        dd.online_progress > 0
+        AND dd.is_deleted = 0
+        GROUP BY
+        dd.user_id
+        ) ss ON ss.user_id = w.id
+        WHERE
+        1 = 1
+        AND w.is_deleted = 0
+        AND d.online_progress > 0
+        AND d.is_deleted = 0
+
+        <if test="parameter.name !=null and parameter.name !='' ">
+			and (w.username like concat('%',#{parameter.name},'%' ) or
+			w.realname like
+			concat('%',#{parameter.name},'%' ) )
+		</if>
+		<if test="parameter.email !=null and parameter.email !='' ">
+			and w.email like concat('%',#{parameter.email},'%' )
+		</if>
+		<if test="parameter.handphone !=null and parameter.handphone !='' ">
+			and w.handphone like concat('%',#{parameter.handphone},'%' )
+		</if>
+		<if test="parameter.orgName !=null and parameter.orgName !=''">
+			and o.org_name like concat('%', #{parameter.orgName},'%')
+		</if>
+		<if test="parameter.rank !=null">
+			and w.rank = #{parameter.rank}
+		</if>
+		<if test="parameter.groupId !=null">
+			and not EXISTS (
+			SELECT
+			id
+			FROM
+			pmph_group_member t1
+			WHERE
+			t1.user_id = w.id and t1.is_deleted=0
+			and t1.is_writer = true and t1.group_id = #{parameter.groupId}
+			)
+		</if>
+        GROUP BY
+        w.id
+        ORDER BY
+        ss.cc DESC ) as al
+	</select>
+	<select id="getListexpertUser" parameterType="PageParameter"
+			resultType="WriterUserManagerVO">
+        SELECT
+        *,ss.declare_count as declareCount
+        FROM
+        writer_user w
+        LEFT JOIN declaration d ON w.id = d.user_id
+        LEFT JOIN (
+        SELECT
+        user_id,
+        count( dd.user_id ) AS declare_count
+        FROM
+        declaration dd
+        WHERE
+        dd.online_progress > 0
+        AND dd.is_deleted = 0
+        GROUP BY
+        dd.user_id
+        ) ss ON ss.user_id = w.id
+        WHERE
+        1 = 1
+        AND w.is_deleted = 0
+        AND d.online_progress > 0
+        AND d.is_deleted = 0
+        <if test="parameter.name !=null and parameter.name !='' ">
+			and (w.username like concat('%',#{parameter.name},'%' ) or
+			w.realname like
+			concat('%',#{parameter.name},'%' ) )
+		</if>
+		<if test="parameter.email !=null and parameter.email !='' ">
+			and w.email like concat('%',#{parameter.email},'%' )
+		</if>
+		<if test="parameter.handphone !=null and parameter.handphone !='' ">
+			and w.handphone like concat('%',#{parameter.handphone},'%' )
+		</if>
+		<if test="parameter.orgName !=null and parameter.orgName !=''">
+			and o.org_name like concat('%', #{parameter.orgName},'%')
+		</if>
+		<if test="parameter.rank !=null">
+			and w.rank = #{parameter.rank}
+		</if>
+		<if test="parameter.groupId !=null">
+			and not EXISTS (
+			SELECT
+			id
+			FROM
+			pmph_group_member t1
+			WHERE
+			t1.user_id = w.id  and t1.is_deleted=0
+			and t1.is_writer = true and t1.group_id = #{parameter.groupId}
+			)
+		</if>
+		GROUP BY w.id
+		ORDER BY ss.declare_count desc
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+
 
 	<!--导出用户信息-->
 	<select id="exportWriterInfo" parameterType="map"

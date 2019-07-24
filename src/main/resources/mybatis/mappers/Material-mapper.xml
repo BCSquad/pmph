@@ -626,6 +626,7 @@
 	</delete>
 
 
+
 	<select id="listMaterialTotal" parameterType="PageParameter"
 		resultType="java.lang.Integer">
 		SELECT count(*) FROM
@@ -1187,4 +1188,21 @@
 		</if>
 		) tt
 	</select>
+	<select id="getMaterialPositions" resultType="MaterialPosition" parameterType="long">
+		select * from material_position where material_id=#{id}
+	</select>
+	<insert id="addMaterialPositions" parameterType="list">
+		INSERT INTO
+		material_position(material_id,position_code)
+		VALUES
+		<foreach item="item" index="key" collection="list" open=""
+				 separator="," close="">
+			(#{item.materialId}, #{item.positionCode})
+		</foreach>
+	</insert>
+
+
+	<delete id="delMaterialPositions" parameterType="java.lang.Long">
+		delete from material_position where material_id=#{id} ;
+	</delete>
 </mapper>

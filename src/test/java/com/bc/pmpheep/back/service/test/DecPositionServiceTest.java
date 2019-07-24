@@ -38,7 +38,7 @@ public class DecPositionServiceTest extends BaseTest{
     	 DecPosition decPosition = new DecPosition();
     	 decPosition.setDeclarationId(6L);
     	 decPosition.setTextbookId(8L);
-    	 decPosition.setPresetPosition(1);
+    	 decPosition.setPresetPosition("1");
     	 decPosition = decPositionService.addDecPosition(decPosition);
     	 Assert.assertTrue("添加数据失败", decPosition.getId() > 0);
      }
@@ -119,15 +119,15 @@ public class DecPositionServiceTest extends BaseTest{
     	 DecPosition decPosition = new DecPosition();
     	 decPosition.setDeclarationId(5L);
     	 decPosition.setTextbookId(1L);
-    	 decPosition.setPresetPosition(2);
+    	 decPosition.setPresetPosition("2");
     	 decPositionService.addDecPosition(decPosition);
-    	 DecPosition decPosition2 = new DecPosition(8L, 3L, 7);
+    	 DecPosition decPosition2 = new DecPosition(8L, 3L, "7");
     	 decPositionService.addDecPosition(decPosition2);
-    	 DecPosition decPosition3 = new DecPosition(8L, 2L, 6);
+    	 DecPosition decPosition3 = new DecPosition(8L, 2L, "6");
     	 decPositionService.addDecPosition(decPosition3);
-    	 DecPosition decPosition4 = new DecPosition(5L, 3L, 1);
+    	 DecPosition decPosition4 = new DecPosition(5L, 3L, "1");
     	 decPositionService.addDecPosition(decPosition4);
-    	 DecPosition decPosition5 = new DecPosition(2L, 1L, 3);
+    	 DecPosition decPosition5 = new DecPosition(2L, 1L, "3");
     	 decPositionService.addDecPosition(decPosition5);
     	 return decPosition3;
      }

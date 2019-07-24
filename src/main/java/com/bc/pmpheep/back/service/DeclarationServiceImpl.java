@@ -13,7 +13,6 @@ import java.util.Map;
 
 import com.bc.pmpheep.back.dao.*;
 import com.bc.pmpheep.back.util.*;
-import com.mchange.v2.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +40,6 @@ import com.bc.pmpheep.back.po.DecTextbookPmph;
 import com.bc.pmpheep.back.po.DecWorkExp;
 import com.bc.pmpheep.back.po.Declaration;
 import com.bc.pmpheep.back.po.Material;
-import com.bc.pmpheep.back.po.MaterialExtension;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.po.WriterUserTrendst;
@@ -279,10 +277,24 @@ public class DeclarationServiceImpl implements DeclarationService {
                     Date date = DateUtil.fomatDate("2019-04-12 12:00");
                     if(date1.getTime()>date.getTime()) {
                     String post = row.getPresetPosition().toString();
-
+                    String post2="";
                     if (post != null) {
                         if (ObjectUtil.isNumber(post)) {
-                            post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, row.getPresetPosition().toString());
+                            if(Integer.parseInt(post)==8){
+                                post="数字编委";
+                            }else{
+                                post = dataDictionaryDao.getDataDictionaryItemNameByCode2(Const.PMPH_POSITION, post);
+                            }
+                        }else{
+                            String[] split = post.split(",");
+                            for(String s:split){
+                                if(Integer.parseInt(s)==8){
+                                    post2+="数字编委,";
+                                }else{
+                                    post2 += dataDictionaryDao.getDataDictionaryItemNameByCode2(Const.PMPH_POSITION, s)+",";
+                                }
+                            }
+                            post=post2.substring(0,post2.lastIndexOf(","));
                         }
                     }
 
@@ -299,10 +311,88 @@ public class DeclarationServiceImpl implements DeclarationService {
                     row.setTitle(tit);
             }
 
+            pageResult.setRows(rows);
+        }
+        pageResult.setTotal(total);
+        return pageResult;
+    }
 
+    @Override
+    public PageResult<DeclarationListVO> pageDeclarationByUserId(Integer pageNumber, Integer pageSize, Long userId, String materialName, String unitName,HttpServletRequest request) throws CheckedServiceException {
+        if (null == request.getSession(false)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+                    "会话过期");
+        }
+        // 获取当前用户
+        String sessionId = CookiesUtil.getSessionId(request);
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+        if (null == pmphUser) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+                    "请求用户不存在");
+        }
 
+        Gson gson = new Gson();
 
+        // 拼装复合参数
+        Map<String, Object> map = new HashMap<String, Object>();
 
+        map.put("userId",userId);
+        map.put("materialName",materialName);
+        map.put("unitName",unitName);
+
+        // 包装参数实体
+        PageParameter<Map<String, Object>> pageParameter = new PageParameter<Map<String, Object>>(pageNumber, pageSize,
+                map);
+        // 返回实体
+        PageResult<DeclarationListVO> pageResult = new PageResult<>();
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+        // 获取总数
+        Integer total =1;
+
+        if (null != total && total > 0) {
+            List<DeclarationListVO> rows = declarationDao.listDeclarationByUserId(pageParameter);
+            total=rows.size()!=0?rows.size():0;
+            for (DeclarationListVO row : rows) {
+                HashMap<String, Object> paraMap = new HashMap<>();
+                paraMap.put("declarationId",row.getId());
+                String declarationlCreateDate = declarationDao.findDeclarationCreateDate(paraMap);
+                Date date1 = DateUtil.fomatDate(declarationlCreateDate);
+                Date date = DateUtil.fomatDate("2019-04-12 12:00");
+                if(date1.getTime()>date.getTime()) {
+                    String post = row.getPresetPosition().toString();
+                    String post2="";
+                    if (post != null) {
+                        if (ObjectUtil.isNumber(post)) {
+                            if(Integer.parseInt(post)==8){
+                                post="数字编委";
+                            }else{
+                                post = dataDictionaryDao.getDataDictionaryItemNameByCode2(Const.PMPH_POSITION, post);
+                            }
+                        }else{
+                            String[] split = post.split(",");
+                            for(String s:split){
+                                if(Integer.parseInt(s)==8){
+                                    post2+="数字编委,";
+                                }else{
+                                    post2 += dataDictionaryDao.getDataDictionaryItemNameByCode2(Const.PMPH_POSITION, s)+",";
+                                }
+                            }
+                            post=post2.substring(0,post2.lastIndexOf(","));
+                        }
+                    }
+
+                    row.setChooseBooksAndPostions(row.getTextbookName() + "-" + post);
+
+                }
+                String tit = row.getTitle();
+                if (tit != null) {
+
+                    if (ObjectUtil.isNumber(tit)) {
+                        tit = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.WRITER_USER_TITLE, row.getTitle().toString());
+                    }
+                }
+                row.setTitle(tit);
+            }
 
             pageResult.setRows(rows);
         }
@@ -550,16 +640,42 @@ public class DeclarationServiceImpl implements DeclarationService {
 
             if(date1.getTime()>date.getTime()) {
 
-            String dataDictionaryItemNameByCode = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, decPositions.getPresetPosition().toString());
-            decPositions.setShowPosition(dataDictionaryItemNameByCode);
-            if (decPositions.getChosenPosition() != 0) {
-                String dataDictionaryItemNameByCode2 = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, decPositions.getChosenPosition().toString());
+                String post=decPositions.getPresetPosition();
+                String dataDictionaryItemNameByCode;
+                String post2="";
+                if (ObjectUtil.isNumber(post)) {
+                    if(Integer.parseInt(post)==8){
+                        dataDictionaryItemNameByCode="数字编委";
+                    }else{
+                        dataDictionaryItemNameByCode = dataDictionaryDao.getDataDictionaryItemNameByCode2(Const.PMPH_POSITION, post);
+                    }
+                }else{
+
+                    String[] split = post.split(",");
+                    for(String s:split){
+                        if(Integer.parseInt(s)==8){
+                            post2+="数字编委,";
+                        }else{
+                            post2 += dataDictionaryDao.getDataDictionaryItemNameByCode2(Const.PMPH_POSITION, s)+",";
+                        }
+
+                    }
+                    dataDictionaryItemNameByCode=post2.substring(0,post2.lastIndexOf(","));
+                }
+                decPositions.setShowPosition(dataDictionaryItemNameByCode);
+                String dataDictionaryItemNameByCode2="";
+                if (decPositions.getChosenPosition() != 0) {
+                if(Integer.parseInt(post)==8){
+                    dataDictionaryItemNameByCode2="数字编委";
+                }else {
+                    dataDictionaryItemNameByCode2 = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, decPositions.getChosenPosition().toString());
+                }
                 decPositions.setShowChosenPosition(dataDictionaryItemNameByCode2);
             }
 
             }else{
 
-                switch (decPositions.getPresetPosition()) {
+                switch (Integer.parseInt(decPositions.getPresetPosition())) {
                     case 1:
                         decPositions.setShowPosition("编委");
                         break;
@@ -674,9 +790,13 @@ public class DeclarationServiceImpl implements DeclarationService {
             Date date = DateUtil.fomatDate("2019-04-12");
 
             if(date1.getTime()>date.getTime()) {
-
+                String dataDictionaryItemNameByCode2=decPositionPublished.getChosenPosition().toString();
                 if (decPositionPublished.getChosenPosition() != 0) {
-                    String dataDictionaryItemNameByCode2 = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, decPositionPublished.getChosenPosition().toString());
+                    if(Integer.parseInt(dataDictionaryItemNameByCode2)==8){
+                        dataDictionaryItemNameByCode2="数字编委";
+                    }else{
+                        dataDictionaryItemNameByCode2 = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION,dataDictionaryItemNameByCode2);
+                    }
                     decPositionPublished.setShowChosenPosition(dataDictionaryItemNameByCode2);
                 } else {
                 switch (decPositionPublished.getChosenPosition()) {
@@ -912,8 +1032,30 @@ public class DeclarationServiceImpl implements DeclarationService {
                 String declarationlCreateDate = declarationDao.findDeclarationCreateDate(paraMap);
                 Date date1 = DateUtil.fomatDate(declarationlCreateDate);
                 Date date = DateUtil.fomatDate("2019-04-12 12:00");
+               String post= declarationOrDisplayVO.getPresetPosition().toString();
+                String post2="";
                 if(date1.getTime()>date.getTime()) {
-                    String post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, declarationOrDisplayVO.getPresetPosition().toString());
+                    if (ObjectUtil.isNumber(post)) {
+
+                        if (Integer.parseInt(post) == 8) {
+                            post = "数字编委";
+                        } else {
+                            post = dataDictionaryDao.getDataDictionaryItemNameByCode2(Const.PMPH_POSITION, post);
+                        }
+
+                    } else {
+                        String[] split = post.split(",");
+                        for (String s : split) {
+                            if (Integer.parseInt(s) == 8) {
+                                post2 += "数字编委,";
+                            } else {
+                                post2 += dataDictionaryDao.getDataDictionaryItemNameByCode2(Const.PMPH_POSITION, s) + ",";
+                            }
+                        }
+                        post = post2.substring(0, post2.lastIndexOf(","));
+
+                    }
+
                     declarationOrDisplayVO.setPresetPosition(post);
 
                 }else{
@@ -1372,9 +1514,27 @@ public class DeclarationServiceImpl implements DeclarationService {
             declarationOrDisplayVOs= declarationDao.getDeclarationOrDisplayVOByIdOrRealname2(decIds);
             for(DeclarationOrDisplayVO dv: declarationOrDisplayVOs){
                 String post = dv.getPresetPosition();
+                String post2="";
                 if (post != null) {
                     if (ObjectUtil.isNumber(post)) {
-                        post = dataDictionaryDao.getDataDictionaryItemNameByCode(Const.PMPH_POSITION, dv.getPresetPosition().toString());
+                        if(Integer.parseInt(post)==8){
+                            post="数字编委";
+                        }else{
+                            post = dataDictionaryDao.getDataDictionaryItemNameByCode2(Const.PMPH_POSITION, post);
+                        }
+                    }else{
+                        String[] split = post.split(",");
+                        for(String s: split){
+                            if(Integer.parseInt(s)==8){
+                                post2+="数字编委,";
+                            }else{
+                                post2 += dataDictionaryDao.getDataDictionaryItemNameByCode2(Const.PMPH_POSITION, s)+",";
+                            }
+
+                        }
+                        post=post2.substring(0,post2.lastIndexOf(","));
+
+
                     }
                 }
                 dv.setPresetPosition(post);

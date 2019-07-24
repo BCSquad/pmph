@@ -36,6 +36,8 @@ public interface BookUserCommentDao {
 	 */
 	Integer updateBookUserComment(BookUserComment bookUserComment);
 
+
+
 	/**
 	 * 查询一个 BookUserComment 通过主键id
 	 * 

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.bc.pmpheep.back.dao.DataDictionaryDao;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,11 +58,14 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 	WriterProfileDao writerProfileDao;
 
 	@Autowired
+	private DataDictionaryDao dataDictionaryDao;
+
+	@Autowired
 	private DecPositionPublishedService decPositionPublishedService;
 
 	@Autowired
 	private PmphGroupService pmphGroupService;
-        
+
         ApplicationContext context;
 
 	@Override
@@ -75,7 +79,7 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 
 	/**
 	 * 返回新插入用户数据的主键
-	 * 
+	 *
 	 * @param user
 	 * @return
 	 */
@@ -106,7 +110,7 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 
 	/**
 	 * 为单个用户设置多个角色
-	 * 
+	 *
 	 * @param user
 	 * @param rids
 	 */
@@ -123,7 +127,7 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 
 	/**
 	 * 根据 user_id 删除用户数据
-	 * 
+	 *
 	 * @param id
 	 */
 	@Override
@@ -153,9 +157,9 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 	}
 
 	/**
-	 * 
+	 *
 	 * 更新用户数据 1、更新用户基本信息 2、更新用户所属角色 （1）先删除所有的角色 （2）再添加绑定的角色
-	 * 
+	 *
 	 * @param user
 	 * @param rids
 	 */
@@ -173,7 +177,7 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 
 	/**
 	 * 更新单个用户信息
-	 * 
+	 *
 	 * @param user
 	 * @return
 	 */
@@ -194,7 +198,7 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 
 	/**
 	 * 根据主键 id 加载用户对象
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -209,7 +213,7 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 
 	/**
 	 * 根据用户名加载用户对象（用于登录使用）
-	 * 
+	 *
 	 * @param username
 	 * @return
 	 */
@@ -229,7 +233,7 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 
 	/**
 	 * 登录逻辑 1、先根据用户名查询用户对象 2、如果有用户对象，则继续匹配密码 如果没有用户对象，则抛出异常
-	 * 
+	 *
 	 * @param username
 	 * @param password
 	 * @return
@@ -253,7 +257,7 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 
 	/**
 	 * 查询所有的用户对象列表
-	 * 
+	 *
 	 * @return
 	 */
 	@Override
@@ -263,7 +267,7 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 
 	/**
 	 * 根据角色 id 查询是这个角色的所有用户
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -278,7 +282,7 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 
 	/**
 	 * 查询指定用户 id 所拥有的权限
-	 * 
+	 *
 	 * @param uid
 	 * @return
 	 */
@@ -293,7 +297,7 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 
 	/**
 	 * 查询指定用户所指定的角色字符串列表
-	 * 
+	 *
 	 * @param uid
 	 * @return
 	 */
@@ -308,7 +312,7 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 
 	/**
 	 * 查询指定用户所绑定的角色列表
-	 * 
+	 *
 	 * @param uid
 	 * @return
 	 */
@@ -322,9 +326,9 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 	}
 
 	/**
-	 * 
+	 *
 	 * 功能描述：分页查询作家用户
-	 * 
+	 *
 	 *
 	 *            传入的查询数据
 	 * @return 需要的Page对象
@@ -354,27 +358,34 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 				List<WriterUserManagerVO> list = writerUserDao.getListWriterUser(pageParameter);
 				for (int i = 0;i<list.size();i++) {
 					WriterUserManagerVO vo = list.get(i);
+
+					String  title= vo.getTitle();
+					if(title!=null){
+						if (ObjectUtil.isNumber(title)) {
+							vo.setTitle(dataDictionaryDao.getDataDictionaryItemNameByCode(Const.WRITER_USER_TITLE, title));
+						}
+					}
 					String voS = com.alibaba.fastjson.JSON.toJSONString(vo).replaceAll("-","");
 					vo = com.alibaba.fastjson.JSON.parseObject(voS,WriterUserManagerVO.class);
 					list.remove(i);
 					list.add(i,vo);
 					switch (vo.getRank()) {
-					case 0:
-						vo.setRankName("普通用户");
-						break;
-					case 1:
-						vo.setRankName("教师用户");
-						break;
-					case 2:
-						vo.setRankName("作家用户");
-						break;
-					case 3:
-						vo.setRankName("专家用户");
-						break;
+						case 0:
+							vo.setRankName("普通用户");
+							break;
+						case 1:
+							vo.setRankName("教师用户");
+							break;
+						case 2:
+							vo.setRankName("作家用户");
+							break;
+						case 3:
+							vo.setRankName("专家用户");
+							break;
 
-					default:
-						throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_USER_MANAGEMENT,
-								CheckedExceptionResult.NULL_PARAM, "该用户没有身份");
+						default:
+							throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_USER_MANAGEMENT,
+									CheckedExceptionResult.NULL_PARAM, "该用户没有身份");
 					}
 				}
 				pageResult.setRows(list);
@@ -391,22 +402,161 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 					list.remove(i);
 					list.add(i,vo);
 					switch (vo.getRank()) {
-					case 0:
-						vo.setRankName("普通用户");
-						break;
-					case 1:
-						vo.setRankName("教师用户");
-						break;
-					case 2:
-						vo.setRankName("作家用户");
-						break;
-					case 3:
-						vo.setRankName("专家用户");
-						break;
+						case 0:
+							vo.setRankName("普通用户");
+							break;
+						case 1:
+							vo.setRankName("教师用户");
+							break;
+						case 2:
+							vo.setRankName("作家用户");
+							break;
+						case 3:
+							vo.setRankName("专家用户");
+							break;
 
-					default:
-						throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_USER_MANAGEMENT,
-								CheckedExceptionResult.NULL_PARAM, "该用户没有身份");
+						default:
+							throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_USER_MANAGEMENT,
+									CheckedExceptionResult.NULL_PARAM, "该用户没有身份");
+					}
+				}
+				pageResult.setRows(list);
+			}
+			pageResult.setTotal(total);
+		}
+		// 设置职位
+		if (null != pageResult.getRows() && pageResult.getRows().size() > 0 && null != groupId) {
+			// 清空职位
+			for (WriterUserManagerVO writerUserManagerVO : pageResult.getRows()) {
+				writerUserManagerVO.setPosition("无");
+			}
+			// 设置职位
+			PmphGroup pmphGroup = pmphGroupService.getPmphGroupById(groupId);
+			Long bookId = pmphGroup.getBookId();
+			if (null != bookId && bookId.intValue() > 0) {
+				// 查询这本书的发布职位
+				List<DecPositionPublished> publisheds = decPositionPublishedService
+						.getDecPositionPublishedListByBookId(bookId);
+				if (null != publisheds && publisheds.size() > 0) {
+					Map<Long, String> userIdsAndPostions = new HashMap<Long, String>();
+					for (DecPositionPublished published : publisheds) {
+						Declaration declaration = declarationService.getDeclarationById(published.getDeclarationId());
+						String postiton = "无";
+						if (published.getChosenPosition().intValue() == 4 && null != published.getRank()
+								&& published.getRank() == 1) {
+							postiton = "主编(第一主编)";
+						} else if (published.getChosenPosition().intValue() == 4) {
+							postiton = "主编";
+						} else if (published.getChosenPosition().intValue() == 12 && null != published.getRank()
+								&& published.getRank() == 1) {
+							postiton = "主编(第一主编)，数字编委";
+						} else if (published.getChosenPosition().intValue() == 12) {
+							postiton = "主编，数字编委";
+						} else if (published.getChosenPosition().intValue() == 2) {
+							postiton = "副主编";
+						} else if (published.getChosenPosition().intValue() == 10) {
+							postiton = "副主编，数字编委";
+						} else if (published.getChosenPosition().intValue() == 1) {
+							postiton = "编委";
+						} else if (published.getChosenPosition().intValue() == 9) {
+							postiton = "编委，数字编委";
+						}
+						userIdsAndPostions.put(declaration.getUserId(), postiton);
+					}
+					for (WriterUserManagerVO writerUserManagerVO : pageResult.getRows()) {
+						String postion = userIdsAndPostions.get(writerUserManagerVO.getId());
+						if (null != postion) {
+							writerUserManagerVO.setPosition(postion);
+						}
+					}
+				}
+			}
+		}
+		// 设置职位 end
+		return pageResult;
+	}
+
+	@Override
+	public PageResult<WriterUserManagerVO> getListexpertUser(PageParameter<WriterUserManagerVO> pageParameter, Long groupId) throws CheckedServiceException {
+		String name = pageParameter.getParameter().getName();
+		if (StringUtil.notEmpty(name)) {
+			pageParameter.getParameter().setName(name);
+		}
+		String orgName = pageParameter.getParameter().getOrgName();
+		if (StringUtil.notEmpty(orgName)) {
+			pageParameter.getParameter().setOrgName(orgName);
+		}
+		if (!ObjectUtil.isNull(groupId)) {
+			pageParameter.getParameter().setGroupId(groupId);
+		}
+		PageResult<WriterUserManagerVO> pageResult = new PageResult<>();
+		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+		// 当rank为1的时候 查询教师用户
+		int total = 0;
+		if (pageParameter.getParameter().getRank() == null || pageParameter.getParameter().getRank() != 1) {
+			// 当rank不为1的时候
+			total = writerUserDao.getListexpertUserTotal(pageParameter);
+			if (total > 0) {
+				List<WriterUserManagerVO> list = writerUserDao.getListexpertUser(pageParameter);
+				for (int i = 0;i<list.size();i++) {
+					WriterUserManagerVO vo = list.get(i);
+
+					String  title= vo.getTitle();
+					if(title!=null){
+						if (ObjectUtil.isNumber(title)) {
+							vo.setTitle(dataDictionaryDao.getDataDictionaryItemNameByCode(Const.WRITER_USER_TITLE, title));
+						}
+					}
+
+                    switch (vo.getRank()) {
+						case 0:
+							vo.setRankName("普通用户");
+							break;
+						case 1:
+							vo.setRankName("教师用户");
+							break;
+						case 2:
+							vo.setRankName("作家用户");
+							break;
+						case 3:
+							vo.setRankName("专家用户");
+							break;
+
+						default:
+							throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_USER_MANAGEMENT,
+									CheckedExceptionResult.NULL_PARAM, "该用户没有身份");
+					}
+				}
+				pageResult.setRows(list);
+			}
+			pageResult.setTotal(total);
+		} else {
+			total = writerUserDao.getLsitisTeacherTotal(pageParameter);
+			if (total > 0) {
+				List<WriterUserManagerVO> list = writerUserDao.getLsitisTeacher(pageParameter);
+				for (int i = 0;i<list.size();i++) {
+					WriterUserManagerVO vo = list.get(i);
+					String voS = com.alibaba.fastjson.JSON.toJSONString(vo).replaceAll("-","");
+					vo = com.alibaba.fastjson.JSON.parseObject(voS,WriterUserManagerVO.class);
+					list.remove(i);
+					list.add(i,vo);
+					switch (vo.getRank()) {
+						case 0:
+							vo.setRankName("普通用户");
+							break;
+						case 1:
+							vo.setRankName("教师用户");
+							break;
+						case 2:
+							vo.setRankName("作家用户");
+							break;
+						case 3:
+							vo.setRankName("专家用户");
+							break;
+
+						default:
+							throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_USER_MANAGEMENT,
+									CheckedExceptionResult.NULL_PARAM, "该用户没有身份");
 					}
 				}
 				pageResult.setRows(list);
@@ -532,6 +682,13 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 		List<WriterUserManagerVO> writerUserManagerVOList = writerUserDao.getTeacherCheckList(pageParameter);
 		for (WriterUserManagerVO writerUserManagerVO : writerUserManagerVOList) {
+
+			String  title= writerUserManagerVO.getTitle();
+			if(title!=null){
+				if (ObjectUtil.isNumber(title)) {
+					writerUserManagerVO.setTitle(dataDictionaryDao.getDataDictionaryItemNameByCode(Const.WRITER_USER_TITLE, title));
+				}
+			}
 			switch (writerUserManagerVO.getRank()) {
 			case 0:
 				writerUserManagerVO.setRankName("普通用户");

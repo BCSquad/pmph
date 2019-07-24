@@ -12,11 +12,12 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.bc.pmpheep.back.po.*;
 import com.bc.pmpheep.back.util.*;
 import com.bc.pmpheep.wx.service.WXQYUserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.common.service.BaseService;
@@ -24,19 +25,6 @@ import com.bc.pmpheep.back.dao.MaterialDao;
 import com.bc.pmpheep.back.dao.PmphRoleDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
-import com.bc.pmpheep.back.po.CmsContent;
-import com.bc.pmpheep.back.po.Material;
-import com.bc.pmpheep.back.po.MaterialContact;
-import com.bc.pmpheep.back.po.MaterialExtension;
-import com.bc.pmpheep.back.po.MaterialExtra;
-import com.bc.pmpheep.back.po.MaterialNoteAttachment;
-import com.bc.pmpheep.back.po.MaterialNoticeAttachment;
-import com.bc.pmpheep.back.po.MaterialProjectEditor;
-import com.bc.pmpheep.back.po.MaterialType;
-import com.bc.pmpheep.back.po.PmphGroup;
-import com.bc.pmpheep.back.po.PmphRole;
-import com.bc.pmpheep.back.po.PmphUser;
-import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.vo.MaterialListVO;
 import com.bc.pmpheep.back.vo.MaterialMainInfoVO;
 import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
@@ -132,6 +120,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			boolean isUpdate) throws CheckedServiceException, IOException {
 		//企业微信推送对象的微信id集合
 		Set<String> touserOpenidSet = new HashSet<String>();
+		String [] positions;
 		List<Long> useridList = new ArrayList<Long>();
 		if (null == request.getSession(false)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
@@ -206,6 +195,13 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 					"邮寄地址过长");
 		}
 		// 教材类型验证
+		String materialCheckPositions = materialVO.getMaterialCheckPositions();
+		if(StringUtil.isEmpty(materialCheckPositions)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"教材选择申报职位为空");
+		}else{
+			positions=materialCheckPositions.split(",");
+		}
 		String materialType = materialVO.getMaterialType();
 		if (StringUtil.isEmpty(materialType) || "[]".equals(materialType.replace(" ", ""))
 				|| "[NaN]".equals(materialType.replace(" ", ""))) {
@@ -286,6 +282,19 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		}
 		Long materialId = material.getId();
 
+		List<MaterialPosition> materialPositions=new ArrayList<>();
+		if(positions.length>0){
+			for(String position : positions){
+				MaterialPosition materialPosition = new MaterialPosition();
+				materialPosition.setMaterialId(materialId);
+				materialPosition.setPositionCode(position);
+				materialPositions.add(materialPosition);
+			}
+		}
+		if(materialPositions.size()>1){
+			materialDao.delMaterialPositions(materialId);
+			materialDao.addMaterialPositions(materialPositions);
+		}
 		// 扩展项转换
 		List<MaterialExtension> oldMaterialExtensionlist = materialExtensionService
 				.getMaterialExtensionByMaterialId(materialId);
@@ -1036,6 +1045,17 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			mtype = "[" + materialType.getPath().replace("-", ",") + "," + material.getMaterialType() + "]";
 			mtype = mtype.replace("[0,", "[").replace("[0", "["); // 去掉 0
 		}
+		List<MaterialPosition> materialPositions= materialDao.getMaterialPositions(id);
+		List<String> checkPostiton = new ArrayList<>();
+
+		if(materialPositions.size()>0){
+		  for(MaterialPosition position :materialPositions){
+			  checkPostiton.add(position.getPositionCode());
+		  }
+		}
+		String join = StringUtils.join(checkPostiton, ",");
+
+
 		// 教材通知备注表
 		MaterialExtra materialExtra = materialExtraService.getMaterialExtraByMaterialId(id);
 		Gson gson = new Gson();
@@ -1068,6 +1088,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				materialContacts, materialExtensions, materialProjectEditorVOs, materialNoticeAttachments,
 				materialNoteAttachments, StringUtil.tentToBinary(material.getPlanPermission()),
 				StringUtil.tentToBinary(material.getProjectPermission()));
+		result.setMaterialCheckPositions(join);
 		result.setDirector(material==null?0:material.getDirector());
 		return result;
 	}

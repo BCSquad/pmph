@@ -32,7 +32,7 @@ public class DecPositionEditorSelectionVO implements Serializable {
     // 书籍id
     private Long      textbookId;
     // 申报职务
-    private Integer   presetPosition;
+    private String   presetPosition;
     // 申报职务
     private String    strPresetPosition;
     // 遴选职务
@@ -121,14 +121,14 @@ public class DecPositionEditorSelectionVO implements Serializable {
     /**
      * @return the presetPosition
      */
-    public Integer getPresetPosition() {
+    public String getPresetPosition() {
         return presetPosition;
     }
 
     /**
      * @param presetPosition the presetPosition to set
      */
-    public void setPresetPosition(Integer presetPosition) {
+    public void setPresetPosition(String presetPosition) {
         this.presetPosition = presetPosition;
     }
 

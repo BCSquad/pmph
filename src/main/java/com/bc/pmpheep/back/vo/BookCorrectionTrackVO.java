@@ -45,7 +45,7 @@ public class BookCorrectionTrackVO implements Serializable {
 	/**
 	 * 责任编辑名字
 	 */
-	@ExcelHeader(header = "责任编辑名")
+	@ExcelHeader(header = "责任编辑")
 	private String dutyName;
 
 	/**

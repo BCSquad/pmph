@@ -521,15 +521,47 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
                     materialOrgList.add(new MaterialOrg(materialId, orgId));
                 }
             }
+            List<Long> i1=new ArrayList<>();
+            i1.addAll(listOrgIds);  //当前提交
+
+            List<Long> i2=new ArrayList<>();
+            i2.addAll(OrgIds);    //以保存
+
+
+            List<Long> i3=new ArrayList<>();
+            for(Long i:i2)
+            {
+                if(!i1.contains(i))
+                {
+                    i3.add(i);
+                }
+            }
+
+
+         /*   System.out.println(i3);
+            if(CollectionUtil.isNotEmpty(i3)){
+                for(Long i:i3){
+                    Map<String, Object> params = new HashMap<>();
+                    params.put("materialId",materialId);
+                    params.put("orgId",i);
+                    materialOrgService.deleteMaterialOrgByMaterialAndOrgId(params);
+                }
+            }*/
+
+
             if (CollectionUtil.isEmpty(materialOrgList)) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
                                                   CheckedExceptionResult.ILLEGAL_PARAM,
                                                   "当前选中的学校已收到消息，无需要再次发送");
             }
-            count = materialOrgService.addMaterialOrgs(materialOrgList);
-            if (count > 0) {
-                systemMessageService.materialSend(materialId, newOrgIds,pmphUser,false);
+            if(CollectionUtil.isNotEmpty(materialOrgList)){
+                count = materialOrgService.addMaterialOrgs(materialOrgList);
+                if (count > 0) {
+                    systemMessageService.materialSend(materialId, newOrgIds,pmphUser,false);
+                }
             }
+
+
         }
         CmsContent cmsContent = cmsContentService.getCmsContentByMaterialId(materialId);
         if (ObjectUtil.notNull(cmsContent)) {

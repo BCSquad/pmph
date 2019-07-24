@@ -17,7 +17,7 @@ public class DecPositionDisplayVO implements Serializable {
     // 书籍名称
     private String    textbookName;
     // 申报职务
-    private Integer   presetPosition;
+    private String   presetPosition;
     // 是否进入预选名单
     private Integer   isOnList;
     // 遴选职务
@@ -89,11 +89,11 @@ public class DecPositionDisplayVO implements Serializable {
 		this.textbookName = textbookName;
 	}
 
-	public Integer getPresetPosition() {
+	public String getPresetPosition() {
 		return presetPosition;
 	}
 
-	public void setPresetPosition(Integer presetPosition) {
+	public void setPresetPosition(String presetPosition) {
 		this.presetPosition = presetPosition;
 	}
 

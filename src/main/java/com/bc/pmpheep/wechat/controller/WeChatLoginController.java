@@ -25,6 +25,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.servlet.ModelAndView;
+import small.danfer.sso.assertion.LocalPrincipal;
 import small.danfer.sso.http.HttpSingleSignOnService;
 
 import com.bc.pmpheep.back.po.PmphUser;
@@ -195,7 +196,8 @@ public class WeChatLoginController {
             model.addObject("isLogin", "2");
             HttpSingleSignOnService service = new HttpSingleSignOnService();
             try {
-                Principal principal = service.singleSignOn(request);
+                LocalPrincipal principal = service.singleSignOn(request);
+                String localPass = principal.getLocalPass();
                 String userName =principal.getName();
              //   String userName = "liub";
                 assert userName != null;
@@ -203,8 +205,13 @@ public class WeChatLoginController {
                 // Map map = ssoHelper.getUserInfo(userName,"123456");
                 Map map = new HashMap(); // 预留
                 if (ObjectUtil.isNull(pmphUser)) {// 为空就新建一个用户
+                    String pass="888888";
+                    if(localPass!=null){
+                        pass=localPass;
+                    }
+
                     pmphUser =
-                            pmphUserService.add(new PmphUser(userName, "888888",false, MapUtils.getString(map,"RealName",""),0L, MapUtils.getString(map,"Mobile",""),MapUtils.getString(map,"Emial",""), "DEFAULT","",999,false));
+                            pmphUserService.add(new PmphUser(userName, pass,false, MapUtils.getString(map,"RealName",""),0L, MapUtils.getString(map,"Mobile",""),MapUtils.getString(map,"Emial",""), "DEFAULT","",999,false));
                     pmphRoleService.addUserRole(pmphUser.getId(), 2L);// 添加默认权限
                 }
                  username = new DesRun(null, pmphUser.getUsername()).enpsw;
@@ -217,9 +224,6 @@ public class WeChatLoginController {
                                                                             username + password
                                                                             + wechatUserId
                                                                             + "<pmpheep>").enpsw);
-
-
-
             } catch (Exception e) {
                 logger.error("SSO登陆失败，异常信息'{}'", e.getMessage());
             }

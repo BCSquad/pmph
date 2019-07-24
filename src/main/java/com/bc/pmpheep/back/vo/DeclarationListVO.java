@@ -18,6 +18,7 @@ public class DeclarationListVO implements java.io.Serializable {
 
     //社保主键
 	private Long id;
+	private String materialName;
 	//教材id
   	private Long materialId;
 	//作家真实姓名
@@ -45,17 +46,24 @@ public class DeclarationListVO implements java.io.Serializable {
     //书籍名称
     private String textbookName;
 
-    private Integer presetPosition;
+    private String presetPosition;
     private Integer orgId;
     //提交日期
     private Timestamp commitDate;
 
+	public String getMaterialName() {
+		return materialName;
+	}
 
-	public Integer getPresetPosition() {
+	public void setMaterialName(String materialName) {
+		this.materialName = materialName;
+	}
+
+	public String getPresetPosition() {
 		return presetPosition;
 	}
 
-	public void setPresetPosition(Integer presetPosition) {
+	public void setPresetPosition(String presetPosition) {
 		this.presetPosition = presetPosition;
 	}
 

@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -84,6 +85,11 @@ public class MaterialOrgServiceImpl extends BaseService implements MaterialOrgSe
                                               CheckedExceptionResult.NULL_PARAM, "发布学校为空");
         }
         return materialOrgDao.deleteMaterialOrgByOrgId(orgId);
+    }
+
+    @Override
+    public Integer deleteMaterialOrgByMaterialAndOrgId(Map<String, Object> params) {
+        return materialOrgDao.deleteMaterialOrgByMaterialAndOrgId(params);
     }
 
 }

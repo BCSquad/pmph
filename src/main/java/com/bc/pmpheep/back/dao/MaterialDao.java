@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.dao;
 
 import java.util.List;
 
+import com.bc.pmpheep.back.po.MaterialPosition;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -201,4 +202,8 @@ public interface MaterialDao {
      * @return
      */
     List<MaterialListVO> listMaterialSignUpEnd(PageParameter<MaterialListVO> pageParameter);
+
+    void addMaterialPositions(List<MaterialPosition> list);
+    void delMaterialPositions(long id);
+    List<MaterialPosition> getMaterialPositions (Long id);
 }

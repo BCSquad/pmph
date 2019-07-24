@@ -159,7 +159,8 @@ public interface WriterUserService {
 	 */
 	PageResult<WriterUserManagerVO> getListWriterUser(PageParameter<WriterUserManagerVO> pageParameter, Long groupId)
 			throws CheckedServiceException;
-
+	PageResult<WriterUserManagerVO> getListexpertUser(PageParameter<WriterUserManagerVO> pageParameter, Long groupId)
+			throws CheckedServiceException;
 	/**
 	 * 
 	 * <pre>

@@ -1638,7 +1638,7 @@ public class MigrationStageSix {
             } else {
                 Positions += "0";
             }
-            decPosition.setPresetPosition(Integer.valueOf(Positions, 2));//转成10进制
+            decPosition.setPresetPosition(Positions);//转成10进制
             if (ObjectUtil.isNull(isOnList)) {
                 decPosition.setIsOnList(true);
             } else {
@@ -1828,7 +1828,7 @@ public class MigrationStageSix {
             } else {
                 Positions += "0";
             }
-            decPositionPublished.setPresetPosition(Integer.valueOf(Positions, 2));//转成10进制
+            decPositionPublished.setPresetPosition(Positions);//转成10进制
             if (ObjectUtil.isNull(isOnList)) {
                 decPositionPublished.setIsOnList(true);
             } else {
