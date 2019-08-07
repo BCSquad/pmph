@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.service;
 import java.io.IOException;
 import java.util.List;
 
+import com.bc.pmpheep.back.vo.CmsAdvertisementVos;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.po.CmsAdvertisement;

@@ -1,20 +1,16 @@
 package com.bc.pmpheep.back.vo;
 
-import java.io.Serializable;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.alibaba.druid.support.json.JSONParser;
 import com.alibaba.druid.support.json.JSONUtils;
+import com.bc.pmpheep.back.po.CmsAdvertisementImage;
+import com.bc.pmpheep.back.util.StringUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.ibatis.type.Alias;
 
-import com.bc.pmpheep.back.po.CmsAdvertisementImage;
-import com.bc.pmpheep.back.util.StringUtil;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author mr
@@ -22,8 +18,8 @@ import com.google.gson.reflect.TypeToken;
  *
  **/
 @SuppressWarnings("serial")
-@Alias("CmsAdvertisementOrImageVO")
-public class CmsAdvertisementOrImageVO implements Serializable {
+@Alias("CmsAdvertisementVos")
+public class CmsAdvertisementVos implements Serializable {
 	/**
 	 * 主键
 	 */
@@ -281,7 +277,7 @@ public class CmsAdvertisementOrImageVO implements Serializable {
 		this.isPlay = isPlay;
 	}
 
-	public CmsAdvertisementOrImageVO() {
+	public CmsAdvertisementVos() {
 		super();
 	}
 

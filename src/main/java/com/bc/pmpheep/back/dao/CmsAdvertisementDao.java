@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.dao;
 
 import java.util.List;
 
+import com.bc.pmpheep.back.vo.CmsAdvertisementVos;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -23,6 +24,8 @@ public interface CmsAdvertisementDao {
 	 * @return
 	 */
 	List<CmsAdvertisementOrImageVO> getAdvertisementList();
+
+	List<CmsAdvertisementImage> getAdvertisementImageListByAdverId(Long id);
 
 	/**
 	 * 更新广告

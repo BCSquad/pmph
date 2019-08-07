@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.apache.ibatis.type.Alias;
 
@@ -69,6 +70,15 @@ public class CmsAdvertisement implements Serializable {
 	 * 是否显示标题
 	 */
 	private Boolean isShowHeading;
+	private List<CmsAdvertisementImage> image;
+
+	public List<CmsAdvertisementImage> getImage() {
+		return image;
+	}
+
+	public void setImage(List<CmsAdvertisementImage> image) {
+		this.image = image;
+	}
 
 	/**
 	 * 应用类型

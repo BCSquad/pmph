@@ -126,7 +126,12 @@
 		<include refid="value" />
 		) ;
 	</insert>
-	
+
+	<select id="getAdvertisementImageListByAdverId" resultType="CmsAdvertisementImage" parameterType="long">
+		select  *  from cms_advertisement_image  where advert_id=#{id}
+
+	</select>
+
 	<!-- 获取广告列表 -->
 	<select id="getAdvertisementList"  resultType="CmsAdvertisementOrImageVO" >
 		SELECT

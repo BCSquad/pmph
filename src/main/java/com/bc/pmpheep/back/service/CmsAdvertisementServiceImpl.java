@@ -1,8 +1,10 @@
 package com.bc.pmpheep.back.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.bc.pmpheep.back.vo.CmsAdvertisementVos;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,13 +52,25 @@ public class CmsAdvertisementServiceImpl implements CmsAdvertisementService {
 		if (ObjectUtil.isNull(pmphUser) || ObjectUtil.isNull(pmphUser.getId())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "用户为空");
 		}
-		List<CmsAdvertisementOrImageVO> cmsAdvertisementOrImageVOs = cmsAdvertisementDao.getAdvertisementList();
-		if (pmphUser.getIsAdmin()) {
-			for (CmsAdvertisementOrImageVO cmsAdvertisementOrImageVO : cmsAdvertisementOrImageVOs) {
-				cmsAdvertisementOrImageVO.setIsPlay(true);
+		List<CmsAdvertisementOrImageVO> cmsAdvertisements = cmsAdvertisementDao.getAdvertisementList();
+			for (CmsAdvertisementOrImageVO cmsAdvertisementVO : cmsAdvertisements) {
+				if (pmphUser.getIsAdmin()) {
+					cmsAdvertisementVO.setIsPlay(true);
+				}
+				List<CmsAdvertisementImage> cmsAdvertisementImages = cmsAdvertisementDao.getAdvertisementImageListByAdverId(cmsAdvertisementVO.getId());
+
+				if(ObjectUtil.notNull(cmsAdvertisementImages)){
+					for (CmsAdvertisementImage image:
+						 cmsAdvertisementImages) {
+						image.setImage("/pmpheep/image/"+image.getImage());
+
+					}
+					cmsAdvertisementVO.setImage(cmsAdvertisementImages);
+				}
 			}
-		}
-		return cmsAdvertisementOrImageVOs;
+
+
+		return cmsAdvertisements;
 	}
 
 	@Override
