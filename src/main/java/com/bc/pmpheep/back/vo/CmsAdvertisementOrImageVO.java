@@ -112,7 +112,15 @@ public class CmsAdvertisementOrImageVO implements Serializable {
 	 * 能否操作
 	 */
 	private Boolean isPlay = false;
+	private String recsize;
 
+	public String getRecsize() {
+		return recsize;
+	}
+
+	public void setRecsize(String recsize) {
+		this.recsize = recsize;
+	}
 	// public Long getImageId() {
 	// return imageId;
 	// }
