@@ -238,7 +238,34 @@ public class DeclarationServiceImpl implements DeclarationService {
             map.put("unitName", StringUtil.toAllCheck(unitName)); // 申报单位
         }
         if (null != positionType && positionType != 0) {
-            map.put("positionType", positionType); // 申报职位
+
+            Map<String,Object> params=new HashMap<>();
+            Object material_id = params.put("material_id", materialId);
+            String materialCreateDate = declarationDao.findMaterialCreateDate(params);
+            Date materialData1 = DateUtil.fomatDate(materialCreateDate);
+            Date materialData = DateUtil.fomatDate("2019-04-12");
+
+            if (materialData1.getTime() < materialData.getTime()) {
+
+                    switch (positionType){
+                        case 1:
+                            map.put("positionType", 4);
+                            break;
+                        case 2:
+                            map.put("positionType", 2);
+                            break;
+                        case 3:
+                            map.put("positionType", 1);
+                            break;
+                    }
+
+            }else{
+                map.put("positionType", positionType); // 申报职位
+            }
+
+
+
+
         }
         if (null != onlineProgress && onlineProgress != 0) {
             map.put("onlineProgress", onlineProgress); // 学校审核进度
@@ -258,6 +285,8 @@ public class DeclarationServiceImpl implements DeclarationService {
         if (null != endCommitDate) {
             map.put("endCommitDate", endCommitDate); // 是否被遴选中
         }
+
+
         // 包装参数实体
         PageParameter<Map<String, Object>> pageParameter = new PageParameter<Map<String, Object>>(pageNumber, pageSize,
                 map);

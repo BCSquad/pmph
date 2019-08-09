@@ -810,15 +810,8 @@
 		</if>
 		<!-- 申报职位 -->
 		<if test="parameter.positionType != null ">
-			<if test="parameter.positionType == 1 "> <!-- 主编 -->
-				and c.preset_position like concat('%',1,'%')
-			</if>
-			<if test="parameter.positionType == 2 "> <!-- 副主编 -->
-				and c.preset_position like concat('%',2,'%')
-			</if>
-			<if test="parameter.positionType == 3 "> <!-- 编委 -->
-				and c.preset_position like concat('%',3,'%')
-			</if>
+				and c.preset_position like concat('%',#{parameter.positionType},'%')
+
 		</if>
 		<!-- 学校审核 -->
 		<if test="parameter.onlineProgress != null ">
