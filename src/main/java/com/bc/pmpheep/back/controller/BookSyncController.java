@@ -69,6 +69,7 @@ public class BookSyncController {
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "图书同步接口")
     @RequestMapping(value = "/syncBook", method = RequestMethod.POST)
     public ResponseBean syncBook(HttpServletRequest request, @RequestBody String json) {
+
         /*解析图书信息*/
         String appkey = request.getParameter("app_key");
         request.getSession().setMaxInactiveInterval(1800*2);
@@ -133,7 +134,8 @@ public class BookSyncController {
         Boolean flag=false;
 
         StringBuilder sb=new StringBuilder();
-
+        List<Long> idList=new ArrayList<>();
+        Long [] ids=new Long[bookSyncConfirms.size()];
         if(increment){
             switch (synchronizationType){
 
@@ -150,7 +152,8 @@ public class BookSyncController {
 
                         }
                         book.setLogId(logId);
-                        bookSyncService.addBookSyncConfirm(book);
+                        Long aLong = bookSyncService.addBookSyncConfirm(book);
+                        idList.add(aLong);
                     }
                     break;
                 case "update":
@@ -160,7 +163,8 @@ public class BookSyncController {
                             sb.append("图书参数"+count+":的ISBN号不能为空---");
                         }
                         book.setLogId(logId);
-                        bookSyncService.addBookSyncConfirm(book);
+                        Long aLong = bookSyncService.addBookSyncConfirm(book);
+                        idList.add(aLong);
                     }
                     break;
                 case "shelf":
@@ -188,7 +192,8 @@ public class BookSyncController {
                             newBookS.setLogId(logId);
                             newBookS.setId(null);
                             bookSyncService.delectBooksyncConfirmByIsbn(bookSyncConfirmByISBN.getIsbn());
-                            bookSyncService.addBookSyncConfirm(newBookS);
+                            Long aLong = bookSyncService.addBookSyncConfirm(newBookS);
+                            idList.add(aLong);
                         }else{
                             flag=true;
                             sb.append("未找到该isbn的图书---");
@@ -222,12 +227,18 @@ public class BookSyncController {
                             newBookS.setLogId(logId);
                             newBookS.setId(null);
                             bookSyncService.delectBooksyncConfirmByIsbn(bookSyncConfirmByISBN.getIsbn());
-                            bookSyncService.addBookSyncConfirm(newBookS);
-
+                            Long aLong = bookSyncService.addBookSyncConfirm(newBookS);
+                            idList.add(aLong);
                         }
                     }
 
                     break;
+            }
+            Long[] longs = idList.toArray(ids);
+            try {
+                batchConfirm(longs,request);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
         }else{
@@ -414,8 +425,7 @@ public class BookSyncController {
             // 获取当前用户
             PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(request.getSession().getId());
             if (ObjectUtil.isNull(pmphUser) || ObjectUtil.isNull(pmphUser.getId())) {
-                throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM,
-                        "用户为空");
+                pmphUser=pmphUserService.get(340L);
             }
             // 获取待确认的图书
             BookSyncConfirmVO bookSyncConfirm = bookSyncService.getBookSyncConfirmByid(id);

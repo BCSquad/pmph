@@ -37,8 +37,8 @@ public class BookSyncServiceImpl implements BookSyncService {
     }
 
     @Override
-    public void addBookSyncConfirm(BookSyncConfirm bookSyncConfirm) {
-        bookSyncDao.addBookSynConfirm(bookSyncConfirm);
+    public Long addBookSyncConfirm(BookSyncConfirm bookSyncConfirm) {
+       return bookSyncDao.addBookSynConfirm(bookSyncConfirm);
 
     }
     @Override

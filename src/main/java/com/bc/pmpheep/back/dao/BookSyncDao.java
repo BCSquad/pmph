@@ -13,7 +13,7 @@ import java.util.Map;
 public interface BookSyncDao {
 
     void addSyncLog(BookSyncLog bookSyncLog);
-    void addBookSynConfirm(BookSyncConfirm bookSyncConfirm);
+    Long addBookSynConfirm(BookSyncConfirm bookSyncConfirm);
     List<BookSyncConfirmVO> queryBookSyncConfirmList(Map<String,Object> Parameter);
     int queryBookSyncConfirmListcount(Map<String,Object> Parameter);
     BookSyncConfirmVO getBookSyncConfirmByid(Long id);

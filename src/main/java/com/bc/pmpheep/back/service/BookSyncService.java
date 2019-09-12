@@ -23,7 +23,7 @@ public interface BookSyncService {
      * 添加图书同步待确认
      * @param bookSyncConfirm
      */
-    void addBookSyncConfirm(BookSyncConfirm bookSyncConfirm);
+    Long addBookSyncConfirm(BookSyncConfirm bookSyncConfirm);
 
     /**
      * 获取所有增量同步待确认列表
