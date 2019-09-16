@@ -153,7 +153,7 @@ public class BookSyncController {
                         }
                         book.setLogId(logId);
                         Long aLong = bookSyncService.addBookSyncConfirm(book);
-                        idList.add(aLong);
+                        idList.add(book.getId());
                     }
                     break;
                 case "update":
