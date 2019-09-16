@@ -152,7 +152,7 @@ public class BookSyncController {
 
                         }
                         book.setLogId(logId);
-                        Long aLong = bookSyncService.addBookSyncConfirm(book);
+                        bookSyncService.addBookSyncConfirm(book);
                         idList.add(book.getId());
                     }
                     break;
@@ -163,8 +163,8 @@ public class BookSyncController {
                             sb.append("图书参数"+count+":的ISBN号不能为空---");
                         }
                         book.setLogId(logId);
-                        Long aLong = bookSyncService.addBookSyncConfirm(book);
-                        idList.add(aLong);
+                        bookSyncService.addBookSyncConfirm(book);
+                        idList.add(book.getId());
                     }
                     break;
                 case "shelf":
@@ -182,6 +182,7 @@ public class BookSyncController {
                             newBookS.setLogId(logId);
                             newBookS.setId(null);
                             bookSyncService.addBookSyncConfirm(newBookS);
+                            idList.add(newBookS.getId());
                             if(bookSyncConfirmByISBN!=null){
                                 bookSyncService.delectBooksyncConfirmByIsbn(bookSyncConfirmByISBN.getIsbn());
                             }
@@ -192,8 +193,8 @@ public class BookSyncController {
                             newBookS.setLogId(logId);
                             newBookS.setId(null);
                             bookSyncService.delectBooksyncConfirmByIsbn(bookSyncConfirmByISBN.getIsbn());
-                            Long aLong = bookSyncService.addBookSyncConfirm(newBookS);
-                            idList.add(aLong);
+                             bookSyncService.addBookSyncConfirm(newBookS);
+                            idList.add(newBookS.getId());
                         }else{
                             flag=true;
                             sb.append("未找到该isbn的图书---");
@@ -213,6 +214,7 @@ public class BookSyncController {
                             newBookS.setLogId(logId);
                             newBookS.setId(null);
                             bookSyncService.addBookSyncConfirm(newBookS);
+                            idList.add(newBookS.getId());
                             if(bookSyncConfirmByISBN!=null){
                                 bookSyncService.delectBooksyncConfirmByIsbn(bookSyncConfirmByISBN.getIsbn());
                             }
@@ -227,8 +229,8 @@ public class BookSyncController {
                             newBookS.setLogId(logId);
                             newBookS.setId(null);
                             bookSyncService.delectBooksyncConfirmByIsbn(bookSyncConfirmByISBN.getIsbn());
-                            Long aLong = bookSyncService.addBookSyncConfirm(newBookS);
-                            idList.add(aLong);
+                            bookSyncService.addBookSyncConfirm(newBookS);
+                            idList.add(newBookS.getId());
                         }
                     }
 
