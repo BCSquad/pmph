@@ -114,6 +114,7 @@ public interface WriterUserService {
 	 * @return
 	 */
 	List<WriterUser> getList() throws CheckedServiceException;
+	List<Long> getListId() throws CheckedServiceException;
 
 	/**
 	 * 根据角色 id 查询是这个角色的所有用户

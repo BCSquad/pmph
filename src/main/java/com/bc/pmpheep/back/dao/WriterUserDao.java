@@ -44,6 +44,7 @@ public interface WriterUserDao {
     WriterUser get(Long id);
 
     List<WriterUser> getListUser();
+	List<Long> getListUserId();
 
     WriterUser getByUsernameAndPassword(String username, String password);
 

@@ -14,6 +14,7 @@ import com.bc.pmpheep.back.vo.BookFeedBack;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,9 +68,18 @@ public class WriterUserController {
 
 	@ResponseBody
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public ResponseBean list() {
-		return new ResponseBean(writerUserService.getList());
+	public ResponseBean list(HttpServletRequest request) {
+		String id = request.getParameter("id");
+		if(StringUtils.isEmpty(id)){
+			return new ResponseBean(writerUserService.getList());
+		}else{
+			return new ResponseBean(writerUserService.getListId());
+
+		}
+
 	}
+
+
 
 	/**
 	 * 

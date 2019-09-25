@@ -337,7 +337,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             // 作家用户
             if (Const.SEND_OBJECT_2.intValue() == sendType.intValue()) {
                 List<WriterUser> writerUserList =
-                writerUserService.getWriterUserListByOrgIds(orgIds2);
+                writerUserService.getList();
                 for (WriterUser writerUser : writerUserList) {
                     userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_1,
                                                         senderUserId, Const.SENDER_TYPE_1,

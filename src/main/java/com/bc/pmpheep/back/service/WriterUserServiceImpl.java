@@ -264,6 +264,10 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 	public List<WriterUser> getList() throws CheckedServiceException {
 		return writerUserDao.getListUser();
 	}
+	@Override
+	public List<Long> getListId() throws CheckedServiceException {
+		return writerUserDao.getListUserId();
+	}
 
 	/**
 	 * 根据角色 id 查询是这个角色的所有用户

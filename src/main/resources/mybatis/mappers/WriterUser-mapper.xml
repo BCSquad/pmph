@@ -374,6 +374,12 @@
 		FROM
 		writer_user
 	</select>
+	<select id="getListUserId" resultType="long">
+		SELECT
+		id
+		FROM
+		writer_user
+	</select>
 
 	<select id="getByUsernameAndPassword" parameterType="String"
 		resultType="WriterUser">
