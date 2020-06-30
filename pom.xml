@@ -87,7 +87,7 @@
         <!-- WebCollector爬虫 -->
         <WebCollector.ver>2.71</WebCollector.ver>
         <!-- xstream -->        
-        <xstream.ver>1.3.1</xstream.ver>
+        <xstream.ver>1.4.10-java7</xstream.ver>
         <!--RxJava2-->
         <retrofit.ver>2.3.0</retrofit.ver>
     </properties>
