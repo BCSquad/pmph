@@ -73,7 +73,7 @@
         <!--ueditor -->
         <ueditor.ver>1.1.2-edit-1.0</ueditor.ver>
         <!-- quartz -->
-        <quartz.ver>2.2.3</quartz.ver>
+        <quartz.ver>2.3.2</quartz.ver>
         <!-- javax-mail -->
         <java-mail.ver>1.5.5</java-mail.ver>
         <!-- commons-email -->
