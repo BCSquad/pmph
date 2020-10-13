@@ -30,7 +30,7 @@
         <!--slf4j -->
         <slf4j.ver>1.7.21</slf4j.ver>
         <!--junit -->
-        <junit.ver>4.12</junit.ver>
+        <junit.ver>4.13.1</junit.ver>
         <!--Spring Framework -->
         <springframework.ver>4.3.9.RELEASE</springframework.ver>
         <!--mybatis -->
