@@ -51,7 +51,7 @@
         <!--com.google.code.gson/gson -->
         <gson.ver>2.8.0</gson.ver>
         <!--jackson -->
-        <jackson.ver>2.6.7</jackson.ver>
+        <jackson.ver>2.9.10.7</jackson.ver>
         <!--commons-fileupload -->
         <commons-fileupload.ver>1.3.1</commons-fileupload.ver>
         <!--commons-io -->
