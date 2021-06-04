@@ -79,7 +79,7 @@
         <!-- commons-email -->
         <commons-email.ver>1.4</commons-email.ver>
         <!-- 百度统计 -->
-        <httpclient.ver>4.5</httpclient.ver>
+        <httpclient.ver>4.5.13</httpclient.ver>
         <httpmime.ver>4.5</httpmime.ver>
         <httpcore.ver>4.4.1</httpcore.ver>
         <fastjson.ver>1.2.7</fastjson.ver>
